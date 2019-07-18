@@ -1,0 +1,80 @@
+{% comment 
+# Copyright (c) 2017 Artur Wiebe <artur@4wiebe.de>
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+# associated documentation files (the "Software"), to deal in the Software without restriction,
+# including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so,
+# subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+# INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+# WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+%}
+
+{% extends "page.html" %}
+
+
+{% block html %}
+<table class="table table-hover">
+	<tbody data-bind="foreach:messages">
+		<tr data-bind="css: {'bg-danger': priority <= 2, 'table-danger': priority == 3, 'table-warning': priority == 4, 'table-info': priority == 5}">
+			<td data-bind="text:timestamp"></td>
+			<td width="85%">
+				<strong data-bind="attr:{'data-l10n-id':report}" style="white-space:pre-line"></strong>
+				<p data-bind="attr:{'data-l10n-id':report+'-help'}, visible:help"></p>
+			</td>
+			<td data-bind="click:toggleHelp"><i class="fa fa-question-circle"></i></td>
+		</tr>
+	</tbody>
+</table>
+{% end %}
+
+
+{% block script %}
+function Message(msg) {
+	let self = this;
+	
+	self.timestamp		= new Date(parseInt(msg['_SOURCE_REALTIME_TIMESTAMP'])/1000).toLocaleString();
+	self.priority		= parseInt(msg['PRIORITY']);
+	self.identifier		= msg['SYSLOG_IDENTIFIER'];
+	self.report			= msg['REPORT'] ? msg['REPORT'] : msg['MESSAGE'];
+	
+	self.help			= ko.observable(false);
+	self.toggleHelp		= function() { self.help(!self.help()); }
+}
+{% end %}
+
+
+{% block model %}
+function() {
+	let self = this;
+	
+	self.messages		= ko.observableArray();
+	self.messages.extend({ rateLimit: 500 });
+	
+	self.connection		= ko.observable();
+
+	self.start = function()	{
+		self.connection(new WebSocket(wsUrl(null, null, 'log', {args:'--since=-24hours REPORTS=1'})));
+
+		self.connection().onmessage = function(e) {
+			self.messages.unshift(new Message(JSON.parse(e.data)));
+			
+			if (self.messages().length > 50)
+				self.messages.pop();
+		}
+	}
+	
+	self.stop = function() {
+		try {
+			self.connection().close();
+		} catch(e) {}
+		self.messages([]);
+	}
+}
+{% end %}

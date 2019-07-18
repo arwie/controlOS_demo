@@ -1,0 +1,13 @@
+#
+# Automatically generated file; DO NOT EDIT.
+# PTXdist 2018.08.0
+#
+PTXCONF__collectionconfig_MAGIC__=y
+PTXCONF_COLLECTION_NONE=y
+# PTXCONF_COLLECTION_MANUAL is not set
+# PTXCONF_COLLECTION_ALL is not set
+# PTXCONF_EFIBOOTMGR is not set
+# PTXCONF_EFIVAR is not set
+# PTXCONF_INSTALL is not set
+# PTXCONF_LIBPOPT is not set
+# PTXCONF_LSHW is not set

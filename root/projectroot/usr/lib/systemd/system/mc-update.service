@@ -1,0 +1,4 @@
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/bin/mc-update

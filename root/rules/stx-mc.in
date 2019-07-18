@@ -1,0 +1,7 @@
+## SECTION=project_specific
+
+config STX_MC
+	bool
+	prompt "stx-mc"
+	help
+	  FIXME

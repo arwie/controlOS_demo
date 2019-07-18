@@ -1,0 +1,9 @@
+[Unit]
+StopWhenUnneeded=true
+ConditionPathExists=/etc/hostapd.conf.d/local.conf
+After=network.target
+
+[Service]
+RuntimeDirectory=hostapd
+ExecStartPre=-/usr/bin/sh -c 'cat /etc/hostapd/hostapd.conf /etc/hostapd.conf.d/*.conf > /run/hostapd/hostapd.conf'
+ExecStart=/usr/sbin/hostapd -g /run/hostapd/syswlan -i syswlan /run/hostapd/hostapd.conf

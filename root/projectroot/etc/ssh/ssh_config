@@ -1,0 +1,9 @@
+Host *
+  StrictHostKeyChecking no
+  UserKnownHostsFile /dev/null
+  ServerAliveInterval 20
+  LogLevel ERROR
+
+Host mc
+  User mc
+  ConnectTimeout 1

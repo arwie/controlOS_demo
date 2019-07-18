@@ -1,0 +1,26 @@
+#!/bin/sh
+
+SCRIPT=$(readlink -f $0)
+BASEDIR=$(dirname $SCRIPT)
+
+GITAF_DIR="$BASEDIR/.git-af"
+
+if [ ! -d "$GITAF_DIR" ]; then
+	echo "ERROR: $GITAF_DIR not found"
+	exit 1
+fi
+
+export GIT_DIR=$GITAF_DIR
+export GIT_WORK_TREE=$BASEDIR
+
+
+git update-index --assume-unchanged \
+	root/projectroot/etc/systemd/network/sys.network.d/1-address.conf \
+	root/projectroot/etc/systemd/network/1-*.link \
+	root/projectroot/etc/hosts \
+	root/rules/app.make
+
+
+export PROMPT_COMMAND="PS1=git-af:\$(realpath --relative-to=$BASEDIR/.. .)'\\$ '"
+
+exec /bin/bash --login

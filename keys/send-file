@@ -1,0 +1,11 @@
+#!/bin/sh
+
+HOST=sys
+
+SCRIPT=$0
+BASEDIR=$(dirname $SCRIPT)
+
+cd $BASEDIR
+
+ssh -i ssh/id_rsa root@$HOST mount -o remount,rw /
+scp -i ssh/id_rsa -r $1 root@$HOST:$2

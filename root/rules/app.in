@@ -1,0 +1,7 @@
+## SECTION=project_specific
+
+config APP
+	bool
+	prompt "app"
+	help
+	  application files

@@ -1,0 +1,5 @@
+<ol data-bind="foreach:$root.breadcrumb" class="breadcrumb">
+	<li class="breadcrumb-item">
+		<a data-bind="attr:{'href':$data.href,'data-l10n-id':$data.l10n}, text:$data.text"></a>
+	</li>
+</ol>

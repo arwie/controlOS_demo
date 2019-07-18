@@ -1,0 +1,11 @@
+devtmpfs		/dev			devtmpfs
+proc			/proc			proc
+sysfs			/sys			sysfs
+
+LABEL=BOOT		/mnt/boot		vfat		ro			0	0
+LABEL=INIT		/mnt/init		vfat		defaults	0	1
+LABEL=ROOT		/mnt/root		ext4		defaults	0	0
+LABEL=DATA		/mnt/data		ext4		defaults	0	1
+
+LABEL=INSTALL	/mnt/install	vfat		ro			0	0
+LABEL=BACKUP	/mnt/backup		vfat		defaults	0	0

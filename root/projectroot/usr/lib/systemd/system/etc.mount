@@ -1,0 +1,6 @@
+[Unit]
+RequiresMountsFor=/var/etc
+
+[Mount]
+What=overlay
+Where=/etc

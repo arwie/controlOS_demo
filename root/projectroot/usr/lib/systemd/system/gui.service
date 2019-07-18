@@ -1,0 +1,6 @@
+[Unit]
+PartOf=gui.socket
+
+[Service]
+WorkingDirectory=/usr/lib/gui
+ExecStart=/usr/lib/gui/gui

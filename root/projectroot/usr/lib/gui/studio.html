@@ -1,0 +1,59 @@
+{% comment 
+# Copyright (c) 2017 Artur Wiebe <artur@4wiebe.de>
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+# associated documentation files (the "Software"), to deal in the Software without restriction,
+# including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so,
+# subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+# INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+# WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+%}
+
+{% extends "base.html" %}
+
+{% block head %}
+	<script src="{{static_url('ace.js')}}"></script>
+{% end %}
+
+{% block html %}
+<nav class="navbar navbar-expand-md fixed-top navbar-light bg-light">
+	<a href="#" class="navbar-brand" data-l10n-id="title"></a>
+	<button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbar-collapse">
+		<span class="navbar-toggler-icon"></span>
+	</button>
+	<div class="collapse navbar-collapse" id="navbar-collapse">
+		<ul class="navbar-nav">
+			<li class="nav-item"><a class="nav-link" href="#log"    data-l10n-id="log"></a></li>
+			<li class="nav-item"><a class="nav-link" href="#mc"     data-l10n-id="mc"></a></li>
+			<li class="nav-item"><a class="nav-link" data-bind="visible:isState('mc@simio')" href="#simio"   data-l10n-id="simio"></a></li>
+			<li class="nav-item"><a class="nav-link" data-bind="visible:isState('mc@sim')"   href="/static/sim/scene.html" target="_blank" data-l10n-id="sim"></a></li>
+		</ul>
+		<ul class="navbar-nav ml-auto">
+			{% include "nav-diag.html" %}
+			{% include "nav-admin.html" %}
+			{% include "locale.html" %}
+			{% include "poweroff.html" %}
+		</ul>
+	</div>
+</nav>
+<main class="container-fluid" style="padding-top:4.5rem">
+	{% module page("report.html") %}
+	{% module page("log.html") %}
+	{% module page("issue.html") %}
+	{% module page("debug.html") %}
+	{% module page("simio.html") %}
+	{% module page("update.html") %}
+	{% module page("remote.html") %}
+	{% module page("network/network.html") %}
+	{% module page("backup.html") %}
+	
+	{% module page("mc/mc.html") %}
+</main>
+{% end %}

@@ -1,0 +1,9 @@
+#!/bin/sh
+
+SCRIPT=$(readlink -f $0)
+BASEDIR=$(dirname $SCRIPT)
+
+USER=$(whoami)
+
+
+exec sudo systemd-nspawn --directory=/var/lib/machines/ptxdist --bind-ro=/etc/passwd --bind=$BASEDIR:/mnt --chdir=/mnt --user=$USER  $@

@@ -1,0 +1,67 @@
+{% comment 
+# Copyright (c) 2019 Artur Wiebe <artur@4wiebe.de>
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+# associated documentation files (the "Software"), to deal in the Software without restriction,
+# including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so,
+# subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+# INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+# WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+%}
+
+
+<script type="text/html" id="navChildrenTabs">
+	<ul data-bind="foreach:$page.children" class="nav nav-tabs nav-justified mb-3">
+		<li class="nav-item">
+			<a data-bind="page-href:$data, css:{active:isVisible}, attr:{'data-l10n-id':($parent.l10n?$parent.l10n+'_':'')+getId()}" class="nav-link"></a>
+		</li>
+	</ul>
+</script>
+<script>ko.components.register('navchildrentabs', {template:{element:'navChildrenTabs'}})</script>
+
+
+<script type="text/html" id="uploadButton">
+	<label data-bind="class:css" class="btn mt-2">
+		<span data-bind="attr:{'data-l10n-id':l10n}"></span>
+		<input type="file" data-bind="event:{change:()=>{upload($element.files[0]);$element.value=null;}}" hidden>
+	</label>
+</script>
+<script>ko.components.register('uploadbutton', {template:{element:'uploadButton'}})</script>
+
+
+<script>
+ko.bindingHandlers.clickConfirm = {
+	init: function(element, valueAccessor, allBindings, viewModel, bindingContext) {
+		return ko.bindingHandlers.click.init.call(this, element, function() {
+			return (data, event)=>{
+				if (!element.clickConfirm) {
+					element.disabled = true;
+					element.clickConfirmDisarm = ()=>{
+						clearInterval(element.clickConfirmInterval);
+						clearTimeout(element.clickConfirmTimeout);
+						element.classList.remove("active", "btn-dark");
+						delete element.clickConfirm;
+					}
+					setTimeout(()=>{
+						element.clickConfirmInterval = setInterval(()=>{element.classList.toggle("btn-dark");}, 333);
+						element.clickConfirmTimeout  = setTimeout(element.clickConfirmDisarm, 3000);
+						element.clickConfirm = true;
+						element.disabled = false;
+						element.classList.add("active");
+					}, 500);
+				} else {
+					element.clickConfirmDisarm();
+					return ko.unwrap(valueAccessor())(data, event);
+				}
+			};
+		}, allBindings, viewModel, bindingContext);
+	}
+};
+</script>

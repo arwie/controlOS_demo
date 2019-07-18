@@ -1,0 +1,7 @@
+[Match]
+#     >PokiniF2         >iEi
+Path= pci-0000:03:00.0  pci-0000:01:00.0
+OriginalName=eth*
+
+[Link]
+Name=syslan

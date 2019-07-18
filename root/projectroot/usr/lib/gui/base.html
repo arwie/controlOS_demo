@@ -1,0 +1,222 @@
+{% comment 
+# Copyright (c) 2017 Artur Wiebe <artur@4wiebe.de>
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+# associated documentation files (the "Software"), to deal in the Software without restriction,
+# including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so,
+# subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+# INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+# WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+%}
+
+{% import os,glob %}
+
+
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="shortcut icon" href="{{static_url('favicon.ico')}}">
+	
+	<title data-l10n-id="title"></title>
+	
+	<script src="{{static_url('pep.js')}}"></script>
+	<script src="{{static_url('jquery.js')}}"></script>
+	<script src="{{static_url('popper.js')}}"></script>
+	<script src="{{static_url('bootstrap.js')}}"></script>
+	<link rel="stylesheet" href="{{static_url('bootstrap.css')}}">
+	<link rel="stylesheet" href="{{static_url('font-awesome/css/font-awesome.min.css')}}">
+	
+	<script src="{{static_url('knockout.js') }}"></script>
+	<script src="{{static_url('knockout.mapping.js') }}"></script>
+	<script src="{{static_url('pager.js') }}"></script>
+
+	{% block head %}{% end %}
+	
+	<script defer src="{{static_url('l20n.js')}}"></script>
+	<link rel="localization" href="{{ajax_url('locale/{locale}.ftl')}}">
+	<meta name="defaultLanguage" content="en">
+	<meta name="availableLanguages" content="{{','.join(sorted(os.path.splitext(os.path.basename(f))[0] for f in glob.glob('locale/*.ftl')))}}">
+</head>
+
+
+<script>
+var hosts = {% raw etc_hosts() %}
+
+function ajaxUrl(url, params=null) {
+	return '{{ajax_url()}}'+url + (params ? '?'+$.param(params) : '');
+}
+function wsUrl(host, port, url=null, params=null) {
+	return 'ws://' + (host ? (host in hosts ? hosts[host] : host)+':'+port : (port ? location.hostname+':'+port : location.host)) + (url ? ajaxUrl(url, params) : '/');
+}
+function pageUrl(url, params=null) {
+	return '#'+url + (params ? '?'+$.param(params) : '');
+}
+
+function webSocket(url, onMessageJson) {
+	let ws = new WebSocket(url);
+	let first = true;
+	ws.onmessage = (e)=>{
+		onMessageJson(JSON.parse(e.data), first);
+		first = false;
+	};
+	ws.sendJson = (data)=>{
+		ws.send(JSON.stringify(data));
+	};
+	return ws;
+}
+
+ko.subscribeTree = function(model, notify) {
+	return ko.pureComputed(()=>{
+		return ko.toJS(model);
+	}).subscribe(notify);
+};
+
+function GuiPage(pageModel, pageParams, pageGuard, pageRoute) {
+	let self = this;
+	
+	self.params = pageParams();
+	
+	self.create = function(callback, page) {
+		self.model = pageModel(page);
+		let ready = function() {
+			self.started = true;
+			callback(self.model);
+		}
+		if (self.model.start) {
+			self.model.start(ready);
+			if (self.model.start.length) return;
+		}
+		ready();
+	}
+	
+	self.start = function(page, callback) {
+		let ready = function() {
+			$(page.element).fadeIn(50);
+			self.started = true;
+			if (self.model && self.model.breadcrumb) {
+				let breadcrumb = self.model.breadcrumb();
+				if (breadcrumb !== undefined) gui.breadcrumb(breadcrumb);
+			} else gui.breadcrumb([{l10n:page.currentId}]);
+			if (callback) callback();
+		}
+		if (self.model && self.model.start && !self.started) {
+			self.model.start(ready);
+			if (self.model.start.length) return;
+		}
+		ready();
+	}
+	
+	self.stop = function(page, callback) {
+		let ready = function() {
+			self.started = false;
+			if (callback) callback();
+		}
+		$(page.element).hide();
+		if (self.model && self.model.stop && self.started) {
+			self.model.stop(ready);
+			if (self.model.stop.length) return;
+		}
+		ready();
+	}
+	
+	self.guard = function(page, route, callback) {
+		if (pageGuard())
+			callback();
+		else
+			pager.navigate(page.currentParentPage() ? page.currentParentPage().path() : page.parentPage.path());
+	}
+	
+	self.route = function(event) {
+		let route = pageRoute();
+		if (route)
+			pager.navigate(event.page.path()+'/'+route);
+	}
+}
+
+gui = new function() {
+	let self = this;
+
+	self.state		= ko.observableArray();
+	self.isState	= (state)=>{ return self.state().includes(state); }
+	self.subscribeState = function(state, notify, initialCall=true) {
+		if (initialCall) notify(gui.isState(state));
+		return ko.pureComputed(()=>{
+			return gui.isState(state);
+		}).subscribe(notify);
+	}
+
+	self.breadcrumb = ko.observable();
+}
+
+{% block script %}{% end %}
+
+</script>
+
+{% include "baseWidgets.html" %}
+
+<body data-bind="visible:true" style="display:none">
+	
+	{% block html %}{% end %}
+	
+	<div id="stateDisconnected" data-backdrop="static" data-keyboard="false" class="modal">
+		<div class="modal-dialog modal-lg">
+			<div class="alert alert-warning">
+				<p data-l10n-id="disconnected"></p>
+			</div>
+		</div>
+	</div>
+</body>
+
+
+<script>(function(){
+
+let stateWatchdog = true;
+function resetWatchdog(activate=true) {
+	clearTimeout(stateWatchdog);
+	if (activate && stateWatchdog !== false)
+		stateWatchdog = setTimeout(disconnected, 10000);
+	else
+		stateWatchdog = false;
+}
+resetWatchdog();
+
+function disconnected() {
+	resetWatchdog(false);
+	$('#stateDisconnected').modal();
+	pager.navigate('#');
+	setInterval(()=>{
+		$.post(ajaxUrl('state')).done(()=>{
+			location.reload();
+		});
+	}, 1000);
+}
+
+function updateState(msg) {
+	gui.state(msg);
+	pager.goTo(pager.activePage$().path());
+}
+
+let stateWs = webSocket(wsUrl(null, null, 'state'), (msg)=>{
+	resetWatchdog();
+	if (Array.isArray(msg))
+		updateState(msg);
+});
+stateWs.onclose = stateWs.onerror = disconnected;
+
+pager.extendWithPage(gui);
+ko.applyBindings(gui);
+pager.start('#');
+
+})();</script>
+
+</html>

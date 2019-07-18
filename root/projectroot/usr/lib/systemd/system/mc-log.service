@@ -1,0 +1,8 @@
+[Unit]
+StopWhenUnneeded=true
+
+[Service]
+User=systemd-journal-remote
+Group=systemd-journal-remote
+
+ExecStart=/lib/systemd/systemd-journal-remote --output=/var/log/journal/remote/remote-mc.journal --getter='/usr/sbin/mc-log mc 5600'

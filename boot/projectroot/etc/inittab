@@ -1,0 +1,8 @@
+
+# mount kernel filesystems
+::sysinit:/bin/mount /dev
+::sysinit:/bin/mount /proc
+::sysinit:/bin/mount /sys
+
+# run rcS
+::once:/bin/cttyhack /etc/init.d/rcS

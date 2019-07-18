@@ -1,0 +1,130 @@
+#!/usr/bin/python -Bu
+
+# Copyright (c) 2018 Artur Wiebe <artur@4wiebe.de>
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+# associated documentation files (the "Software"), to deal in the Software without restriction,
+# including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so,
+# subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+# INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+# WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+
+from subprocess import run, DEVNULL, PIPE, CalledProcessError
+import shared, logging, argparse, tempfile, socket, os, pexpect
+
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--force", help="force update all files on mc", action="store_true")
+parser.add_argument("--console", help="log also to console", action="store_true")
+args = parser.parse_args()
+
+if args.console:
+	logging.root.addHandler(logging.StreamHandler())
+
+
+virginIp   = '90.0.0.1'
+virginPass = 'mc'
+
+
+
+def isVirgin():
+	return run(['ping', '-c1', '-W1', virginIp], stdout=DEVNULL).returncode == 0
+
+
+def deflower():
+	out,status = pexpect.run('ssh -oConnectTimeout=1 mc@{} "mkdir -p ~/.ssh && echo {} > ~/.ssh/authorized_keys && sudo ifconfig eth0:0 {}"'.format(
+			virginIp,
+			open('/root/.ssh/id_rsa.pub').read().strip(),
+			socket.gethostbyname('mc')
+		),
+	events={'(?i)password': virginPass+"\n"},
+	withexitstatus=True)
+	
+	if status != 0:
+		raise Exception('failed to deflower mc: '+out.decode())
+
+
+def getType():
+	detectType = '''
+		case $(cat /proc/cpuinfo) in
+		*N2800*)
+			echo -n "702"
+			;;
+		*E3825*)
+			echo -n "703"
+			;;
+		*ARMv7*)
+			echo -n "301"
+			;;
+		*)
+			echo -n "sim"
+			;;
+		esac
+	'''
+	return run(['ssh', 'mc'], input=detectType, stdout=PIPE, stderr=PIPE, check=True, text=True).stdout
+
+
+def build(outdir, mctype):
+	stderr = run(['php5', '-n', '-ddisplay_errors=stderr', 'main.php', outdir, mctype], cwd='/usr/lib/mc', stdout=DEVNULL, stderr=PIPE, check=True, text=True).stderr
+	if stderr:
+		logging.warning("php build:\n"+stderr);
+
+
+def reboot():
+	run(['ssh', 'mc', 'sudo reboot'], stderr=PIPE, check=True, text=True)
+
+
+def sync(outdir):
+	hashOld = run(['ssh', 'mc', 'cat app.hash || echo'], stdout=PIPE, stderr=PIPE, check=True, text=True).stdout
+	hashOldSet = set(hashOld.splitlines())
+	hashNew = run('md5sum $(find ! -type d)', cwd=outdir, shell=True, stdout=PIPE, stderr=PIPE, check=True, text=True).stdout
+	hashNewSet = set(hashNew.splitlines())
+	
+	if args.force:
+		hashCopySet = hashNewSet
+	else:
+		hashCopySet = hashNewSet - hashOldSet
+	
+	if not hashCopySet:
+		return False
+	
+	for f in (hashNewSet - hashCopySet):
+		os.remove(outdir+'/'+f.split()[1])
+	run(['scp', '-q', '-r', '.', 'mc:/FFS0'], cwd=outdir, stderr=PIPE, check=True, text=True)
+	run(['ssh', 'mc', 'cat > app.hash'], input=hashNew, stderr=PIPE, check=True, text=True)
+	return True
+
+
+def update():
+	if isVirgin():
+		logging.info('deflower virgin mc')
+		deflower()
+	
+	mcType = getType()
+	logging.info('build for mc-'+mcType)
+	
+	with tempfile.TemporaryDirectory(prefix='mc-update_') as outdir:
+		build(outdir, mcType)
+		if sync(outdir):
+			reboot()
+			logging.info('mc updated successfully')
+		else:
+			logging.info('mc is up to date')
+
+
+try:
+	update()
+except CalledProcessError as e:
+	logging.exception(e.stderr)
+	exit(1)
+except:
+	logging.exception('ERROR in mc-update')
+	exit(1)

@@ -1,0 +1,55 @@
+#!/bin/sh
+
+SCRIPT=$(readlink -f $0)
+BASEDIR=$(dirname $SCRIPT)
+
+NP=$(nproc)
+
+
+
+errexit() {
+	echo "#############################################"
+	echo "Build failed!"
+	echo "$1"
+	exit 1
+}
+
+
+ptxdist_clean()
+{
+	cd $BASEDIR/$1
+	
+	ptxdist -q clean					|| errexit "Error while cleaning $1"
+}
+
+
+ptxdist_build()
+{
+	cd $BASEDIR/$1
+	CMD=${2-images}
+	
+	if ! ptxdist go -j$NP; then
+		ptxdist go						|| errexit "Error while building $1"
+	fi
+	eval ptxdist $CMD
+}
+
+
+
+# Clean everything first
+ptxdist_clean initramfs
+ptxdist_clean root
+ptxdist_clean boot
+
+
+# Now build all images
+ptxdist_build initramfs
+ptxdist_build root
+ptxdist_build boot "--collectionconfig=configs/system  image system.img"
+ptxdist_build boot "--collectionconfig=configs/install image install.img"
+
+
+echo "#############################################"
+echo "Build completed successfully!"
+
+exit 0

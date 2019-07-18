@@ -1,0 +1,8 @@
+[Unit]
+ConditionPathExists=/usr/lib/gui/gui
+
+[Socket]
+ListenStream=80
+
+[Install]
+WantedBy=sockets.target

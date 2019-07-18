@@ -1,0 +1,16 @@
+[Unit]
+DefaultDependencies=no
+After=local-fs.target
+Before=basic.target
+RequiresMountsFor=/var
+RequiresMountsFor=/mnt/root
+RequiresMountsFor=/mnt/init
+ConditionPathExists=/mnt/init/.update
+Wants=reboot.service
+Before=reboot.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStop=/usr/sbin/update-apply
+TimeoutStopSec=600

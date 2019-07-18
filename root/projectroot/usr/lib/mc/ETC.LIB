@@ -1,0 +1,270 @@
+<?# Copyright (c) 2019 Artur Wiebe <artur@4wiebe.de>
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+# associated documentation files (the "Software"), to deal in the Software without restriction,
+# including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so,
+# subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+# INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+# WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+?>
+
+
+<?$etc = device_busDevices('etc')?>
+
+
+common shared etc_busnumber as const long = 0
+common shared etc_cycletime as const long = 4000	'{4000,2000,1000,500}[µs]
+
+dim shared healthQueryIntervalMs as const long	= 60*60*1000
+
+
+
+<?lib_systemError([19015], 'putEthercatFatal()')?>
+	etc_stopTrigger()
+end sub
+
+
+<?lib_init()?>
+	try
+		dropLong(EC_ETHERCAT_INIT)
+		sleep <?=count($etc)?> * 250
+
+		<?foreach($etc as $dev) {
+			ll("'--------");
+			switch ($dev['device']) {
+				case 'cdhd':
+					ll('EC_REMAP_CDHD_DEFAULT_PDOS('.$dev['address'].')');
+					break;
+				case 'stepim':
+					ll('setupPdoMapping_stepim('.$dev['address'].')');
+					break;
+			}
+		}?>
+
+		dropLong(EC_RESCAN_SLAVES)
+		sleep 500
+		dropLong(CHECK_TOPOLOGY)
+		EC_CREATE_MASTER()
+
+		<?foreach($etc as $dev) {
+			ll("'--------");
+			ll('resetErrorRegisters('.$dev['address'].')');
+			switch ($dev['device']) {
+				case 'cdhd':
+				case 'stepim':
+					ll('EC_CDHD_SET_PDOS('.$dev['address'].', etc_busnumber, 0, CDHD_OPMODE_SYNC_POSITION)');
+					ll('EC_USE_SLAVE('.$dev['address'].', EC_SLAVES_INFO['.$dev['address'].']->vendor_id, EC_SLAVES_INFO['.$dev['address'].']->product_code, "ECAT_AXIS_SLAVE", true)');
+					ll('etc_sdoWrite('.$dev['address'].', 0x60C2, 1, 8,  etc_cycletime/100)');
+					ll('etc_sdoWrite('.$dev['address'].', 0x60C2, 2, 8,  -4)');
+					break;
+				default:
+					ll('EC_USE_SLAVE('.$dev['address'].', EC_SLAVES_INFO['.$dev['address'].']->vendor_id, EC_SLAVES_INFO['.$dev['address'].']->product_code, "ECAT_IOMODULE_SLAVE", false)');
+					break;
+			}
+			foreach ($dev['writeBit'] as $bit)
+				ll('EC_ASSOCIATE_PDO_TO_SYS_DIO('.$dev['address'].', 0x'.dechex($bit['index']).', '.$bit['subindex'].', '.$bit['dio'].', '.$bit['size'].', '.$bit['offset'].')');
+		}?>
+	<?catchLogThrow('putEthercatFatal()')?>
+end sub
+
+
+<?lib_start()?>
+	try
+		EC_SET_BUS_CYCLETIME(etc_cycletime)
+		dropLong(EC_SET_NEW_STATIC_DISTANCE(300))
+		EC_STARTMASTER()
+	<?catchLogThrow('putEthercatFatal()')?>
+end sub
+
+
+<?lib_prgPoll('healthQueryIntervalMs', 16)?>
+	<?logInfo(['ethercat health'], function(){?>
+		putEthercatDebug()
+		putEthercatHealth()
+	<?})?>
+end sub
+
+
+<?lib_prgStop()?>
+	dropLong(EC_RESCAN_SLAVES)
+	sleep 3000
+	<?logNotice(['ethercat stop'], function(){?>
+		putEthercatDebug()
+		putEthercatError()
+		putEthercatHealth()
+	<?})?>
+end sub
+
+
+sub putEthercatFatal
+	putEthercatDebug()
+	putEthercatError()
+end sub
+
+sub putEthercatError
+	com_putString("/dmesg", sh("dmesg | tail -n64"))
+	com_putString("/slaves_info", sh("ethercat -v slaves"))
+end sub
+
+sub putEthercatDebug
+	com_putString("/slaves", EC_SLAVES)
+	com_putString("/master", EC_MASTER)
+end sub
+
+sub putEthercatHealth
+	<?foreach($etc as $dev)
+		ll('com_putString("/regs_'.$dev['address'].'", readErrorRegisters('.$dev['address'].'))')?>
+end sub
+
+
+
+public sub etc_write(byval slave_ as long, byval index_ as long, byval subindex_ as long, byval size_ as long, byval value_ as long)
+	if EC_IS_PDO(slave_, index_, subindex_) then
+		etc_pdoWrite(slave_, index_, subindex_, value_)
+	else
+		etc_sdoWrite(slave_, index_, subindex_, size_, value_)
+	end if
+end sub
+
+public function etc_read(byval slave_ as long, byval index_ as long, byval subindex_ as long) as long
+	if EC_IS_PDO(slave_, index_, subindex_) then
+		etc_read = etc_pdoRead(slave_, index_, subindex_)
+	else
+		etc_read = etc_sdoRead(slave_, index_, subindex_)
+	end if
+end function
+
+
+
+<?$xdoCatchLogThrow = function($valueType=false) {
+	catchLogThrow([
+		'com_putLong("/slave", slave_)',
+		'com_putString("/index", hex$(index_)+"h")',
+		'com_putLong("/subindex", subindex_)',
+		($valueType) ? 'com_put'.ucfirst($valueType).'("/value", value_)' : false,
+		'putEthercatDebug()',
+	]);
+}?>
+
+
+public sub etc_pdoWrite(byval slave_ as long, byval index_ as long, byval subindex_ as long, byval value_ as long)
+	try
+		EC_PDO_WRITE(slave_, index_, subindex_, value_)
+	<?$xdoCatchLogThrow('long')?>
+end sub
+
+public function etc_pdoRead(byval slave_ as long, byval index_ as long, byval subindex_ as long) as long
+	dim repeat_ as long = 3
+	try
+		do
+			try
+				etc_pdoRead = EC_PDO_READ(slave_, index_, subindex_)
+				repeat_ = false
+			catch EC_DOMAIN_WC_INCOMPLETE.num
+				if not decrementUse(repeat_) then
+					throw
+				end if
+				etc_sleepCycle()
+			end try
+		loop while repeat_
+	<?$xdoCatchLogThrow()?>
+end function
+
+
+public sub etc_sdoWrite(byval slave_ as long, byval index_ as long, byval subindex_ as long, byval size_ as long, byval value_ as long)
+	try
+		EC_SDO_WRITE(slave_, index_, subindex_, size_, value_)
+	<?$xdoCatchLogThrow('long')?>
+end sub
+
+public function etc_sdoRead(byval slave_ as long, byval index_ as long, byval subindex_ as long) as long
+	try
+		etc_sdoRead = EC_SDO_READ(slave_, index_, subindex_)
+	<?$xdoCatchLogThrow()?>
+end function
+
+
+public function etc_readString(byval slave_ as long, byval index_ as long, byval subindex_ as long) as string
+	dim strLen_ as long
+	try
+		etc_readString = EC_SDO_READ_STRING(slave_, index_, subindex_, strLen_)
+	<?$xdoCatchLogThrow()?>
+end function
+
+
+
+public sub etc_sleepCycle
+	sleep max(1, etc_cycletime/1000)
+end sub
+
+
+
+sub setupPdoMapping_stepim(byval address_ as long)
+	etc_sdoWrite(address_, 0x1C12, 0, 8, 0)
+	etc_sdoWrite(address_, 0x1C12, 1, 16, 0x1600)
+	etc_sdoWrite(address_, 0x1C12, 0, 8, 1)
+	etc_sdoWrite(address_, 0x1600, 0, 8, 0)
+	etc_sdoWrite(address_, 0x1600, 1, 32, 0x60400010)
+	etc_sdoWrite(address_, 0x1600, 2, 32, 0x607A0020)
+	etc_sdoWrite(address_, 0x1600, 3, 32, 0x60FE0120)
+	etc_sdoWrite(address_, 0x1600, 0, 8, 3)
+	etc_sdoWrite(address_, 0x1C13, 0, 8, 0)
+	etc_sdoWrite(address_, 0x1C13, 1, 16, 0x1A00)
+	etc_sdoWrite(address_, 0x1C13, 0, 8, 1)
+	etc_sdoWrite(address_, 0x1A00, 0, 8, 0)
+	etc_sdoWrite(address_, 0x1A00, 1, 32, 0x60410010)
+	etc_sdoWrite(address_, 0x1A00, 2, 32, 0x60640020)
+	etc_sdoWrite(address_, 0x1A00, 3, 32, 0x60FD0020)
+	etc_sdoWrite(address_, 0x1A00, 0, 8, 3)
+end sub
+
+
+
+sub resetErrorRegisters(byval slave_ as long)
+	dim port_ as long
+	for port_ = 0 to 1
+		tryResetErrorRegister(slave_, 0x300+port_*2)	'invalid frame counter
+		tryResetErrorRegister(slave_, 0x301+port_*2)	'physical error counter
+		tryResetErrorRegister(slave_, 0x308+port_)		'previous error counter
+		tryResetErrorRegister(slave_, 0x310+port_)		'lost link counter
+	next
+	tryResetErrorRegister(slave_, 0x30C)				'malformat error counter
+	tryResetErrorRegister(slave_, 0x30D)				'local error counter
+end sub
+
+sub tryResetErrorRegister(byval slave_ as long, byval reg_ as long)
+	try
+		dropLong(EC_SLAVE_WRITE_REGISTER(slave_, reg_, 1, 0))
+	catch else
+	end try
+end sub
+
+function readErrorRegisters(byval slave_ as long) as string
+	dim port_ as long
+	for port_ = 0 to 1
+		readErrorRegisters = readErrorRegisters + "PORT"+str$(port_) +\
+			" IFC:"+tryReadErrorRegister(slave_, 0x300+port_*2) +\
+			" PHC:"+tryReadErrorRegister(slave_, 0x301+port_*2) +\
+			" PEC:"+tryReadErrorRegister(slave_, 0x308+port_) +\
+			" LLC:"+tryReadErrorRegister(slave_, 0x310+port_)
+		newLine(readErrorRegisters)
+	next
+	readErrorRegisters = readErrorRegisters +\
+		"MEC:"+tryReadErrorRegister(slave_, 0x30C) +" "+\
+		"LEC:"+tryReadErrorRegister(slave_, 0x30D)
+end function
+
+function tryReadErrorRegister(byval slave_ as long, byval reg_ as long) as string
+	try
+		tryReadErrorRegister = str$(EC_SLAVE_READ_REGISTER(slave_, reg_, 1))
+	catch else
+		tryReadErrorRegister = "#"
+	end try
+end function

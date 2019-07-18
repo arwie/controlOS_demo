@@ -1,0 +1,22 @@
+#!/bin/sh
+
+
+if [ ! -b $2 ]; then
+	echo "ERROR: target is not a block device"
+	exit 1
+fi
+
+if grep -qs $2 /proc/mounts; then
+	echo "ERROR: target device is mounted"
+	exit 1
+fi
+
+
+echo "writing image to $2 ..."
+sudo sh -c "xzcat $1 | dd of=$2 bs=64K"
+
+sync
+
+
+lsblk -f $2
+echo "finished!"

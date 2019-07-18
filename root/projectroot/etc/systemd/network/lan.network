@@ -1,0 +1,5 @@
+[Match]
+Name=lan
+
+[Network]
+DHCP=yes

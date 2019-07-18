@@ -1,0 +1,11 @@
+## SECTION=image2
+
+config IMAGE_SYSTEM
+	bool
+	select IMAGE_KERNEL
+	select HOST_GENIMAGE
+	select HOST_DOSFSTOOLS
+	select HOST_MTOOLS
+	prompt "Generate images/system.img"
+	help
+	  Generate system image

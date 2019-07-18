@@ -1,0 +1,148 @@
+<?# Copyright (c) 2019 Artur Wiebe <artur@4wiebe.de>
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+# associated documentation files (the "Software"), to deal in the Software without restriction,
+# including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so,
+# subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+# INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+# WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+?>
+
+
+<?com_websocket(5600, ['receive'=>'false'])?>
+
+common shared log_prioCritical	as const long	= 2
+common shared log_prioError		as const long	= 3
+common shared log_prioWarning	as const long	= 4
+common shared log_prioNotice	as const long	= 5
+common shared log_prioInfo		as const long	= 6
+common shared log_prioDebug		as const long	= 7
+
+common shared log_priority		as const long	= <?=debug() ? 'log_prioDebug' : 'log_prioInfo'?> 
+common shared log_priorityPrint	as const long	= <?=debug() ? 'log_prioDebug' : 'log_prioWarning'?> 
+
+
+dim shared comLogChannel as long
+
+
+
+public sub log_message(byval prio_ as long, byval message_ as string)
+	com_store()
+	com_putLong("/clock", system.clock)
+	com_putLong("/priority", prio_)
+	com_putStringRef("/message", message_)
+	com_putString("/prg", programname)
+end sub
+
+
+public sub log_putMessageId(byval messageId_ as string)
+	com_putStringRef("/message_id", messageId_)
+end sub
+
+public sub log_putCodeFunc(byval codeFunc_ as string)
+	com_putStringRef("/code_func", codeFunc_)
+end sub
+
+public sub log_putReport(byval report_ as string)
+	com_putStringRef("/report", report_)
+	com_putLong("/reports", true)
+end sub
+
+public sub log_putFile(byval name_ as string)
+	com_putString("/"+name_, sh("awk '{print NR $s}' /FFS0/SSMC/"+name_))
+end sub
+
+public sub log_putTrnErr
+	com_putString("/TRN.ERR", sh("cat /RAM/TRN.ERR"))
+end sub
+
+
+public sub log_send
+	try
+		com_send(comLogChannel)
+	catch else
+		print "ERROR: log failed to send"
+	end try
+	com_restore()
+end sub
+
+
+public sub log_debugMessage(byval message_ as string)
+	log_message(log_prioDebug, message_)
+	log_send()
+end sub
+
+
+<?lib_init()?>
+	<?com_open('comLogChannel', 'log', function() {?>
+		com_putLong("/priority", log_priority)
+	<?})?> 
+end sub
+
+
+public sub log_waitDrain
+	com_clear()
+	com_sendSelf(comLogChannel)
+	<?waitActive('log')?>
+end sub
+
+
+
+<?lib_prgStart()?>
+	dropLong(com_receive(this_websocket, 30000))	'wait for log client connection
+end sub
+
+
+<?com_prgReceive('comLogChannel', 250, 16)?>
+	select case receive_
+	case com_receiveMessage
+		com_send(this_websocket)
+		printLog()
+	case com_receiveNotify
+		log_stopTrigger()
+	end select
+end sub
+
+
+<?lib_prgError()?>
+	log_stopTrigger()
+end sub
+
+
+<?lib_prgStop()?>
+	sleep 500	'let messages arrive at journal
+end sub
+
+
+
+sub printLog
+	dim prio as long
+	try
+		prio = com_getLong("/priority")
+		if prio <= log_priorityPrint then
+			select case prio
+			case log_prioCritical
+				print "CRITICAL: ";
+			case log_prioError
+				print "ERROR:    ";
+			case log_prioWarning
+				print "WaRnInG:  ";
+			case log_prioNotice
+				print " Notice:  ";
+			case log_prioInfo
+				print "  info:   ";
+			case log_prioDebug
+				print "   debug: ";
+			end select
+			print com_getString("/message")
+		end if
+	catch else
+	end try
+end sub

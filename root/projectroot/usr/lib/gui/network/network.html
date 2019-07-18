@@ -1,0 +1,264 @@
+{% comment 
+# Copyright (c) 2017 Artur Wiebe <artur@4wiebe.de>
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+# associated documentation files (the "Software"), to deal in the Software without restriction,
+# including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so,
+# subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+# INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+# WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+%}
+
+{% extends "../page.html" %}
+
+
+
+{% block html %}{% from shared import network %}
+<div class="row">
+<div class="col-lg-2">
+	<nav data-bind="foreach:$page.children" class="nav nav-pills flex-column">
+		<a data-bind="page-href:$data, css:{active:isVisible}, attr:{'data-l10n-id':'network_'+getId()}" class="nav-link"></a>
+	</nav>
+</div>
+
+<div class="col">
+
+	{% module page("network/status.html") %}
+
+	{% if network.hasInterface('syswlan') %}
+	<fieldset data-bind="page:{id:'syswlan', with:syswlan}">
+		<legend data-l10n-id="network_syswlan"></legend>
+		<p>
+			<div class="form-group">
+				<div class="form-check">
+					<input data-bind="checked:enabled" type="checkbox" class="form-check-input">
+					<label class="form-check-label" data-l10n-id="network_enabled"></label>
+				</div>
+			</div>
+		</p>
+		<div data-bind="visible:enabled">
+			<p>
+				<div class="form-group">
+					<label data-l10n-id="network_ssid"></label>
+					<input data-bind="value:conf.ssid" type="text" class="form-control">
+				</div>
+				<div class="form-group">
+					<label data-l10n-id="network_password"></label>
+					<input data-bind="value:conf.wpa_passphrase" type="text" class="form-control">
+				</div>
+				<div class="form-group">
+					<label data-l10n-id="network_channel"></label>
+					<select data-bind="value:conf.channel, options:[1,2,3,4,5,6,7,8,9,10,11,12,13]" class="form-control"></select>
+				</div>
+				<div class="form-group">
+					<label data-l10n-id="network_country"></label>
+					<input data-bind="value:conf.country_code" type="text" class="form-control">
+				</div>
+			</p>
+		</div>
+		<p>
+			<button data-bind="click:save" class="btn btn-primary" data-l10n-id="network_save"></button>
+		</p>
+	</fieldset>
+	{% end %}
+
+	{% if network.hasInterface('lan') %}
+	<fieldset data-bind="page:{id:'lan', with:lan}">
+		<legend data-l10n-id="network_lan"></legend>
+		<script type="text/html" id="network_lan">
+			<p>
+				<div class="form-group">
+					<radiogroup>
+						<div class="form-check form-check-inline">
+							<input data-bind="checked:conf.Network.DHCP" type="radio" value="yes" class="form-check-input">
+							<label class="form-check-label" data-l10n-id="network_dhcp"></label>
+						</div>
+						<div class="form-check form-check-inline">
+							<input data-bind="checked:conf.Network.DHCP" type="radio" value="no" class="form-check-input">
+							<label class="form-check-label" data-l10n-id="network_maunal"></label>
+						</div>
+					</radiogroup>
+				</div>
+				<div data-bind="visible:conf.Network.DHCP()!='no'">
+					<div class="form-group">
+						<label data-l10n-id="network_hostname"></label>
+						<input data-bind="value:conf.DHCP.Hostname" type="text" class="form-control">
+					</div>
+				</div>
+				<div data-bind="visible:conf.Network.DHCP()=='no'">
+					<div class="form-group">
+						<label data-l10n-id="network_address"></label>
+						<input data-bind="value:conf.Network.Address" type="text" class="form-control">
+					</div>
+					<div class="form-group">
+						<label data-l10n-id="network_gateway"></label>
+						<input data-bind="value:conf.Network.Gateway" type="text" class="form-control">
+					</div>
+					<div class="form-group">
+						<label data-l10n-id="network_dns"></label>
+						<input data-bind="value:conf.Network.DNS" type="text" class="form-control" placeholder="9.9.9.9">
+					</div>
+				</div>
+			</p>
+		</script>
+		<div data-bind="template:{name:'network_lan'}"></div>
+		<p>
+			<button data-bind="click:save" class="btn btn-primary" data-l10n-id="network_save"></button>
+		</p>
+	</fieldset>
+	{% end %}
+
+	{% if network.hasInterface('wlan') %}
+	<fieldset data-bind="page:{id:'wlan', with:wlan}">
+		<legend data-l10n-id="network_wlan"></legend>
+		<p>
+			<div class="form-group">
+				<div class="form-check">
+					<input data-bind="checked:enabled" type="checkbox" class="form-check-input">
+					<label class="form-check-label" data-l10n-id="network_enabled"></label>
+				</div>
+			</div>
+		</p>
+		<div data-bind="visible:enabled">
+			<p>
+				<div class="form-group">
+					<label data-l10n-id="network_ssid"></label>
+					<input data-bind="value:conf.ssid" type="text" class="form-control">
+				</div>
+				<div class="form-group">
+					<label data-l10n-id="network_password"></label>
+					<input data-bind="value:conf.psk" type="text" class="form-control">
+				</div>
+			</p>
+			<div data-bind="template:{name:'network_lan',data:lan}"></div>
+		</div>
+		<p>
+			<button data-bind="click:save" class="btn btn-primary" data-l10n-id="network_save"></button>
+		</p>
+	</fieldset>
+	{% end %}
+
+	{% module page("network/smtp.html") %}
+
+</div>
+</div>
+{% end %}
+
+
+{% block script %}
+class syswlan {
+	constructor() {
+		this.enabled = ko.observable(false);
+		this.conf = ko.mapping.fromJS({
+			ssid:				'',
+			wpa_passphrase:		'',
+			channel:			11,
+			country_code:		'DE',
+		});
+	}
+	
+	load() {
+		$.getJSON(ajaxUrl('network/syswlan'), (data)=>{
+			this.enabled(!$.isEmptyObject(data));
+			if (this.enabled())
+				ko.mapping.fromJS(data, this.conf);
+		});
+	}
+	
+	save() {
+		$.post(ajaxUrl('network/syswlan'), this.enabled() ? ko.mapping.toJSON(this.conf) : '');
+	}
+}
+
+class lan {
+	constructor(handler='lan') {
+		this.conf = ko.mapping.fromJS({
+			Network: {
+				DHCP:		'yes',
+				Address:	'192.168.178.56/24',
+				Gateway:	'192.168.178.1',
+				DNS:		'9.9.9.9',
+			},
+			DHCP: {
+				Hostname:	'robot',
+			}
+		});
+		this.handler = 'network/'+handler;
+	}
+	
+	load() {
+		$.getJSON(ajaxUrl(this.handler), (data)=>{
+			ko.mapping.fromJS(data, this.conf);
+		});
+	}
+	
+	save() {
+		let conf = ko.mapping.toJS(this.conf);
+		if (conf.Network.DHCP == 'no') {
+			delete conf.DHCP;
+		} else {
+			delete conf.Network.Address;
+			delete conf.Network.Gateway;
+			delete conf.Network.DNS;
+		}
+		$.post(ajaxUrl(this.handler), JSON.stringify(conf));
+	}
+}
+
+class wlan {
+	constructor() {
+		this.enabled = ko.observable(false);
+		this.lan = new lan('wlan/lan');
+		this.conf = ko.mapping.fromJS({
+			ssid:		'',
+			psk:		'',
+		});
+	}
+	
+	load() {
+		$.getJSON(ajaxUrl('network/wlan'), (data)=>{
+			this.enabled(!$.isEmptyObject(data));
+			if (this.enabled()) {
+				ko.mapping.fromJS(data, this.conf);
+				this.lan.load();
+			}
+		});
+	}
+	
+	save() {
+		$.post(ajaxUrl('network/wlan'), this.enabled() ? ko.mapping.toJSON(this.conf) : '');
+		if (this.enabled()) {
+			this.lan.save();
+		}
+	}
+}
+{% end %}
+
+
+{% block model %}
+class {
+	constructor() {
+		this.syswlan	= new syswlan();
+		this.lan		= new lan();
+		this.wlan		= new wlan();
+	}
+	
+	start() {
+		this.syswlan.load();
+		this.lan.load();
+		this.wlan.load();
+	}
+}
+{% end %}
+
+
+{% block route %}
+	return 'status';
+{% end %}

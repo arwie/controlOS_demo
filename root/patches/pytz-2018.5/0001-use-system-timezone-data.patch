@@ -1,0 +1,40 @@
+From 09acc56fe52e53042c8d2dcb458b017de55a626d Mon Sep 17 00:00:00 2001
+From: Artur Wiebe <artur@4wiebe.de>
+Date: Tue, 11 Sep 2018 10:07:27 +0200
+Subject: [PATCH] use system timezone data
+
+---
+ pytz/__init__.py | 2 +-
+ pytz/tzfile.py   | 3 ++-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/pytz/__init__.py b/pytz/__init__.py
+index 120fab4..006db4d 100644
+--- a/pytz/__init__.py
++++ b/pytz/__init__.py
+@@ -91,7 +91,7 @@ def open_resource(name):
+     if zoneinfo_dir is not None:
+         filename = os.path.join(zoneinfo_dir, *name_parts)
+     else:
+-        filename = os.path.join(os.path.dirname(__file__),
++        filename = os.path.join('/usr','share',
+                                 'zoneinfo', *name_parts)
+         if not os.path.exists(filename):
+             # http://bugs.launchpad.net/bugs/383171 - we avoid using this
+diff --git a/pytz/tzfile.py b/pytz/tzfile.py
+index 25117f3..e06ce77 100644
+--- a/pytz/tzfile.py
++++ b/pytz/tzfile.py
+@@ -126,7 +126,8 @@ def build_tzinfo(zone, fp):
+ if __name__ == '__main__':
+     import os.path
+     from pprint import pprint
+-    base = os.path.join(os.path.dirname(__file__), 'zoneinfo')
++    # use system timezone data
++    base = '/usr/share/zoneinfo'
+     tz = build_tzinfo('Australia/Melbourne',
+                       open(os.path.join(base, 'Australia', 'Melbourne'), 'rb'))
+     tz = build_tzinfo('US/Eastern',
+-- 
+2.18.0
+

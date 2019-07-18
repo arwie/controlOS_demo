@@ -1,0 +1,8 @@
+.git-af
+/src
+/**/configs/**/*.old
+/boot/platform-*/
+/root/platform-*/
+/initramfs/platform-*/
+/mccom/platform-*/
+__pycache__

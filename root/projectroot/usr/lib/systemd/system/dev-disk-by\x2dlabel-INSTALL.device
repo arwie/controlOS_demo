@@ -1,0 +1,2 @@
+[Unit]
+Wants=studio.socket

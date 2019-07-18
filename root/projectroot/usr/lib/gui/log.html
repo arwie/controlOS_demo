@@ -1,0 +1,235 @@
+{% comment 
+# Copyright (c) 2017 Artur Wiebe <artur@4wiebe.de>
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+# associated documentation files (the "Software"), to deal in the Software without restriction,
+# including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so,
+# subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+# INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+# WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+%}
+
+{% extends "page.html" %}
+
+
+{% block html %}
+<div class="row">
+	
+	<div class="col-lg-2">
+		<p>
+			<div class="card">
+				<div data-bind="with: filter" class="card-body">
+					
+					<div class="form-group">
+						<label class="form-control-label" data-l10n-id="log-priority"></label>
+						<select data-bind="options: priorities, value: priority, optionsText: priorityName" class="form-control"></select>
+					</div>
+					
+					<div class="form-group">
+						<label class="form-control-label" data-l10n-id="log-since"></label>
+						<select data-bind="options: sinceValues, value: since, optionsCaption: ''" class="form-control"></select>
+					</div>
+					
+					<div class="form-group">
+						<label class="form-control-label" data-l10n-id="log-host"></label>
+						<select data-bind="options: hosts, value: host, optionsCaption: ''" class="form-control"></select>
+					</div>
+					
+					<div class="form-group">
+						<label class="form-control-label" data-l10n-id="log-identifier"></label>
+						<select data-bind="options: identifiers, value: identifier, optionsCaption: ''" class="form-control"></select>
+					</div>
+					
+					<div class="form-group">
+						<label class="form-control-label" data-l10n-id="log-cmdline"></label>
+						<input data-bind="value: cmdline" type="text" class="form-control">
+					</div>
+					
+				</div>
+			</div>
+		</p>
+		<p>
+			<button data-bind="visible:connection(),  click:disconnect" class="btn btn-default btn-block" data-l10n-id="log-disconnect"></button>
+			<button data-bind="visible:!connection(), click:query"      class="btn btn-primary btn-block" data-l10n-id="log-reconnect"></button>
+		</p>
+	</div>
+	
+	<div class="col-lg">
+		<p>
+			<div data-bind="visible: !connection()"                      class="alert alert-warning" data-l10n-id="log-disconnected"></div>
+			<div data-bind="visible: connection() && !messages().length" class="alert alert-info"    data-l10n-id="log-empty"></div>
+		</p>
+		
+		<table class="table table-sm table-hover">
+			<tbody data-bind="foreach:messages">
+				
+				<tr data-bind="click: toggleDetails, css: {'bg-danger': priority <= 2, 'table-danger': priority == 3, 'table-warning': priority == 4, 'table-info': priority == 5}">
+					<td data-bind="text: timestamp"></td>
+					<td data-bind="text: priorityName(priority)"></td>
+					<td data-bind="text: hostname"></td>
+					<td data-bind="text: identifier"></td>
+					
+					<td width="70%">
+						<strong data-bind="text: message" style="white-space:pre-wrap"></strong>
+						<!-- ko if: details -->
+							<p></p>
+							<table data-bind="click:function(){}, clickBubble:false" class="table table-sm">
+								<tbody data-bind="foreach:keys()">
+									<tr>
+										<td data-bind="text:$data"></td>
+										<td data-bind="text:$parent.value($data)" style="white-space:pre-wrap"></td>
+									</tr>
+								</tbody>
+							</table>
+						<!-- /ko -->
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+</div>
+{% end %}
+
+
+{% block script %}
+function priorityName(prio) {
+	switch (prio) {
+		case 0: return "Emergency";
+		case 1: return "Alert";
+		case 2: return "Critical";
+		case 3: return "Error";
+		case 4: return "Warning";
+		case 5: return "Notice";
+		case 6: return "Info";
+		case 7: return "Debug";
+	}	
+}
+
+
+function Filter(onChange) {
+	let self = this;
+	
+	self.priorities		= [0, 1, 2, 3, 4, 5, 6, 7]
+	self.priority		= ko.observable(5);
+	self.priorityName	= priorityName;
+	
+	self.sinceValues	= ko.observableArray(['60minutes', '3hours', '9hours', '24hours', '3days', '2weeks', '1month', '1year']);
+	self.since			= ko.observable();
+	
+	self.hosts			= ko.observableArray();
+	self.host			= ko.observable();
+	
+	self.identifiers	= ko.observableArray();
+	self.identifier		= ko.observable();
+	
+	self.cmdline		= ko.observable('');
+
+	self.priority.subscribe(onChange);
+	self.host.subscribe(onChange);
+	self.identifier.subscribe(onChange);
+	self.since.subscribe(onChange);
+	self.cmdline.subscribe(onChange);
+	
+	self.args			= function(args = '') {
+		args += '--priority='+self.priority()+' ';
+		if (self.since())
+			args += '--since=-'+self.since()+' ';
+		if (self.host())
+			args += '_HOSTNAME='+self.host()+' ';
+		if (self.identifier())
+			args += '--identifier='+self.identifier()+' ';
+		return args + self.cmdline();
+	}
+}
+
+	
+function Message(msg) {
+	let self = this;
+	
+	self.msg			= msg;
+	
+	self.timestamp		= new Date(parseInt(msg['_SOURCE_REALTIME_TIMESTAMP'])/1000).toLocaleString(navigator.language, {hour12:false});
+	self.identifier		= msg['SYSLOG_IDENTIFIER'];
+	self.hostname		= msg['_HOSTNAME'];
+	self.message		= msg['MESSAGE'];
+
+	self.priority		= parseInt(msg['PRIORITY']);
+	self.priorityName	= priorityName;
+	
+	self.details		= ko.observable(false);
+	self.toggleDetails	= function() { self.details(!self.details()); }
+	
+	self.keys			= function() { return Object.keys(self.msg); }
+	self.value			= function(key) { 
+		try {
+			return JSON.stringify(JSON.parse(self.msg[key]), null, 4);
+		} catch(e) {}
+		return self.msg[key]; 
+	}
+}
+{% end %}
+
+
+{% block model %}
+function() {
+	let self = this;
+	
+	self.query = function()	{
+		self.stop();
+		
+		self.connection(new WebSocket(wsUrl(null, null, 'log', {args: self.filter.args()})));
+
+		self.connection().onmessage = function(e) {
+			self.messages.unshift(new Message(JSON.parse(e.data)));
+			
+			if (self.messages().length > 300)
+				self.messages.pop();
+		}
+		self.connection().onclose = self.connection().onerror = function() {
+			if (self.connection() == this) 
+				self.connection(null);
+		}
+	}
+	
+	self.start = function()	{
+		self.query();
+		
+		if (!self.filter.hosts().length) {
+			$.getJSON(ajaxUrl('log/_HOSTNAME'), function(data) { 
+				self.filter.hosts(data);
+			});
+		}
+		if (!self.filter.identifiers().length) {
+			$.getJSON(ajaxUrl('log/SYSLOG_IDENTIFIER'), function(data) { 
+				self.filter.identifiers(data);
+			});
+		}
+	}
+	
+	self.disconnect = function() {
+		try {
+			self.connection().close();
+		} catch(e) {}
+	}
+	
+	self.stop = function() {
+		self.disconnect();
+		self.connection(null);
+		self.messages([]);
+	}
+	
+	
+	self.connection		= ko.observable();
+	self.filter			= new Filter(self.query);
+	self.messages		= ko.observableArray();
+	self.messages.extend({ rateLimit: 500 });
+}
+{% end %}

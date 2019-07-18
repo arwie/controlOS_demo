@@ -1,0 +1,11 @@
+## SECTION=initmethod
+
+config MACHINE_ID
+	tristate
+	prompt "create /etc/machine-id"
+#	select RC_ONCE			if RUNTIME
+#	select UTIL_LINUX_NG		if !INITMETHOD_SYSTEMD
+#	select UTIL_LINUX_NG_UUIDGEN	if !INITMETHOD_SYSTEMD
+	help
+	  Enable this to make sure there is always a unique /etc/machine-id
+	  available in the system.

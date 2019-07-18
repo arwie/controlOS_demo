@@ -1,0 +1,5 @@
+[Unit]
+Wants=studio.socket
+
+[Install]
+WantedBy=multi-user.target

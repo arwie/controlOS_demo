@@ -1,0 +1,103 @@
+{% comment 
+# Copyright (c) 2017 Artur Wiebe <artur@4wiebe.de>
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+# associated documentation files (the "Software"), to deal in the Software without restriction,
+# including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so,
+# subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+# INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+# WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+%}
+
+{% extends "page.html" %}
+
+
+{% block html %}
+<p>
+	<div class="card">
+		<div class="card-header" data-l10n-id="update-version"></div>
+		<div class="card-body">
+			<dl data-bind="with:version">
+				<dt data-l10n-id="update-version-name"></dt>
+				<dd data-bind="text:name"></dd>
+				<dt data-l10n-id="update-version-id"></dt>
+				<dd data-bind="text:id"></dd>
+			</dl>
+		</div>
+	</div>
+</p>
+
+<ul data-bind="foreach:$page.children" class="nav nav-tabs nav-justified mb-3">
+	<li class="nav-item">
+		<a data-bind="page-href:$data, attr:{'data-l10n-id':'update-'+getId()}, css:{active:isVisible}" class="nav-link"></a>
+	</li>
+</ul>
+
+<div data-bind="page:{id:'file', role:'start'}">
+	<p>
+		<uploadButton params="upload:$model.upload, l10n:'update-file', css:'btn-primary'"></uploadButton>
+	</p>
+</div>
+
+<!-- ko if:revertDate -->
+<div data-bind="page:{id:'revert'}">
+	<p>
+		<dl>
+			<dt data-l10n-id="update-revert-date"></dt>
+			<dd data-bind="text:revertDate"></dd>
+		</dl>
+	</p>
+	<p>
+		<button data-bind="click:revert" class="btn btn-danger" data-l10n-id="update-revert"></button>
+	</p>
+</div>
+<!-- /ko -->
+{% end %}
+
+
+{% block model %}
+class {
+	constructor() {
+		this.version    = ko.observable();
+		this.revertDate = ko.observable();
+	}
+	
+	upload(file) {
+		let formData = new FormData();
+		formData.append('update', file);
+		$.ajax({
+			url: ajaxUrl('update'),
+			type: "put",
+			data: formData,
+			processData: false,
+			contentType: false,
+		});
+	}
+	
+	revert() {
+		$.post(ajaxUrl('update/revert'));
+	}
+	
+	start(started) {
+		$.getJSON(ajaxUrl('update'), (data)=>{
+			model.version(data);
+		}).always(started);
+		$.get(ajaxUrl('update/revert'), (data)=>{
+			if (!data) return;
+			model.revertDate(new Date(parseInt(data)*1000).toLocaleString(navigator.language, {hour12:false}));
+		});
+	}
+	
+	stop() {
+		model.version(null);
+		model.revertDate(null);
+	}
+}
+{% end %}

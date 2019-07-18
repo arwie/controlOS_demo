@@ -1,0 +1,31 @@
+From d20f79d5e0d04a243f8bda8ef49e59f8d3afaf9c Mon Sep 17 00:00:00 2001
+From: Artur Wiebe <artur@4wiebe.de>
+Date: Thu, 30 Aug 2018 10:46:22 +0200
+Subject: [PATCH] do not use libdirs from xslt-config
+
+---
+ setupinfo.py | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/setupinfo.py b/setupinfo.py
+index bdac1d0..87feac7 100644
+--- a/setupinfo.py
++++ b/setupinfo.py
+@@ -292,10 +292,10 @@ def library_dirs(static_library_dirs):
+         return static_library_dirs
+     # filter them from xslt-config --libs
+     result = []
+-    possible_library_dirs = flags('libs')
+-    for possible_library_dir in possible_library_dirs:
+-        if possible_library_dir.startswith('-L'):
+-            result.append(possible_library_dir[2:])
++#    possible_library_dirs = flags('libs')
++#    for possible_library_dir in possible_library_dirs:
++#        if possible_library_dir.startswith('-L'):
++#            result.append(possible_library_dir[2:])
+     return result
+ 
+ def include_dirs(static_include_dirs):
+-- 
+2.18.0
+

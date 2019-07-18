@@ -1,0 +1,97 @@
+{% comment 
+# Copyright (c) 2018 Artur Wiebe <artur@4wiebe.de>
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+# associated documentation files (the "Software"), to deal in the Software without restriction,
+# including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so,
+# subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+# INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+# WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+%}
+
+{% extends "../page.html" %}
+
+
+
+{% block html %}
+<ul data-bind="with:$page.children" class="nav nav-tabs nav-justified mb-3">
+	<li data-bind="with:$data[0]" class="nav-item">
+		<a data-bind="page-href:$data, click:()=>{$model.list();return true;}, css:{active:isVisible}" class="nav-link" data-l10n-id="mc_files"></a>
+	</li>
+	<li data-bind="with:$data[1]" class="nav-item">
+		<a data-bind="page-href:$data, click:()=>{$model.load();return true;}, css:{active:isVisible}, visible:$model.file, text:$model.file" class="nav-link"></a>
+	</li>
+</ul>
+
+<div data-bind="page:{id:'files', role:'start'}">
+	<div data-bind="foreach:files" class="row">
+		<div class="col">
+			<ul data-bind="foreach:$data" class="nav nav-pills flex-column">
+				<li class="nav-item">
+					<a data-bind="text:$data, click:$model.select, clickBubble:false" class="nav-link" href></a>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div data-bind="page:{id:'code'}">
+	<div id="mc-basic-editor"></div>
+</div>
+{% end %}
+
+
+{% block model %}
+class {
+	constructor() {
+		this.files = ko.observableArray();
+		this.file  = ko.observable();
+	}
+	
+	list() {
+		return $.getJSON(ajaxUrl('mc.basic')).done((data)=>{
+			model.files(data);
+		});
+	}
+	
+	load() {
+		if (!model.editor) model.editor = ace.edit("mc-basic-editor", {
+			readOnly:		true,
+			minLines:		24,
+			maxLines:		40,
+			fontSize:		16,
+		});
+		return $.get(ajaxUrl('mc.basic', {file:model.file()})).done((data)=>{
+			model.editor.session.setValue(data);
+			model.editor.gotoLine(1);
+		});
+	}
+	
+	select(file) {
+		model.file(file);
+		model.load().done(()=>{
+			pager.navigate(page.path()+'/code');
+		});
+	}
+	
+	start(started) {
+		model.list().done(started);
+	}
+	
+	stop() {
+		model.file(null);
+		model.files.removeAll();
+		if (model.editor) {
+			model.editor.destroy();
+			model.editor = null;
+		}
+	}
+}
+{% end %}

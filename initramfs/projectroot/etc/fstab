@@ -1,0 +1,6 @@
+devtmpfs		/dev		devtmpfs
+
+LABEL=ROOT		/mnt		ext4		ro
+LABEL=DATA		/mnt/var	ext4		defaults
+
+overlay			/mnt/etc	overlay		lowerdir=/mnt/etc,upperdir=/mnt/var/etc,workdir=/mnt/var/.etc

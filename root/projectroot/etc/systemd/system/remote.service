@@ -1,0 +1,11 @@
+[Unit]
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/ssh -N -T  -R *:0:localhost:22  remote@office.4wiebe.de
+Restart=always
+RestartSec=30
+StartLimitInterval=0
+
+[Install]
+WantedBy=multi-user.target

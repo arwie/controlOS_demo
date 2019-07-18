@@ -1,0 +1,7 @@
+## SECTION=project_specific
+
+config SYSTEM
+	bool
+	prompt "system"
+	help
+	  FIXME

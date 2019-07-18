@@ -1,0 +1,198 @@
+' Copyright (c) 2016 Artur Wiebe <artur@4wiebe.de>
+'
+' Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+' associated documentation files (the "Software"), to deal in the Software without restriction,
+' including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
+' and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so,
+' subject to the following conditions:
+'
+' The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+'
+' THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+' INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+' IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+' WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+' OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+
+common shared prgPriorityRealtime	as const long		= 6
+common shared prgPriorityHigh		as const long		= 8
+common shared prgPriorityNormal		as const long		= 10
+common shared prgPriorityLow		as const long		= 12
+
+common shared errorApplication		as error	"error in application"		20810
+
+
+IMPORT_C SHELL(byval as string) as string
+
+
+
+public sub dropLong(byval dummy_ as long)
+end sub
+public sub dropDouble(byval dummy_ as double)
+end sub
+public sub dropString(byval dummy_ as string)
+end sub
+
+
+
+public function sh(byval cmd_ as string) as string
+	sh = SHELL(cmd_)
+end function
+
+public function python(byval cmd_ as string) as string
+	python = sh("python -c "+chr$(34)+cmd_+chr$(34))
+end function
+
+
+
+public function max(byval a as double, byval b as double) as double
+  if a > b then
+    max = a
+  else
+    max = b
+  end if
+end function
+
+public function maxl(byval a as long, byval b as long) as long
+  if a > b then
+    maxl = a
+  else
+    maxl = b
+  end if
+end function
+
+
+public function min(byval a as double, byval b as double) as double
+  if a < b then
+    min = a
+  else
+    min = b
+  end if
+end function
+
+public function minl(byval a as long, byval b as long) as long
+  if a < b then
+    minl = a
+  else
+    minl = b
+  end if
+end function
+
+
+public function bound(byval value_ as double, byval min_ as double, byval max_ as double) as double
+	select case value_
+	case is < min_
+		bound = min_
+	case is > max_
+		bound = max_
+	case else
+		bound = value_
+	end select
+end function
+
+public function boundl(byval value_ as long, byval min_ as long, byval max_ as long) as long
+	select case value_
+	case is < min_
+		boundl = min_
+	case is > max_
+		boundl = max_
+	case else
+		boundl = value_
+	end select
+end function
+
+
+public function inside(byval value_ as double, byval min_ as double, byval max_ as double) as long
+	inside = value_ >= min_ and value_ <= max_
+end function
+
+public function outside(byval value_ as double, byval min_ as double, byval max_ as double) as long
+	outside = value_ < min_ or value_ > max_
+end function
+
+
+public sub increment(value_ as long)
+	value_ = value_ + 1
+end sub
+
+public function incrementUse(value_ as long) as long
+	value_ = value_ + 1
+	incrementUse = value_
+end function
+
+public function useIncrement(value_ as long) as long
+	useIncrement = value_
+	value_ = value_ + 1
+end function
+
+public sub decrement(value_ as long)
+	value_ = value_ - 1
+end sub
+
+public function decrementUse(value_ as long) as long
+	value_ = value_ - 1
+	decrementUse = value_
+end function
+
+public function useDecrement(value_ as long) as long
+	useDecrement = value_
+	value_ = value_ - 1
+end function
+
+
+public sub newLine(string_ as string)
+	string_ = string_ + chr$(10)
+end sub
+
+
+
+public function sinDeg(byval angle_ as double) as double
+	sinDeg = sin(angle_*PI/180)
+end function
+
+public function cosDeg(byval angle_ as double) as double
+	cosDeg = cos(angle_*PI/180)
+end function
+
+public function atan2Deg(byval opposite_ as double, byval adjacent_ as double) as double
+	atan2Deg = atan2(opposite_, adjacent_) * 180/PI
+end function
+
+
+public function normDeg(byval angle_ as double) as double
+	normDeg = angle_ mod 360
+	if abs(normDeg) > 180 then
+		normDeg = normDeg - sgn(normDeg)*360
+	end if
+end function
+
+
+
+public function setBit(byval input_ as long, byval bit_ as long, byval value_ as long) as long
+	if value_ then
+		setBit = input_ bor (1 shl bit_)
+	else
+		setBit = input_ band (bnot (1 shl bit_))
+	end if
+end function
+
+public function getBit(byval input_ as long, byval bit_ as long) as long
+	getBit = (input_ band (1 shl bit_)) > 0
+end function
+
+
+function word2long(byval value_ as long) as long
+	if value_ band 0x8000 then
+		word2long = value_ bor 0xFFFF0000
+	else
+		word2long = value_
+	end if
+end function
+
+
+
+public function blinkHerz(byval herz_ as double) as long
+	dim wavelength_ as long = 1000 / herz_
+	blinkHerz = (system.clock mod wavelength_) < (wavelength_ / 2)
+end function

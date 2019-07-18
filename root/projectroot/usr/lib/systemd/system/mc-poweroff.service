@@ -1,0 +1,7 @@
+[Unit]
+DefaultDependencies=no
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/ssh mc poweroff

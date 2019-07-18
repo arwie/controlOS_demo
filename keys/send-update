@@ -1,0 +1,13 @@
+#!/bin/sh
+
+HOST=${1-sys}
+PORT=${2-22}
+
+SCRIPT=$0
+BASEDIR=$(dirname $SCRIPT)
+
+cd $BASEDIR
+
+
+scp -i ssh/id_rsa -P $PORT ../images/update root@$HOST:/mnt/init/..update \
+	&& ssh -i ssh/id_rsa -p $PORT root@$HOST "mv /mnt/init/..update /mnt/init/update && reboot"
