@@ -1,0 +1,5 @@
+[Match]
+MACAddress=00:24:32:16:aa:fa
+
+[Link]
+Name=debug
