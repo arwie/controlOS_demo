@@ -130,8 +130,9 @@ function _defaultDriveUpdate($ax) { lib('driveUpdate')['hash'][] = 4;
 
 
 function _defaultDriveSetup($ax) {
-	ll(lib().'_deviceWrite(0x6060, 0, 8, 8)');		#Modes of Operation: 8 = cyclic synchronous position mode
+	ll('driveLogResetFault(false)');
 	ll('driveLogResetFault(true)');
+	ll(lib().'_deviceWrite(0x6060, 0, 8, 8)');		#Modes of Operation: 8 = cyclic synchronous position mode
 
 	ll('motionbusvelocityscale		= 0');
 	ll('motionbusvelocitybase		= 1000');
@@ -213,8 +214,9 @@ end function
 
 public sub <?=lib()?>_driveLogInfo
 	<?logInfo([lib().' drive information'], function() use ($ax) {
-		if ($ax['device']=='stepim' && $ax['bus']=='etc') {
-			ll('com_putString("/version", '.lib().'_deviceReadString(0x2E00, 0))');
+		if ($ax['device']=='stepim') {
+			ll('com_putString("/version/software", '.lib().'_deviceReadString(0x'.($ax['bus']=='etc'?'2E00':'100A').', 0))');
+			ll('com_putString("/version/hardware", '.lib().'_deviceReadString(0x'.($ax['bus']=='etc'?'2E01':'1009').', 0))');
 		}
 		ll('driveLogPutHealth()');
 	})?>

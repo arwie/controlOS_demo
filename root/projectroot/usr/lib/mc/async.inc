@@ -27,11 +27,12 @@ function async($prio='prgPriorityNormal')
 		com_openNotify('asyncNotify');
 	});
 	
-	lib('stopTrigger', function(){
-		ll('com_clear()');
-		ll('com_send(asyncNotify)');
-		ll('com_send(asyncBuffer)');
-	});
+	lib('stopTrigger', [
+		'com_store()',
+		'com_send(asyncNotify)',
+		'com_send(asyncBuffer)',
+		'com_restore()',
+	]);
 	
 	lib('stop', function(){
 		ll('com_reset(asyncBuffer)');

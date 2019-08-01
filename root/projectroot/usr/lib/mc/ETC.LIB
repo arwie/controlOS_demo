@@ -16,7 +16,7 @@
 ?>
 
 
-<?$etc = device_busDevices('etc')?>
+<?$etc = device_busDevices('etc'); if (empty($etc)) return;?>
 
 
 common shared etc_busnumber as const long = 0
@@ -83,6 +83,21 @@ end sub
 	<?catchLogThrow('putEthercatFatal()')?>
 end sub
 
+
+<?lib_prgEvent(1)?>
+	try
+		<?foreach($etc as $dev)
+			if($dev['elementid'])
+				lll('dropLong(EC_PDO_READ('.$dev['address'].', 0x6041, 0))')?>
+		'pass
+	catch EC_DOMAIN_WC_INCOMPLETE.num
+		<?logWarning(false, function(){?>
+			putEthercatDebug()
+		<?})?>
+	catch else
+		'pass
+	end try
+end sub
 
 <?lib_prgPoll('healthQueryIntervalMs', 16)?>
 	<?logInfo(['ethercat health'], function(){?>

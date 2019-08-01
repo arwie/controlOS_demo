@@ -1,6 +1,6 @@
 
 ifeq ($(PLATFORM),i586)
-	PLATFORM_ARGS := -static-libgcc -static-libstdc++ $(TOOLCHAIN)/sysroot-i586-unknown-linux-gnu/usr/lib/libc.a
+	PLATFORM_ARGS := -static-libgcc $(TOOLCHAIN)/i586-unknown-linux-gnu/lib/libstdc++.a $(TOOLCHAIN)/sysroot-i586-unknown-linux-gnu/usr/lib/libc.a
 endif
 ifeq ($(PLATFORM),iMX6)
 	PLATFORM_ARGS := -static-libgcc -static-libstdc++

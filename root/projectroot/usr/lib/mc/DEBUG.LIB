@@ -41,7 +41,9 @@ end sub
 	end select
 
 	if debugWebsocketConnected then
-		<?com_send('debug_websocket', 'pollData()')?>
+		com_clear()
+		pollData()
+		com_send(debug_websocket)
 	end if
 end sub
 

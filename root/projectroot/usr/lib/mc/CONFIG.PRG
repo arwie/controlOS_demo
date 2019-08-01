@@ -32,15 +32,6 @@ program
 	system.doubleformat			= 1
 
 
-<?if (get('mc')['type'] == 'sim') {?>
-	load SIMMC.LIB
-<?} else {?>
-	load ETHERCAT.LIB
-	load CANDS402.LIB
-	load EC_CDHD.LIB
-	load ISMAPPER.LIB
-<?}?>
-
 <?if (get('config')['modbus']) {?>
 	oload MODBUS.O
 	load  MODBUS.LIB

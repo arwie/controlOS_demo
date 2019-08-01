@@ -16,11 +16,14 @@
 ?>
 
 
-<?$can = device_busDevices('can')?>
+<?$can = device_busDevices('can'); if (empty($can)) return;?>
 
 
 common shared can_busnumber as const long = 1
 common shared can_cycletime as const long = 8000	'{4000,2000,1000}[µs]
+
+
+import_c USER_CAN_CNTRL_WORD_SET_RAW(byval as long, byval as long) as long				'(int dadd, int iCntrlWord)
 
 
 
@@ -55,7 +58,9 @@ end sub
 
 public sub can_write(byval slave_ as long, byval index_ as long, byval subindex_ as long, byval size_ as long, byval value_ as long)
 	dim pdo_ as pdo_type
-	select case index_
+	select case index_ * can_active
+	case 0x6040
+		dropLong(USER_CAN_CNTRL_WORD_SET_RAW(slave_, value_))
 	case 0x60FE
 		pdo_->data[1]   = value_
 		pdo_->length[1] = 4
@@ -67,7 +72,7 @@ end sub
 
 public function can_read(byval slave_ as long, byval index_ as long, byval subindex_ as long) as long
 	dim refCnt_ as long
-	select case index_
+	select case index_ * can_active
 	case 0x6041
 		can_read = CAN_PDO_Read_atomic(slave_, 1, 0, 2, refCnt_)
 	case 0x60FD
@@ -110,4 +115,7 @@ end function
 
 
 public function can_readString(byval slave_ as long, byval index_ as long, byval subindex_ as long) as string
+	try
+		can_readString = CAN_SDO_READ_STRING(slave_, index_, subindex_)
+	<?$xdoCatchLogThrow()?>
 end function

@@ -16,7 +16,11 @@
 ?>
 
 
-<?$axes = device_axes()?>
+<?
+	$etc = !empty(device_busDevices('etc'));
+	$can = !empty(device_busDevices('can'));
+	$axes = device_axes();
+?>
 
 
 program continue
@@ -51,8 +55,16 @@ program continue
 
 	loadGlobal INIT.LIB
 
+<?if ($etc) {?>
+	loadGlobal ETHERCAT.LIB
+	loadGlobal EC_CDHD.LIB
 	loadGlobal ETC.LIB
+<?}?>
+<?if ($can) {?>
+	loadGlobal CANDS402.LIB
+	loadGlobal ISMAPPER.LIB
 	loadGlobal CAN.LIB
+<?}?>
 
 <?
 	foreach (array_reverse(get('libs')['app']) as $l=>$lib) {

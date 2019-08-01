@@ -55,7 +55,6 @@ public:
 	void send(const Message& message) override
 	{
 		thread_local pid_t  tid = syscall(SYS_gettid);	// cache tid (reduce syscalls)
-		thread_local string prg = message.value("prg", string());
 
 		if (message.value("priority", LogDebug::priority) > priority)
 			return;
@@ -65,12 +64,7 @@ public:
 
 		messagePtr->merge(base);
 
-		//messagePtr->put("timestamp", chrono::steady_clock::now().time_since_epoch());
-
 		(*messagePtr)["tid"] = tid;
-
-		if (!prg.empty())
-			(*messagePtr)["prg"] = prg;
 
 		pushMessage(move(messagePtr));
 	}

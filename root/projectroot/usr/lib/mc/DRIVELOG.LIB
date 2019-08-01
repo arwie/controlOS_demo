@@ -16,20 +16,16 @@
 ?>
 
 
-<?$axes = array_filter(device_axes(), function($ax) { return !$ax['simulated']; })?>
+<?$axes = array_filter(device_axes(), function($ax) { return !$ax['simulated']; }); if (empty($axes)) return;?>
+
+<?com_fifo()?>
 
 
 dim shared healthQueryIntervalMs	as const long	= 32*60*1000 / 64
 dim shared errorHistoryDelayMs		as const long	= 300
 
-dim shared this_logHistoryBuffer	as long
 dim shared this_logHealthId			as long = -32
 
-
-
-<?lib_init()?>
-	<?com_openFifo('this_logHistoryBuffer')?> 
-end sub
 
 
 <?lib_prgEvent(1)?>
@@ -38,7 +34,7 @@ end sub
 			com_clear()
 			com_putLong("/id", <?=$axis['elementid']?>)
 			com_putLong("/clock", system.clock+errorHistoryDelayMs)
-			com_send(this_logHistoryBuffer)
+			com_send(this_fifo)
 		end if
 	<?}?>
 end sub
@@ -50,7 +46,7 @@ end sub
 	<?}?>
 end sub
 
-<?com_prgReceive('this_logHistoryBuffer', 'healthQueryIntervalMs', 16)?>
+<?com_prgReceive('this_fifo', 'healthQueryIntervalMs', 16)?>
 	select case receive_
 	
 	case com_receiveMessage

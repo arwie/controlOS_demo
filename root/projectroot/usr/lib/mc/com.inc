@@ -21,7 +21,7 @@ function com_prgReceive($name, $timeout=250, $prio='prgPriorityNormal') {
 	ll('while '.lib().'_active');
 	lll('receive_ = com_receive('.$name.', '.$timeout.')');
 	lll('if '.lib().'_active then');
-	llll('call comPrgReceive(receive_)');
+	llll('comPrgReceive(receive_)');
 	lll('end if');
 	ll('end while');
 	l('end sub');
@@ -36,43 +36,42 @@ function com_websocket($port, $args=[], $name=false)
 		$name = 'this_websocket';
 		l('dim shared '.$name.' as long');
 	}
-	
 	lib('start', function() use ($port, $args, $name) {
 		com_openWebsocket($name, $port, $args);
 	});
-	
-	lib('stopTrigger', function() use ($name) {
-		lll('call com_clear');
-		lll('call com_sendSelf('.$name.')');
-	});
-	
-	lib('stop', function() use ($name) {
-		lll('call com_close('.$name.')');
-	});
+	lib('stopTrigger', ['com_store()', "com_sendSelf({$name})", 'com_restore()']);
+	lib('stop','com_close('.$name.')');
 }
 
-
-
-function com_send($name, $message) {
-	call(['com_clear()', $message, "com_send({$name})"]);
+function com_fifo($name=false)
+{
+	if (!$name) {
+		$name = 'this_fifo';
+		l('dim shared '.$name.' as long');
+	}
+	lib('start', function() use ($name) {
+		com_openFifo($name);
+	});
+	lib('stopTrigger', ['com_store()', "com_send({$name})", 'com_restore()']);
+	lib('stop', 'com_close('.$name.')');
 }
 
 
 
 function com_open($name, $type, $args=false) {
-	lll('call com_clear');
-	lll('call com_putString("/log/lib",  "'.lib().'")');
-	lll('call com_putString("/log/name", "'.$name.'")');
+	lll('com_clear()');
+	lll('com_putString("/log/lib",  "'.lib().'")');
+	lll('com_putString("/log/name", "'.$name.'")');
 	call($args);
 	lll($name.' = com_open(com_channel'.ucfirst($type).')');
 }
 
 function com_openWebsocket($name, $port, $args=[]) {
 	com_open($name, 'websocket', function() use ($port, $args) {
-		lll('call com_putLong("/port", '.$port.')');
+		lll('com_putLong("/port", '.$port.')');
 		foreach ($args as $arg=>$value) {
 			switch ($arg) {
-				case 'receive': lll('call com_putBool("/receive", '.$value.')'); break;
+				case 'receive': lll('com_putBool("/receive", '.$value.')'); break;
 			}
 		}
 	});
@@ -87,5 +86,5 @@ function com_openNotify($name) {
 }
 
 function com_openFile($name, $filename) {
-	com_open($name, 'file', 'call com_putString("/file", '.s($filename).')');
+	com_open($name, 'file', 'com_putString("/file", '.s($filename).')');
 }

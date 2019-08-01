@@ -42,19 +42,26 @@ function device(&$dev) { global $lib;
 function deviceLibEnd($dev) {
 	if (!$dev['bus']) return;
 	
+	$ifNotSimulated = function($body) use ($dev) {
+		if ($dev['simulated']) 
+			logThrow([lib().' device is simulated'], 'com_putString("/index", hex$(index_)+"h")');
+		else
+			ll($body);
+	};
+	
 	l('public function '.lib().'_deviceRead(byval index_ as long, byval subindex_ as long) as long');
-	ll(lib().'_deviceRead = '.$dev['bus'].'_read('.$dev['address'].', index_, subindex_)');
+		$ifNotSimulated(lib().'_deviceRead = '.$dev['bus'].'_read('.$dev['address'].', index_, subindex_)');
 	l('end function');
 	l('public sub '.lib().'_deviceWrite(byval index_ as long, byval subindex_ as long, byval size_ as long, byval value_ as long)');
-	ll($dev['bus'].'_write('.$dev['address'].', index_, subindex_, size_, value_)');
+		$ifNotSimulated($dev['bus'].'_write('.$dev['address'].', index_, subindex_, size_, value_)');
 	l('end sub');
 	
 	l('public function '.lib().'_deviceReadString(byval index_ as long, byval subindex_ as long) as string');
-	ll(lib().'_deviceReadString = '.$dev['bus'].'_readString('.$dev['address'].', index_, subindex_)');
+		$ifNotSimulated(lib().'_deviceReadString = '.$dev['bus'].'_readString('.$dev['address'].', index_, subindex_)');
 	l('end function');
 	
 	l('public function '.lib().'_deviceReadBit(byval index_ as long, byval subindex_ as long, byval bit_ as long) as long');
-	ll(lib().'_deviceReadBit = getBit('.lib().'_deviceRead(index_, subindex_), bit_)');
+		ll(lib().'_deviceReadBit = getBit('.lib().'_deviceRead(index_, subindex_), bit_)');
 	l('end function');
 	
 	if ($dev['writeBit']) {
@@ -74,7 +81,7 @@ function deviceLibEnd($dev) {
 		}
 		ll('end select');
 		ll('if (dio_ > 0) and (bit_ >= offset_) and (bit_-offset_+range_ <= size_) then');
-		lll('system.dout[dio_+bit_-offset_][range_] = value_');
+			$ifNotSimulated('system.dout[dio_+bit_-offset_][range_] = value_');
 		ll('else');
 			logThrow(['bitwise write to unassociated pdo'], [
 				'com_putString("/index", hex$(index_)+"h")',

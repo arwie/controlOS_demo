@@ -82,6 +82,8 @@ end sub
 
 <?lib_init()?>
 	<?com_open('comLogChannel', 'log', function() {?>
+		com_putString("/base/_HOSTNAME", "mc")
+		com_putString("/base/_BOOT_ID", left$(sh("tr -d '\n-' < /proc/sys/kernel/random/boot_id"), 32))
 		com_putLong("/priority", log_priority)
 	<?})?> 
 end sub

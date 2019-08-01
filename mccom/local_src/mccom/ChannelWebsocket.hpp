@@ -40,17 +40,13 @@ public:
 
 		wsServer.set_open_handler([this](websocketpp::connection_hdl hdl)
 		{
-			{ lock_guard<mutex> lock(connectionsMtx);
-				connections.insert(hdl);
-			}
+			connections.insert(hdl);
 			pushMessage(make_unique<Message>(Message::Event::connect));
 		});
 
 		wsServer.set_close_handler([this](websocketpp::connection_hdl hdl)
 		{
-			{ lock_guard<mutex> lock(connectionsMtx);
-				connections.erase(hdl);
-			}
+			connections.erase(hdl);
 			if (connections.empty())
 				pushMessage(make_unique<Message>(Message::Event::disconnect));
 		});
@@ -92,15 +88,17 @@ public:
 	void send(const Message& message) override
 	{
 		auto msgString = message.dump();
-
-		lock_guard<mutex> lock(connectionsMtx);
-		for(auto& con : connections) {
-			try {
-				wsServer.send(con, msgString, websocketpp::frame::opcode::text);
-			} catch (websocketpp::exception& e) {
-				logMsg(LogWarning(e.what()).func(__func__));
+		
+		wsServer.get_io_service().post([this, msgString]()
+		{
+			for(auto& con : connections) {
+				try {
+					wsServer.send(con, msgString, websocketpp::frame::opcode::text);
+				} catch (websocketpp::exception& e) {
+					logMsg(LogWarning(e.what()).func("ChannelWebsocket::send"));
+				}
 			}
-		}
+		});
 	}
 
 
@@ -169,7 +167,6 @@ private:
 	WsServer wsServer;
 	thread runner;
 	set<websocketpp::connection_hdl, std::owner_less<websocketpp::connection_hdl>> connections;
-	mutex connectionsMtx;
 };
 
 #endif /* CHANNELWEBSOCKET_HPP_ */
