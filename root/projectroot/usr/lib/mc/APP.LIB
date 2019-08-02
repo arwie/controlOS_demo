@@ -1,0 +1,12 @@
+
+
+
+
+<?lib_prgStart()?>
+	sleep 3000
+	delta1_homing()
+end sub
+
+
+<?lib_prgPoll(500)?>
+end sub

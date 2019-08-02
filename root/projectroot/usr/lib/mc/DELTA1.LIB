@@ -3,3 +3,12 @@
 	'model'		=> 21,
 	'type'		=> 'xyzr',
 ])?>
+
+
+
+public sub delta1_homing
+	while not (delta1a_homingLoop and delta1b_homingLoop and delta1c_homingLoop)
+		sleep 100
+	end while
+	
+end sub
