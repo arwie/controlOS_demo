@@ -55,6 +55,31 @@ function robot_setup() { global $lib;
 }
 
 
+function robot_setupSpeedTrans($vel, $accTimeMs=500, $jerkTimeMs=250) {
+?>
+	velocitymaxtrans		= <?=$vel?>'
+	accelerationmaxtrans	= <?=1000/$accTimeMs?>  * velocitymaxtrans
+	jerkmaxtrans			= <?=1000/$jerkTimeMs?> * accelerationmaxtrans
+	velocitytrans			= velocitymaxtrans
+	accelerationtrans		= accelerationmaxtrans
+	decelerationtrans		= accelerationmaxtrans
+	jerktrans				= jerkmaxtrans
+<?
+}
+
+function robot_setupSpeedRot($vel, $accTimeMs=500, $jerkTimeMs=250) {
+?>
+	velocitymaxrot			= <?=$vel?>'
+	accelerationmaxrot		= <?=1000/$accTimeMs?>  * velocitymaxrot
+	jerkmaxrot				= <?=1000/$jerkTimeMs?> * accelerationmaxrot
+	velocityrot				= velocitymaxrot
+	accelerationrot			= accelerationmaxrot
+	decelerationrot			= accelerationmaxrot
+	jerkrot					= jerkmaxrot
+<?
+}
+
+
 function robot_enableFunctions($axes) {
 ?>
 public sub <?=lib()?>_enable

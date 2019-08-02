@@ -1,3 +1,14 @@
 <?axis([
 	'simulated'		=> true,
 ])?>
+
+
+
+<?axis_setup()?>
+	absolute					= true
+	axistype					= 1
+	
+	<?axis_setupSpeed(100, 150, 50)?>
+	
+	positionerrormax			= 5
+end sub

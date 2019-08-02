@@ -10,5 +10,122 @@ public sub delta1_homing
 	while not (delta1a_homingLoop and delta1b_homingLoop and delta1c_homingLoop)
 		sleep 100
 	end while
-	
+	delta1a_enableAttach()
+	delta1b_enableAttach()
+	delta1c_enableAttach()
+	move delta1a delta1a.positionmin+1
+	move delta1b delta1b.positionmin+1
+	move delta1c delta1c.positionmin+1
+	delta1a_disableDetach()
+	delta1b_disableDetach()
+	delta1c_disableDetach()
+end sub
+
+
+
+<?robot_setup()?>
+	absolute					= true
+	positionerrordelay			= 5
+
+	positionerrormax			= 50
+	positionerrorsettle			= 5
+
+	couplingmatrix[1][1]		= 1
+	couplingmatrix[1][2]		= 0
+	couplingmatrix[1][3]		= 0
+	couplingmatrix[1][4]		= 0
+	couplingmatrix[2][1]		= 0
+	couplingmatrix[2][2]		= 1
+	couplingmatrix[2][3]		= 0
+	couplingmatrix[2][4]		= 0
+	couplingmatrix[3][1]		= 0
+	couplingmatrix[3][2]		= 0
+	couplingmatrix[3][3]		= 1
+	couplingmatrix[3][4]		= 0
+	couplingmatrix[4][1]		= 0
+	couplingmatrix[4][2]		= 0
+	couplingmatrix[4][3]		= 0
+	couplingmatrix[4][4]		= 1
+	coupled						= 1
+
+	axis[1][1]					= 0
+	axis[1][2]					= 0
+	axis[1][3]					= 1
+	axis[2][1]					= 0
+	axis[2][2]					= 0
+	axis[2][3]					= 1
+	axis[3][1]					= 0
+	axis[3][2]					= 0
+	axis[3][3]					= 1
+	axis[4][1]					= 0
+	axis[4][2]					= 0
+	axis[4][3]					= 1
+
+	link[1][1]					= 371.7963
+	link[1][2]					= 0
+	link[1][3]					= 0
+	link[2][1]					= 0
+	link[2][2]					= 0
+	link[2][3]					= 45
+	link[3][1]					= 0
+	link[3][2]					= 0
+	link[3][3]					= 400
+	link[4][1]					= 42.0022
+	link[4][2]					= 0
+	link[4][3]					= 0
+	configgroup
+
+	velocitycruise				= velocitymax
+	acceleration				= accelerationmax
+	deceleration				= decelerationmax
+	decelerationstop			= decelerationmax
+	jerk						= jerkmax
+
+	<?robot_setupSpeedTrans(200, 150, 50)?>
+	<?robot_setupSpeedRot(100, 150, 50)?>
+
+	blendingmethod				= 2 	'superpositon
+	orientationfollowing		= false
+	stoptype					= ONPATH
+	precomputationMode			= OFF
+
+	' following cartesian limits confilc wich coordinate system switching (rack / machine) -> disable them here
+	rmin						= 0
+	rmax						= 1000000
+	xmin						= -rmax
+	xmax						= rmax
+	ymin						= -rmax
+	ymax						= rmax
+	zmin						= -rmax
+	zmax						= rmax
+	base.xmin					= -rmax
+	base.xmax					= rmax
+	base.ymin					= -rmax
+	base.ymax					= rmax
+	base.zmin					= -rmax
+	base.zmax					= rmax
+	machinetable.xmin			= -rmax
+	machinetable.xmax			= rmax
+	machinetable.ymin			= -rmax
+	machinetable.ymax			= rmax
+	machinetable.zmin			= -rmax
+	machinetable.zmax			= rmax
+	workpiece.xmin				= -rmax
+	workpiece.xmax				= rmax
+	workpiece.ymin				= -rmax
+	workpiece.ymax				= rmax
+	workpiece.zmin				= -rmax
+	workpiece.zmax				= rmax
+	tool.xmin					= -rmax
+	tool.xmax					= rmax
+	tool.ymin					= -rmax
+	tool.ymax					= rmax
+	tool.zmin					= -rmax
+	tool.zmax					= rmax
+end sub
+
+
+
+<?lib_debug()?>
+	call com_putLocationXyzr("here",				here)
 end sub
