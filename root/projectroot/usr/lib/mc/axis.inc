@@ -78,6 +78,22 @@ function axis_setup() {
 }
 
 
+function axis_setupSpeed($vel, $accTimeMs=500, $jerkTimeMs=250) {
+?>
+	velocitymax			= <?=$vel?>'
+	accelerationmax		= <?=1000/$accTimeMs?>  * velocitymax
+	decelerationmax		= accelerationmax
+	jerkmax				= <?=1000/$jerkTimeMs?> * accelerationmax
+	velocitycruise		= velocitymax
+	acceleration		= accelerationmax
+	deceleration		= decelerationmax
+	jerk				= jerkmax
+	decelerationstop	= decelerationmax
+	velocityoverspeed	= 10 * velocitymax
+<?
+}
+
+
 
 function _axisFunctions($ax) {
 ?>
@@ -174,6 +190,13 @@ function _driveFunctions($ax) {
 public sub <?=lib()?>_driveSave
 	<?=lib()?>_deviceWrite(0x<?=($ax['device']=='stepim' && $ax['bus']=='etc')?'2E04':'1010'?>, 1, 32, 0x65766173)
 end sub
+
+<?if (!$ax['simulated'] && $ax['bus']=='can' && $ax['device']=='stepim') {?>
+public sub <?=lib()?>_driveSetupAddress(byval currentAddress_ as long)
+	can_write(currentAddress_, 0x2F1B, 0, 16, <?=get('device')[lib()]['address']?>)
+	can_write(currentAddress_, 0x1010, 1, 32, 0x65766173)
+end sub
+<?}?>
 <?
 }
 

@@ -1,0 +1,3 @@
+<?axis([
+	'simulated'		=> true,
+])?>

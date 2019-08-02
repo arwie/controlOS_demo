@@ -1,0 +1,5 @@
+<?robot([
+	'axes'		=> ['delta1a','delta1b','delta1c','delta1r'],
+	'model'		=> 21,
+	'type'		=> 'xyzr',
+])?>
