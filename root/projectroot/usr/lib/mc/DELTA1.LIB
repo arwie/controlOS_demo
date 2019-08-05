@@ -13,9 +13,9 @@ public sub delta1_homing
 	delta1a_enableAttach()
 	delta1b_enableAttach()
 	delta1c_enableAttach()
-	move delta1a delta1a.positionmin+1
-	move delta1b delta1b.positionmin+1
-	move delta1c delta1c.positionmin+1
+	move delta1a delta1a.positionmin+10
+	move delta1b delta1b.positionmin+10
+	move delta1c delta1c.positionmin+10
 	delta1a_disableDetach()
 	delta1b_disableDetach()
 	delta1c_disableDetach()
@@ -83,13 +83,14 @@ end sub
 
 	<?robot_setupSpeedTrans(200, 150, 50)?>
 	<?robot_setupSpeedRot(100, 150, 50)?>
+	
+	base						= #{0, 0, -540, 0}
 
 	blendingmethod				= 2 	'superpositon
 	orientationfollowing		= false
 	stoptype					= ONPATH
 	precomputationMode			= OFF
 
-	' following cartesian limits confilc wich coordinate system switching (rack / machine) -> disable them here
 	rmin						= 0
 	rmax						= 1000000
 	xmin						= -rmax

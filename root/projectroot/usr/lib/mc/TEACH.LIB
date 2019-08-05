@@ -1,0 +1,76 @@
+<?com_websocket(55001)?>
+
+
+
+<?com_prgReceive('this_websocket', 200)?>
+	select case receive_
+	case com_receiveDisconnect
+		delta1_disableDetach()
+	
+	case com_receiveMessage
+		if com_getLong("/cmd") and not isMoving then
+			delta1_enableAttach()
+			moveLimit(com_getLong("/dim"), com_getLong("/dir"))
+		else
+			stop stoptype=ABORT
+		end if
+	end select
+	
+	com_clear()
+	call com_putLocationXyzr("/pos",		setPoint)
+	call com_send(this_websocket)
+end sub
+
+
+<?lib_prgStop()?>
+	delta1_disableDetach()
+end sub
+
+
+<?lib_prgError()?>
+	if not prgRunning then
+		teach_prgStop()
+		teach_stopTrigger()
+	end if
+end sub
+
+
+
+sub moveLimit(byval dim_ as long, byval dir_ as long)
+	dim target_ as location of xyzr = setPoint
+	dim step_   as location of xyzr
+	dim steps_  as long
+	
+	if dir_ > 0 then
+		step_ = #{+200, +200, 120, +180}
+	else
+		step_ = #{-200, -200,   0, -179.999}
+	end if
+	
+	select case dim_
+	case 1
+		steps_ = abs(target_{1} - step_{1})
+		target_{1} = step_{1}
+		step_ = #{dir_, 0, 0, 0}
+	case 2
+		steps_ = abs(target_{2} - step_{2})
+		target_{2} = step_{2}
+		step_ = #{0, dir_, 0, 0}
+	case 3
+		steps_ = abs(target_{3} - step_{3})
+		target_{3} = step_{3}
+		step_ = #{0, 0, dir_, 0}
+	case 4
+		steps_ = abs(target_{4} - step_{4})
+		target_{4} = step_{4}
+		step_ = #{0, 0, 0, dir_}
+	end select
+	
+	while not isMoving and useDecrement(steps_)
+		try
+			moves target_ velocityrate=10
+		catch 3121
+			target_ = target_ - step_
+		end try
+	end while
+end sub

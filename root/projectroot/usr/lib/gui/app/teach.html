@@ -1,0 +1,86 @@
+{% extends "../page.html" %}
+
+
+{% block html %}
+	<dl data-bind="with:info.pos" class="row">
+		<dt class="col-sm-2"  data-l10n-id="X"></dt>
+		<dd class="col-sm-10" data-bind="text:x().toFixed(2)"></dd>
+		<dt class="col-sm-2"  data-l10n-id="Y"></dt>
+		<dd class="col-sm-10" data-bind="text:y().toFixed(2)"></dd>
+		<dt class="col-sm-2"  data-l10n-id="Z"></dt>
+		<dd class="col-sm-10" data-bind="text:z().toFixed(2)"></dd>
+		<dt class="col-sm-2"  data-l10n-id="R"></dt>
+		<dd class="col-sm-10" data-bind="text:r().toFixed(2)"></dd>
+	</dl>
+
+<hr>
+
+<div class="row my-5">
+	<div class="col">
+		<button data-bind="event:{pointerdown:()=>{$model.moveDim(3,-1)}, pointerup:$model.moveStop, pointerout:$model.moveStop}" touch-action="none" class="btn btn-block btn-lg btn-secondary"><i class="fa fa-minus"> Z</i></button>
+	</div>
+	<div class="col"></div>
+	<div class="col">
+		<button data-bind="event:{pointerdown:()=>{$model.moveDim(1,-1)}, pointerup:$model.moveStop, pointerout:$model.moveStop}" touch-action="none" class="btn btn-block btn-lg btn-secondary"><i class="fa fa-minus"> X</i></button>
+	</div>
+	<div class="col"></div>
+	<div class="col">
+		<button data-bind="event:{pointerdown:()=>{$model.moveDim(4,-1)}, pointerup:$model.moveStop, pointerout:$model.moveStop}" touch-action="none" class="btn btn-block btn-lg btn-secondary"><i class="fa fa-minus"> R</i></button>
+	</div>
+</div>
+<div class="row my-5">
+	<div class="col"></div>
+	<div class="col">
+		<button data-bind="event:{pointerdown:()=>{$model.moveDim(2,-1)}, pointerup:$model.moveStop, pointerout:$model.moveStop}" touch-action="none" class="btn btn-block btn-lg btn-secondary"><i class="fa fa-minus"> Y</i></button>
+	</div>
+	<div class="col"></div>
+	<div class="col">
+		<button data-bind="event:{pointerdown:()=>{$model.moveDim(2, 1)}, pointerup:$model.moveStop, pointerout:$model.moveStop}" touch-action="none" class="btn btn-block btn-lg btn-secondary"><i class="fa fa-plus" > Y</i></button>
+	</div>
+	<div class="col"></div>
+</div>
+<div class="row my-5">
+	<div class="col">
+		<button data-bind="event:{pointerdown:()=>{$model.moveDim(3, 1)}, pointerup:$model.moveStop, pointerout:$model.moveStop}" touch-action="none" class="btn btn-block btn-lg btn-secondary"><i class="fa fa-plus" > Z</i></button>
+	</div>
+	<div class="col"></div>
+	<div class="col">
+		<button data-bind="event:{pointerdown:()=>{$model.moveDim(1, 1)}, pointerup:$model.moveStop, pointerout:$model.moveStop}" touch-action="none" class="btn btn-block btn-lg btn-secondary"><i class="fa fa-plus" > X</i></button>
+	</div>
+	<div class="col"></div>
+	<div class="col">
+		<button data-bind="event:{pointerdown:()=>{$model.moveDim(4, 1)}, pointerup:$model.moveStop, pointerout:$model.moveStop}" touch-action="none" class="btn btn-block btn-lg btn-secondary"><i class="fa fa-plus"> R</i></button>
+	</div>
+</div>
+{% end %}
+
+
+{% block model %}
+class {
+	constructor() {
+	}
+	
+	moveDim(dim, dir)	{ model.mc.sendJson({cmd:1, dim:dim, dir:dir}); }
+	moveStop()			{ model.mc.sendJson({cmd:0}); }
+	
+	start(started) {
+		model.mc = webSocket(wsUrl('mc', 55001), (msg, first)=>{
+			if ('info' in model) {
+				ko.mapping.fromJS(msg, model.info);
+			} else {
+				model.info = ko.mapping.fromJS(msg);
+			}
+			if (first) started();
+		});
+	}
+	
+	stop() {
+		model.mc.close();
+	}
+}
+{% end %}
+
+
+{% block guard %}
+	return gui.isState('mc@teach');
+{% end %}

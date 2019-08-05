@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+
+{% block head %}
+	<script src="{{static_url('chart.js')}}"></script>
+{% end %}
+
+
+{% block html %}
+<nav class="navbar navbar-expand-md fixed-top navbar-light bg-light">
+	<a href="#" class="navbar-brand" data-l10n-id="title"></a>
+	<button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbar-collapse">
+		<span class="navbar-toggler-icon"></span>
+	</button>
+	<div class="collapse navbar-collapse" id="navbar-collapse">
+		<ul class="navbar-nav">
+			{% include "app/menu.html" %}
+		</ul>
+		<ul class="navbar-nav ml-auto">
+			{% include "locale.html" %}
+			{% include "poweroff.html" %}
+		</ul>
+	</div>
+</nav>
+<main class="container-fluid" style="padding-top:4.5rem">
+	
+	{% module page("app/app.html") %}
+</main>
+{% end %}
