@@ -5,11 +5,11 @@
 
 
 
-<?drive_update(4)?>
+<?drive_update(9)?>
 	dim posFactor_ as double = 4096 / 70
 	
-	<?=lib()?>_deviceWrite(0x607C, 0, 32, 240*posFactor_)	'Home Offset
-	<?=lib()?>_deviceWrite(0x2F22, 0, 16, 1000)				'Home On Edge Current Saturation [mA]
+	<?=lib()?>_deviceWrite(0x607C, 0, 32, (237.5)*posFactor_)	'Home Offset
+	<?=lib()?>_deviceWrite(0x2F22, 0, 16, 1000)					'Home On Edge Current Saturation [mA]
 end sub
 
 
@@ -25,7 +25,7 @@ end sub
 	absolute					= true
 	absEnable					= false		'disable abs motions until homed
 	
-	positionmin					= 242.5
+	positionmin					= 240
 	positionmax					= positionmin + 145
 	positionminenable			= true
 	positionmaxenable			= true
@@ -39,9 +39,6 @@ end sub
 
 
 
-<?output('opMode', 'long', lib())?>
-	<?=lib()?>_deviceWrite(0x6060, 0, 8, value_)
-end sub
 
 
 public function <?=lib()?>_homingLoop as long
@@ -49,18 +46,13 @@ public function <?=lib()?>_homingLoop as long
 		if not enable then
 			attach
 			followingMode = 2
-			<?=lib()?>_opMode(6)
-			enable = true
+			<?=lib()?>_deviceWrite(0x6060, 0, 8, 6)
+			<?=lib()?>_enable()
 		else
 			if getBit(driveStatus, 10) then
-				enable = false
-				<?=lib()?>_opMode(8)
-				if getBit(driveStatus, 12) then
-					absEnable = true
-					detach
-				else
-					<?logThrow([lib().": homing error"])?>
-				end if
+				absEnable = getBit(driveStatus, 12)
+				<?=lib()?>_disableDetach()
+				<?=lib()?>_deviceWrite(0x6060, 0, 8, 8)
 			end if
 		end if
 	end if

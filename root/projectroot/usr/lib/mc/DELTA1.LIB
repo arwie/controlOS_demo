@@ -13,9 +13,9 @@ public sub delta1_homing
 	delta1a_enableAttach()
 	delta1b_enableAttach()
 	delta1c_enableAttach()
-	move delta1a delta1a.positionmin+10
-	move delta1b delta1b.positionmin+10
-	move delta1c delta1c.positionmin+10
+	move delta1a delta1a.positionmin+10 velocityrate=10
+	move delta1b delta1b.positionmin+10 velocityrate=10
+	move delta1c delta1c.positionmin+10 velocityrate=10
 	delta1a_disableDetach()
 	delta1b_disableDetach()
 	delta1c_disableDetach()
@@ -61,7 +61,7 @@ end sub
 	axis[4][2]					= 0
 	axis[4][3]					= 1
 
-	link[1][1]					= 371.7963
+	link[1][1]					= 392.15
 	link[1][2]					= 0
 	link[1][3]					= 0
 	link[2][1]					= 0
@@ -70,7 +70,7 @@ end sub
 	link[3][1]					= 0
 	link[3][2]					= 0
 	link[3][3]					= 400
-	link[4][1]					= 42.0022
+	link[4][1]					= 42
 	link[4][2]					= 0
 	link[4][3]					= 0
 	configgroup

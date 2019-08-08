@@ -1,12 +1,12 @@
-<?engage(['teach'])?>
 
 
 
 <?lib_prgStart()?>
-	sleep 3000
+	sleep 5000
 	delta1_homing()
 end sub
 
 
-<?lib_prgPoll(500)?>
+<?lib_prg()?>
+	<?engageActive('teach')?>
 end sub
