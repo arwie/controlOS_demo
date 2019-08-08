@@ -191,12 +191,25 @@ public sub <?=lib()?>_driveSave
 	<?=lib()?>_deviceWrite(0x<?=($ax['device']=='stepim' && $ax['bus']=='etc')?'2E04':'1010'?>, 1, 32, 0x65766173)
 end sub
 
-<?if (!$ax['simulated'] && $ax['bus']=='can' && $ax['device']=='stepim') {?>
+<?if ($ax['device']=='stepim') {?>
+
+<?if (!$ax['simulated'] && $ax['bus']=='can') {?>
 public sub <?=lib()?>_driveSetupAddress(byval currentAddress_ as long)
 	can_write(currentAddress_, 0x2F1B, 0, 16, <?=get('device')[lib()]['address']?>)
 	can_write(currentAddress_, 0x1010, 1, 32, 0x65766173)
 end sub
 <?}?>
+
+public sub <?=lib()?>_driveTune(byval posProportional_ as long, byval posIntegral_ as long, byval posDerivative_ as long, byval posVelFeedForward_ as long, byval velProportional_ as long, byval velIntegral_ as long)
+	<?=lib()?>_deviceWrite(0x201E, 0, 32, posDerivative_)
+	<?=lib()?>_deviceWrite(0x2020, 0, 32, posIntegral_)
+	<?=lib()?>_deviceWrite(0x2022, 0, 32, posProportional_)
+	<?=lib()?>_deviceWrite(0x2023, 0, 32, posVelFeedForward_)
+	<?=lib()?>_deviceWrite(0x2026, 0, 32, velIntegral_)
+	<?=lib()?>_deviceWrite(0x2027, 0, 32, velProportional_)
+end sub
+<?}?>
+
 <?
 }
 
