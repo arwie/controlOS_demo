@@ -2,7 +2,6 @@
 
 
 <?lib_prgStart()?>
-	sleep 5000
 	delta1_homing()
 end sub
 

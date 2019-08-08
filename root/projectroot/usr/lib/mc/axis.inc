@@ -189,6 +189,7 @@ function _driveFunctions($ax) {
 ?>
 public sub <?=lib()?>_driveSave
 	<?=lib()?>_deviceWrite(0x<?=($ax['device']=='stepim' && $ax['bus']=='etc')?'2E04':'1010'?>, 1, 32, 0x65766173)
+	sleep <?=($ax['device']=='stepim' && $ax['bus']=='can')?'3500':'500'?>'
 end sub
 
 <?if ($ax['device']=='stepim') {?>
