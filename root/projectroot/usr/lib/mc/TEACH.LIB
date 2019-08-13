@@ -40,11 +40,12 @@ sub moveLimit(byval dim_ as long, byval dir_ as long)
 	dim target_ as location of xyzr = setPoint
 	dim step_   as location of xyzr
 	dim steps_  as long
+	dim orientationfollowing_ as long
 	
 	if dir_ > 0 then
-		step_ = #{+200, +200, 120, +180}
+		step_ = #{+200, +200, 120, +179}
 	else
-		step_ = #{-200, -200,   0, -179.999}
+		step_ = #{-200, -200,   0, -179}
 	end if
 	
 	select case dim_
@@ -61,14 +62,18 @@ sub moveLimit(byval dim_ as long, byval dir_ as long)
 		target_{3} = step_{3}
 		step_ = #{0, 0, dir_, 0}
 	case 4
-		steps_ = abs(target_{4} - step_{4})
+		steps_ = 1
 		target_{4} = step_{4}
-		step_ = #{0, 0, 0, dir_}
+		if dir_ > 0 then
+			orientationfollowing_ = 4
+		else
+			orientationfollowing_ = 6
+		end if
 	end select
 	
 	while not isMoving and useDecrement(steps_)
 		try
-			moves target_ velocityrate=10
+			moves target_ velocityrate=5 orientationfollowing = orientationfollowing_
 		catch 3121
 			target_ = target_ - step_
 		end try

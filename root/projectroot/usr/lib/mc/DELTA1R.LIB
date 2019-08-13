@@ -1,14 +1,21 @@
 <?axis([
-	'simulated'		=> true,
+	'device'		=> 'stepim',
+	'bus'			=> 'can',
 ])?>
 
+
+
+<?drive_setup()?>
+	positionfactor				= positionfactor / 360
+	direction					= 1
+end sub
 
 
 <?axis_setup()?>
 	absolute					= true
 	axistype					= 1
 	
-	<?axis_setupSpeed(100, 150, 50)?>
+	<?axis_setupSpeed(900, 150, 50)?>
 	
-	positionerrormax			= 5
+	positionerrormax			= 15
 end sub
