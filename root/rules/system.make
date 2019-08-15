@@ -39,7 +39,8 @@ $(STATEDIR)/system.targetinstall:
 	@$(call install_alternative_tree, system, 0, 0, /usr/lib/firmware)
 
 	# networking
-	@$(call install_alternative_tree, system, 0, 0, /etc/systemd/network)
+	@$(call install_alternative, system, 0, 0, 0644, /etc/polkit-1/localauthority/10-vendor.d/systemd-networkd.pkla)
+	@$(call install_alternative_tree, system, 0, 0,  /etc/systemd/network)
 	@$(call install_alternative_tree, system, 0, 0,  /etc/hostapd.conf.d)
 	@$(call install_alternative, system, 0, 0, 0644, /usr/lib/systemd/system/hostapd.service)
 	@$(call install_alternative, system, 0, 0, 0644, /usr/lib/systemd/system/sys-subsystem-net-devices-syswlan.device)
