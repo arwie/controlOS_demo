@@ -81,8 +81,7 @@ end sub
 	decelerationstop			= decelerationmax
 	jerk						= jerkmax
 
-	<?robot_setupSpeedTrans(600, 150, 50)?>
-	<?robot_setupSpeedRot(900, 150, 50)?>
+	<?robot_setupSpeed([600, 900], 150, 50)?>
 	
 	base						= #{0, 0, -540, 0}
 

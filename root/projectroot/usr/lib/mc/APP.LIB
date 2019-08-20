@@ -1,4 +1,14 @@
 
+<?input('mode', 'long', true, 1)?>
+end sub
+
+
+<?$app_engageMode = function($mode) {?>
+	call <?=$mode?>_start
+	while not app_wait(10) and app_mode
+	end while
+	call <?=$mode?>_stop
+<?}?>
 
 
 <?lib_prgStart()?>
@@ -6,6 +16,11 @@
 end sub
 
 
-<?lib_prg()?>
-	<?engageActive('teach')?>
+<?lib_prgPoll(10)?>
+	select case app_mode
+	case 1
+		<?$app_engageMode('teach')?>
+	case 2
+		<?$app_engageMode('tracking')?>
+	end select
 end sub

@@ -1,0 +1,33 @@
+<?axis([
+	'simulated'		=> 'true'
+])?>
+
+
+common shared conv_frame as moving frame of xyzr
+
+
+
+<?lib_init()?>
+	conv_frame.type						= 0
+	conv_frame.numberDegreesOfFreedom	= 1
+	conv_frame.masterSource				= positionCommand
+	conv_frame.upStream[1]				= #{50,-150,50,0}
+	conv_frame.downStream[1]			= #{50,+150,50,0}
+	conv_frame.upMaster[1]				= 0
+	conv_frame.downMaster[1]			= 300
+end sub
+
+
+<?axis_setup()?>
+	absolute					= true
+	axistype					= 0
+	
+	<?axis_setupSpeed(100, 150, 50)?>
+end sub
+
+
+
+<?lib_debug()?>
+	com_putLocationXyzr("frame/here",		conv_frame.here)
+	com_putLocationXyzr("frame/zero",		conv_frame.zero)
+end sub

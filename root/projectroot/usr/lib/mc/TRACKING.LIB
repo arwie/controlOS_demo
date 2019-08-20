@@ -1,0 +1,44 @@
+
+
+
+
+<?lib_prgStart()?>
+	conv_enableAttach()
+	delta1_enableAttach()
+	
+	masterFrame = conv_frame
+	jog conv 100
+end sub
+
+
+<?lib_prgLoop()?>
+	moves #{-150, 0, 50, 0}
+	waitForMotion
+	trigger delta1 ndof=1 value=conv.positioncommand  MasterFrame=conv_frame
+	slave = 5
+	moves conv_frame.zero
+	waitForMotion
+	moves #{0, 0, +10, 0} abs=false
+	sleep 500
+	moves #{0, 0, -10, 0} abs=false
+	sleep 500
+	slave = off
+end sub
+
+
+<?lib_prgStop()?>
+	stop conv
+	masterFrame = NONE
+	
+	delta1_disableDetach()
+	conv_disableDetach()
+end sub
+
+
+<?lib_prgError()?>
+print "tracking_error"
+	tracking_stopTrigger()
+	if not prgRunning then
+		tracking_prgStop()
+	end if
+end sub
