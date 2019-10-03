@@ -10,15 +10,6 @@ public sub delta1_homing
 	while not (delta1a_homingLoop and delta1b_homingLoop and delta1c_homingLoop)
 		sleep 100
 	end while
-	delta1a_enableAttach()
-	delta1b_enableAttach()
-	delta1c_enableAttach()
-	move delta1a delta1a.positionmin+10 velocityrate=10
-	move delta1b delta1b.positionmin+10 velocityrate=10
-	move delta1c delta1c.positionmin+10 velocityrate=10
-	delta1a_disableDetach()
-	delta1b_disableDetach()
-	delta1c_disableDetach()
 end sub
 
 
@@ -122,6 +113,10 @@ end sub
 	tool.ymax					= rmax
 	tool.zmin					= -rmax
 	tool.zmax					= rmax
+
+	delta1a.displacement = -310 + 53.37158
+	delta1b.displacement = -310 + 52.43164
+	delta1c.displacement = -310 + 55.37109
 end sub
 
 

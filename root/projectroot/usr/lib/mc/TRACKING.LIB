@@ -36,7 +36,6 @@ end sub
 
 
 <?lib_prgError()?>
-print "tracking_error"
 	tracking_stopTrigger()
 	if not prgRunning then
 		tracking_prgStop()
