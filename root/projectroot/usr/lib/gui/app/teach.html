@@ -21,7 +21,7 @@
 	</div>
 	<div class="col"></div>
 	<div class="col">
-		<button data-bind="event:{pointerdown:()=>{$model.moveDim(1,-1)}, pointerup:$model.moveStop, pointerout:$model.moveStop}" touch-action="none" class="btn btn-block btn-lg btn-secondary"><i class="fa fa-minus"> X</i></button>
+		<button data-bind="event:{pointerdown:()=>{$model.moveDim(2, 1)}, pointerup:$model.moveStop, pointerout:$model.moveStop}" touch-action="none" class="btn btn-block btn-lg btn-secondary"><i class="fa fa-plus"> Y</i></button>
 	</div>
 	<div class="col"></div>
 	<div class="col">
@@ -31,11 +31,11 @@
 <div class="row my-5">
 	<div class="col"></div>
 	<div class="col">
-		<button data-bind="event:{pointerdown:()=>{$model.moveDim(2,-1)}, pointerup:$model.moveStop, pointerout:$model.moveStop}" touch-action="none" class="btn btn-block btn-lg btn-secondary"><i class="fa fa-minus"> Y</i></button>
+		<button data-bind="event:{pointerdown:()=>{$model.moveDim(1,-1)}, pointerup:$model.moveStop, pointerout:$model.moveStop}" touch-action="none" class="btn btn-block btn-lg btn-secondary"><i class="fa fa-minus"> X</i></button>
 	</div>
 	<div class="col"></div>
 	<div class="col">
-		<button data-bind="event:{pointerdown:()=>{$model.moveDim(2, 1)}, pointerup:$model.moveStop, pointerout:$model.moveStop}" touch-action="none" class="btn btn-block btn-lg btn-secondary"><i class="fa fa-plus" > Y</i></button>
+		<button data-bind="event:{pointerdown:()=>{$model.moveDim(1, 1)}, pointerup:$model.moveStop, pointerout:$model.moveStop}" touch-action="none" class="btn btn-block btn-lg btn-secondary"><i class="fa fa-plus" > X</i></button>
 	</div>
 	<div class="col"></div>
 </div>
@@ -45,31 +45,32 @@
 	</div>
 	<div class="col"></div>
 	<div class="col">
-		<button data-bind="event:{pointerdown:()=>{$model.moveDim(1, 1)}, pointerup:$model.moveStop, pointerout:$model.moveStop}" touch-action="none" class="btn btn-block btn-lg btn-secondary"><i class="fa fa-plus" > X</i></button>
+		<button data-bind="event:{pointerdown:()=>{$model.moveDim(2,-1)}, pointerup:$model.moveStop, pointerout:$model.moveStop}" touch-action="none" class="btn btn-block btn-lg btn-secondary"><i class="fa fa-minus" > Y</i></button>
 	</div>
 	<div class="col"></div>
 	<div class="col">
 		<button data-bind="event:{pointerdown:()=>{$model.moveDim(4, 1)}, pointerup:$model.moveStop, pointerout:$model.moveStop}" touch-action="none" class="btn btn-block btn-lg btn-secondary"><i class="fa fa-plus"> R</i></button>
 	</div>
 </div>
+
+<div data-bind="element:graph.canvas"></div>
 {% end %}
 
 
 {% block model %}
 class {
 	constructor() {
+		this.info = ko.mapping.fromJS({});
+		this.graph = new GraphXY();
 	}
 	
 	moveDim(dim, dir)	{ model.mc.sendJson({cmd:1, dim:dim, dir:dir}); }
 	moveStop()			{ model.mc.sendJson({cmd:0}); }
 	
 	start(started) {
-		model.mc = webSocket(wsUrl('mc', 55001), (msg, first)=>{
-			if ('info' in model) {
-				ko.mapping.fromJS(msg, model.info);
-			} else {
-				model.info = ko.mapping.fromJS(msg);
-			}
+		model.mc = webSocket(wsUrl('mc', 55001), (data, first)=>{
+			ko.mapping.fromJS(data, model.info);
+			model.graph.updatePos(data.pos.x, data.pos.y);
 			if (first) started();
 		});
 	}
