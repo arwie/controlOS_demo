@@ -25,10 +25,10 @@
 		<tr data-bind="css: {'bg-danger': priority <= 2, 'table-danger': priority == 3, 'table-warning': priority == 4, 'table-info': priority == 5}">
 			<td data-bind="text:timestamp"></td>
 			<td width="85%">
-				<strong data-bind="attr:{'data-l10n-id':report}" style="white-space:pre-line"></strong>
-				<p data-bind="attr:{'data-l10n-id':report+'-help'}, visible:help"></p>
+				<strong data-bind="l10n:report" style="white-space:pre-line"></strong>
+				<p data-bind="l10n:report+'-help', visible:help"></p>
 			</td>
-			<td data-bind="click:toggleHelp"><i class="fa fa-question-circle"></i></td>
+			<td data-bind="click:toggleHelp"><i class="fas fa-question-circle"></i></td>
 		</tr>
 	</tbody>
 </table>

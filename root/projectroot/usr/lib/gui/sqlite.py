@@ -29,8 +29,10 @@ class TableHandler(server.RequestHandler):
 		}, **doGet}
 		self.doPost = {**{
 			'create':	self.doCreate,
+			'copy':		self.doCopy,
 			'remove':	self.doRemove,
 			'save':		self.doSave,
+			'swap':		self.doSwap,
 		}, **doPost}
 	
 	def get(self):
@@ -40,7 +42,9 @@ class TableHandler(server.RequestHandler):
 	
 	def post(self):
 		with self.table.db:
-			self.doPost[self.get_query_argument('do')]()
+			result = self.doPost[self.get_query_argument('do')]()
+			if result is not None:
+				self.writeJson(result)
 	
 	
 	def doList(self):
@@ -51,10 +55,16 @@ class TableHandler(server.RequestHandler):
 	
 	
 	def doCreate(self):
-		self.table.create()
+		return {'id': self.table.create()}
+	
+	def doCopy(self):
+		return {'id': self.table.copy(self.get_query_argument('id'))}
 	
 	def doRemove(self):
 		self.table.remove(self.get_query_argument('id'))
 	
+	def doSwap(self):
+		self.table.swap(self.get_query_argument('id'), self.get_query_argument('swap'))
+	
 	def doSave(self):
-		return self.table.save(self.get_query_argument('id'), self.readJson())
+		self.table.save(self.get_query_argument('id'), self.readJson())

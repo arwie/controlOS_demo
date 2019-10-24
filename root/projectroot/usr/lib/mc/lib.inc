@@ -73,7 +73,7 @@ function logMessage($prio, $message=false, $log=false) {
 	}
 	ll('log_message('.$prio.','.$message.')');
 	call($extra);
-	ll(lib().'_putDebug()');
+	ll(lib().'_putDebug(true)');
 	ll('log_putCodeFunc(scope)');
 	ll('com_putString("/lib", "'.lib().'")');
 	ll('log_send()');
@@ -177,8 +177,11 @@ function lib_prgError($log=false) {
 }
 
 
-function lib_debug() {
-	lib('debug', 'call libPutDebug');
+function lib_debug($ext=[]) {
+	lib('debug', 'libPutDebug()');
+	foreach ($ext as $l)
+		if (array_key_exists($l, get('lib')))
+			lib('debugExt', $l);
 	l('sub libPutDebug');
 }
 
@@ -255,16 +258,21 @@ function libEnd() { global $lib;
 	ll('end if');
 	l('end sub');
 	
-	l('public sub '.lib().'_putDebug');
+	l('public sub '.lib().'_putDebug(byval ext_ as long)');
 	ll('try');
-	lll('call com_with("/debug/'.lib().'/")');
-	lll('call com_putBool("started", '.lib().'_started)');
-	lll('call com_putBool("active", '.lib().'_active)');
+	lll('com_with("/debug/'.lib().'/")');
+	lll('com_putBool("started", '.lib().'_started)');
+	lll('com_putBool("active", '.lib().'_active)');
 	call(lib('debug'));
-	call(lib('debugExt'));
 	ll('catch else');
-	lll('call com_putString("-", error)');
+	lll('com_putString("-", error)');
 	ll('end try');
+	if (lib('debugExt')) {
+		ll('if ext_ then');
+			foreach (lib('debugExt') as $l)
+				lll("{$l}_putDebug(true)");
+		ll('end if');
+	}
 	l('end sub');
 
 	foreach (['Error', 'Warning', 'Notice', 'Info', 'Debug'] as $prio) {
@@ -274,7 +282,7 @@ function libEnd() { global $lib;
 	}
 	l('sub logSend');
 	ll('call com_putString("/lib", "'.$lib['name'].'")');
-	ll('call '.lib().'_putDebug');
+	ll('call '.lib().'_putDebug(true)');
 	ll('call log_send');
 	l('end sub');
 

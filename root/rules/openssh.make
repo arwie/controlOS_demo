@@ -3,8 +3,6 @@
 # Copyright (C) 2002, 2003 by Pengutronix e.K., Hildesheim, Germany
 #               2009 by Marc Kleine-Budde <mkl@pengutronix.de>
 #
-# See CREDITS for details about who has contributed to this project.
-#
 # For further information about the PTXdist project and license conditions
 # see the README file.
 #
@@ -17,8 +15,8 @@ PACKAGES-$(PTXCONF_OPENSSH) += openssh
 #
 # Paths and names
 #
-OPENSSH_VERSION	:= 7.9p1
-OPENSSH_MD5	:= c6af50b7a474d04726a5aa747a5dce8f
+OPENSSH_VERSION	:= 8.0p1
+OPENSSH_MD5	:= bf050f002fe510e1daecd39044e1122d
 OPENSSH		:= openssh-$(OPENSSH_VERSION)
 OPENSSH_SUFFIX	:= tar.gz
 OPENSSH_URL	:= \

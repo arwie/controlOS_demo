@@ -34,7 +34,7 @@
 	<script src="{{static_url('popper.js')}}"></script>
 	<script src="{{static_url('bootstrap.js')}}"></script>
 	<link rel="stylesheet" href="{{static_url('bootstrap.css')}}">
-	<link rel="stylesheet" href="{{static_url('font-awesome/css/font-awesome.min.css')}}">
+	<link rel="stylesheet" href="{{static_url('fontawesome/css/all.min.css')}}">
 	
 	<script src="{{static_url('knockout.js') }}"></script>
 	<script src="{{static_url('knockout.mapping.js') }}"></script>
@@ -58,8 +58,14 @@ function ajaxUrl(url, params=null) {
 function wsUrl(host, port, url=null, params=null) {
 	return 'ws://' + (host ? (host in hosts ? hosts[host] : host)+':'+port : (port ? location.hostname+':'+port : location.host)) + (url ? ajaxUrl(url, params) : '/');
 }
-function pageUrl(url, params=null) {
-	return '#'+url + (params ? '?'+$.param(params) : '');
+function pageUrl(url, params=null, subpage=null, breadcrumb=[]) {
+	breadcrumb = [].concat(breadcrumb);
+	if (breadcrumb.length)
+		params = Object.assign({breadcrumb:JSON.stringify(breadcrumb)}, params);
+	return '#'+url + (params ? '?'+$.param(params) : '') + (subpage ? '/'+subpage : '');
+}
+function navigate(url, params=null, subpage=null, breadcrumb=[]) {
+	pager.navigate(pageUrl(url, params, subpage, breadcrumb));
 }
 
 function webSocket(url, onMessageJson) {
@@ -75,16 +81,35 @@ function webSocket(url, onMessageJson) {
 	return ws;
 }
 
+String.prototype.hashCode = function() {
+	let hash = 0, i, chr;
+	if (this.length === 0) return hash;
+	for (i = 0; i < this.length; i++) {
+		chr   = this.charCodeAt(i);
+		hash  = ((hash << 5) - hash) + chr;
+		hash |= 0; // Convert to 32bit integer
+	}
+	return hash;
+};
+
 ko.subscribeTree = function(model, notify) {
 	return ko.pureComputed(()=>{
 		return ko.toJS(model);
 	}).subscribe(notify);
 };
 
-function GuiPage(pageModel, pageParams, pageGuard, pageRoute) {
+function GuiPage(pageModel, pageGuard, pageRoute) {
 	let self = this;
 	
-	self.params = pageParams();
+	let callModelStart = function(ready) {
+		let when = self.model.start(ready);
+		if (self.model.start.length)
+			return true;
+		if (when) {
+			Array.isArray(when) ? Promise.all(when).then(ready) : when.then(ready);
+			return true;
+		}
+	}
 	
 	self.create = function(callback, page) {
 		self.model = pageModel(page);
@@ -92,41 +117,49 @@ function GuiPage(pageModel, pageParams, pageGuard, pageRoute) {
 			self.started = true;
 			callback(self.model);
 		}
+		page.path$().subscribe(()=>{
+			if (self.started) {
+				self.stop(page);
+				self.start(page);
+			}
+		});
 		if (self.model.start) {
-			self.model.start(ready);
-			if (self.model.start.length) return;
+			if (callModelStart(ready)) return;
 		}
 		ready();
 	}
 	
 	self.start = function(page, callback) {
 		let ready = function() {
-			$(page.element).fadeIn(50);
+			$(page.element).fadeIn(75);
 			self.started = true;
+			let breadcrumb = null;
 			if (self.model && self.model.breadcrumb) {
-				let breadcrumb = self.model.breadcrumb();
-				if (breadcrumb !== undefined) gui.breadcrumb(breadcrumb);
-			} else gui.breadcrumb([{l10n:page.currentId}]);
+				breadcrumb = self.model.breadcrumb(page.params.breadcrumb?JSON.parse(page.params.breadcrumb):[]);
+				if (!Array.isArray(breadcrumb))
+					switch (typeof breadcrumb) {
+						case 'object':		breadcrumb = [breadcrumb];				break;
+						case 'string':		breadcrumb = [{l10n:breadcrumb}];		break;
+						case 'undefined':	breadcrumb = [{l10n:page.currentId}];	break;
+					}
+			}
+			gui.breadcrumb(breadcrumb);
 			if (callback) callback();
 		}
 		if (self.model && self.model.start && !self.started) {
-			self.model.start(ready);
-			if (self.model.start.length) return;
+			if (callModelStart(ready)) return;
 		}
 		ready();
 	}
 	
 	self.stop = function(page, callback) {
-		let ready = function() {
-			self.started = false;
-			if (callback) callback();
-		}
 		$(page.element).hide();
+		gui.breadcrumb(ko.toJS(gui.breadcrumb));
 		if (self.model && self.model.stop && self.started) {
-			self.model.stop(ready);
-			if (self.model.stop.length) return;
+			self.model.stop();
 		}
-		ready();
+		self.started = false;
+		if (callback) callback();
 	}
 	
 	self.guard = function(page, route, callback) {
@@ -163,10 +196,11 @@ gui = new function() {
 </script>
 
 {% include "baseWidgets.html" %}
+{% block html %}{% end %}
 
 <body data-bind="visible:true" style="display:none">
 	
-	{% block html %}{% end %}
+	{% block body %}{% end %}
 	
 	<div id="stateDisconnected" data-backdrop="static" data-keyboard="false" class="modal">
 		<div class="modal-dialog modal-lg">
@@ -214,6 +248,7 @@ let stateWs = webSocket(wsUrl(null, null, 'state'), (msg)=>{
 stateWs.onclose = stateWs.onerror = disconnected;
 
 pager.extendWithPage(gui);
+ko.options.deferUpdates = true;
 ko.applyBindings(gui);
 pager.start('#');
 

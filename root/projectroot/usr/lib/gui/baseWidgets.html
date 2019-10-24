@@ -17,10 +17,20 @@
 %}
 
 
+<script type="text/html" id="breadcrumb">
+	<ol data-bind="visible:$root.breadcrumb, foreach:$root.breadcrumb" class="breadcrumb">
+		<li class="breadcrumb-item">
+			<a data-bind="attr:{'href':$data.href}, l10n:$data.l10n, text:$data.text"></a>
+		</li>
+	</ol>
+</script>
+<script>ko.components.register('breadcrumb', {template:{element:'breadcrumb'}})</script>
+
+
 <script type="text/html" id="navChildrenTabs">
 	<ul data-bind="foreach:$page.children" class="nav nav-tabs nav-justified mb-3">
 		<li class="nav-item">
-			<a data-bind="page-href:$data, css:{active:isVisible}, attr:{'data-l10n-id':($parent.l10n?$parent.l10n+'_':'')+getId()}" class="nav-link"></a>
+			<a data-bind="page-href:$data, css:{active:isVisible}, l10n:($parent.l10n?$parent.l10n+'_':'')+getId()" class="nav-link"></a>
 		</li>
 	</ul>
 </script>
@@ -29,7 +39,7 @@
 
 <script type="text/html" id="uploadButton">
 	<label data-bind="class:css" class="btn mt-2">
-		<span data-bind="attr:{'data-l10n-id':l10n}"></span>
+		<span data-bind="l10n:l10n"></span>
 		<input type="file" data-bind="event:{change:()=>{upload($element.files[0]);$element.value=null;}}" hidden>
 	</label>
 </script>
@@ -64,4 +74,34 @@ ko.bindingHandlers.clickConfirm = {
 		}, allBindings, viewModel, bindingContext);
 	}
 };
+
+//usage: checkbox:{value:observable, checked:'true', unchecked:'false'}
+ko.bindingHandlers.checkbox = {
+	init: function(element, valueAccessor, allBindings, viewModel, bindingContext) {
+		let params = valueAccessor();
+		let checked   = 'checked'   in params ? params.checked   : true;
+		let unchecked = 'unchecked' in params ? params.unchecked : false;
+		let computed = ko.pureComputed({
+			read: () => params.value() == checked,
+			write: (value) => { params.value(value ? checked : unchecked);},
+			disposeWhenNodeIsRemoved: element
+		});
+		return ko.bindingHandlers.checked.init.call(this, element, ()=>computed, allBindings, viewModel, bindingContext);
+	}
+};
+
+ko.bindingHandlers.l10n = {update: function (element, valueAccessor) {
+	let value = ko.utils.unwrapObservable(valueAccessor());
+	if (value)
+		element.setAttribute('data-l10n-id', value);
+}};
+
+ko.bindingHandlers.ro = {update: function (element, valueAccessor) {
+	element.readOnly = ko.utils.unwrapObservable(valueAccessor());
+}};
+
+ko.bindingHandlers.element = {update: function (element, valueAccessor) {
+	$(element).empty();
+	$(element).append(ko.utils.unwrapObservable(valueAccessor()));
+}};
 </script>

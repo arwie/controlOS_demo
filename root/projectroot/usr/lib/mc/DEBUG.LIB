@@ -56,7 +56,7 @@ end sub
 sub pollData
 <?
 	foreach (get('libs')['app'] as $l=>$lib) {
-		ll("{$l}_putDebug()");
+		ll("{$l}_putDebug(false)");
 	}
 ?> 
 end sub

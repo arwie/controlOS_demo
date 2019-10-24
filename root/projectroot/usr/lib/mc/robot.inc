@@ -40,7 +40,7 @@ function robot($rbt) { global $lib;
 		]);
 	}
 	foreach ($rbt['axes'] as $ax)
-		lib('debugExt', "{$ax}_putDebug()");
+		lib('debugExt', $ax);
 	
 	lib('end', function() use ($rbt) {
 		robot_enableFunctions($rbt['axes']);

@@ -22,9 +22,8 @@ class SqliteTable {
 		this.handler = handler;
 	}
 	
-	url(action, id=null, args={}) {
+	url(action, args={}) {
 		args['do'] = action;
-		if (id) args['id'] = id;
 		return ajaxUrl(this.handler, args);
 	}
 	
@@ -38,26 +37,32 @@ class SqliteTable {
 	}
 
 	load(id) {
-		return $.getJSON(this.url('load', id));
+		return $.getJSON(this.url('load', {id:id}));
 	}
 	
 	
 	create() {
-		return $.post(this.url('create'));
+		return $.post(this.url('create'), null, null, 'json');
+	}
+	
+	copy(id) {
+		return $.post(this.url('copy', {id:id}), null, null, 'json');
 	}
 	
 	remove(id) {
-		return $.post(this.url('remove', id));
+		return $.post(this.url('remove', {id:id}));
 	}
 	
 	save(id, data) {
 		return $.post(
-			this.url('save', id), 
+			this.url('save', {id:id}), 
 			this.stringify(data)
 		);
 	}
 	
-	copy(id) {
-		return $.post(this.url('copy', id));
+	swap(id, swap) {
+		return $.post(
+			this.url('swap', {id:id, swap:swap})
+		);
 	}
 }
