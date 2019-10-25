@@ -17,8 +17,8 @@
 	end select
 	
 	com_clear()
-	call com_putLocationXyzr("/pos",		setPoint)
-	call com_send(this_websocket)
+	com_putLocationXyzr("/pos",		setPoint)
+	com_send(this_websocket)
 end sub
 
 

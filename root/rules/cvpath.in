@@ -1,0 +1,9 @@
+## SECTION=project_specific
+
+config CVPATH
+	bool
+	prompt "cvpath"
+	select OPENCV
+	select OPENCV_VIDEO
+	help
+	  FIXME

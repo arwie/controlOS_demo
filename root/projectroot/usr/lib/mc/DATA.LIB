@@ -1,0 +1,10 @@
+<?com_websocket(55000)?>
+
+
+
+<?lib_prgPoll(100)?>
+	com_clear()
+	com_putLocationXyzr("/delta1/setpoint",	setpoint)
+	com_putLocationXyzr("/delta1/here",		here)
+	com_send(this_websocket)
+end sub

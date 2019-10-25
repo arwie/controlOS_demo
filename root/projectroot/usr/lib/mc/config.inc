@@ -1,6 +1,8 @@
 <?
 includeLib('APP.LIB');
+includeLib('DATA.LIB');
 
+includeLib('CVPATH.LIB');
 includeLib('TRACKING.LIB');
 includeLib('TEACH.LIB');
 

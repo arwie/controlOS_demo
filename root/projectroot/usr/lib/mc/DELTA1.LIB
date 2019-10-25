@@ -77,6 +77,7 @@ end sub
 	base						= #{0, 0, -540, 0}
 
 	blendingmethod				= 2 	'superpositon
+	passInterpolation			= 1		'cartesian
 	orientationfollowing		= false
 	stoptype					= ONPATH
 	precomputationMode			= OFF

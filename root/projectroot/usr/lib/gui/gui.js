@@ -48,12 +48,3 @@ Chart.defaults.global.legend.display		= false;
 Chart.defaults.global.animation				= 0;
 Chart.defaults.global.tooltips.enabled		= false;
 Chart.defaults.global.elements.line.tension	= 0;
-
-
-
-
-
-ko.bindingHandlers.element = {update: function(element, valueAccessor) {
-	$(element).empty();
-	$(element).append(ko.utils.unwrapObservable(valueAccessor()));
-}};
