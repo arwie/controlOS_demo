@@ -2,6 +2,7 @@
 includeLib('APP.LIB');
 includeLib('DATA.LIB');
 
+includeLib('DUPLO.LIB');
 includeLib('CVPATH.LIB');
 includeLib('TRACKING.LIB');
 includeLib('TEACH.LIB');

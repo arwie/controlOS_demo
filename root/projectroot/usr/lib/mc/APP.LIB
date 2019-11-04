@@ -26,5 +26,7 @@ end sub
 		<?$app_engageMode('tracking')?>
 	case 3
 		<?$app_engageMode('cvpath')?>
+	case 4
+		<?$app_engageMode('duplo')?>
 	end select
 end sub

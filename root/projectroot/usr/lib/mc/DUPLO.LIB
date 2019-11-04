@@ -1,0 +1,74 @@
+
+dim shared this_zLevel		as const double		= 57.5
+dim shared this_zLift		as const double		= 28
+
+
+type duplo_brickType
+	x		as long
+	y		as long
+end type
+
+
+
+<?lib_prgStart()?>
+	delta1_enableAttach()
+end sub
+
+
+<?lib_prgLoop()?>
+	duplo_moveBrick(duplo_brick( 0, 0), duplo_brick( 2, 2))
+	duplo_moveBrick(duplo_brick( 2, 2), duplo_brick(-2,-2))
+	duplo_moveBrick(duplo_brick(-2,-2), duplo_brick(-2, 2))
+	duplo_moveBrick(duplo_brick(-2, 2), duplo_brick( 2,-2))
+	duplo_moveBrick(duplo_brick( 2,-2), duplo_brick( 4, 0))
+	duplo_moveBrick(duplo_brick( 4, 0), duplo_brick(-4, 0))
+	duplo_moveBrick(duplo_brick(-4, 0), duplo_brick( 0, 4))
+	duplo_moveBrick(duplo_brick( 0, 4), duplo_brick( 0,-4))
+	duplo_moveBrick(duplo_brick(0 ,-4), duplo_brick( 0, 0))
+end sub
+
+
+<?lib_prgStop()?>
+	delta1_disableDetach()
+end sub
+
+
+<?lib_prgError()?>
+	if not prgRunning then
+		duplo_prgStop()
+		duplo_stopTrigger()
+	end if
+end sub
+
+
+
+
+public sub duplo_moveBrick(byval bf_ as duplo_brickType, byval bt_ as duplo_brickType)
+	dim pf_ as location of xyzr = #{bf_->x*32, bf_->y*32, this_zLevel, 0}
+	dim pt_ as location of xyzr = #{bt_->x*32, bt_->y*32, this_zLevel, 0}
+	
+	moves pf_ + #{0,0, -this_zLift, 0}
+	moves pf_ + #{0,0,           0, 0}			velocityrate=10
+	moves pf_ + #{0,0,           0, -40}
+	waitForMotion
+	sleep 80
+	moves pf_ + #{0,0, -this_zLift, here{4}}
+	moves pt_ + #{0,0, -this_zLift, dest{4}}
+	moves pt_ + #{0,0,           0, dest{4}}	velocityrate=5
+	moves pt_ + #{0,0,           0, 0}
+	moves pt_ + #{0,0, -this_zLift, 0}
+	waitForMotion
+end sub
+
+
+public function duplo_brick(byval x_ as long, byval y_ as long) as duplo_brickType
+	duplo_brick->x = x_
+	duplo_brick->y = y_
+end function
+
+
+
+public sub duplo_calibrate(byval x_ as long, byval y_ as long)
+	moves #{x_*32, y_*32, this_zLevel, 45} velocityrate=1
+	waitForMotion
+end sub

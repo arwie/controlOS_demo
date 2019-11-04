@@ -32,7 +32,7 @@ end sub
 	
 	axistype					= 0
 	
-	<?axis_setupSpeed(300, 150, 50)?>
+	<?axis_setupSpeed(300, 100, 50)?>
 	
 	positionerrormax			= 2
 end sub
