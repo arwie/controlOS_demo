@@ -75,6 +75,26 @@ ko.bindingHandlers.clickConfirm = {
 	}
 };
 
+//usage: press:{start:handler, stop:handler}
+ko.bindingHandlers.press = {
+	init: function(element, valueAccessor, allBindings, viewModel, bindingContext) {
+		element.style.touchAction = 'none';
+		element.setAttribute('touch-action', 'none'); //workaround for pep.js
+		let params = valueAccessor();
+		let active = false;
+		let start = (c,e) => { active = true; params.start(c,e); };
+		let stop  = (c,e) => { if (active) params.stop(c,e); active = false; };
+		let newValueAccessor = function () {
+			return {
+				pointerdown:	start,
+				pointerup:		stop,
+				pointerleave:	stop,
+			};
+		};
+		return ko.bindingHandlers.event.init.call(this, element, newValueAccessor, allBindings, viewModel, bindingContext);
+	}
+};
+
 //usage: checkbox:{value:observable, checked:'true', unchecked:'false'}
 ko.bindingHandlers.checkbox = {
 	init: function(element, valueAccessor, allBindings, viewModel, bindingContext) {

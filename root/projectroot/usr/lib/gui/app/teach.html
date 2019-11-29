@@ -17,39 +17,39 @@
 
 <div class="row my-5">
 	<div class="col">
-		<button data-bind="event:{pointerdown:()=>{$model.moveDim(3,-1)}, pointerup:$model.moveStop, pointerout:$model.moveStop}" touch-action="none" class="btn btn-block btn-lg btn-secondary"><i class="fa fa-minus"> Z</i></button>
+		<button data-bind="press:{start:()=>{$model.moveDim(3,-1)}, stop:$model.moveStop}" class="btn btn-block btn-lg btn-secondary"><i class="fa fa-minus"> Z</i></button>
 	</div>
 	<div class="col"></div>
 	<div class="col">
-		<button data-bind="event:{pointerdown:()=>{$model.moveDim(2, 1)}, pointerup:$model.moveStop, pointerout:$model.moveStop}" touch-action="none" class="btn btn-block btn-lg btn-secondary"><i class="fa fa-plus"> Y</i></button>
+		<button data-bind="press:{start:()=>{$model.moveDim(2, 1)}, stop:$model.moveStop}" class="btn btn-block btn-lg btn-secondary"><i class="fa fa-plus"> Y</i></button>
 	</div>
 	<div class="col"></div>
 	<div class="col">
-		<button data-bind="event:{pointerdown:()=>{$model.moveDim(4,-1)}, pointerup:$model.moveStop, pointerout:$model.moveStop}" touch-action="none" class="btn btn-block btn-lg btn-secondary"><i class="fa fa-minus"> R</i></button>
+		<button data-bind="press:{start:()=>{$model.moveDim(4,-1)}, stop:$model.moveStop}" class="btn btn-block btn-lg btn-secondary"><i class="fa fa-minus"> R</i></button>
 	</div>
 </div>
 <div class="row my-5">
 	<div class="col"></div>
 	<div class="col">
-		<button data-bind="event:{pointerdown:()=>{$model.moveDim(1,-1)}, pointerup:$model.moveStop, pointerout:$model.moveStop}" touch-action="none" class="btn btn-block btn-lg btn-secondary"><i class="fa fa-minus"> X</i></button>
+		<button data-bind="press:{start:()=>{$model.moveDim(1,-1)}, stop:$model.moveStop}" class="btn btn-block btn-lg btn-secondary"><i class="fa fa-minus"> X</i></button>
 	</div>
 	<div class="col"></div>
 	<div class="col">
-		<button data-bind="event:{pointerdown:()=>{$model.moveDim(1, 1)}, pointerup:$model.moveStop, pointerout:$model.moveStop}" touch-action="none" class="btn btn-block btn-lg btn-secondary"><i class="fa fa-plus" > X</i></button>
+		<button data-bind="press:{start:()=>{$model.moveDim(1, 1)}, stop:$model.moveStop}" class="btn btn-block btn-lg btn-secondary"><i class="fa fa-plus" > X</i></button>
 	</div>
 	<div class="col"></div>
 </div>
 <div class="row my-5">
 	<div class="col">
-		<button data-bind="event:{pointerdown:()=>{$model.moveDim(3, 1)}, pointerup:$model.moveStop, pointerout:$model.moveStop}" touch-action="none" class="btn btn-block btn-lg btn-secondary"><i class="fa fa-plus" > Z</i></button>
+		<button data-bind="press:{start:()=>{$model.moveDim(3, 1)}, stop:$model.moveStop}" class="btn btn-block btn-lg btn-secondary"><i class="fa fa-plus" > Z</i></button>
 	</div>
 	<div class="col"></div>
 	<div class="col">
-		<button data-bind="event:{pointerdown:()=>{$model.moveDim(2,-1)}, pointerup:$model.moveStop, pointerout:$model.moveStop}" touch-action="none" class="btn btn-block btn-lg btn-secondary"><i class="fa fa-minus" > Y</i></button>
+		<button data-bind="press:{start:()=>{$model.moveDim(2,-1)}, stop:$model.moveStop}" class="btn btn-block btn-lg btn-secondary"><i class="fa fa-minus" > Y</i></button>
 	</div>
 	<div class="col"></div>
 	<div class="col">
-		<button data-bind="event:{pointerdown:()=>{$model.moveDim(4, 1)}, pointerup:$model.moveStop, pointerout:$model.moveStop}" touch-action="none" class="btn btn-block btn-lg btn-secondary"><i class="fa fa-plus"> R</i></button>
+		<button data-bind="press:{start:()=>{$model.moveDim(4, 1)}, stop:$model.moveStop}" class="btn btn-block btn-lg btn-secondary"><i class="fa fa-plus"> R</i></button>
 	</div>
 </div>
 
