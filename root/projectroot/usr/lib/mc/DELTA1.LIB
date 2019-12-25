@@ -116,8 +116,8 @@ end sub
 	tool.zmax					= rmax
 
 	delta1a.displacement = -310 + 53.37158
-	delta1b.displacement = -310 + 52.43164
-	delta1c.displacement = -310 + 55.37109
+	delta1b.displacement = -310 + 55.37109
+	delta1c.displacement = -310 + 52.43164
 	delta1r.displacement = -23
 end sub
 
