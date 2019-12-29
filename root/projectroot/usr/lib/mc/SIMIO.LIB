@@ -17,30 +17,61 @@
 
 
 <?com_websocket(6002)?>
-dim shared simioWebsocketConnected as long
+dim shared this_websocketConnected as long
 
 
 
 <?lib_start()?>
-	simioWebsocketConnected = false
+	this_websocketConnected = false
 end sub
 
+
+<?lib_prgEvent()?>
+	<?foreach (get('libs')['app'] as $l=>$lib)
+		if ($lib['simio'])
+			ll("{$l}_simio()")?>
+end sub
+
+
+
+<?lib_prgStart()?>
+	com_clear()
+	<?foreach(get('simio') as $io) {
+		ll(com_with("/{$io['id']}/"));
+		lll(com_putLong("id",  $io['id']));
+		lll(com_putBool("sim", $io['sim']?true:false));
+		lll(com_putString("dir",  $io['dir']));
+		lll(com_putString("name", $io['name']));
+		lll(com_putString("type", $io['type']));
+	}?>
+	com_store()
+end sub
+
+sub sendUpdate
+	com_restore()
+	<?foreach(get('simio') as $io) {
+		ll(com_with("/{$io['id']}/"));
+		lll(com_putBool("ord", $io['ord']));
+		lll(com_put($io['type'], 'io',  $io['dir']=='in' ? $io['gui'] : $io['io']));
+		lll(com_put($io['type'], 'app', $io['app']));
+	}?>
+	com_send(this_websocket)
+	com_store()
+end sub
 
 
 <?com_prgReceive('this_websocket', 250, 16)?>
 	select case receive_
 	case com_receiveConnect
-		simioWebsocketConnected = true
-		call sendList
-	case com_receiveMessage
-		call handleOverride
+		this_websocketConnected = true
 	case com_receiveDisconnect
-		simioWebsocketConnected = false
+		this_websocketConnected = false
+	case com_receiveMessage
+		handleOverride()
 	end select
 
-	if simioWebsocketConnected then
-		call updateInputs
-		call sendUpdate
+	if this_websocketConnected then
+		sendUpdate()
 	end if
 end sub
 
@@ -53,81 +84,29 @@ end sub
 sub handleOverride
 	try
 		select case com_getLong("/id")
-<?
-	foreach(get('simio') as $io) {
-		lll('case '.$io['id']);
-		llll('select case com_getLong("/ord")');
-		
-		llll('case 0');
-		if (!$io['sim']) {
-			if ($io['dir'] == 'out') {
-				lllll($io['io'].' = '.$io['app']);
-				lllll('call '.$io['set'].'('.$io['io'].')');
-			}
-			lllll($io['ord'].' = false');
-		}
-		
-		llll('case 1');
-		lllll($io['ord'].' = true');
-		
-		llll('case 2');
-		if ($io['dir'] == 'in') {
-			lllll($io['app'].' = com_get'.ucfirst($io['type']).'("/io")');
-			lllll($io['ord'].' = true');
-		} else if (!$io['sim']) {
-			lllll($io['ord'].' = true');
-			lllll($io['io'].'  = com_get'.ucfirst($io['type']).'("/io")');
-			lllll('call '.$io['set'].'('.$io['io'].')');
-		}
-		
-		llll('end select');
-	}
-?>
+		<?foreach(get('simio') as $io) {
+			lll("case {$io['id']}");
+			llll('select case com_getLong("/ord")');
+			
+			llll('case 0');
+				if ($io['dir']=='out')
+					lllll("{$io['gui']}({$io['app']})");
+				lllll("{$io['ord']} = false");
+			
+			llll('case 1');
+				lllll("{$io['ord']} = true");
+			
+			llll('case 2');
+				if ($io['dir']=='in') {
+					lllll($io['app'].' = '.com_get($io['type'], '/value'));
+					lllll("{$io['ord']} = true");
+				} else {
+					lllll("{$io['ord']} = true");
+					lllll($io['gui'].'('.com_get($io['type'], '/value').')');
+				}
+			
+			llll('end select');
+		}?>
 		end select
 	<?catchLog()?>
-end sub
-
-
-sub updateInputs
-<?
-	foreach(get('simio') as $io) {
-		if (!$io['sim'] && $io['dir'] == 'in') {
-			ll('call '.$io['get'].'('.$io['io'].')');
-			ll('if not '.$io['ord'].' then');
-			lll($io['app'].' = '.$io['io']);
-			ll('end if');
-		}
-	}
-?>
-end sub
-
-
-sub sendUpdate
-	call com_clear
-<?
-	foreach(get('simio') as $io) {
-		ll('call com_with("/'.$io['id'].'/")');
-		lll('call com_putLong("id",  '.$io['id'].')');
-		lll('call com_putLong("ord", '.$io['ord'].')');
-		lll('call com_put'.ucfirst($io['type']).'("app", '.$io['app'].')');
-		lll('call com_put'.ucfirst($io['type']).'("io",  '.$io['io'].')');
-	}
-?>
-	call com_send(this_websocket)
-end sub
-
-
-sub sendList
-	call com_clear
-<?
-	foreach(get('simio') as $io) {
-		ll('call com_with("/'.$io['id'].'/")');
-		lll('call com_putLong("id",  '.$io['id'].')');
-		lll('call com_putLong("sim", '.($io['sim']?1:0).')');
-		lll('call com_putString("dir",  "'.$io['dir'].'")');
-		lll('call com_putString("name", "'.$io['name'].'")');
-		lll('call com_putString("type", "'.$io['type'].'")');
-	}
-?>
-	call com_send(this_websocket)
 end sub

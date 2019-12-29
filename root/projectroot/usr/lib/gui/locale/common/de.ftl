@@ -74,3 +74,6 @@ network_nossl = Unsichere Verbindung (unverschlüsselt)
 network_host = Host
 network_port = Port
 network_user = Benutzer
+
+
+sim = Simulation

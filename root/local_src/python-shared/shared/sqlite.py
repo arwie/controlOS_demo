@@ -104,19 +104,20 @@ class Sqlite:
 		def dbFile(version): return '{}.{}.sqlite'.format(path, version)
 		
 		self.db = sqlite3.connect(dbFile(schemaVersion))
-		with self.db:
-			self.db.row_factory = rowToData
-			self.db.execute('PRAGMA synchronous  = OFF;')
-			
-			if not self.db.execute('SELECT * FROM sqlite_master;').fetchone():	# db empty
-				logging.info(__name__+": creating tables")
+		self.db.row_factory = rowToData
+		self.db.execute('PRAGMA synchronous  = OFF;')
+		
+		if not self.db.execute('SELECT * FROM sqlite_master;').fetchone():	# db empty
+			logging.info(__name__+": creating tables")
+			with self.db:
 				self.create(definition)
 				self.db.execute('PRAGMA user_version = {};'.format(schemaVersion))
-				
+				populate = True
 				for oldVersion in reversed(range(1, schemaVersion)):
 					oldDbFile = dbFile(oldVersion)
 					if os.path.isfile(oldDbFile):
 						logging.info(__name__+": migrating from old database {}".format(oldDbFile))
+						populate = False
 						try:
 							oldDb = sqlite3.connect('file:{}?mode=ro'.format(oldDbFile), uri=True)
 							oldDb.row_factory = rowToData
@@ -124,8 +125,10 @@ class Sqlite:
 						except:
 							logging.exception(__name__+": failed to migrate from old database")
 						break
-			
-			self.db.execute('PRAGMA foreign_keys = ON;')	#check foreign keys after migrating
+				if populate:
+					self.populate()
+		
+		self.db.execute('PRAGMA foreign_keys = ON;')	#check foreign keys after migrating
 	
 	
 	def create(self, definition):
@@ -151,6 +154,10 @@ class Sqlite:
 			columns    = [c for c in newColumns if c in oldColumns]
 			for oldRow in oldDb.execute("SELECT * FROM {}".format(table)).fetchall():
 				self.db.execute("INSERT INTO {} ({}) VALUES ({})".format(table, ','.join(columns), ','.join([':'+c for c in columns])), dataToRow(oldRow))
+	
+	
+	def populate(self):
+		pass
 	
 	
 	def table(self, table):

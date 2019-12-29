@@ -34,6 +34,7 @@ OPENCV_CONF_TOOL	:= cmake
 
 OPENCV_CONF_OPT		:= \
 	$(CROSS_CMAKE_USR) \
+	-DOPENCV_GENERATE_PKGCONFIG=ON \
 	-DANT_EXECUTABLE:FILEPATH= \
 	-DPYTHON_EXECUTABLE= \
 	-DBUILD_DOCS:BOOL=OFF \
@@ -128,7 +129,7 @@ OPENCV_LIBS-$(PTXCONF_OPENCV_FEATURES2D)	+= libopencv_features2d
 OPENCV_LIBS-$(PTXCONF_OPENCV_FLANN)		+= libopencv_flann
 OPENCV_LIBS-$(PTXCONF_OPENCV_GPU)		+= libopencv_gpu
 OPENCV_LIBS-$(PTXCONF_OPENCV_HIGHGUI)		+= libopencv_highgui
-OPENCV_LIBS-$(PTXCONF_OPENCV_IMGPROC)		+= libopencv_imgproc
+OPENCV_LIBS-$(PTXCONF_OPENCV_IMGPROC)		+= libopencv_imgproc libopencv_imgcodecs
 OPENCV_LIBS-$(PTXCONF_OPENCV_LEGACY)		+= libopencv_legacy
 OPENCV_LIBS-$(PTXCONF_OPENCV_ML)		+= libopencv_ml
 OPENCV_LIBS-$(PTXCONF_OPENCV_NONFREE)		+= libopencv_nonfree
@@ -136,7 +137,7 @@ OPENCV_LIBS-$(PTXCONF_OPENCV_OBJDETECT)		+= libopencv_objdetect
 OPENCV_LIBS-$(PTXCONF_OPENCV_PHOTO)		+= libopencv_photo
 OPENCV_LIBS-$(PTXCONF_OPENCV_STITCHING)		+= libopencv_stitching
 OPENCV_LIBS-$(PTXCONF_OPENCV_SUPERRES)		+= libopencv_superres
-OPENCV_LIBS-$(PTXCONF_OPENCV_VIDEO)		+= libopencv_video
+OPENCV_LIBS-$(PTXCONF_OPENCV_VIDEO)		+= libopencv_video libopencv_videoio
 OPENCV_LIBS-$(PTXCONF_OPENCV_VIDEOSTAB)		+= libopencv_videostab
 
 $(STATEDIR)/opencv.targetinstall:

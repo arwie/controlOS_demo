@@ -1,5 +1,5 @@
 {% comment 
-# Copyright (c) 2017 Artur Wiebe <artur@4wiebe.de>
+# Copyright (c) 2019 Artur Wiebe <artur@4wiebe.de>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 # associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -20,40 +20,45 @@
 
 
 {% block html %}
-<div class="row">
-	
-	<script type="text/html" id="simio-io">
-		<table class="table table-sm table-hover">
+<div data-bind="foreach:[{dir:'in'},{dir:'out'}]" class="row">
+	<div class="col-xl">
+		<table class="table table-hover">
+			<colgroup>
+				<col style="width:auto">
+				<col style="width:auto">
+				<col style="min-width:150px">
+				<col style="min-width:150px">
+				<col style="min-width:220px">
+			</colgroup>  
 		<thead>
 			<tr>
-				<th data-l10n-id="name"></th>
-				<th data-l10n-id="type"></th>
-				<th data-l10n-id="app"></th>
-				<th data-l10n-id="io"></th>
-				<th data-l10n-id="override"></th>
+				<th data-bind="l10n:'simio_list-'+dir"></th>
+				<th data-l10n-id="simio_type"></th>
+				<th data-l10n-id="simio_app"			class="text-right"></th>
+				<th data-bind="l10n:'simio_io-'+dir"	class="text-right"></th>
+				<th data-l10n-id="simio_override"></th>
 			</tr>
 		</thead>
-		<tbody data-bind="foreach: $data">
-			<tr>
-				<th><p data-bind="text:name" class="form-control-plaintext"></p></th>
-				<td><p data-bind="text:dir+'&nbsp;/&nbsp;'+type" class="form-control-plaintext"></p></td>
-				<td  style="width:30%">
-					<p data-bind="text:app" class="form-control-plaintext"></p>
+		<tbody data-bind="foreach:$model.simio().filter(io => io.dir.startsWith(dir))">
+			<tr data-bind="css:{'table-info':sim, 'table-warning':sim&&ord(), 'table-danger':!sim&&ord()}">
+				<th><span data-bind="text:name" class="form-control-plaintext"></span></th>
+				<td><span data-bind="text:type" class="form-control-plaintext"></span></td>
+				<td class="text-right">
+					<span data-bind="text:type=='double'?app().toFixed(3):app()"	class="form-control-plaintext"></span>
 				</td>
-				<td  style="width:30%">
-					<!-- ko if:!sim--><p data-bind="text:io" class="form-control-plaintext"></p><!-- /ko -->
-					<!-- ko if: sim--><p class="form-control-plaintext"><i class="fas fa-ban"></i></p><!-- /ko -->
+				<td class="text-right">
+					<span data-bind="text:type=='double'?io().toFixed(3):io()"		class="form-control-plaintext"></span>
 				</td>
-				<td style="min-width:200px">
+				<td>
 					<div class="input-group">
-						<div class="input-group-prepend"><span class="input-group-text">
-							<input data-bind="checked:ord, disable:sim, click:ordToggle" type="checkbox">
-						</span></div>
-						<input data-bind="event:{keypress:ordSendValue}" type="text" class="form-control">
-						<!-- ko if:type=='long'-->
-						<div class="input-group-append">
-							<button data-bind="click:ordSendPreset" class="btn btn-outline-secondary" type="button" value="1">1</button>
-							<button data-bind="click:ordSendPreset" class="btn btn-outline-primary"   type="button" value="0">0</button>
+						<div class="input-group-prepend"><div class="input-group-text">
+							<input data-bind="checked:ord(), click:$model.ordToggle" type="checkbox">
+						</div></div>
+						<input data-bind="event:{keypress:$model.ordSendValue}" type="text" class="form-control">
+						<!-- ko if:type=='long' -->
+						<div class="input-group-append bg-white">
+							<button data-bind="click:$model.ordSendPreset" class="btn btn-outline-secondary" value="1">1</button>
+							<button data-bind="click:$model.ordSendPreset" class="btn btn-outline-primary"   value="0">0</button>
 						</div>
 						<!-- /ko -->
 					</div>
@@ -61,99 +66,56 @@
 			</tr>
 		</tbody>
 		</table>
-	</script>
-	
-	<div data-bind="template: { name:'simio-io', data:inputs }"  class="col"></div>
-	<div data-bind="template: { name:'simio-io', data:outputs }" class="col"></div>
-	
+	</div>
 </div>
-{% end %}
-
-
-{% block script %}
-function Io(io) {
-	let self = this;
-	
-	self.id		= io.id;
-	self.sim	= io.sim;
-	self.name	= io.name;
-	self.dir	= io.dir;
-	self.type	= io.type;
-	
-	self.ord	= ko.observable();
-	self.app	= ko.observable();
-	self.io		= ko.observable();
-	
-	self.ordToggle = function() {
-		model.send({id:self.id, ord:(self.ord()?1:0)});
-	}
-	
-	self.ordSendValue = function(d, e) {
-		if (e.keyCode != 13) return true;
-		model.send({id:self.id, ord:2, io:self.parseType(e.target.value)});
-		e.target.value = '';
-	}
-	
-	self.ordSendPreset = function(d, e) {
-		model.send({id:self.id, ord:2, io:self.parseType(e.target.value)});
-	}
-	
-	self.update	= function(io) {
-		self.app(io.app);
-		self.io(io.io);
-		self.ord(io.ord);
-	}
-	
-	self.parseType = function(value) {
-		switch (self.type) {
-			case 'long':
-				return parseInt(value);
-			case 'double':
-				return parseFloat(value);
-		}
-		return value;
-	}
-}
 {% end %}
 
 
 {% block model %}
 class {
 	constructor() {
-		this.ios		= {};
-		this.inputs		= ko.observableArray();
-		this.outputs	= ko.observableArray();
+		this.simio = ko.mapping.fromJS([], {
+			create: (o) => {
+				for (let key of ['ord','app','io'])
+					o.data[key] = ko.observable(o.data[key]);
+				return o.data;
+			},
+			key: (io) => io.id,
+		});
 	}
 	
-	send(msg) {
-		this.mc.send(JSON.stringify(msg));
-	}
-	
-	start()
-	{
-		this.mc = new WebSocket(wsUrl('mc', 6002));
-		
-		this.mc.onmessage = (e) => {
-			let msg = JSON.parse(e.data);
-			
-			if ($.isEmptyObject(this.ios)) {
-				for (let io of msg) {
-					this.ios[io.id] = new Io(io);
-					if (io.dir == 'in')
-						this.inputs.push(this.ios[io.id]);
-					else
-						this.outputs.push(this.ios[io.id]);
-				}
-			} else {
-				for (let io of msg) {
-					this.ios[io.id].update(io);
-				}
-			}
+	send(io, ord, value=null) {
+		if (value!==null) switch (io.type) {
+			case 'long':	value = parseInt(value); break;
+			case 'double':	value = parseFloat(value.replace(",",".")); break;
 		}
+		this.mc.sendJson({id:io.id, ord:ord, value:value});
+	}
+	
+	ordToggle(io) {
+		model.send(io, io.ord()?0:1);
+	}
+	
+	ordSendValue(io, event) {
+		if (event.keyCode != 13) return true;
+		model.send(io, 2, event.target.value);
+		event.target.value = '';
+	}
+	
+	ordSendPreset(io, event) {
+		model.send(io, 2, event.target.value);
+	}
+	
+	start(started) {
+		model.mc = webSocket(wsUrl('mc', 6002), (msg, first)=>{
+			ko.mapping.fromJS(msg, model.simio);
+			if (first) started();
+		});
 	}
 	
 	stop() {
-		this.mc.close();
+		model.mc.close();
+		model.simio.removeAll();
 	}
 }
 {% end %}

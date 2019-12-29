@@ -18,16 +18,17 @@
 
 {% import random, string %}
 {% set uuid = ''.join(random.choice(string.ascii_lowercase) for _ in range(8)) %}
+{% from shared.setup import setup %}
 
 
-<script>(function(){
+<script type="module">
 	let page = null;
 	let model = null;
 	
 	{% block script %}
 	{% end %}
 	
-gui.{{uuid}} = new GuiPage(
+window.gui.{{uuid}} = new GuiPage(
 	function(newPage) {
 		page = newPage;
 		Object.defineProperty(page, 'params', { get: function() { return page.pageRoute.params; } });
@@ -49,10 +50,10 @@ gui.{{uuid}} = new GuiPage(
 		{% end %}
 	}
 );
-})();</script>
+</script>
 
 
-<div data-bind="page: {id:'{{id}}', sourceCache:true, withOnShow:$root.{{uuid}}.create, showElement:$root.{{uuid}}.start, hideElement:$root.{{uuid}}.stop, guard:$root.{{uuid}}.guard, onNoMatch:$root.{{uuid}}.route}">
+<div data-bind="page: {id:'{{id}}', sourceCache:true, withOnShow:$root.{{uuid}}.create, showElement:$root.{{uuid}}.start, hideElement:$root.{{uuid}}.stop, guard:$root.{{uuid}}.guard, onNoMatch:$root.{{uuid}}.route {% if start %},role:'start'{% end %} }">
 	<!-- ko let:{$model:$data} -->
 	{% block html %}
 	{% end %}

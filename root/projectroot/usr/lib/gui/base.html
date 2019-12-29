@@ -176,7 +176,7 @@ function GuiPage(pageModel, pageGuard, pageRoute) {
 	}
 }
 
-gui = new function() {
+window.gui = new function() {
 	let self = this;
 
 	self.state		= ko.observableArray();
@@ -212,7 +212,7 @@ gui = new function() {
 </body>
 
 
-<script>(function(){
+<script>window.addEventListener('DOMContentLoaded', () => {
 
 let stateWatchdog = true;
 function resetWatchdog(activate=true) {
@@ -252,6 +252,6 @@ ko.options.deferUpdates = true;
 ko.applyBindings(gui);
 pager.start('#');
 
-})();</script>
+})</script>
 
 </html>

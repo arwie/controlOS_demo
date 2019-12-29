@@ -36,12 +36,9 @@ set('mc')['type'] = $argv[2];
 
 
 function common($name, $type='long', $init=null) {
-	set('common')[] = [
-		'lib'	=> lib(),
-		'name'	=> $name,
-		'type'	=> $type,
-		'init'	=> $init,
-	];
+	if (strpos($name, '_')===false)
+		$name = lib().'_'.$name;
+	set('init')['begin'][] = "common shared $name as $type".($init ? " = $init" : '');
 }
 
 
@@ -112,6 +109,7 @@ file_put_contents($out.'IO.DAT', ob_get_clean());
 
 ob_start();
 	l('ipaddressmask '.gethostbyname('mc').':255.255.255.0');
+	l('defaultgw '.gethostbyname('sys'));
 file_put_contents($argv[1].'/FWCONFIG', ob_get_clean());
 
 

@@ -24,7 +24,7 @@ set -e	#exit script on first error
 rm -rf /mnt/init/revert
 mkdir  /mnt/init/revert
 
-tar -cC/mnt/root  .			| xz -T0 > /mnt/init/revert/update
-tar -cC/var       etc		| xz -T0 > /mnt/init/revert/data
+tar -cC/mnt/root  .				| xz -T0 > /mnt/init/revert/update
+tar -cC/var       etc local		| xz -T0 > /mnt/init/revert/data
 
 mv /mnt/init/.update /mnt/init/update

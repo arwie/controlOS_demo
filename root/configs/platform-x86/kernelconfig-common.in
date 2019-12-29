@@ -57,6 +57,10 @@ CONFIG_CGROUP_BPF=y
 # CONFIG_RT_GROUP_SCHED is not set
 # CONFIG_AUDIT is not set
 
+## networking
+CONFIG_IP_NF_NAT=y
+CONFIG_IP_NF_TARGET_MASQUERADE=y
+
 
 ## Wireless (must be a module to load regulatory)
 ## firmware/regulatory.db

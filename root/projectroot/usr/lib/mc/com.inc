@@ -88,3 +88,21 @@ function com_openNotify($name) {
 function com_openFile($name, $filename) {
 	com_open($name, 'file', 'com_putString("/file", '.s($filename).')');
 }
+
+
+
+function com_with($with) {
+	return 'com_with('.s($with).')';
+}
+
+function com_put($type, $path, $value) {
+	return 'com_put'.ucfirst($type).'('.s($path).','.$value.')';
+}
+function com_putLong($path, $value)		{ return com_put('long', $path, $value); }
+function com_putBool($path, $value)		{ return com_put('bool', $path, $value); }
+function com_putDouble($path, $value)	{ return com_put('double', $path, $value); }
+function com_putString($path, $value, $literal=true)	{ return com_put('string', $path, $literal?s($value):$value); }
+
+function com_get($type, $path) {
+	return 'com_get'.ucfirst($type).'('.s($path).')';
+}
