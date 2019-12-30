@@ -17,7 +17,8 @@ end sub
 	positionfactor				= positionfactor / 70
 	direction					= 1
 	
-	<?=lib()?>_deviceWrite(0x6098, 0,  8, -3)				'Homing Method (-3 = homing on hard stop in negative direction with index)
+	<?=lib()?>_deviceWrite(0x6098, 0,  8, <?=conf(lib(),'homing','method', -1)?>)
+	displacement = <?=conf(lib(),'homing','offset', -240)?>'
 end sub
 
 

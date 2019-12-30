@@ -13,6 +13,8 @@ end sub
 <?drive_setup()?>
 	positionfactor				= positionfactor / 360
 	direction					= 1
+	
+	displacement				= -23
 end sub
 
 
