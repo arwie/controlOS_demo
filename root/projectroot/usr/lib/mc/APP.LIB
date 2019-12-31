@@ -1,16 +1,11 @@
 <?engage(['data'])?>
 
+<?com_websocket(55100)?>
 
-<?input('mode', 'long', true, 1)?>
-end sub
+<?$modes = ['teach','tracking','duplo']?>
 
+common shared app_mode as long
 
-<?$app_engageMode = function($mode) {?>
-	call <?=$mode?>_start
-	while not app_wait(10) and app_mode
-	end while
-	call <?=$mode?>_stop
-<?}?>
 
 
 <?lib_prgStart()?>
@@ -18,15 +13,40 @@ end sub
 end sub
 
 
-<?lib_prgPoll(10)?>
+<?lib_prgLoop()?>
 	select case app_mode
-	case 1
-		<?$app_engageMode('teach')?>
-	case 2
-		<?$app_engageMode('tracking')?>
-	case 3
-		<?$app_engageMode('cvpath')?>
-	case 4
-		<?$app_engageMode('duplo')?>
+	<?foreach($modes as $mode=>$modeLib) {?>
+		case <?=$mode?>'
+			<?=$modeLib?>_start()
+			while (app_mode=<?=$mode?>) and app_active
+				if <?=$modeLib?>_active then
+					modeControl()
+				else
+					app_mode = 0
+				end if
+			end while
+			<?=$modeLib?>_stop()
+	<?}?>
+	case else
+		app_mode = 0
 	end select
+end sub
+
+
+
+sub modeControl
+	com_clear()
+	com_putLong("/mode",	app_mode)
+	com_send(this_websocket)
+	
+	select case com_receive(this_websocket, 250)
+	case com_receiveMessage
+		app_mode = com_getLong("/mode")
+	end select
+end sub
+
+
+
+<?lib_debug()?>
+	com_putLong("mode",			app_mode)
 end sub

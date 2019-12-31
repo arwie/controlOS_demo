@@ -1,0 +1,59 @@
+{% extends "../page.html" %}
+
+
+{% block html %}
+<div class="form-group">
+	<label data-l10n-id="app_mode"></label>
+	<select data-bind="enable:info.mode()==0, value:modeSelect" class="custom-select custom-select-lg">
+		<!-- ko foreach:[1,2] -->
+			<option data-bind="value:$data, l10n:'app_mode-'+$data"></option>
+		<!-- /ko -->
+	</select>
+</div>
+<div class="form-row mt-4">
+	<div class="col-md">
+		<button data-bind="click:modeStart, enable:info.mode()==0"
+			class="btn btn-block btn-lg btn-success"><i class="fas fa-play"></i></button>
+	</div>
+	<div class="col-md">
+		<button data-bind="click:modeStop, enable:info.mode()>0"
+			class="btn btn-block btn-lg btn-danger"><i class="fas fa-stop"></i></button>
+	</div>
+</div>
+{% end %}
+
+
+{% block model %}
+class {
+	constructor() {
+		this.info = ko.mapping.fromJS({});
+		this.modeSelect = ko.observable();
+	}
+	
+	modeStart() {
+		model.mc.sendJson({mode:model.modeSelect()});
+	}
+	modeStop() {
+		model.mc.sendJson({mode:0});
+		model.info.mode(undefined);
+	}
+	
+	start(started) {
+		model.mc = webSocket(wsUrl('mc', 55100), (data, first)=>{
+			ko.mapping.fromJS(data, model.info);
+			if (model.info.mode() > 0)
+				model.modeSelect(model.info.mode());
+			if (first) started();
+		});
+	}
+	
+	stop() {
+		model.mc.close();
+	}
+}
+{% end %}
+
+
+{% block guard %}
+	return gui.isState('mc@app');
+{% end %}
