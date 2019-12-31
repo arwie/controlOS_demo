@@ -6,4 +6,5 @@ Host *
 
 Host mc
   User mc
+  PasswordAuthentication no
   ConnectTimeout 1

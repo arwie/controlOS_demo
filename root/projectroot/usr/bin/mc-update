@@ -104,11 +104,16 @@ def sync(outdir):
 
 
 def update():
-	if isVirgin():
-		logging.info('deflower virgin mc')
-		deflower()
+	try:
+		mcType = getType()
+	except:
+		if isVirgin():
+			logging.info('deflower virgin mc')
+			deflower()
+			mcType = getType()
+		else:
+			raise
 	
-	mcType = getType()
 	logging.info('build for mc-'+mcType)
 	
 	with tempfile.TemporaryDirectory(prefix='mc-update_') as outdir:
