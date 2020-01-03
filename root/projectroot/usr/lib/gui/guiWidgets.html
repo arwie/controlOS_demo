@@ -1,0 +1,68 @@
+
+
+<script type="text/html" id="xyzrInput">
+	<div class="row">
+		<div class="input-group col-lg">
+			<div class="input-group-prepend"><span class="input-group-text">X</span></div>
+			<input data-bind="value:value.x, ro:$component.ro" type="number" step="any" class="form-control">
+		</div>
+		<div class="input-group col-lg">
+			<div class="input-group-prepend"><span class="input-group-text">Y</span></div>
+			<input data-bind="value:value.y, ro:$component.ro" type="number" step="any" class="form-control">
+		</div>
+		<div class="input-group col-lg" data-bind="if:'z' in value">
+			<div class="input-group-prepend"><span class="input-group-text">Z</span></div>
+			<input data-bind="value:value.z, ro:$component.ro" type="number" step="any" class="form-control">
+		</div>
+		<div class="input-group col-lg" data-bind="if:'r' in value">
+			<div class="input-group-prepend"><span class="input-group-text">R</span></div>
+			<input data-bind="value:value.r, ro:$component.ro" type="number" step="any" class="form-control">
+		</div>
+	</div>
+</script>
+<script>ko.components.register('xyzrinput', {template:{element:'xyzrInput'}})</script>
+
+
+<script type="text/html" id="createButton">
+	<button data-bind="click:click" class="btn btn-block btn-primary">
+		<i class="fas fa-file"></i>
+	</button>
+</script>
+<script>ko.components.register('createbutton', {template:{element:'createButton'}})</script>
+
+<script type="text/html" id="copyButton">
+	<!-- ko using:$parent -->
+	<button data-bind="click:$component.click, clickBubble:false" class="btn btn-sm btn-block btn-secondary">
+		<i class="fas fa-copy"></i>
+	</button>
+	<!-- /ko -->
+</script>
+<script>ko.components.register('copybutton', {template:{element:'copyButton'}})</script>
+
+<script type="text/html" id="removeButton">
+	<!-- ko using:$parent -->
+	<button data-bind="clickConfirm:$component.click, clickBubble:false" class="btn btn-sm btn-block btn-danger">
+		<i class="fas fa-trash"></i>
+	</button>
+	<!-- /ko -->
+</script>
+<script>ko.components.register('removebutton', {template:{element:'removeButton'}})</script>
+
+
+<script type="text/html" id="searchBar">
+	<div class="input-group">
+		<div class="input-group-prepend">
+			<!-- ko ifnot:search -->
+				<span class="input-group-text"><i class="fas fa-search"></i></span>
+			<!-- /ko -->
+			<!-- ko if:search -->
+				<button data-bind="click:()=>{search(undefined)}" class="btn btn-secondary"><i class="fas fa-times"></i></button>
+			<!-- /ko -->
+		</div>
+		<input data-bind="textInput:search" type="text" class="form-control">
+		<div class="input-group-append">
+			<button data-bind="click:()=>{sort(!sort())}, css:{active:sort}" class="btn btn-primary"><i class="fas fa-sort-alpha-down"></i></button>
+		</div>
+	</div>
+</script>
+<script>ko.components.register('searchbar', {template:{element:'searchBar'}})</script>

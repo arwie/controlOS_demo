@@ -5,7 +5,7 @@
 <div class="form-group">
 	<label data-l10n-id="app_mode"></label>
 	<select data-bind="enable:info.mode()==0, value:modeSelect" class="custom-select custom-select-lg">
-		<!-- ko foreach:[1,2] -->
+		<!-- ko foreach:[1,2,3] -->
 			<option data-bind="value:$data, l10n:'app_mode-'+$data"></option>
 		<!-- /ko -->
 	</select>

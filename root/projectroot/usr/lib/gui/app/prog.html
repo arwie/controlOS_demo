@@ -1,0 +1,107 @@
+{% extends "../page.html" %}
+
+
+{% block html %}
+<form data-bind="using:prog">
+	<div class="form-group">
+		<label data-l10n-id="prog_name"></label>
+		<input data-bind="value:name" type="text" class="form-control">
+	</div>
+	<div class="form-group">
+		<label data-l10n-id="prog_description"></label>
+		<textarea data-bind="value:description" class="form-control" rows="3"></textarea>
+	</div>
+</form>
+
+<button data-bind="click:play, enable:points().length"
+	class="btn btn-block btn-lg btn-success"><i class="fas fa-play"></i></button>
+
+<table class="table table-hover mt-3">
+	<thead>
+		<tr>
+			<th style="width:5%"></th>
+			<th>X</th><th>Y</th><th>Z</th><th>R</th>
+			<th style="width:10%">
+				<createButton params="click:$model.create"></createButton>
+			</th>
+		</tr>
+	</thead>
+	<tbody data-bind="foreach:points">
+		<tr>
+			<td>
+				<button data-bind="click:$model.raise, clickBubble:false, enable:swap"
+					class="btn btn-sm btn-block btn-secondary"><i class="fas fa-arrow-up"></i></button>
+			</td>
+			<td data-bind="text:path.x.toFixed(2)"></td>
+			<td data-bind="text:path.y.toFixed(2)"></td>
+			<td data-bind="text:path.z.toFixed(2)"></td>
+			<td data-bind="text:path.r.toFixed(2)"></td>
+			<td>
+				<removeButton params="click:$model.remove"></removeButton>
+			</td>
+		</tr>
+	</tbody>
+</table>
+{% end %}
+
+
+{% block model %}
+class {
+	constructor() {
+		this.prog	= ko.mapping.fromJS({});
+		this.points	= ko.observableArray();
+		this.here	= {};
+	}
+	
+	list() {
+		return progdb.points.list(page.params.id).done((points)=>{
+			model.points(points);
+		});
+	}
+	
+	create() {
+		progdb.points.create(page.params.id, model.here).done(model.list);
+	}
+	
+	remove(point) {
+		progdb.points.remove(point.id).done(model.list);
+	}
+	
+	raise(point) {
+		progdb.points.swap(point.id, point.swap).done(model.list);
+	}
+	
+	play() {
+		model.mc.sendJson({points:model.points()});
+	}
+	
+	start() {
+		model.mc = webSocket(wsUrl('mc', 55003), (data)=>{
+			model.here = data.here;
+		});
+		return [
+			progdb.progs.load(page.params.id).done((prog)=>{
+				ko.mapping.fromJS(prog, model.prog);
+				model.progObserver = ko.subscribeTree(model.prog, ()=>{
+					progdb.progs.save(page.params.id, ko.mapping.toJS(model.prog));
+				});
+			}),
+			model.list()
+		];
+	}
+	
+	stop() {
+		model.mc.close();
+		model.progObserver.dispose();
+	}
+	
+	breadcrumb() {
+		return [{href:pageUrl('app/progs'), l10n:'progs'}, {text:model.prog.name}];
+	}
+}
+{% end %}
+
+
+{% block guard %}
+	return gui.isState('mc@prog');
+{% end %}

@@ -2,7 +2,7 @@
 
 <?com_websocket(55100)?>
 
-<?$modes = ['teach','tracking','duplo']?>
+<?$modes = ['teach','prog','tracking','duplo']?>
 
 common shared app_mode as long
 
