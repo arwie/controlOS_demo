@@ -17,7 +17,7 @@ dim shared this_disableTimeout as long
 	case com_receiveMessage
 		if com_getLong("/cmd") and not isMoving then
 			delta1_enableAttach()
-			moveLimit(com_getLong("/dim"), com_getLong("/dir"))
+			moveLimit(com_getLong("/dim"), com_getLong("/dir"), com_getLong("/speed"))
 			this_disableTimeout = 25
 		else
 			stop stoptype=ABORT
@@ -44,7 +44,7 @@ end sub
 
 
 
-sub moveLimit(byval dim_ as long, byval dir_ as long)
+sub moveLimit(byval dim_ as long, byval dir_ as long, byval speed_ as long)
 	dim target_ as location of xyzr = setPoint
 	dim step_   as location of xyzr
 	dim steps_  as long
@@ -81,7 +81,7 @@ sub moveLimit(byval dim_ as long, byval dir_ as long)
 	
 	while not isMoving and useDecrement(steps_)
 		try
-			moves target_ velocityrate=5 orientationfollowing = orientationfollowing_
+			moves target_ velocityrate=speed_ orientationfollowing=orientationfollowing_
 		catch 3121
 			target_ = target_ - step_
 		end try

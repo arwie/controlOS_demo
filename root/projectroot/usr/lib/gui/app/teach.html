@@ -2,18 +2,20 @@
 
 
 {% block html %}
-	<dl data-bind="with:info.pos" class="row">
-		<dt class="col-sm-2"  data-l10n-id="X"></dt>
-		<dd class="col-sm-10" data-bind="text:x().toFixed(2)"></dd>
-		<dt class="col-sm-2"  data-l10n-id="Y"></dt>
-		<dd class="col-sm-10" data-bind="text:y().toFixed(2)"></dd>
-		<dt class="col-sm-2"  data-l10n-id="Z"></dt>
-		<dd class="col-sm-10" data-bind="text:z().toFixed(2)"></dd>
-		<dt class="col-sm-2"  data-l10n-id="R"></dt>
-		<dd class="col-sm-10" data-bind="text:r().toFixed(2)"></dd>
-	</dl>
+<div class="form-group">
+	<label data-l10n-id="teach_position"></label>
+	<div data-bind="foreach:['x','y','z','r']" class="row">
+		<div class="input-group col-lg">
+			<div class="input-group-prepend"><span data-bind="text:$data.toUpperCase()" class="input-group-text"></span></div>
+			<input data-bind="value:$model.info.pos[$data]().toFixed(2), ro:true" type="text" class="form-control">
+		</div>
+	</div>
+</div>
 
-<hr>
+<div class="form-group">
+	<label data-l10n-id="teach_speed"></label>
+	<input data-bind="value:$model.speed" type="range" min="3" max="21" step="3" class="custom-range">
+</div>
 
 <div class="row my-5">
 	<div class="col">
@@ -52,8 +54,6 @@
 		<button data-bind="press:{start:()=>{$model.moveDim(4, 1)}, stop:$model.moveStop}" class="btn btn-block btn-lg btn-secondary"><i class="fa fa-plus"> R</i></button>
 	</div>
 </div>
-
-<div data-bind="element:graph.canvas"></div>
 {% end %}
 
 
@@ -61,16 +61,15 @@
 class {
 	constructor() {
 		this.info = ko.mapping.fromJS({});
-		this.graph = new GraphXY();
+		this.speed = ko.observable('9');
 	}
 	
-	moveDim(dim, dir)	{ model.mc.sendJson({cmd:1, dim:dim, dir:dir}); }
+	moveDim(dim, dir)	{ model.mc.sendJson({cmd:1, dim:dim, dir:dir, speed:parseInt(model.speed())}); }
 	moveStop()			{ model.mc.sendJson({cmd:0}); }
 	
 	start(started) {
 		model.mc = webSocket(wsUrl('mc', 55001), (data, first)=>{
 			ko.mapping.fromJS(data, model.info);
-			model.graph.updatePos(data.pos.x, data.pos.y);
 			if (first) started();
 		});
 	}
