@@ -8,6 +8,8 @@
 	select case receive_
 	case com_receiveMessage
 		movePath()
+	case com_receiveTimeout
+		delta1_disableDetach()
 	end select
 	
 	com_clear()
@@ -41,5 +43,4 @@ sub movePath
 		next
 		waitForMotion
 	<?catchLog()?>
-	delta1_disableDetach()
 end sub
