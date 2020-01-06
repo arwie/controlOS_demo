@@ -7,7 +7,9 @@ import logging, json
 
 class ProgdbTableHandler(TableHandler):
 	def initialize(self, tableName):
-		super().initialize(progdb.progdb, tableName)
+		super().initialize(progdb.progdb, tableName, doPost={
+			'touch':	self.doTouch,
+		})
 	
 	def touch(self, id):
 		self.db.execute('UPDATE {table} SET ord = (SELECT MAX(ord) FROM {table})+1 WHERE id=:id'.format(table=self.table.table), {'id':id})
@@ -27,6 +29,9 @@ class ProgdbTableHandler(TableHandler):
 	
 	def doSave(self):
 		super().doSave()
+		self.touch(self.get_query_argument('id'))
+	
+	def doTouch(self):
 		self.touch(self.get_query_argument('id'))
 
 

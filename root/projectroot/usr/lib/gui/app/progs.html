@@ -34,6 +34,9 @@
 				success(JSON.parse(data), data.hashCode());
 			});
 		}
+		touch(id) {
+			return $.post(this.url('touch', {id:id}));
+		}
 	}
 	
 	window.progdb = {

@@ -71,14 +71,17 @@ class {
 	
 	create() {
 		progdb.points.create(page.params.id, model.newPoint()).done(model.list);
+		progdb.progs.touch(page.params.id);
 	}
 	
 	remove(point) {
 		progdb.points.remove(point.id).done(model.list);
+		progdb.progs.touch(page.params.id);
 	}
 	
 	raise(point) {
 		progdb.points.swap(point.id, point.swap).done(model.list);
+		progdb.progs.touch(page.params.id);
 	}
 	
 	value(point) {
@@ -88,6 +91,7 @@ class {
 	
 	play() {
 		model.mc.sendJson({points:model.points()});
+		progdb.progs.touch(page.params.id);
 	}
 	
 	start() {
