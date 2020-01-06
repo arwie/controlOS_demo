@@ -14,44 +14,44 @@
 
 <div class="form-group">
 	<label data-l10n-id="teach_speed"></label>
-	<input data-bind="value:$model.speed" type="range" min="3" max="21" step="3" class="custom-range">
+	<input data-bind="value:$model.speed" type="range" min="1" max="20" step="1" class="custom-range">
 </div>
 
 <div class="row my-5">
 	<div class="col">
-		<button data-bind="press:{start:()=>{$model.moveDim(3,-1)}, stop:$model.moveStop}" class="btn btn-block btn-lg btn-secondary"><i class="fa fa-minus"> Z</i></button>
+		<button data-bind="press:{start:()=>{$model.moveDim(3,-1)}, stop:$model.moveStop}" class="btn btn-block btn-lg btn-secondary"><i class="fa fa-minus"></i> Z</button>
 	</div>
 	<div class="col"></div>
 	<div class="col">
-		<button data-bind="press:{start:()=>{$model.moveDim(2,-1)}, stop:$model.moveStop}" class="btn btn-block btn-lg btn-secondary"><i class="fa fa-minus"> Y</i></button>
+		<button data-bind="press:{start:()=>{$model.moveDim(2,-1)}, stop:$model.moveStop}" class="btn btn-block btn-lg btn-secondary"><i class="fa fa-minus"></i> Y</button>
 	</div>
 	<div class="col"></div>
 	<div class="col">
-		<button data-bind="press:{start:()=>{$model.moveDim(4,-1)}, stop:$model.moveStop}" class="btn btn-block btn-lg btn-secondary"><i class="fa fa-minus"> R</i></button>
+		<button data-bind="press:{start:()=>{$model.moveDim(4,-1)}, stop:$model.moveStop}" class="btn btn-block btn-lg btn-secondary"><i class="fa fa-minus"></i> R</button>
 	</div>
 </div>
 <div class="row my-5">
 	<div class="col"></div>
 	<div class="col">
-		<button data-bind="press:{start:()=>{$model.moveDim(1,-1)}, stop:$model.moveStop}" class="btn btn-block btn-lg btn-secondary"><i class="fa fa-minus"> X</i></button>
+		<button data-bind="press:{start:()=>{$model.moveDim(1,-1)}, stop:$model.moveStop}" class="btn btn-block btn-lg btn-secondary"><i class="fa fa-minus"></i> X</button>
 	</div>
 	<div class="col"></div>
 	<div class="col">
-		<button data-bind="press:{start:()=>{$model.moveDim(1, 1)}, stop:$model.moveStop}" class="btn btn-block btn-lg btn-secondary"><i class="fa fa-plus" > X</i></button>
+		<button data-bind="press:{start:()=>{$model.moveDim(1, 1)}, stop:$model.moveStop}" class="btn btn-block btn-lg btn-secondary"><i class="fa fa-plus" ></i> X</button>
 	</div>
 	<div class="col"></div>
 </div>
 <div class="row my-5">
 	<div class="col">
-		<button data-bind="press:{start:()=>{$model.moveDim(3, 1)}, stop:$model.moveStop}" class="btn btn-block btn-lg btn-secondary"><i class="fa fa-plus" > Z</i></button>
+		<button data-bind="press:{start:()=>{$model.moveDim(3, 1)}, stop:$model.moveStop}" class="btn btn-block btn-lg btn-secondary"><i class="fa fa-plus" ></i> Z</button>
 	</div>
 	<div class="col"></div>
 	<div class="col">
-		<button data-bind="press:{start:()=>{$model.moveDim(2, 1)}, stop:$model.moveStop}" class="btn btn-block btn-lg btn-secondary"><i class="fa fa-plus" > Y</i></button>
+		<button data-bind="press:{start:()=>{$model.moveDim(2, 1)}, stop:$model.moveStop}" class="btn btn-block btn-lg btn-secondary"><i class="fa fa-plus" ></i> Y</button>
 	</div>
 	<div class="col"></div>
 	<div class="col">
-		<button data-bind="press:{start:()=>{$model.moveDim(4, 1)}, stop:$model.moveStop}" class="btn btn-block btn-lg btn-secondary"><i class="fa fa-plus"> R</i></button>
+		<button data-bind="press:{start:()=>{$model.moveDim(4, 1)}, stop:$model.moveStop}" class="btn btn-block btn-lg btn-secondary"><i class="fa fa-plus"></i> R</button>
 	</div>
 </div>
 {% end %}
@@ -61,7 +61,7 @@
 class {
 	constructor() {
 		this.info = ko.mapping.fromJS({});
-		this.speed = ko.observable('9');
+		this.speed = ko.observable('8');
 	}
 	
 	moveDim(dim, dir)	{ model.mc.sendJson({cmd:1, dim:dim, dir:dir, speed:parseInt(model.speed())}); }
