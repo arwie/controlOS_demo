@@ -7,7 +7,7 @@
 	<div data-bind="foreach:['x','y','z','r']" class="row">
 		<div class="input-group col-lg">
 			<div class="input-group-prepend"><span data-bind="text:$data.toUpperCase()" class="input-group-text"></span></div>
-			<input data-bind="value:$model.info.pos[$data]().toFixed(2), ro:true" type="text" class="form-control">
+			<input data-bind="value:$model.info.pos[$data]().toFixed(2)" type="text" class="form-control" readonly>
 		</div>
 	</div>
 </div>

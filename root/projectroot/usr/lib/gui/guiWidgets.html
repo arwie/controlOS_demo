@@ -24,9 +24,11 @@
 
 
 <script type="text/html" id="createButton">
-	<button data-bind="click:click" class="btn btn-block btn-primary">
+	<!-- ko using:$parent -->
+	<button data-bind="click:$component.click" class="btn btn-block btn-primary">
 		<i class="fas fa-file"></i>
 	</button>
+	<!-- /ko -->
 </script>
 <script>ko.components.register('createbutton', {template:{element:'createButton'}})</script>
 
