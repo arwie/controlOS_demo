@@ -8,20 +8,14 @@ dim shared this_disableTimeout as long
 	case com_receiveDisconnect
 		delta1_disableDetach()
 	case com_receiveTimeout
-		if not isMoving then 
+		if not delta1_disabled and not isMoving then 
 			if not useDecrement(this_disableTimeout) then
 				delta1_disableDetach()
 			end if
 		end if
 	
 	case com_receiveMessage
-		if com_getLong("/cmd") and not isMoving then
-			delta1_enableAttach()
-			moveLimit(com_getLong("/dim"), com_getLong("/dir"), com_getLong("/speed"))
-			this_disableTimeout = 25
-		else
-			stop stoptype=ABORT
-		end if
+		handleMessage()
 	end select
 	
 	com_clear()
@@ -36,12 +30,26 @@ end sub
 
 
 <?lib_prgError()?>
+	stop stoptype=ABORT
 	if not prgRunning then
 		teach_prgStop()
 		teach_stopTrigger()
 	end if
 end sub
 
+
+
+sub handleMessage
+	try
+		if com_getLong("/cmd") and not isMoving then
+			this_disableTimeout = 25
+			delta1_enableAttach()
+			moveLimit(com_getLong("/dim"), com_getLong("/dir"), com_getLong("/speed"))
+		else
+			stop stoptype=ABORT
+		end if
+	<?catchLog()?>
+end sub
 
 
 sub moveLimit(byval dim_ as long, byval dir_ as long, byval speed_ as long)
