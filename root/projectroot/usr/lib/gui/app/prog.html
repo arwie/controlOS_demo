@@ -36,7 +36,7 @@
 		</tr>
 	</thead>
 	<tbody data-bind="foreach:points">
-		<tr>
+		<tr data-bind="click:$model.value">
 			<td>
 				<button data-bind="click:$model.raise, clickBubble:false, enable:swap"
 					class="btn btn-sm btn-block btn-secondary"><i class="fas fa-arrow-up"></i></button>
@@ -79,6 +79,11 @@ class {
 	
 	raise(point) {
 		progdb.points.swap(point.id, point.swap).done(model.list);
+	}
+	
+	value(point) {
+		if (!model.teach())
+			model.newPoint(point.path);
 	}
 	
 	play() {
