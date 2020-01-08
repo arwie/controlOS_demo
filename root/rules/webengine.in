@@ -1,0 +1,10 @@
+## SECTION=project_specific
+
+config WEBENGINE
+	bool
+	prompt "webengine"
+	select HOST_QT5
+	select QT5
+	select QT5_MODULE_QTWEBENGINE
+	help
+	  FIXME
