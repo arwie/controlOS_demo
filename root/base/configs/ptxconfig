@@ -3,14 +3,12 @@
 # PTXdist 2019.11.0
 #
 # PTXCONF_APP is not set
-# PTXCONF_CVPATH is not set
 PTXCONF_GUI=y
 PTXCONF_PYTHON_SHARED=y
 # PTXCONF_QEMU is not set
 PTXCONF_STX_MC=y
 PTXCONF_SYSTEM=y
 PTXCONF_VERSION=y
-# PTXCONF_WEBENGINE is not set
 
 #
 # ------------------------------------
@@ -2333,7 +2331,6 @@ PTXCONF_DBUS_SYSTEMD_UNIT=y
 # PTXCONF_MESA_DEMOS is not set
 # PTXCONF_MESALIB is not set
 # PTXCONF_MTDEV is not set
-# PTXCONF_OPENCV is not set
 # PTXCONF_OPUS is not set
 # PTXCONF_ORC is not set
 # PTXCONF_PIXMAN is not set

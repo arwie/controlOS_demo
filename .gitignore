@@ -3,6 +3,7 @@
 /**/configs/**/*.old
 /boot/platform-*/
 /root/platform-*/
+/root/base/platform-*/
 /initramfs/platform-*/
 /mccom/platform-*/
 __pycache__
