@@ -16,6 +16,9 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 %}
 
+{% from shared.setup import setup %}
+
+
 locale_en	= English (en)
 locale_de	= Deutsch (de)
 locale_se	= Svenska (se)
