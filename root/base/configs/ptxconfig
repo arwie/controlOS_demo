@@ -9,6 +9,7 @@ PTXCONF_PYTHON_SHARED=y
 PTXCONF_STX_MC=y
 PTXCONF_SYSTEM=y
 PTXCONF_VERSION=y
+# PTXCONF_WEBENGINE is not set
 
 #
 # ------------------------------------
