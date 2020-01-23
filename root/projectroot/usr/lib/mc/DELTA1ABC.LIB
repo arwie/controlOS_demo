@@ -24,7 +24,7 @@ end sub
 
 <?axis_setup()?>
 	absolute					= true
-	absEnable					= false		'disable abs motions until homed
+	absEnable					= <?=device_simulated()?'true':'false'?>		'disable abs motions until homed
 	
 	positionmin					= 242
 	positionmax					= positionmin + 146

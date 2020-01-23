@@ -73,6 +73,8 @@ CONFIG_OVERLAY_FS=y
 CONFIG_BRIDGE=y
 CONFIG_TUN=m
 
+CONFIG_RTC_HCTOSYS=y
+
 
 ## unused features
 # CONFIG_SWAP is not set

@@ -33,22 +33,16 @@ export default class Scene extends THREE.Scene {
 		this.camera = new THREE.PerspectiveCamera(50, 0, 0.1, 10000);
 		this.camera.position.set(-2000, -2000, 2000);
 		this.camera.up.set(0, 0, 1);
+		this.add(this.camera);
+		
+		this.camera.add(new THREE.PointLight(0xffffff, 0.5));
+		let hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444);
+		hemiLight.position.set(0, 0, 1);
+		this.add(hemiLight);
 		
 		this.controls = new OrbitControls(this.camera, this.renderer.domElement);
+		this.controls.rotateSpeed = 0.5;
 		this.controls.addEventListener('change', this.render.bind(this));
-		
-		var hemiLight = new THREE.HemisphereLight(0xffffff, 0xffffff, 0.6);
-		hemiLight.color.setHSL( 0.6, 1, 0.6 );
-		hemiLight.groundColor.setHSL( 0.095, 1, 0.75 );
-		hemiLight.position.set( 0, 3000, 0 );
-		this.add(hemiLight);
-
-		var ambient = new THREE.AmbientLight( 0x333333 );
-		this.add(ambient);
-
-		var directionalLight = new THREE.DirectionalLight(0x888888);
-		directionalLight.position.set(1, 1, 1);
-		this.add(directionalLight);
 		
 		new ResizeObserver(()=>{
 			const canvas = this.renderer.domElement;
@@ -57,6 +51,12 @@ export default class Scene extends THREE.Scene {
 			this.camera.updateProjectionMatrix();
 			this.render();
 		}).observe(this.renderer.domElement);
+	}
+	
+	setWorld(world) {
+		this.remove(this.sceneWorld);
+		this.sceneWorld = world;
+		this.add(this.sceneWorld)
 	}
 	
 	get element() {

@@ -64,7 +64,7 @@ end sub
 
 	<?foreach($axes as $ax=>$axis) 
 			if ($axis['simulated']) {
-				ll($ax.'.busnumber					= 0');
+				call(['try', "$ax.busnumber = 0", 'catch 19017', "$ax.busnumber = 1", 'end try']);
 				ll($ax.'.simulated					= true');
 			} else {
 				ll($ax.'.busnumber					= '.$axis['bus'].'_busnumber');
