@@ -11,7 +11,7 @@ Environment=HOME=/var/webengine
 ExecStartPre=+install -d -o nobody /var/webengine
 
 ExecStartPre=/usr/lib/systemd/systemd-networkd-wait-online --interface=sys --timeout=5
-ExecStart=/usr/sbin/webengine --disk-cache-dir=/dev/null --incognito
+ExecStart=/usr/sbin/webengine --single-process --block-new-web-contents --disk-cache-dir=/dev/null --incognito
 
 
 [Install]
