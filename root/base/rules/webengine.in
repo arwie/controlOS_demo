@@ -5,7 +5,9 @@ config WEBENGINE
 	prompt "webengine"
 	select HOST_QT5
 	select QT5
+	select QT5_INPUT_LIBINPUT
 	select QT5_MODULE_QTWEBENGINE
+	select QT5_MODULE_QTVIRTUALKEYBOARD
 	select MENU_XORG_FONTS
 	select XORG_FONT_TTF
 	select XORG_FONT_TTF_LIBERATION
