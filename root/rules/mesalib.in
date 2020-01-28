@@ -1,0 +1,184 @@
+## SECTION=multimedia_libs
+
+menuconfig MESALIB
+	tristate
+	prompt "mesa                          "
+	select HOST_MESALIB
+	select HOST_MESON
+	select HOST_MAKEDEPEND
+	select HOST_SYSTEM_PYTHON3
+	select HOST_SYSTEM_PYTHON3_MAKO
+	select GCCLIBS
+	select GCCLIBS_CXX
+	select LIBDRM
+	select LIBDRM_INTEL		if MESALIB_DRI_I915 || MESALIB_DRI_I965
+	select WAYLAND			if MESALIB_EGL_WAYLAND
+	select WAYLAND_PROTOCOLS	if MESALIB_EGL_WAYLAND
+	select LIBDRM_RADEON		if MESALIB_DRI_R200
+	select LIBDRM_RADEON		if MESALIB_DRI_R300
+	select LIBDRM_RADEON		if MESALIB_DRI_R600
+	select LIBDRM_RADEON		if MESALIB_DRI_RADEONSI
+	select LIBDRM_NOUVEAU		if MESALIB_DRI_NOUVEAU || MESALIB_DRI_NOUVEAU_VIEUX
+	select LIBDRM_VMWGFX		if MESALIB_DRI_SVGA
+	select LM_SENSORS		if MESALIB_LMSENSORS
+	select XORGPROTO		if MESALIB_GLX
+	select XORG_LIB_X11		if MESALIB_GLX || MESALIB_EGL_X11 && MESALIB_EGL_DRM
+	select XORG_LIB_XEXT		if MESALIB_GLX
+	select XORG_LIB_XXF86VM		if MESALIB_GLX
+	select XORG_LIB_XDAMAGE		if MESALIB_GLX
+	select XORG_LIB_XFIXES		if MESALIB_GLX
+	select EXPAT
+	select ZLIB
+	help
+	  Mesa is a 3-D graphics library with an API which is very
+	  similar to that of OpenGL. See the project homepage for
+	  details:
+
+		http://www.mesa3d.org/
+
+if MESALIB
+
+comment "Drivers"
+
+config MESALIB_DRI_SWRAST
+	bool
+	prompt "Software Rasterizer"
+
+config MESALIB_DRI_I915
+	bool
+	select MESALIB_OPENGL
+	prompt "Intel i915"
+
+config MESALIB_DRI_I965
+	bool
+	select MESALIB_OPENGL
+	prompt "Intel i965"
+
+config MESALIB_DRI_R200
+	bool
+	select MESALIB_OPENGL
+	prompt "AMD R200"
+
+config MESALIB_DRI_R300
+	bool
+	prompt "AMD R300"
+
+config MESALIB_DRI_R600
+	bool
+	prompt "AMD R600"
+
+config MESALIB_DRI_RADEONSI
+	bool
+	# needs LLVM
+	depends on BROKEN
+	prompt "AMD RadeonSI"
+
+config MESALIB_DRI_NOUVEAU_VIEUX
+	bool
+	select MESALIB_OPENGL
+	prompt "Nvidia <= GForce4"
+
+config MESALIB_DRI_NOUVEAU
+	bool
+	prompt "Nvidia > GForce4"
+
+config MESALIB_DRI_KMSRO
+	bool
+	prompt "KMS renderonly"
+
+config MESALIB_DRI_FREEDRENO
+	bool
+	prompt "Freedreno"
+
+config MESALIB_DRI_ETNAVIV
+	bool
+	prompt "Etnaviv"
+
+config MESALIB_DRI_V3D
+	bool
+	# needs v3dv3
+	depends on BROKEN
+	prompt "v3d"
+
+config MESALIB_DRI_VC4
+	bool
+	prompt "vc4"
+
+config MESALIB_DRI_PANFROST
+	bool
+	prompt "panfrost"
+
+config MESALIB_DRI_IRIS
+	bool
+	prompt "iris"
+
+config MESALIB_DRI_LIMA
+	bool
+	prompt "lima"
+
+config MESALIB_DRI_SVGA
+	bool
+	prompt "svga"
+	help
+	  driver for vmware virtual gpu (requires linux kernel module vmwgfx)
+
+comment "API Support"
+
+config MESALIB_OPENGL
+	bool
+	prompt "OpenGL"
+
+config MESALIB_GLES1
+	bool
+	select MESALIB_OPENGL
+	prompt "OpenGL ES1"
+
+config MESALIB_GLES2
+	bool
+	select MESALIB_OPENGL
+	prompt "OpenGL ES2"
+
+config MESALIB_GLX
+	select MESALIB_EGL_X11
+	select MESALIB_OPENGL
+	prompt "GLX"
+	bool
+
+config MESALIB_EGL
+	bool
+	prompt "EGL"
+
+config MESALIB_GBM
+	bool
+	prompt "GBM"
+
+comment "Platforms"
+
+config MESALIB_EGL_X11
+	bool
+	prompt "X11"
+
+config MESALIB_EGL_DRM
+	bool
+	select MESALIB_GBM
+	select MESALIB_EGL
+	prompt "DRM"
+
+config MESALIB_EGL_WAYLAND
+	bool
+	select MESALIB_EGL
+	prompt "Wayland"
+
+comment "Gallium HUD options"
+
+config MESALIB_EXTENDED_HUD
+	prompt "Extended Gallium HUD options"
+	bool
+
+config MESALIB_LMSENSORS
+	prompt "LMsensors support"
+	depends on MESALIB_EXTENDED_HUD
+	bool
+
+endif
+

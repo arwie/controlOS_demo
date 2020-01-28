@@ -1,0 +1,70 @@
+## SECTION=multimedia_libs
+
+menuconfig LIBDRM
+	tristate
+	prompt "libdrm                        "
+	select HOST_MESON
+	select LIBC_RT
+	select LIBPTHREAD_STUBS
+	select HOST_XORG_UTIL_MACROS
+	select LIBPCIACCESS	if LIBDRM_INTEL
+	help
+	  This library provides an user-level interface to the DRM
+	  device. It is needed for x.org.
+
+if LIBDRM
+
+config LIBDRM_LIBKMS
+	bool
+	prompt "build libkms"
+
+config LIBDRM_INTEL
+	bool
+	prompt "intel KMS support"
+
+config LIBDRM_RADEON
+	bool
+	prompt "radeon KMS support"
+
+config LIBDRM_AMDGPU
+	bool
+	prompt "amdgpu KMS support"
+
+config LIBDRM_NOUVEAU
+	bool
+	prompt "nouveau KMS support"
+
+config LIBDRM_VMWGFX
+	bool
+	prompt "vmwgfx KMS support"
+
+config LIBDRM_OMAP
+	bool
+	prompt "omap KMS support"
+
+config LIBDRM_EXYNOS
+	bool
+	prompt "exynos KMS support"
+
+config LIBDRM_FREEDRENO
+	bool
+	prompt "freedreno KMS support"
+
+config LIBDRM_TEGRA
+	bool
+	prompt "tegra KMS support"
+
+config LIBDRM_VC4
+	bool
+	prompt "vc4 KMS support"
+
+config LIBDRM_ETNAVIV
+	bool
+	prompt "etnaviv KMS support"
+
+config LIBDRM_TESTS
+	bool
+	prompt "install test programs"
+
+endif
+
