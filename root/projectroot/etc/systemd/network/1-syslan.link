@@ -1,6 +1,6 @@
 [Match]
-#     >SolidPC
-Path= pci-0000:03:00.0
+#     >PokiniF2         >SolidPC
+Path= pci-0000:03:00.0  pci-0000:03:00.0
 OriginalName=eth*
 
 [Link]

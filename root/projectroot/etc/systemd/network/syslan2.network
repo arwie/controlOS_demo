@@ -1,0 +1,5 @@
+[Match]
+Name=syslan2
+
+[Network]
+Bridge=sys
