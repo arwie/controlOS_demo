@@ -2,7 +2,7 @@
 
 
 FILE=${1-system.vdi}
-SIZE=${2-2147483648}
+SIZE=${2-4294967296}
 
 
 SCRIPT=$(readlink -f $0)
