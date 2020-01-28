@@ -68,3 +68,20 @@
 	</div>
 </script>
 <script>ko.components.register('searchbar', {template:{element:'searchBar'}})</script>
+
+
+<script>
+ko.bindingHandlers.selectPicker = {
+	after: ['options', 'value', 'selectedOptions', 'enable'],
+	init: function (element, valueAccessor, allBindingsAccessor) {
+		$(element).addClass('selectpicker').selectpicker();
+	},
+	update: function (element, valueAccessor, allBindingsAccessor) {
+		allBindingsAccessor.get('enable');
+		allBindingsAccessor.get('options');
+		allBindingsAccessor.get('value');
+		allBindingsAccessor.get('selectedOptions');
+		$(element).selectpicker('refresh');
+	}
+};
+</script>
