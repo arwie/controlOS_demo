@@ -1,0 +1,70 @@
+<?com_websocket(55003)?>
+
+dim shared this_paintHeight		as const double	= 44
+dim shared this_traverseHeight	as const double	= 40
+dim shared this_parkingPosition	as location of xyzr
+
+
+<?lib_prgStart()?>
+	attach
+	this_parkingPosition = dest
+end sub
+
+
+<?com_prgReceive('this_websocket', 200)?>
+	select case receive_
+	case com_receiveMessage
+		movePath()
+	case com_receiveTimeout
+		if not delta1_disabled then
+			moves this_parkingPosition
+			waitForMotion
+			delta1_disable()
+		end if
+	end select
+end sub
+
+
+<?lib_prgStop()?>
+	blendingMethod = OFF
+	delta1_disableDetach()
+end sub
+
+
+<?lib_prgError()?>
+	stop stoptype=ABORT
+	if not prgRunning then
+		paint_prgStop()
+		paint_stopTrigger()
+	end if
+end sub
+
+
+sub movePath
+	dim i as long
+	
+	try
+		delta1_enable()
+		
+		com_with("/path/0/")
+		moves #{com_getDouble("x"), com_getDouble("y"), this_traverseHeight, 0}
+		moves #{dest{1}, dest{2}, this_paintHeight, 0}
+		waitForMotion
+		
+		try
+			blendingMethod = 3
+			for i = 1 to com_size("/path")-1
+				com_with("/path/"+str$(i)+"/")
+				moves #{com_getDouble("x"), com_getDouble("y"), this_paintHeight, 0} vrate=10
+			next
+			doPass
+			while isMoving
+				sleep 10
+			end while
+		<?catchLogThrow(null,
+			['stop stoptype=ABORT','blendingMethod = OFF'])?>
+		
+		sleep 100
+		moves #{dest{1}, dest{2}, this_traverseHeight, 0}
+	<?catchLog()?>
+end sub

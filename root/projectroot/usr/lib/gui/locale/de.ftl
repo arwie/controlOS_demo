@@ -1,9 +1,8 @@
 {% include "common/de.ftl" %}
 
 
-app				= Anwendung
-app_mode		= Anwendungsmodus
-app_mode-1		= Einfache Punkt-zu-Punkt Programmierung (SQLite Beispiel)
+paint		= Zeichnen: Kontinuierliche Pfad-Interpolation
+paint_nav	= Zeichnen
 
 teach			= Teachen
 teach_position	= Position
@@ -16,3 +15,8 @@ prog_description	= Beschreibung
 cvpath			= Computer Vision: Path
 cvpath_scan		= Scannen
 cvpath_run		= Ausführen
+
+app				= Anwendung
+app_mode		= Anwendungsmodus
+app_mode-1		= Einfache Punkt-zu-Punkt Programmierung (SQLite Beispiel)
+app_mode-2		= {paint}
