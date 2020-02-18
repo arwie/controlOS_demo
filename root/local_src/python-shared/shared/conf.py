@@ -21,19 +21,17 @@ import configparser, os, pathlib
 
 class Conf(configparser.ConfigParser):
 	
-	def __init__(self, confFile, fromDict=None, section=None):
+	def __init__(self, confFile=None, data=None, section=None):
 		super().__init__(strict=False)
 		self.optionxform = str
 		
 		self.confFile = confFile
 		
-		if fromDict:
-			if section:
-				self.read_dict({section:fromDict})
-			else:
-				self.read_dict(fromDict)
+		if isinstance(data, dict):
+			self.read_dict({section:data} if section else data)
 		else:
-			data = pathlib.Path(confFile).read_text(encoding='utf8')
+			if data is None:
+				data = pathlib.Path(confFile).read_text()
 			if not section:
 				try:
 					self.read_string(data)

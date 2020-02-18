@@ -3,4 +3,4 @@ StopWhenUnneeded=true
 
 [Socket]
 ListenStream=8000
-#BindToDevice=sys
+BindToDevice=sys
