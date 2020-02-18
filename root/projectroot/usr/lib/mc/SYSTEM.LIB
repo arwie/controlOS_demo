@@ -43,7 +43,7 @@ public sub system_stopTimeout(byval timeout_ as long)
 	if not prgRunning then
 		system_stop()
 	else
-		<?logError(['system not stopped in time'])?>
+		<?logError('system not stopped in time')?>
 	end if
 end sub
 

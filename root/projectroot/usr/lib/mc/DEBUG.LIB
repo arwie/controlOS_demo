@@ -37,7 +37,7 @@ end sub
 		debugWebsocketConnected = false
 	case com_receiveTimeout
 	case else
-		<?logNotice(['system state snapshot'], 'pollData()')?>
+		<?logNotice('system state snapshot', ['pollData()'])?>
 	end select
 
 	if debugWebsocketConnected then

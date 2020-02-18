@@ -71,7 +71,7 @@ end sub
 			foreach ($dev['writeBit'] as $bit)
 				ll('EC_ASSOCIATE_PDO_TO_SYS_DIO('.$dev['address'].', 0x'.dechex($bit['index']).', '.$bit['subindex'].', '.$bit['dio'].', '.$bit['size'].', '.$bit['offset'].')');
 		}?>
-	<?catchLogThrow('putEthercatFatal()')?>
+	<?catchThrowLog(['putEthercatFatal()'])?>
 end sub
 
 
@@ -80,7 +80,7 @@ end sub
 		EC_SET_BUS_CYCLETIME(etc_cycletime)
 		dropLong(EC_SET_NEW_STATIC_DISTANCE(300))
 		EC_STARTMASTER()
-	<?catchLogThrow('putEthercatFatal()')?>
+	<?catchThrowLog(['putEthercatFatal()'])?>
 end sub
 
 
@@ -91,30 +91,30 @@ end sub
 				lll('dropLong(EC_PDO_READ('.$dev['address'].', 0x6041, 0))')?>
 		'pass
 	catch EC_DOMAIN_WC_INCOMPLETE.num
-		<?logWarning(false, function(){?>
+		<?logWarning([function(){?>
 			putEthercatDebug()
-		<?})?>
+		<?}])?>
 	catch else
 		'pass
 	end try
 end sub
 
 <?lib_prgPoll('healthQueryIntervalMs', 16)?>
-	<?logInfo(['ethercat health'], function(){?>
+	<?logInfo('ethercat health', [function(){?>
 		putEthercatDebug()
 		putEthercatHealth()
-	<?})?>
+	<?}])?>
 end sub
 
 
 <?lib_prgStop()?>
 	dropLong(EC_RESCAN_SLAVES)
 	sleep 3000
-	<?logNotice(['ethercat stop'], function(){?>
+	<?logNotice('ethercat stop', [function(){?>
 		putEthercatDebug()
 		putEthercatError()
 		putEthercatHealth()
-	<?})?>
+	<?}])?>
 end sub
 
 
@@ -158,8 +158,8 @@ end function
 
 
 
-<?$xdoCatchLogThrow = function($valueType=false) {
-	catchLogThrow([
+<?$xdoCatchThrowLog = function($valueType=false) {
+	catchThrowLog([
 		'com_putLong("/slave", slave_)',
 		'com_putString("/index", hex$(index_)+"h")',
 		'com_putLong("/subindex", subindex_)',
@@ -172,7 +172,7 @@ end function
 public sub etc_pdoWrite(byval slave_ as long, byval index_ as long, byval subindex_ as long, byval value_ as long)
 	try
 		EC_PDO_WRITE(slave_, index_, subindex_, value_)
-	<?$xdoCatchLogThrow('long')?>
+	<?$xdoCatchThrowLog('long')?>
 end sub
 
 public function etc_pdoRead(byval slave_ as long, byval index_ as long, byval subindex_ as long) as long
@@ -189,20 +189,20 @@ public function etc_pdoRead(byval slave_ as long, byval index_ as long, byval su
 				etc_sleepCycle()
 			end try
 		loop while repeat_
-	<?$xdoCatchLogThrow()?>
+	<?$xdoCatchThrowLog()?>
 end function
 
 
 public sub etc_sdoWrite(byval slave_ as long, byval index_ as long, byval subindex_ as long, byval size_ as long, byval value_ as long)
 	try
 		EC_SDO_WRITE(slave_, index_, subindex_, size_, value_)
-	<?$xdoCatchLogThrow('long')?>
+	<?$xdoCatchThrowLog('long')?>
 end sub
 
 public function etc_sdoRead(byval slave_ as long, byval index_ as long, byval subindex_ as long) as long
 	try
 		etc_sdoRead = EC_SDO_READ(slave_, index_, subindex_)
-	<?$xdoCatchLogThrow()?>
+	<?$xdoCatchThrowLog()?>
 end function
 
 
@@ -210,7 +210,7 @@ public function etc_readString(byval slave_ as long, byval index_ as long, byval
 	dim strLen_ as long
 	try
 		etc_readString = EC_SDO_READ_STRING(slave_, index_, subindex_, strLen_)
-	<?$xdoCatchLogThrow()?>
+	<?$xdoCatchThrowLog()?>
 end function
 
 

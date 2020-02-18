@@ -61,8 +61,10 @@ sub movePath
 			while isMoving
 				sleep 10
 			end while
-		<?catchLogThrow(null,
-			['stop stoptype=ABORT','blendingMethod = OFF'])?>
+		<?catchThrowAlwaysLog([
+			'stop stoptype=ABORT',
+			'blendingMethod = OFF'
+		])?>
 		
 		sleep 100
 		moves #{dest{1}, dest{2}, this_traverseHeight, 0}

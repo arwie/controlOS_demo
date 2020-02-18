@@ -1,4 +1,4 @@
-<?// Copyright (c) 2016 Artur Wiebe <artur@4wiebe.de>
+<?// Copyright (c) 2020 Artur Wiebe <artur@4wiebe.de>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 // associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -59,55 +59,66 @@ function engageActive($lib, $while='true', $interval=100) {
 	lll($lib.'_stop()');
 }
 
-function logMessage($prio, $message=false, $log=false) {
-	if (!$message) {
-		$message = 'taskerror(programname)';
-		$extra[] = 'com_putLong("/error", taskerrornumber(programname))';
-	} elseif (is_array($message)) {
-		if ($message[1])
-			$extra[] = 'log_putReport('.s($message[1]).')';
-		$message = s($message[0]);
+function logMessage($prio, $message=null, $report=null, $log=[]) {
+	if (is_array($message)) {
+		$log = $message;
+	} else {
+		if (is_array($report)) {
+			$log = $report;
+		} else {
+			if (is_string($report))
+				$log['report'] = strpos($report,'"')===false ? s($report) : $report;
+		}
+		if (is_string($message))
+			$log['message'] = strpos($message,'"')===false ? s($message) : $message;
 	}
+	if (!$log['message']) {
+		$log['message'] = 'taskerror(programname)';
+		$extra[] = 'com_putLong("/error", taskerrornumber(programname))';
+	}
+	ll("log_message($prio, {$log['message']})");
+	if ($log['report']) {
+		$extra[] = "log_putReport({$log['report']})";
+	}
+	unset($log['message'], $log['report']);
 	if ($log) {
 		$extra[] = ['try', $log, 'catch else', 'end try'];
 	}
-	ll('log_message('.$prio.','.$message.')');
 	call($extra);
 	ll(lib().'_putDebug(true)');
 	ll('log_putCodeFunc(scope)');
-	ll('com_putString("/lib", "'.lib().'")');
+	ll('com_putString("/lib", '.s(lib()).')');
 	ll('log_send()');
 }
-function logCritical($message=false, $log=false) { logMessage(2, $message, $log); }
-function logError   ($message=false, $log=false) { logMessage(3, $message, $log); }
-function logWarning ($message=false, $log=false) { logMessage(4, $message, $log); }
-function logNotice  ($message=false, $log=false) { logMessage(5, $message, $log); }
-function logInfo    ($message=false, $log=false) { logMessage(6, $message, $log); }
-function logDebug   ($message=false, $log=false) { logMessage(7, $message, $log); }
+function logCritical($message=null, $report=null, $log=[]) { logMessage(2, $message, $report, $log); }
+function logError   ($message=null, $report=null, $log=[]) { logMessage(3, $message, $report, $log); }
+function logWarning ($message=null, $report=null, $log=[]) { logMessage(4, $message, $report, $log); }
+function logNotice  ($message=null, $report=null, $log=[]) { logMessage(5, $message, $report, $log); }
+function logInfo    ($message=null, $report=null, $log=[]) { logMessage(6, $message, $report, $log); }
+function logDebug   ($message=null, $report=null, $log=[]) { logMessage(7, $message, $report, $log); }
 
-function logThrow($message=false, $log=false) {
-	logError($message, $log);
+function throwLog($message=null, $report=null, $log=[]) {
+	logError($message, $report, $log);
 	ll('throw errorApplication');
 }
 
-function catchLog($log=false) {
+function catchLog($log=[], $finally=false) {
 	ll('catch errorApplication.num');
 	ll('catch else');
-	logError(false, $log);
+	logError(false, null, $log);
+	if ($finally) {
+		ll('finally');
+		call($finally);
+	}
 	ll('end try');
 }
-
-function catchLogThrow($log=false, $always=false) {
-	ll('catch errorApplication.num');
-	ll('catch else');
-	logError(false, $log);
-	ll('finally');
-	call($always);
-	lll('throw errorApplication');
-	ll('end try');
+function catchThrowLog($log=[], $finally=false) {
+	catchLog($log, [$finally, 'throw errorApplication']);
+}
+function catchThrowAlwaysLog($always, $log=[]) {
+	catchThrowLog($log, $always);
 	call($always);
 }
-
 
 
 function lib_init() {
@@ -189,7 +200,7 @@ function lib_debug($ext=[]) {
 function lib_systemError($errors, $log=false) {
 	foreach ($errors as $e) lib('systemError', $e);
 	l('public sub '.lib().'_systemError');
-	logError('system.error', ['call com_putLong("/error", system.errornumber)', $log]);
+	logError(['message'=>'system.error', 'com_putLong("/error", system.errornumber)', $log]);
 	ll('call lib_systemError');
 	l('end sub');
 	l('sub lib_systemError');
@@ -220,7 +231,7 @@ function libEnd() { global $lib;
 	if ($lib['prg']) {
 		lll('starttask '.$lib['prg']['file']);
 	}
-	logInfo([lib().' started']);
+	logInfo(lib().' started');
 	ll('end if');
 	l('end sub');
 
@@ -254,7 +265,7 @@ function libEnd() { global $lib;
 	lll($lib['name'].'_started = false');
 	lll('call com_sendSelf(state_websocket)');
 	call(lib('stop'), true);
-	logInfo([lib().' stopped']);
+	logInfo(lib().' stopped');
 	ll('end if');
 	l('end sub');
 	
@@ -275,17 +286,6 @@ function libEnd() { global $lib;
 	}
 	l('end sub');
 
-	foreach (['Error', 'Warning', 'Notice', 'Info', 'Debug'] as $prio) {
-		l('sub logLib'.$prio.'(byval message as string)');
-		ll('call log_message(log_prio'.$prio.', message)');
-		l('end sub');
-	}
-	l('sub logSend');
-	ll('call com_putString("/lib", "'.$lib['name'].'")');
-	ll('call '.lib().'_putDebug(true)');
-	ll('call log_send');
-	l('end sub');
-
 	l('sub sleepActive(byval milliseconds_ as long)');
 	ll('dim dummy_ as long = com_receive(lib_activeNotify, milliseconds_)');
 	l('end sub');
@@ -297,7 +297,7 @@ function libEnd() { global $lib;
 		l('end sub');
 		
 		l('public sub '.lib().'_prgError');
-			logError(false, [
+			logError([
 				'call com_putLong("/state", '.lib('prg')['file'].'.state)',
 				//'call com_putString("/trace", backtrace$(programname))',
 				lib('prgError')['log'],
