@@ -20,7 +20,7 @@
 
 
 common shared can_busnumber as const long = 1
-common shared can_cycletime as const long = 8000	'{4000,2000,1000}[µs]
+common shared can_cycletime as const long = 4000	'{4000,2000,1000}[µs]
 
 
 import_c USER_CAN_CNTRL_WORD_SET_RAW(byval as long, byval as long) as long				'(int dadd, int iCntrlWord)
