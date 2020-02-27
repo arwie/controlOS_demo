@@ -61,10 +61,6 @@ public sub can_write(byval slave_ as long, byval index_ as long, byval subindex_
 	select case index_ * can_active
 	case 0x6040
 		dropLong(USER_CAN_CNTRL_WORD_SET_RAW(slave_, value_))
-	case 0x60FE
-		pdo_->data[1]   = value_
-		pdo_->length[1] = 4
-		can_pdo2_write(slave_, pdo_)
 	case else
 		can_sdoWrite(slave_, index_, subindex_, size_, value_)
 	end select

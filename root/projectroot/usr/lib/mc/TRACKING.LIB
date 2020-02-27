@@ -1,4 +1,7 @@
 
+<?input('trigger', 'long', 'delta1b')?>
+	value_ = delta1b_deviceReadBit(0x60FD, 0, 16+0)
+end sub
 
 
 

@@ -1,0 +1,15 @@
+
+
+<?output('outGrip', 'long', 'delta1c')?>
+	system.dout[10000+delta1c_deviceAddress*100+0][1] = not value_
+end sub
+
+<?output('outLaser', 'long', 'delta1c')?>
+	system.dout[10000+delta1c_deviceAddress*100+1][1] = not value_
+end sub
+
+
+<?lib_init()?>
+	tool_outGrip(false)
+	tool_outLaser(false)
+end sub

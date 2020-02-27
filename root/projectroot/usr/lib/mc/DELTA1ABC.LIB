@@ -5,11 +5,18 @@
 
 
 
-<?drive_update(12)?>
+<?drive_update(18)?>
 	<?=lib()?>_deviceWrite(0x607C, 0, 32, 0)					'Home Offset
 	<?=lib()?>_deviceWrite(0x2F22, 0, 16, 1000)					'Home On Edge Current Saturation [mA]
 	
 	<?=lib()?>_driveTune(18000, 0, 0, 350, 8000, 200)
+	
+	<?=lib()?>_deviceWrite(0x20E0, 1, 16, 1)					'Digital Input Mode
+	
+	<?=lib()?>_deviceWrite(0x209C, 1, 16, 13)					'Digital Output Functionality
+	<?=lib()?>_deviceWrite(0x209C, 2, 16, 13)
+	<?=lib()?>_deviceWrite(0x209B, 1, 16, 0)					'Digital Outputs Polarity
+	<?=lib()?>_deviceWrite(0x209B, 2, 16, 0)
 end sub
 
 
@@ -35,7 +42,7 @@ end sub
 	
 	<?axis_setupSpeed(300, 100, 50)?>
 	
-	positionerrormax			= 2
+	positionerrormax			= 3
 end sub
 
 
