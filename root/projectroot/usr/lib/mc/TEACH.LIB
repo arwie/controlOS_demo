@@ -3,14 +3,20 @@
 dim shared this_disableTimeout as long
 
 
+<?lib_prgStart()?>
+	attach
+	tool_select(tool_typeLaser)
+	tool_grip(true)
+end sub
+
 <?com_prgReceive('this_websocket', 200)?>
 	select case receive_
 	case com_receiveDisconnect
-		delta1_disableDetach()
+		delta1_disable()
 	case com_receiveTimeout
 		if not delta1_disabled and not isMoving then 
 			if not useDecrement(this_disableTimeout) then
-				delta1_disableDetach()
+				delta1_disable()
 			end if
 		end if
 	
@@ -25,6 +31,7 @@ end sub
 
 
 <?lib_prgStop()?>
+	tool_select(tool_typeNone)
 	delta1_disableDetach()
 end sub
 
@@ -43,7 +50,7 @@ sub handleMessage
 	try
 		if com_getLong("/cmd") and not isMoving then
 			this_disableTimeout = 25
-			delta1_enableAttach()
+			delta1_enable()
 			moveLimit(com_getLong("/dim"), com_getLong("/dir"), com_getLong("/speed"))
 		else
 			stop stoptype=ABORT
