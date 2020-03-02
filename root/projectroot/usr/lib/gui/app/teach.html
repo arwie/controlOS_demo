@@ -14,7 +14,7 @@
 
 <div class="form-group">
 	<label data-l10n-id="teach_speed"></label>
-	<input data-bind="value:$model.speed" type="range" min="1" max="20" step="1" class="custom-range">
+	<input data-bind="value:$model.speed" type="range" min="1" max="15" step="1" class="custom-range">
 </div>
 
 <div class="row my-5">
@@ -61,7 +61,7 @@
 class {
 	constructor() {
 		this.info = ko.mapping.fromJS({});
-		this.speed = ko.observable('8');
+		this.speed = ko.observable('5');
 	}
 	
 	moveDim(dim, dir)	{ model.mc.sendJson({cmd:1, dim:dim, dir:dir, speed:parseInt(model.speed())}); }

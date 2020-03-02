@@ -40,7 +40,7 @@ end sub
 	
 	axistype					= 0
 	
-	<?axis_setupSpeed(300, 100, 50)?>
+	<?axis_setupSpeed(600, 50, 50)?>
 	
 	positionerrormax			= 3
 end sub
