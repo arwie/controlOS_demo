@@ -25,14 +25,14 @@ end sub
 
 <?lib_prgEvent()?>
 	if tracking_inTrigger and not this_lastTrigger then
-		if tracking_inLoad then
-			if useIncrement(this_triggerCount) mod 2 then
+'		if tracking_inLoad then
+'			if useIncrement(this_triggerCount) mod 2 then
 				trigger delta1 ndof=1 value=conv.positioncommand+70  MasterFrame=conv_frame
 				com_clear()
 				com_send(this_fifo)
-			end if
-		end if
-		adjustConvSpeed()
+'			end if
+'		end if
+'		adjustConvSpeed()
 	end if
 	this_lastTrigger = tracking_inTrigger
 end sub
