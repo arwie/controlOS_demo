@@ -28,7 +28,7 @@ end sub
 
 
 <?lib_debug()?>
-	com_putLocationXyzr("frame/here",		conv_frame.here)
-	com_putLocationXyzr("frame/zero",		conv_frame.zero)
+	'com_putLocationXyzr("frame/here",		conv_frame.here)
+	'com_putLocationXyzr("frame/zero",		conv_frame.zero)
 	com_putDouble("velocityCommand",		velocityCommand)
 end sub

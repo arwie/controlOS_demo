@@ -42,7 +42,7 @@ end sub
 	
 	<?axis_setupSpeed(600, 50, 50)?>
 	
-	positionerrormax			= 3
+	positionerrormax			= 5
 end sub
 
 
