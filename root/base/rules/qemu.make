@@ -16,14 +16,15 @@ PACKAGES-$(PTXCONF_QEMU) += qemu
 #
 # Paths and names
 #
-QEMU_VERSION	:= 2.9.0
-QEMU_MD5	:= 86c95eb3b24ffea3a84a4e3a856b4e26
+QEMU_VERSION	:= 4.1.1
+QEMU_MD5	:= 53879f792ef2675c6c5e6cbf5cc1ac6c
 QEMU		:= qemu-$(QEMU_VERSION)
 QEMU_SUFFIX	:= tar.xz
 QEMU_URL	:= http://download.qemu-project.org/$(QEMU).$(QEMU_SUFFIX)
 QEMU_SOURCE	:= $(SRCDIR)/$(QEMU).$(QEMU_SUFFIX)
 QEMU_DIR	:= $(BUILDDIR)/$(QEMU)
 QEMU_LICENSE	:= unknown
+QEMU_BUILD_OOT	:= YES
 
 
 # ----------------------------------------------------------------------------
@@ -37,80 +38,100 @@ QEMU_LICENSE	:= unknown
 # autoconf
 #
 QEMU_CONF_TOOL	:= autoconf
-#QEMU_CONF_OPT	:= $(CROSS_AUTOCONF_USR)
 QEMU_CONF_OPT	:= \
 	--prefix=/usr \
 	--cross-prefix=$(COMPILER_PREFIX) \
 	--target-list="x86_64-softmmu" \
+	--python=python3 \
+	--disable-werror \
 	--audio-drv-list= \
-	--with-coroutine= \
-	--without-system-pixman \
+	--block-drv-rw-whitelist= \
+	--block-drv-ro-whitelist= \
 	--enable-trace-backends=nop \
+	--disable-tcg-interpreter \
+	--with-coroutine= \
+	--tls-priority=NORMAL \
 	--enable-system \
-	--enable-replication \
-	--enable-kvm \
-	--enable-libusb \
-	--enable-vhost-net \
-	--disable-vhost-scsi \
-	--disable-vhost-vsock \
-	--disable-attr \
-	--disable-bsd-user \
+	--disable-user \
 	--disable-linux-user \
+	--disable-bsd-user \
+	--disable-docs \
+	--disable-guest-agent \
+	--disable-guest-agent-msi \
+	--enable-pie \
+	--disable-modules \
+	--disable-debug-tcg \
+	--disable-debug-info \
+	--disable-sparse \
+	--disable-gnutls \
+	--disable-nettle \
+	--disable-gcrypt \
+	--disable-sdl \
+	--disable-gtk \
+	--disable-vte \
+	--disable-curses \
+	--disable-vnc \
+	--disable-vnc-sasl \
+	--disable-vnc-jpeg \
+	--disable-vnc-png \
+	--disable-cocoa \
+	--disable-virtfs \
+	--disable-mpath \
 	--disable-xen \
 	--disable-xen-pci-passthrough \
-	--disable-xen-pv-domain-build \
-	--disable-vnc \
-	--disable-virtfs \
 	--disable-brlapi \
-	--disable-curses \
 	--disable-curl \
+	--disable-fdt \
 	--disable-bluez \
-	--disable-vde \
+	--enable-kvm \
+	--disable-hax \
+	--disable-rdma \
+	--disable-pvrdma \
+	--disable-netmap \
 	--disable-linux-aio \
 	--disable-cap-ng \
-	--disable-docs \
+	--disable-attr \
+	--enable-vhost-net \
+	--disable-vhost-vsock \
+	--disable-vhost-scsi \
+	--disable-vhost-crypto \
+	--disable-vhost-user \
 	--disable-spice \
 	--disable-rbd \
 	--disable-libiscsi \
-	--disable-usb-redir \
-	--disable-strip \
-	--disable-seccomp \
-	--disable-sparse \
-	--disable-tools \
-	--disable-fdt \
-	--disable-sdl \
-	--disable-gtk \
-	--disable-gcrypt \
-	--disable-nettle \
-	--disable-gnutls \
-	--disable-user \
-	--disable-qom-cast-debug \
-	--disable-xfsctl \
-	--disable-virglrenderer \
-	--disable-opengl \
-	--disable-jemalloc \
-	--disable-tcmalloc \
-	--disable-numa \
-	--disable-libssh2 \
-	--disable-tpm \
-	--disable-glusterfs \
-	--disable-coroutine-pool \
-	--disable-bzip2 \
-	--disable-snappy \
-	--disable-lzo \
-	--disable-smartcard \
 	--disable-libnfs \
-	--disable-netmap \
-	--disable-rdma \
-	--disable-hax \
-	--disable-cocoa \
-	--disable-vte \
-	--disable-debug-info \
-	--disable-debug-tcg \
-	--disable-modules \
-	--disable-pie \
-	--disable-guest-agent \
-	--disable-guest-agent-msi
+	--disable-smartcard \
+	--disable-libusb \
+	--disable-live-block-migration \
+	--disable-usb-redir \
+	--disable-lzo \
+	--disable-snappy \
+	--disable-bzip2 \
+	--disable-lzfse \
+	--disable-seccomp \
+	--enable-coroutine-pool \
+	--disable-glusterfs \
+	--disable-tpm \
+	--disable-libssh \
+	--disable-numa \
+	--disable-libxml2 \
+	--disable-tcmalloc \
+	--disable-jemalloc \
+	--enable-replication \
+	--disable-opengl \
+	--disable-virglrenderer \
+	--disable-xfsctl \
+	--disable-qom-cast-debug \
+	--disable-tools \
+	--disable-dmg \
+	--disable-vvfat \
+	--disable-qed \
+	--disable-parallels \
+	--disable-sheepdog \
+	--disable-crypto-afalg \
+	--disable-capstone \
+	--disable-debug-mutex \
+	--disable-libpmem
 
 # ----------------------------------------------------------------------------
 # Target-Install

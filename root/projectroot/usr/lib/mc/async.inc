@@ -129,6 +129,6 @@ function async_function($name, $args=[], $pre=false, $post=false)
 }
 
 
-function async_call($name) {
-	echo $name.'_';
+function async_call($name, $args='') {
+	ll("{$name}_({$args})");
 }

@@ -45,6 +45,9 @@ public:
 	explicit Message(const string& str)
 		:json(json::parse(str))					{}
 
+	explicit Message(const char* buffer, const size_t length)
+		:json(json::parse(buffer, buffer+length))	{}
+
 
 	void with(const string& with)
 	{

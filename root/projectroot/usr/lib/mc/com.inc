@@ -34,10 +34,23 @@ function com_websocket($port, $args=[], $name=false)
 {
 	if (!$name) {
 		$name = 'this_websocket';
-		l('dim shared '.$name.' as long');
+		l("dim shared {$name} as long");
 	}
 	lib('start', function() use ($port, $args, $name) {
 		com_openWebsocket($name, $port, $args);
+	});
+	lib('stopTrigger', ['com_store()', "com_sendSelf({$name})", 'com_restore()']);
+	lib('stop','com_close('.$name.')');
+}
+
+function com_udpReceiver($port, $name=false)
+{
+	if (!$name) {
+		$name = 'this_udpReceiver';
+		l("dim shared {$name} as long");
+	}
+	lib('start', function() use ($port, $name) {
+		com_openUdpReceiver($name, $port);
 	});
 	lib('stopTrigger', ['com_store()', "com_sendSelf({$name})", 'com_restore()']);
 	lib('stop','com_close('.$name.')');
@@ -47,7 +60,7 @@ function com_fifo($name=false)
 {
 	if (!$name) {
 		$name = 'this_fifo';
-		l('dim shared '.$name.' as long');
+		l("dim shared {$name} as long");
 	}
 	lib('start', function() use ($name) {
 		com_openFifo($name);
@@ -75,6 +88,13 @@ function com_openWebsocket($name, $port, $args=[]) {
 			}
 		}
 	});
+}
+
+function com_openUdpSender($name, $address, $port) {
+	com_open($name, 'udpSender', ['com_putString("/address",'.s($address).')', 'com_putLong("/port",'.$port.')']);
+}
+function com_openUdpReceiver($name, $port) {
+	com_open($name, 'udpReceiver', ['com_putLong("/port",'.$port.')']);
 }
 
 function com_openFifo($name) {

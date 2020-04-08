@@ -23,10 +23,7 @@ dim shared this_udpBeacon as long
 
 
 <?lib_init()?>
-	<?com_open('this_udpBeacon', 'udp', function() {?>
-		com_putString("/send/address", "<?=gethostbyname('sys')?>")
-		com_putLong("/send/port", 33000)
-	<?})?> 
+	<?com_openUdpSender('this_udpBeacon', gethostbyname('sys'), 33000)?> 
 	<?com_openWebsocket('state_websocket', 33000, ['receive'=>'false'])?>
 end sub
 

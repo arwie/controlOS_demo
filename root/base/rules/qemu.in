@@ -9,7 +9,7 @@ config QEMU
 	select GCCLIBS_GCC_S
 	select GLIB
 	select ZLIB
-	select LIBUSB
+	select PIXMAN
 	prompt "qemu"
 	help
 	  FIXME

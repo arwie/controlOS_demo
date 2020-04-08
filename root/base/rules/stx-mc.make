@@ -51,6 +51,8 @@ $(STATEDIR)/stx-mc.targetinstall:
 	
 	@$(call install_alternative, stx-mc, 0, 0, 0644, /usr/lib/systemd/system/mc-poweroff.service)
 	@$(call install_link,        stx-mc, ../mc-poweroff.service, /usr/lib/systemd/system/poweroff.target.wants/mc-poweroff.service)
+	
+	@$(call install_alternative, stx-mc, 0, 0, 0644, /usr/lib/systemd/system/mc-sim.service)
 
 	@$(call install_finish, stx-mc)
 	@$(call touch)

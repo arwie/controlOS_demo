@@ -20,8 +20,9 @@ common shared com_channelNotify				as const long		= 2
 common shared com_channelState				as const long		= 3
 common shared com_channelFifo				as const long		= 4
 common shared com_channelWebsocket			as const long		= 5
-common shared com_channelUdp				as const long		= 6
 common shared com_channelFile				as const long		= 7
+common shared com_channelUdpSender			as const long		= 8
+common shared com_channelUdpReceiver		as const long		= 9
 
 common shared com_receiveTimeout			as const long		= 0
 common shared com_receiveMessage			as const long		= 1

@@ -1,0 +1,9 @@
+[Unit]
+ConditionPathExists=/var/mc-sim.vdi
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/qemu-system-x86_64  -m 512M  -smp 2  -machine pc  -cpu host  -accel kvm  -vga none  -netdev tap,id=n0,ifname=tap-mcsim,script=,downscript=  -device pcnet,netdev=n0  /var/mc-sim.vdi
+
+[Install]
+WantedBy=multi-user.target

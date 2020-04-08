@@ -3,8 +3,6 @@
 # Copyright (C) 2006 by Robert Schwebel
 #               2009 by Marc Kleine-Budde <mkl@pengutronix.de>
 #
-# See CREDITS for details about who has contributed to this project.
-#
 # For further information about the PTXdist project and license conditions
 # see the README file.
 #
@@ -25,6 +23,7 @@ BOOST_URL	:= $(call ptx/mirror, SF, boost/$(BOOST).$(BOOST_SUFFIX))
 BOOST_SOURCE	:= $(SRCDIR)/$(BOOST).$(BOOST_SUFFIX)
 BOOST_DIR	:= $(BUILDDIR)/$(BOOST)
 BOOST_LICENSE	:= BSL-1.0
+BOOST_LICENSE_FILES := file://LICENSE_1_0.txt;md5=e4224ccaecb14d942c71d31bef20d78c
 
 # ----------------------------------------------------------------------------
 # Prepare
@@ -114,7 +113,8 @@ BOOST_JAM	:= \
 JAM_PAR		:= \
 	$(filter -j%,$(if $(PTXDIST_PARALLELMFLAGS),$(PTXDIST_PARALLELMFLAGS),$(PARALLELMFLAGS)))
 
-JAM_MAKE_OPT	:= \
+# Use '=' to delay $(shell ...) calls until this is needed
+JAM_MAKE_OPT	= \
 	$(if $(shell test $(subst -j,,$(JAM_PAR)) -le 64 && echo 1),$(JAM_PAR),-j64) \
 	stage
 

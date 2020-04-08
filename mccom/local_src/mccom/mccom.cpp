@@ -72,8 +72,9 @@ static int mccom_open(int channelType, int *error) noexcept
 			case  3: return manager.openChannel(make_shared<ChannelState>			(*messagePtr));
 			case  4: return manager.openChannel(make_shared<ChannelFifo>			(*messagePtr));
 			case  5: return manager.openChannel(make_shared<ChannelWebsocket>		(*messagePtr));
-			case  6: return manager.openChannel(make_shared<ChannelUdp>				(*messagePtr));
 			case  7: return manager.openChannel(make_shared<ChannelFile>			(*messagePtr));
+			case  8: return manager.openChannel(make_shared<ChannelUdpSender>		(*messagePtr));
+			case  9: return manager.openChannel(make_shared<ChannelUdpReceiver>		(*messagePtr));
 			default: throw runtime_error("unknown channel type");
 		}
 	} catch (exception& e) {

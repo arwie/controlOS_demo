@@ -160,10 +160,19 @@ public function atan2Deg(byval opposite_ as double, byval adjacent_ as double) a
 end function
 
 
+'return normalized angle between -180 and 180
 public function normDeg(byval angle_ as double) as double
 	normDeg = angle_ mod 360
 	if abs(normDeg) > 180 then
 		normDeg = normDeg - sgn(normDeg)*360
+	end if
+end function
+
+'return normalized angle between 0 and 360
+public function normDeg360(byval angle_ as double) as double
+	normDeg360 = angle_ mod 360
+	if normDeg360 < 0 then
+		normDeg360 = normDeg360 + 360
 	end if
 end function
 

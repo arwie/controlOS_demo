@@ -21,14 +21,52 @@
 #include <boost/asio.hpp>
 
 
-class ChannelUdp : public QueuingChannel
+class ChannelUdpSender : public Channel
 {
 public:
 
-	ChannelUdp(const Message& args)
-		: Channel("udp", args), QueuingChannel(args),
-		  socket(asioService),
-		  sendEndpoint(boost::asio::ip::address::from_string(args["send"]["address"]), args["send"]["port"])
+	ChannelUdpSender(const Message& args)
+		: Channel("udpSender", args),
+		  socket(asioContext),
+		  remoteEndpoint(boost::asio::ip::address::from_string(args["address"]), args["port"])
+	{
+	}
+
+	void open() override
+	{
+		Channel::open();
+		socket.open(boost::asio::ip::udp::v4());
+	}
+
+	void send(const Message& message) override
+	{
+		socket.send_to(boost::asio::buffer(message.dump()), remoteEndpoint);
+	}
+
+	void close() override
+	{
+		socket.close();
+		Channel::close();
+	}
+
+
+private:
+	boost::asio::io_context asioContext;
+	boost::asio::ip::udp::socket socket;
+	boost::asio::ip::udp::endpoint remoteEndpoint;
+};
+
+
+
+class ChannelUdpReceiver : public QueuingChannel
+{
+public:
+
+	ChannelUdpReceiver(const Message& args)
+		: Channel("udpReceiver", args), QueuingChannel(args),
+		  socket(asioContext),
+		  localEndpoint(boost::asio::ip::udp::v4(), args["port"]),
+		  buffer(bufferData, sizeof(bufferData))
 	{
 	}
 
@@ -36,26 +74,44 @@ public:
 	{
 		QueuingChannel::open();
 		socket.open(boost::asio::ip::udp::v4());
+		socket.bind(localEndpoint);
+		runner = thread([this](){
+			logMsg(LogDebug("udpReceiver runner started"));
+			receive();
+			asioContext.run();
+		});
 	}
 
-
-	void send(const Message& message) override
+	void receive()
 	{
-		socket.send_to(boost::asio::buffer(message.dump()), sendEndpoint);
+		socket.async_receive_from(buffer, remoteEndpoint, [this](boost::system::error_code ec, std::size_t bytes) {
+			try {
+				if (ec) throw runtime_error(ec.message());
+				pushMessage(make_unique<Message>(bufferData, bytes));
+			} catch (exception& e) {
+				logMsg(LogError(e.what()).func("ChannelUdpReceiver::receive"));
+			}
+			receive();
+		});
 	}
-
 
 	void close() override
 	{
+		asioContext.stop();
+		runner.join();
 		socket.close();
 		QueuingChannel::close();
 	}
 
 
 private:
-	boost::asio::io_service asioService;
+	boost::asio::io_context asioContext;
 	boost::asio::ip::udp::socket socket;
-	boost::asio::ip::udp::endpoint sendEndpoint;
+	boost::asio::ip::udp::endpoint localEndpoint;
+	boost::asio::ip::udp::endpoint remoteEndpoint;
+	char bufferData[1500];
+	boost::asio::mutable_buffer buffer;
+	thread runner;
 };
 
 #endif /* CHANNELUDP_HPP_ */
