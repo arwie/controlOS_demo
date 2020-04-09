@@ -39,6 +39,7 @@ end sub
 
 public sub tool_grip(byval grip_ as long)
 	select case tool_type
+	case tool_typeNone
 	case tool_typeLaser
 		tool_outLaser(grip_)
 	case else

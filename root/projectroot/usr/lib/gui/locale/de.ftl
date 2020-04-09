@@ -7,6 +7,11 @@ paint_nav	= Zeichnen
 teach			= Teachen
 teach_position	= Position
 teach_speed		= Geschwindigkeit
+teach_tool		= Greifer
+teach_goto		= Bewege zu Position
+
+tool_none		= Kein Greifer
+tool_laser		= Laser-Pointer
 
 progs				= Programme
 prog_name			= Name

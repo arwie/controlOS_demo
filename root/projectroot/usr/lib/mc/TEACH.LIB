@@ -26,6 +26,7 @@ end sub
 	
 	com_clear()
 	com_putLocationXyzr("/pos",		setPoint)
+	com_putLong("/tool",			tool_type)
 	com_send(this_websocket)
 end sub
 
@@ -47,13 +48,25 @@ end sub
 
 
 sub handleMessage
+	dim cmd_ as long
 	try
-		if com_getLong("/cmd") and not isMoving then
+		cmd_ = com_getLong("/cmd")
+		if cmd_>0 and not isMoving then
 			this_disableTimeout = 25
 			delta1_enable()
-			moveLimit(com_getLong("/dim"), com_getLong("/dir"), com_getLong("/speed"))
+			select case cmd_
+			case 1
+				moveLimit(com_getLong("/dim"), com_getLong("/dir"), com_getLong("/speed"))
+			case 2
+				moves com_getLocationXyzr("/pos") velocityrate=com_getLong("/speed")
+			end select
 		else
 			stop stoptype=ABORT
+			select case cmd_
+			case -1
+				tool_select(com_getLong("/tool"))
+				tool_grip(true)
+			end select
 		end if
 	<?catchLog()?>
 end sub

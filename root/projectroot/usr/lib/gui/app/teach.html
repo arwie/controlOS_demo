@@ -17,6 +17,28 @@
 	<input data-bind="value:$model.speed" type="range" min="1" max="15" step="1" class="custom-range">
 </div>
 
+<div class="form-group">
+	<label data-l10n-id="teach_tool"></label>
+	<select data-bind="event:{change:$model.selectTool}, value:$model.info.tool, valueAllowUnset:true" class="custom-select">
+		 <option value="0"  data-l10n-id="tool_none"></option>
+		 <option value="10" data-l10n-id="tool_laser"></option>
+	</select>
+</div>
+
+<div class="form-group">
+	<label data-l10n-id="teach_goto"></label>
+	<div class="row">
+		<div class="col">
+			<xyzrInput params="value:$model.gotoPos"></xyzrInput>
+		</div>
+		<div class="col-lg-2">
+			<button data-bind="press:{start:$model.goto, stop:$model.moveStop}" class="btn btn-block btn-success"><i class="fas fa-play"></i></button>
+		</div>
+	</div>
+</div>
+
+<hr class="my-5">
+
 <div class="row my-5">
 	<div class="col">
 		<button data-bind="press:{start:()=>{$model.moveDim(3,-1)}, stop:$model.moveStop}" class="btn btn-block btn-lg btn-secondary"><i class="fa fa-minus"></i> Z</button>
@@ -62,10 +84,31 @@ class {
 	constructor() {
 		this.info = ko.mapping.fromJS({});
 		this.speed = ko.observable('5');
+		this.gotoPos = ko.mapping.fromJS({x:0, y:0, z:0, r:0});
 	}
 	
-	moveDim(dim, dir)	{ model.mc.sendJson({cmd:1, dim:dim, dir:dir, speed:parseInt(model.speed())}); }
-	moveStop()			{ model.mc.sendJson({cmd:0}); }
+	moveStop()			{ model.sendCmd(0); }
+	
+	moveDim(dim, dir)	{ model.sendCmd(1, {dim:dim, dir:dir}); }
+	
+	goto() {
+		document.activeElement.blur();
+		let pos = {};
+		for (let key of ['x','y','z','r']) 
+			pos[key] = parseFloat(model.gotoPos[key]());
+		model.sendCmd(2, {pos:pos});
+	}
+	
+	selectTool(ctx, event) {
+		model.sendCmd(-1, {tool:parseInt(event.target.value)});
+	}
+	
+	sendCmd(cmd, args={}) {
+		args.cmd = cmd;
+		args.speed = parseInt(model.speed());
+		model.mc.sendJson(args);
+		//console.log(args); 
+	}
 	
 	start(started) {
 		model.mc = webSocket(wsUrl('mc', 55001), (data, first)=>{
