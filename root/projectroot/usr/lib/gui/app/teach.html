@@ -19,10 +19,21 @@
 
 <div class="form-group">
 	<label data-l10n-id="teach_tool"></label>
-	<select data-bind="event:{change:$model.selectTool}, value:$model.info.tool, valueAllowUnset:true" class="custom-select">
-		 <option value="0"  data-l10n-id="tool_none"></option>
-		 <option value="10" data-l10n-id="tool_laser"></option>
-	</select>
+	<div class="row">
+		<div class="col">
+			<select data-bind="event:{change:$model.selectTool}, value:$model.info.tool, valueAllowUnset:true" class="custom-select">
+				 <option value="0"  data-l10n-id="tool_none"></option>
+				 <option value="1"  data-l10n-id="tool_magnet"></option>
+				 <option value="10" data-l10n-id="tool_laser"></option>
+			</select>
+		</div>
+		<div class="col-2">
+			<div class="custom-control custom-switch">
+				<input data-bind="event:{change:$model.gripTool}, checked:$model.info.gripped()" type="checkbox" class="custom-control-input" id="teach_grip">
+				<label class="custom-control-label" for="teach_grip" data-l10n-id="teach_grip"></label>
+			</div>
+		</div>
+	</div>
 </div>
 
 <div class="form-group">
@@ -101,6 +112,10 @@ class {
 	
 	selectTool(ctx, event) {
 		model.sendCmd(-1, {tool:parseInt(event.target.value)});
+	}
+	
+	gripTool() {
+		model.sendCmd(-2, {grip:!model.info.gripped()});
 	}
 	
 	sendCmd(cmd, args={}) {

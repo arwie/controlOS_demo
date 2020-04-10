@@ -118,6 +118,6 @@ end sub
 
 
 <?lib_debug()?>
-	com_putLong("/triggerCount",		this_triggerCount)
-	com_putBool("/isInWindow",			conv_frame.isInWindow)
+	com_putLong("triggerCount",		this_triggerCount)
+	com_putBool("isInWindow",		conv_frame.isInWindow)
 end sub

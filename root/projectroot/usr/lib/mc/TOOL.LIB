@@ -4,6 +4,7 @@ common shared tool_typeMagnet		as const long = 1
 common shared tool_typeLaser		as const long = 10
 
 common shared tool_type				as long
+common shared tool_gripped			as long
 
 
 <?output('outGrip', 'long', 'delta1c')?>
@@ -23,6 +24,7 @@ end sub
 
 
 public sub tool_select(byval toolType_ as long)
+	tool_grip(false)
 	tool_type = toolType_
 	select case tool_type
 	case tool_typeMagnet
@@ -30,14 +32,13 @@ public sub tool_select(byval toolType_ as long)
 	case tool_typeLaser
 		delta1.tool = #{37*cosDeg(-60), 37*sinDeg(-60), 0, 0}
 	case else
-		tool_outGrip(false)
-		tool_outLaser(false)
 		delta1.tool = #{0,0,0,0}
 	end select
 end sub
 
 
 public sub tool_grip(byval grip_ as long)
+	tool_gripped = grip_
 	select case tool_type
 	case tool_typeNone
 	case tool_typeLaser
@@ -45,4 +46,11 @@ public sub tool_grip(byval grip_ as long)
 	case else
 		tool_outGrip(grip_)
 	end select
+end sub
+
+
+
+<?lib_debug()?>
+	com_putLong("type",			tool_type)
+	com_putBool("gripped",		tool_gripped)
 end sub

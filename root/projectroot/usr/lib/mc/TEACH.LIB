@@ -27,6 +27,7 @@ end sub
 	com_clear()
 	com_putLocationXyzr("/pos",		setPoint)
 	com_putLong("/tool",			tool_type)
+	com_putBool("/gripped",			tool_gripped)
 	com_send(this_websocket)
 end sub
 
@@ -65,7 +66,8 @@ sub handleMessage
 			select case cmd_
 			case -1
 				tool_select(com_getLong("/tool"))
-				tool_grip(true)
+			case -2
+				tool_grip(com_getBool("/grip"))
 			end select
 		end if
 	<?catchLog()?>

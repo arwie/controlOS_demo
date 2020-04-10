@@ -9,9 +9,11 @@ teach			= Teach
 teach_position	= Position
 teach_speed		= Speed
 teach_tool		= Gripper
+teach_grip		= Grip
 teach_goto		= Move to position
 
 tool_none		= No gripper
+tool_magnet		= Magnet
 tool_laser		= Laser pointer
 
 progs				= Programs
