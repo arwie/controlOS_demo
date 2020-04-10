@@ -2,13 +2,20 @@
 
 
 
+<?lib_prgStart()?>
+	attach
+	tool_select(tool_typeLaser)
+	tool_grip(true)
+end sub
+
+
 <?com_prgReceive('this_websocket', 200)?>
 	select case receive_
 	case com_receiveMessage
 		movePath()
 	case com_receiveTimeout
 		if not delta1_disabled then 
-			delta1_disableDetach()
+			delta1_disable()
 		end if
 	end select
 	
@@ -19,6 +26,7 @@ end sub
 
 
 <?lib_prgStop()?>
+	tool_select(tool_typeNone)
 	delta1_disableDetach()
 end sub
 
@@ -36,7 +44,7 @@ sub movePath
 	dim i as long
 	
 	try
-		delta1_enableAttach()
+		delta1_enable()
 		for i = 0 to com_size("/points")-1
 			com_with("/points/"+str$(i))
 			moves com_getLocationXyzr("path")
