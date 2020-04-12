@@ -1,0 +1,40 @@
+{% extends "../page.html" %}
+
+
+{% block html %}
+<button data-bind="click:play"
+	class="btn btn-block btn-lg btn-success"><i class="fas fa-play"></i></button>
+
+{% end %}
+
+
+{% block model %}
+class {
+	constructor() {
+	}
+	
+	play() {
+		$.getJSON(ajaxUrl('app.o3d')).done((data)=>{
+			console.log(data);
+			if (data.count) {
+				model.mc.sendJson(data.objects[0]);
+			}
+		});
+	}
+	
+	start() {
+		model.mc = webSocket(wsUrl('mc', 55003));
+	}
+	
+	stop() {
+		model.mc.close();
+	}
+	
+	breadcrumb() {}
+}
+{% end %}
+
+
+{% block guard %}
+	return gui.isState('mc@o3d');
+{% end %}

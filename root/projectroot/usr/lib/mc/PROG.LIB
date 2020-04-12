@@ -14,7 +14,7 @@ end sub
 	case com_receiveMessage
 		movePath()
 	case com_receiveTimeout
-		if not delta1_disabled then 
+		if not delta1_disabled then
 			delta1_disable()
 		end if
 	end select

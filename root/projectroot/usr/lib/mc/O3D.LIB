@@ -1,0 +1,63 @@
+<?com_websocket(55003)?>
+
+dim shared this_pickHeight		as const double	= 111
+dim shared this_travHeight		as const double	= 80
+dim shared this_scanPos			as location of xyzr = #{120, 0, this_travHeight, 0}
+
+
+
+<?lib_prgStart()?>
+	delta1_enableAttach()
+	tool_select(tool_typeMagnet)
+	moves this_scanPos
+end sub
+
+
+<?com_prgReceive('this_websocket', 200)?>
+	select case receive_
+	case com_receiveMessage
+		delta1_enableAttach()
+		fetchCan()
+	case com_receiveTimeout
+		if not (delta1_disabled or isMoving) then
+			delta1_disable()
+		end if
+	end select
+end sub
+
+
+<?lib_prgStop()?>
+	tool_select(tool_typeNone)
+	delta1_disableDetach()
+end sub
+
+
+<?lib_prgError()?>
+	stop stoptype=ABORT
+	if not prgRunning then
+		o3d_prgStop()
+		o3d_stopTrigger()
+	end if
+end sub
+
+
+sub fetchCan
+	dim canPos_ as location of xyzr = com_getLocationXyzr("/pos")
+	moves posWithHeight(canPos_, this_travHeight)
+	moves posWithHeight(canPos_, this_pickHeight) vrate=10
+	tool_grip(true)
+	waitForMotion
+	sleepActive(100)
+	moves posWithHeight(canPos_, this_travHeight) vrate=10
+	moves this_scanPos arate=30
+	waitForMotion
+	tool_grip(false)
+	sleepActive(50)
+end sub
+
+
+function posWithHeight(byval pos_ as location of xyzr, byval height_ as double) as location of xyzr
+	pos_{3} = height_
+	posWithHeight = pos_
+	print posWithHeight
+end function

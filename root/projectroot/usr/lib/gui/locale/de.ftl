@@ -23,7 +23,10 @@ cvpath			= Computer Vision: Path
 cvpath_scan		= Scannen
 cvpath_run		= Ausführen
 
+o3d				= ifm O3D Sensor
+
 app				= Anwendung
 app_mode		= Anwendungsmodus
 app_mode-1		= Einfache Punkt-zu-Punkt Programmierung (SQLite Beispiel)
 app_mode-2		= {paint}
+app_mode-5		= {o3d}
