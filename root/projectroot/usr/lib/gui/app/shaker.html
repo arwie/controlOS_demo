@@ -1,0 +1,43 @@
+{% extends "../page.html" %}
+
+
+{% block html %}
+<button data-bind="click:play"
+	class="btn btn-block btn-lg btn-success"><i class="fas fa-play"></i></button>
+
+<hr>
+<img data-bind="attr:{src:imgSrc}" class="img-fluid"/>
+{% end %}
+
+
+{% block model %}
+class {
+	constructor() {
+		this.imgSrc = ko.observable();
+	}
+	
+	play() {
+		$.post(ajaxUrl('app.shaker'), null, null, 'json').done((data)=>{
+			//console.log(data);
+			model.imgSrc(ajaxUrl('app.shaker', {_:Date.now()}));
+			for (let obj of data)
+				model.mc.sendJson({pos:obj});
+		});
+	}
+	
+	start() {
+		model.mc = webSocket(wsUrl('mc', 55003));
+	}
+	
+	stop() {
+		model.mc.close();
+	}
+	
+	breadcrumb() {}
+}
+{% end %}
+
+
+{% block guard %}
+	return gui.isState('mc@shaker');
+{% end %}

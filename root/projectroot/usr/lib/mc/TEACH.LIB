@@ -81,7 +81,7 @@ sub moveLimit(byval dim_ as long, byval dir_ as long, byval speed_ as long)
 	dim orientationfollowing_ as long
 	
 	if dir_ > 0 then
-		step_ = #{+200, +200, 120, +179}
+		step_ = #{+200, +200, 150, +179}
 	else
 		step_ = #{-200, -200,   0, -179}
 	end if
