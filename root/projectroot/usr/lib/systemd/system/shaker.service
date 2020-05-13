@@ -1,0 +1,5 @@
+[Unit]
+StopWhenUnneeded=true
+
+[Service]
+ExecStart=/usr/sbin/shaker

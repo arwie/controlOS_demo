@@ -2,7 +2,7 @@
 # Automatically generated file; DO NOT EDIT.
 # PTXdist 2020.04.0
 #
-# PTXCONF_APP is not set
+PTXCONF_APP=y
 # PTXCONF_CVPATH is not set
 PTXCONF_GUI=y
 PTXCONF_PYTHON_SHARED=y

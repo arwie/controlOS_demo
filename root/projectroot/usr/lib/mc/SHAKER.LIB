@@ -1,27 +1,48 @@
 <?com_websocket(55003)?>
 
-dim shared this_pickHeight		as const double	= 122
-dim shared this_travHeight		as const double	= 100
-dim shared this_scanPos			as location of xyzr = #{130, 0, this_travHeight, 0}
+dim shared this_travHeight		as const double	= 75
+dim shared this_pickHeight		as const double	= 104.5
+dim shared this_scanPos			as const location of xyzr = #{120, 0, this_travHeight, 0}
+
+dim shared this_placePos		as location of xyzr = #{70, 170, 77, 0}
+dim shared this_objectCount		as long
 
 
 
-<?lib_prgStart()?>
-	delta1_enableAttach()
-	tool_select(tool_typeMagnet)
-	moves this_scanPos vrate=10
+<?output('outShake', 'long', 'delta1a')?>
+	system.dout[10000+delta1a_deviceAddress*100+1][1] = not value_
+end sub
+
+<?output('outLight', 'long', 'delta1b')?>
+	system.dout[10000+delta1b_deviceAddress*100+1][1] = not value_
 end sub
 
 
-<?com_prgReceive('this_websocket', 200)?>
+
+<?lib_init()?>
+	shaker_outShake(false)
+	shaker_outLight(false)
+end sub
+
+
+<?lib_prgStart()?>
+	this_objectCount = 0
+	delta1_enableAttach()
+	tool_select(tool_typeMagnet)
+end sub
+
+
+<?com_prgReceive('this_websocket', 1500)?>
+	shaker_outLight(false)
 	select case receive_
+	case com_receiveNotify
+		shakeAndScan()
 	case com_receiveMessage
-		delta1_enableAttach()
 		fetchObject()
-	case com_receiveTimeout
-		if not (delta1_disabled or isMoving) then
-			delta1_disable()
-		end if
+	case com_receiveDisconnect
+		moves this_scanPos vrate=50
+		waitForMotion
+		shaker_stopTrigger()
 	end select
 end sub
 
@@ -41,23 +62,38 @@ end sub
 end sub
 
 
+sub shakeAndScan
+	moves this_scanPos vrate=50
+	shaker_outShake(true)
+	sleepActive(300)
+	shaker_outShake(false)
+	shaker_outLight(true)
+	sleepActive(450)
+	waitForMotion
+	com_clear()
+	com_send(this_websocket)
+end sub
+
 sub fetchObject
-	dim objectPos_ as location of xyzr = com_getLocationXyzr("/pos")
-	moves posWithHeight(objectPos_, this_travHeight)
-	moves posWithHeight(objectPos_, this_pickHeight)
+	dim pickPos_  as location of xyzr = com_getLocationXyzr("/pos")
+	dim placePos_ as location of xyzr = this_placePos + #{-30*(this_objectCount mod 7), -30*int(this_objectCount / 7), 0,0}
+	increment(this_objectCount)
+	moves posWithHeight(pickPos_, this_travHeight)
+	moves posWithHeight(pickPos_, this_pickHeight)
 	tool_grip(true)
 	waitForMotion
 	sleepActive(10)
-	moves posWithHeight(objectPos_, this_travHeight)
-	moves this_scanPos
+	moves posWithHeight(pickPos_, this_travHeight)
+	moves posWithHeight(placePos_, this_travHeight)
+	moves placePos_
 	waitForMotion
 	tool_grip(false)
 	sleepActive(10)
+	moves posWithHeight(placePos_, this_travHeight)
 end sub
 
 
 function posWithHeight(byval pos_ as location of xyzr, byval height_ as double) as location of xyzr
 	pos_{3} = height_
 	posWithHeight = pos_
-	print posWithHeight
 end function
