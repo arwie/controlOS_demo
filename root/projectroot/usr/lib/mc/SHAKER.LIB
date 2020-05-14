@@ -1,10 +1,10 @@
 <?com_websocket(55003)?>
 
-dim shared this_travHeight		as const double	= 75
-dim shared this_pickHeight		as const double	= 104.5
+dim shared this_travHeight		as const double	= 71
+dim shared this_pickHeight		as const double	= 105.5
 dim shared this_scanPos			as const location of xyzr = #{120, 0, this_travHeight, 0}
 
-dim shared this_placePos		as location of xyzr = #{70, 170, 77, 0}
+dim shared this_placePos		as location of xyzr = #{116, 78, 73, 0}
 dim shared this_objectCount		as long
 
 
@@ -29,6 +29,7 @@ end sub
 	this_objectCount = 0
 	delta1_enableAttach()
 	tool_select(tool_typeMagnet)
+	moves #{0, 0, this_travHeight, 0} vrate=30
 end sub
 
 
@@ -40,7 +41,7 @@ end sub
 	case com_receiveMessage
 		fetchObject()
 	case com_receiveDisconnect
-		moves this_scanPos vrate=50
+		moves #{0, 0, this_travHeight, 0} vrate=30
 		waitForMotion
 		shaker_stopTrigger()
 	end select
@@ -62,13 +63,18 @@ end sub
 end sub
 
 
+<?lib_stopTrigger()?>
+	stop stoptype=ABORT
+end sub
+
+
 sub shakeAndScan
 	moves this_scanPos vrate=50
 	shaker_outShake(true)
 	sleepActive(300)
 	shaker_outShake(false)
 	shaker_outLight(true)
-	sleepActive(450)
+	sleepActive(600)
 	waitForMotion
 	com_clear()
 	com_send(this_websocket)
@@ -76,14 +82,14 @@ end sub
 
 sub fetchObject
 	dim pickPos_  as location of xyzr = com_getLocationXyzr("/pos")
-	dim placePos_ as location of xyzr = this_placePos + #{-30*(this_objectCount mod 7), -30*int(this_objectCount / 7), 0,0}
+	dim placePos_ as location of xyzr = this_placePos + #{-26*int(this_objectCount / 7), -26*(this_objectCount mod 7), 0,0}
 	increment(this_objectCount)
 	moves posWithHeight(pickPos_, this_travHeight)
-	moves posWithHeight(pickPos_, this_pickHeight)
+	moves posWithHeight(pickPos_, this_pickHeight) drate=30
 	tool_grip(true)
 	waitForMotion
-	sleepActive(10)
-	moves posWithHeight(pickPos_, this_travHeight)
+	sleepActive(50)
+	moves posWithHeight(pickPos_, this_travHeight) arate=50
 	moves posWithHeight(placePos_, this_travHeight)
 	moves placePos_
 	waitForMotion

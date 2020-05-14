@@ -20,6 +20,8 @@ cap.set(cv.CAP_PROP_AUTO_EXPOSURE, 1)
 cap.set(cv.CAP_PROP_EXPOSURE, 3)
 
 
+homography = np.array([[-2.77567915e+00, -1.00764105e-01, 2.69350242e+03],[1.03750041e-02, -2.88806990e+00, 1.89610723e+03],[7.45911550e-06, -1.08313725e-04, 1.00000000e+00]])
+
 
 def getRaw():
 	cap.grab()	#clear buffer
@@ -27,9 +29,8 @@ def getRaw():
 	return cv.cvtColor(frame, cv.COLOR_YUV2GRAY_YUYV)
 
 def getImage():
-	homography = np.array([[-2.64775813e+00, -1.03469375e-01, 2.66602673e+03],[1.18218397e-02, -2.77722517e+00, 2.13563180e+03],[3.31794082e-06, -1.02626229e-04, 1.00000000e+00]])
 	img = getRaw()
-	return cv.warpPerspective(img, homography, (1750,1750))
+	return cv.warpPerspective(img, homography, (1800,1800))
 
 
 
@@ -60,8 +61,8 @@ class StateClient(websocket.Client):
 			(x,y),r	= cv.minEnclosingCircle(c)
 			a		= cv.contourArea(c)
 			
-			if (abs(89-r)<5) and (abs(22000-a)<2000):
-				self.writeMessageJson({'pos':{'x':-y/10+65, 'y':+x/10-95, 'z':0, 'r':0}})
+			if (abs(94-r)<5) and (abs(24000-a)<2000):
+				self.writeMessageJson({'pos':{'x':-y/10+35, 'y':+x/10-90, 'z':0, 'r':0}})
 			else:
 				rescan = True
 		
