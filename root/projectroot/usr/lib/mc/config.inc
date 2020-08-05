@@ -22,4 +22,4 @@ includeLib('DELTA1R.LIB');
 includeLib('CONV.LIB');
 
 
-device_order(['delta1a','delta1b','delta1c','delta1r']);
+device_order(['delta1a','delta1b','delta1c','delta1r','conv']);

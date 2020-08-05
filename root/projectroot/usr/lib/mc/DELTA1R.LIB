@@ -1,6 +1,7 @@
 <?axis([
 	'device'		=> 'stepim',
 	'bus'			=> 'can',
+	'simulated'		=> true
 ])?>
 
 
