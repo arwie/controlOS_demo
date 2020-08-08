@@ -22,7 +22,7 @@ end sub
 
 <?lib_prgStop()?>
 	blendingMethod = OFF
-	delta1_disableDetach()
+	delta1_disable()
 end sub
 
 

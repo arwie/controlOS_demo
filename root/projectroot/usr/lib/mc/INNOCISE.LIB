@@ -1,0 +1,63 @@
+
+dim shared this_levelPlace		as const double = 48
+dim shared this_levelPlaceAbove	as const double = this_levelPlace - 10
+dim shared this_posSafe			as const location of xyzr = #{80, 0, 0, 0}
+dim shared this_posPlace		as const location of xyzr = #{121, 0, 0, 0}
+dim shared this_levelPick		as const double = 57 '59.5
+dim shared this_levelPickAbove	as const double = this_levelPlace
+dim shared this_posPick			as const location of xyzr = #{19, 100, this_levelPick, 0}
+
+dim shared this_part			as long
+
+
+<?lib_prgStart()?>
+	this_part = 0
+	conv_enableAttach()
+	delta1_enableAttach()
+	jog conv 50
+	blendingmethod = 1 'continuous path
+	'vrate = 50
+end sub
+
+
+<?lib_prgLoop()?>
+	dim posPart_ as location of xyzr
+	
+	posPart_ = this_posPick + #{-40*int(this_part / 6), -40*(this_part mod 6), +(1.6/6)*(this_part mod 6), 0}
+	
+	moves delta1_posLevel(posPart_, this_levelPickAbove)
+	moves posPart_												drate=10
+	moves delta1_posLevel(posPart_, this_levelPickAbove)		arate=10
+	
+	moves delta1_posLevel(this_posSafe,  this_levelPlace)		cp=20
+	moves delta1_posLevel(this_posPlace, this_levelPlace)
+	moves delta1_posLevel(this_posPlace, this_levelPlaceAbove)	vrate = 20
+	moves delta1_posLevel(this_posSafe,  this_levelPlaceAbove)	cp=20
+	
+	
+	if incrementUse(this_part) = 24 then
+		moves #{0, 0, 10, 0}
+		waitForMotion
+		sleepActive(3000)
+		innocise_stopTrigger()
+	end if
+end sub
+
+
+<?lib_prgStop()?>
+	delta1_disable()
+	stop conv
+	conv_disable()
+	delta1_torque(100)
+end sub
+
+
+<?lib_prgError()?>
+	if not prgRunning then
+		innocise_prgStop()
+		innocise_stopTrigger()
+	end if
+end sub
+
+
+

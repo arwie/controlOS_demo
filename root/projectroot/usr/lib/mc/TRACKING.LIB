@@ -102,8 +102,8 @@ end sub
 	
 	tool_select(tool_typeNone)
 	
-	delta1_disableDetach()
-	conv_disableDetach()
+	delta1_disable()
+	conv_disable()
 end sub
 
 

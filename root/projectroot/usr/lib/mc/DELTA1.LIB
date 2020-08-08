@@ -22,6 +22,13 @@ public sub delta1_homing
 end sub
 
 
+public sub delta1_torque(byval torque_ as double)
+	delta1a_torque(torque_)
+	delta1b_torque(torque_)
+	delta1c_torque(torque_)
+end sub
+
+
 
 <?robot_setup()?>
 	absolute					= true
@@ -124,6 +131,11 @@ end sub
 	tool.zmin					= -rmax
 	tool.zmax					= rmax
 end sub
+
+
+public function delta1_posLevel(byval pos_ as location of xyzr, byval level_ as double) as location of xyzr
+	delta1_posLevel = #{pos_{1}, pos_{2}, level_, pos_{4}}
+end function
 
 
 

@@ -27,7 +27,7 @@ end sub
 
 <?lib_prgStop()?>
 	tool_select(tool_typeNone)
-	delta1_disableDetach()
+	delta1_disable()
 end sub
 
 

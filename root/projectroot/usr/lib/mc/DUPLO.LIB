@@ -29,7 +29,7 @@ end sub
 
 
 <?lib_prgStop()?>
-	delta1_disableDetach()
+	delta1_disable()
 end sub
 
 

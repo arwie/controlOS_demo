@@ -23,7 +23,7 @@ end sub
 <?drive_setup()?>
 	positionfactor				= positionfactor / 70
 	direction					= 1
-	
+	torquemax					= <?=driveCache(lib().'_deviceRead(0x6075, 0)')?>		'Motor Rated Current [mA]
 	<?=lib()?>_deviceWrite(0x6098, 0,  8, <?=conf(lib(),'homing','method', -1)?>)
 	displacement = <?=conf(lib(),'homing','offset', -240)?>'
 end sub
@@ -66,6 +66,12 @@ public function <?=lib()?>_homingLoop as long
 	end if
 	<?=lib()?>_homingLoop = absEnable
 end function
+
+
+<?output('torque', 'double', lib())?>
+	value_ = bound(value_, 5, 100)
+	<?=lib()?>_deviceWrite(0x6073, 0, 16, torquemax*value_/100)
+end sub
 
 
 

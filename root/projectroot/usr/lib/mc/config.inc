@@ -2,6 +2,7 @@
 includeLib('APP.LIB');
 includeLib('DATA.LIB');
 
+includeLib('INNOCISE.LIB');
 includeLib('DUPLO.LIB');
 includeLib('CVPATH.LIB');
 includeLib('O3D.LIB');
