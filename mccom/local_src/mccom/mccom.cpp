@@ -263,7 +263,8 @@ static void mccom_put_json(SYS_STRING* path, SYS_STRING* value, int *error) noex
 	*error = 0;
 	try {
 		auto valueStr = amcsGetString(value);
-		replace(valueStr.begin(), valueStr.end(), '`', '"');	//allow coding json strings in basic
+		if (valueStr.find('"') == string::npos)
+			replace(valueStr.begin(), valueStr.end(), '`', '"');	//allow coding json strings in basic
 		(*messagePtr)[messagePtr->withPath(amcsGetString(path))] = json::parse(valueStr);
 	} catch (exception& e) {
 		*error = 1;
