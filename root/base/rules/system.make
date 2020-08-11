@@ -41,6 +41,7 @@ $(STATEDIR)/system.targetinstall:
 	@$(call install_alternative_tree, system, 0, 0, /usr/lib/firmware)
 
 	# networking
+	@$(call install_copy,        system, 0, 0, 0700, /etc/polkit-1/localauthority)
 	@$(call install_alternative, system, 0, 0, 0644, /etc/polkit-1/localauthority/10-vendor.d/systemd-networkd.pkla)
 	@$(call install_alternative_tree, system, 0, 0,  /etc/systemd/network)
 	@$(call install_alternative_tree, system, 0, 0,  /etc/hostapd.conf.d)
@@ -57,6 +58,7 @@ $(STATEDIR)/system.targetinstall:
 	@$(call install_alternative, system, 0, 0, 0644, /usr/lib/systemd/system/reboot.service)
 
 	# sshd root key
+	@$(call install_copy,        system, 0, 0, 0700, /root)
 	@$(call install_copy,        system, 0, 0, 0700, /root/.ssh)
 	@$(call install_alternative, system, 0, 0, 0600, /root/.ssh/authorized_keys)
 	@$(call install_alternative, system, 0, 0, 0600, /root/.ssh/id_rsa)
@@ -68,7 +70,7 @@ $(STATEDIR)/system.targetinstall:
 	@$(call install_alternative, system, 0, 0, 0644, /root/.profile)
 	@$(call install_alternative, system, 0, 0, 0644, /usr/lib/systemd/system/debug.target)
 	@$(call install_alternative, system, 0, 0, 0644, /etc/systemd/system/remote.service)
-	@$(call install_copy,        system, 0, 0, 0644, $(PTXDIST_WORKSPACE)/projectroot/usr/lib/systemd/system/dev-disk-by\\x2dlabel-INSTALL.device, /usr/lib/systemd/system/dev-disk-by\\x2dlabel-INSTALL.device)
+	@$(call install_alternative, system, 0, 0, 0644, /usr/lib/systemd/system/dev-disk-by\\x2dlabel-INSTALL.device)
 	
 	# journal helpers
 	@$(call install_alternative, system, 0, 0, 0644, /usr/lib/systemd/system/journal-cleanup.service)

@@ -15,8 +15,8 @@ PACKAGES-$(PTXCONF_OPENSSH) += openssh
 #
 # Paths and names
 #
-OPENSSH_VERSION	:= 8.0p1
-OPENSSH_MD5	:= bf050f002fe510e1daecd39044e1122d
+OPENSSH_VERSION	:= 8.3p1
+OPENSSH_MD5	:= 68d7527bf2672153ca47402f6489a1af
 OPENSSH		:= openssh-$(OPENSSH_VERSION)
 OPENSSH_SUFFIX	:= tar.gz
 OPENSSH_URL	:= \
@@ -26,7 +26,7 @@ OPENSSH_URL	:= \
 OPENSSH_SOURCE	:= $(SRCDIR)/$(OPENSSH).$(OPENSSH_SUFFIX)
 OPENSSH_DIR	:= $(BUILDDIR)/$(OPENSSH)
 OPENSSH_LICENSE	:= BSD AND BSD-2-Clause AND BSD-3-Clause AND MIT AND Beerware AND ISC
-OPENSSH_LICENSE_FILES := file://LICENCE;encoding=ISO-8859-1;md5=429658c6612f3a9b1293782366ab29d8
+OPENSSH_LICENSE_FILES := file://LICENCE;encoding=ISO-8859-1;md5=18d9e5a8b3dd1790d73502f50426d4d3
 
 # ----------------------------------------------------------------------------
 # Prepare
@@ -51,6 +51,7 @@ OPENSSH_CONF_OPT	:= \
 	--sysconfdir=/etc/ssh \
 	$(GLOBAL_LARGE_FILE_OPTION) \
 	--disable-pkcs11 \
+	--disable-security-key \
 	--disable-strip \
 	--disable-etc-default-login \
 	--disable-lastlog \

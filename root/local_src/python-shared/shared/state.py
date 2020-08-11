@@ -39,7 +39,7 @@ class State:
 			except asyncio.TimeoutError:
 				timeout = None
 			
-			systemctl  = await asyncio.create_subprocess_exec('systemctl','list-units','--no-pager','--no-legend','--type=target','--state=active', stdout=asyncio.subprocess.PIPE)
+			systemctl  = await asyncio.create_subprocess_exec('systemctl','list-units','--no-pager','--no-legend','--plain','--type=target','--state=active', stdout=asyncio.subprocess.PIPE)
 			targets,*_ = await systemctl.communicate()
 			newState = frozenset(t.partition('.target')[0] for t in targets.decode().splitlines())
 			

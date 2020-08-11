@@ -1,6 +1,6 @@
 #
 # Automatically generated file; DO NOT EDIT.
-# PTXdist 2019.12.0
+# PTXdist 2020.08.0
 #
 PTXCONF_MCCOM=y
 
@@ -64,7 +64,7 @@ PTXCONF_REPRODUCIBLE_TIMESTAMP="ptxdist"
 PTXCONF_BSP=y
 PTXCONF_RUNTIME=y
 PTXCONF_BUILDTIME=y
-PTXCONF_CONFIGFILE_VERSION="2019.12.0"
+PTXCONF_CONFIGFILE_VERSION="2020.08.0"
 PTXCONF__ptxconfig_MAGIC__=y
 
 #
@@ -82,8 +82,11 @@ PTXCONF__ptxconfig_MAGIC__=y
 # Host Tools                    
 #
 # PTXCONF_HOST_DFU_UTIL is not set
+# PTXCONF_HOST_GENGETOPT is not set
+# PTXCONF_HOST_MFGTOOLS is not set
 # PTXCONF_HOST_OPENOCD is not set
 # PTXCONF_HOST_QEMU is not set
+# PTXCONF_HOST_TESTFRAMEWORK is not set
 PTXCONF_HOST_ACL=y
 PTXCONF_HOST_ATTR=y
 PTXCONF_HOST_LIBARCHIVE=y
@@ -94,6 +97,7 @@ PTXCONF_HOST_OPKG_UTILS=y
 PTXCONF_HOST_OPKG=y
 PTXCONF_HOST_PKG_CONFIG=y
 PTXCONF_HOST_SYSTEM_PERL=y
+PTXCONF_HOST_SYSTEM_PYTHON3=y
 PTXCONF_HOST_XORGPROTO=y
 PTXCONF_HOST_ZLIB=y
 PTXCONF_HOST_AUTOTOOLS_AUTOCONF=y
@@ -198,6 +202,7 @@ PTXCONF_ROOTFS_INIT_NONE=y
 # Core (libc, locales)          
 #
 PTXCONF_BASE=y
+# PTXCONF_GLOBAL_PAM is not set
 # PTXCONF_CRYPTODEV_API is not set
 # PTXCONF_CRYPTODEV is not set
 
@@ -286,6 +291,7 @@ PTXCONF_NO_LIBC=y
 # PTXCONF_NANOCOM is not set
 # PTXCONF_NVME_CLI is not set
 # PTXCONF_P7ZIP is not set
+# PTXCONF_PARTED is not set
 # PTXCONF_PCIUTILS is not set
 # PTXCONF_PCMCIAUTILS is not set
 # PTXCONF_PICOCOM is not set
@@ -300,6 +306,7 @@ PTXCONF_NO_LIBC=y
 # PTXCONF_SCREEN is not set
 # PTXCONF_SED is not set
 # PTXCONF_SETSERIAL is not set
+# PTXCONF_SHADOW is not set
 # PTXCONF_SMARTMONTOOLS is not set
 # PTXCONF_STM32FLASH is not set
 # PTXCONF_SUDO is not set
@@ -315,6 +322,7 @@ PTXCONF_NO_LIBC=y
 # PTXCONF_WATCHDOG is not set
 # PTXCONF_WHICH is not set
 # PTXCONF_XMLSTARLET is not set
+# PTXCONF_ZSTD is not set
 
 #
 # Scripting Languages           
@@ -336,7 +344,6 @@ PTXCONF_NO_LIBC=y
 # PTXCONF_NET_IP_PERL is not set
 # PTXCONF_NET_SERVER_PERL is not set
 # PTXCONF_SOCKET6_PERL is not set
-# PTXCONF_PHP5 is not set
 # PTXCONF_PYTHON is not set
 
 #
@@ -365,6 +372,7 @@ PTXCONF_NO_LIBC=y
 # PTXCONF_PYTHON3_AIOHTTP_WSGI is not set
 # PTXCONF_PYTHON3_AIOHTTP is not set
 # PTXCONF_PYTHON3_ASYNC_TIMEOUT is not set
+# PTXCONF_PYTHON3_ATTRS is not set
 # PTXCONF_PYTHON3_CFFI is not set
 # PTXCONF_PYTHON3_CHARDET is not set
 # PTXCONF_PYTHON3_DATEUTIL is not set
@@ -372,22 +380,29 @@ PTXCONF_NO_LIBC=y
 # PTXCONF_PYTHON3_GBULB is not set
 # PTXCONF_PYTHON3_GI is not set
 # PTXCONF_PYTHON3_HBMQTT is not set
+# PTXCONF_PYTHON3_IMPORTLIB_METADATA is not set
 # PTXCONF_PYTHON3_INIHERIT is not set
 # PTXCONF_PYTHON3_IPYTHON_GENUTILS is not set
 # PTXCONF_PYTHON3_IPYTHON is not set
 # PTXCONF_PYTHON3_LXML is not set
 # PTXCONF_PYTHON3_MAKO is not set
+# PTXCONF_PYTHON3_MORE_ITERTOOLS is not set
 # PTXCONF_PYTHON3_MSGPACK is not set
 # PTXCONF_PYTHON3_MULTIDICT is not set
 # PTXCONF_PYTHON3_NUMPY is not set
 # PTXCONF_PYTHON3_OPCUA is not set
+# PTXCONF_PYTHON3_PACKAGING is not set
 # PTXCONF_PYTHON3_PATH_PY is not set
 # PTXCONF_PYTHON3_PEXPECT is not set
 # PTXCONF_PYTHON3_PICKLESHARE is not set
+# PTXCONF_PYTHON3_PLUGGY is not set
 # PTXCONF_PYTHON3_PLY is not set
 # PTXCONF_PYTHON3_PTYPROCESS is not set
+# PTXCONF_PYTHON3_PY is not set
 # PTXCONF_PYTHON3_PYALSAAUDIO is not set
 # PTXCONF_PYTHON3_PYCPARSER is not set
+# PTXCONF_PYTHON3_PYPARSING is not set
+# PTXCONF_PYTHON3_PYTEST is not set
 # PTXCONF_PYTHON3_PYTZ is not set
 # PTXCONF_PYTHON3_PYYAML is not set
 # PTXCONF_PYTHON3_SETUPTOOLS is not set
@@ -397,8 +412,10 @@ PTXCONF_NO_LIBC=y
 # PTXCONF_PYTHON3_TORNADO is not set
 # PTXCONF_PYTHON3_TRAITLETS is not set
 # PTXCONF_PYTHON3_TRANSITIONS is not set
+# PTXCONF_PYTHON3_WCWIDTH is not set
 # PTXCONF_PYTHON3_WEBSOCKETS is not set
 # PTXCONF_PYTHON3_YARL is not set
+# PTXCONF_PYTHON3_ZIPP is not set
 
 #
 # Bytecode Engines / VMs        
@@ -406,6 +423,8 @@ PTXCONF_NO_LIBC=y
 # PTXCONF_CLASSPATH is not set
 # PTXCONF_FRODO is not set
 # PTXCONF_JAMVM is not set
+# PTXCONF_NODEJS is not set
+# PTXCONF_NODEJS_PACKAGES is not set
 
 #
 # Networking Tools              
@@ -433,6 +452,7 @@ PTXCONF_NO_LIBC=y
 # PTXCONF_ETHTOOL is not set
 # PTXCONF_FCGI is not set
 # PTXCONF_GNUTLS is not set
+# PTXCONF_HAPROXY is not set
 # PTXCONF_HASERL is not set
 # PTXCONF_HAVEGED is not set
 # PTXCONF_HOSTAPD is not set
@@ -447,7 +467,6 @@ PTXCONF_NO_LIBC=y
 # PTXCONF_IW is not set
 # PTXCONF_JSON_DBUS_BRIDGE is not set
 # PTXCONF_LIBCGI is not set
-# PTXCONF_LIBCGIC is not set
 # PTXCONF_LIBCGICC is not set
 # PTXCONF_LIBCOAP is not set
 # PTXCONF_LIBCURL is not set
@@ -468,7 +487,6 @@ PTXCONF_NO_LIBC=y
 # PTXCONF_LIBSOUP is not set
 # PTXCONF_LIBSSH2 is not set
 # PTXCONF_LIBTIRPC is not set
-# PTXCONF_LIBWEBSOCKETS is not set
 # PTXCONF_LIBZMQ is not set
 # PTXCONF_LIGHTTPD is not set
 # PTXCONF_LINKS is not set
@@ -478,17 +496,16 @@ PTXCONF_NO_LIBC=y
 # PTXCONF_MEMCACHED is not set
 # PTXCONF_MICROCOM is not set
 # PTXCONF_MII_DIAG is not set
+# PTXCONF_MOBILE_BROADBAND_PROVIDER_INFO is not set
 # PTXCONF_MODEMMANAGER is not set
 # PTXCONF_MOSH is not set
 # PTXCONF_MOSQUITTO is not set
-# PTXCONF_MSMTP is not set
 # PTXCONF_MTR is not set
 # PTXCONF_NBD is not set
 # PTXCONF_NCFTP is not set
 # PTXCONF_NET_SNMP is not set
 # PTXCONF_NETCAT is not set
 # PTXCONF_NETKIT_FTP is not set
-# PTXCONF_NETPERF is not set
 # PTXCONF_NETTLE is not set
 # PTXCONF_NETWORKMANAGER is not set
 
@@ -525,14 +542,12 @@ PTXCONF_NO_LIBC=y
 # PTXCONF_SIMPLERPL is not set
 # PTXCONF_SMCROUTE is not set
 # PTXCONF_SOCAT is not set
+# PTXCONF_SPAWN_FCGI is not set
 # PTXCONF_STRONGSWAN is not set
 # PTXCONF_STUNNEL is not set
+# PTXCONF_SYSLOGNG is not set
 # PTXCONF_TCPDUMP is not set
-# PTXCONF_TCPWRAPPER is not set
-# PTXCONF_THTTPD is not set
 # PTXCONF_TNTNET is not set
-# PTXCONF_TOMCAT is not set
-# PTXCONF_UNSTRUNG is not set
 # PTXCONF_URSHD is not set
 # PTXCONF_UTELNETD is not set
 # PTXCONF_WAVEMON is not set
@@ -564,6 +579,7 @@ PTXCONF_NO_LIBC=y
 # PTXCONF_LOGROTATE is not set
 # PTXCONF_LVM2 is not set
 # PTXCONF_MMC_UTILS is not set
+# PTXCONF_NCDU is not set
 # PTXCONF_OPKG is not set
 # PTXCONF_QUOTA_TOOLS is not set
 # PTXCONF_SAMBA is not set
@@ -580,11 +596,13 @@ PTXCONF_NO_LIBC=y
 #
 # PTXCONF_BERLIOS_CAN_UTILS is not set
 # PTXCONF_BLUEZ is not set
+# PTXCONF_CKERMIT is not set
 # PTXCONF_EFAX is not set
 # PTXCONF_HEIRLOOM_MAILX is not set
+# PTXCONF_IMX_UUC is not set
 # PTXCONF_LIBSOCKETCAN is not set
 # PTXCONF_LRZSZ is not set
-# PTXCONF_MGETTY is not set
+# PTXCONF_OPEN62541 is not set
 # PTXCONF_OPENCT is not set
 # PTXCONF_OPENSC is not set
 # PTXCONF_PCSC_LITE is not set
@@ -597,6 +615,7 @@ PTXCONF_NO_LIBC=y
 # Applications                  
 #
 # PTXCONF_CASYNC is not set
+# PTXCONF_COG is not set
 # PTXCONF_CUPS_FILTERS is not set
 # PTXCONF_CUPS is not set
 # PTXCONF_FFMPEG is not set
@@ -710,7 +729,6 @@ PTXCONF_BOOST_NOPYTHON=y
 # PTXCONF_LIBMXML is not set
 # PTXCONF_LIBNDP is not set
 # PTXCONF_LIBNEWT is not set
-# PTXCONF_LIBNIH is not set
 # PTXCONF_LIBNL3 is not set
 # PTXCONF_LIBOIL is not set
 # PTXCONF_LIBOOP is not set
@@ -731,6 +749,7 @@ PTXCONF_BOOST_NOPYTHON=y
 # PTXCONF_LIBUSB_COMPAT is not set
 # PTXCONF_LIBUSB is not set
 # PTXCONF_LIBUV is not set
+# PTXCONF_LIBWPE is not set
 # PTXCONF_LIBX86 is not set
 # PTXCONF_LIBXML2 is not set
 # PTXCONF_LIBXMLCONFIG is not set
@@ -740,6 +759,7 @@ PTXCONF_BOOST_NOPYTHON=y
 # PTXCONF_LOG4CPLUS is not set
 # PTXCONF_LXC is not set
 # PTXCONF_LZ4 is not set
+# PTXCONF_MBEDTLS is not set
 # PTXCONF_NCURSES is not set
 # PTXCONF_NICKEL is not set
 # PTXCONF_NPTH is not set
@@ -761,7 +781,6 @@ PTXCONF_BOOST_NOPYTHON=y
 # PTXCONF_TERMCAP is not set
 # PTXCONF_TIMESCALEDB is not set
 # PTXCONF_UPOWER is not set
-# PTXCONF_USTR is not set
 # PTXCONF_XERCES is not set
 # PTXCONF_YAJL is not set
 # PTXCONF_ZLIB is not set
@@ -782,8 +801,8 @@ PTXCONF_BOOST_NOPYTHON=y
 # PTXCONF_LIBP11 is not set
 # PTXCONF_OPTEE_CLIENT is not set
 # PTXCONF_OPTEE_EXAMPLES is not set
-# PTXCONF_OPTEE_TEST is not set
 # PTXCONF_P11_KIT is not set
+# PTXCONF_PAM is not set
 # PTXCONF_TOMOYO_TOOLS is not set
 
 #
@@ -822,6 +841,7 @@ PTXCONF_BOOST_NOPYTHON=y
 # PTXCONF_BONNIEXX is not set
 # PTXCONF_CALIBRATOR is not set
 # PTXCONF_CBENCHSUITE is not set
+# PTXCONF_CMOCKA is not set
 # PTXCONF_CPUBURN_ARM is not set
 # PTXCONF_DBENCH is not set
 # PTXCONF_EVTEST is not set
@@ -862,7 +882,9 @@ PTXCONF_BOOST_NOPYTHON=y
 # PTXCONF_FRIBIDI is not set
 # PTXCONF_GIFLIB is not set
 # PTXCONF_GLMARK2 is not set
+# PTXCONF_GLSLANG is not set
 # PTXCONF_GLU is not set
+# PTXCONF_GRAPHENE is not set
 # PTXCONF_GRAPHITE2 is not set
 # PTXCONF_HARFBUZZ is not set
 # PTXCONF_ICU is not set
@@ -898,6 +920,7 @@ PTXCONF_BOOST_NOPYTHON=y
 # PTXCONF_MESA_DEMOS is not set
 # PTXCONF_MESALIB is not set
 # PTXCONF_MTDEV is not set
+# PTXCONF_OPENCV is not set
 # PTXCONF_OPUS is not set
 # PTXCONF_ORC is not set
 # PTXCONF_PIXMAN is not set
@@ -905,13 +928,20 @@ PTXCONF_BOOST_NOPYTHON=y
 # PTXCONF_QPDF is not set
 # PTXCONF_RTMPDUMP is not set
 # PTXCONF_SBC is not set
+# PTXCONF_SHADERC is not set
 # PTXCONF_SPEEX is not set
 # PTXCONF_SPEEXDSP is not set
+# PTXCONF_SPIRV_TOOLS is not set
 # PTXCONF_SVGALIB is not set
 # PTXCONF_TSLIB is not set
 # PTXCONF_V4L_UTILS is not set
 # PTXCONF_VO_AACENC is not set
+# PTXCONF_VULKAN_LOADER is not set
+# PTXCONF_VULKAN_TOOLS is not set
+# PTXCONF_VULKAN_VALIDATIONLAYERS is not set
 # PTXCONF_WAFFLE is not set
+# PTXCONF_WPEBACKEND_FDO is not set
+# PTXCONF_WPEWEBKIT is not set
 # PTXCONF_XKEYBOARD_CONFIG is not set
 
 #
@@ -927,17 +957,12 @@ PTXCONF_BOOST_NOPYTHON=y
 #
 # gstreamer 0.10                
 #
-# PTXCONF_GST_PLUGINS_BAD is not set
-# PTXCONF_GST_PLUGINS_BASE is not set
-# PTXCONF_GST_PLUGINS_GL is not set
-# PTXCONF_GST_PLUGINS_GOOD is not set
-# PTXCONF_GST_PLUGINS_UGLY is not set
-# PTXCONF_GSTREAMER is not set
 # PTXCONF_LIBFSL_VPU is not set
 
 #
 # gstreamer 1.0                 
 #
+# PTXCONF_GST_BAYER2RGB_NEON is not set
 # PTXCONF_GST_LIBAV1 is not set
 # PTXCONF_GST_PLUGINS_BAD1 is not set
 # PTXCONF_GST_PLUGINS_BASE1 is not set
@@ -965,7 +990,6 @@ PTXCONF_BOOST_NOPYTHON=y
 # PTXCONF_GTK is not set
 # PTXCONF_GTK2 is not set
 # PTXCONF_JSON_GLIB is not set
-# PTXCONF_LIBCROCO is not set
 # PTXCONF_LIBGEE is not set
 # PTXCONF_LIBRSVG is not set
 # PTXCONF_PANGO is not set
@@ -1020,10 +1044,12 @@ PTXCONF_BOOST_NOPYTHON=y
 # PTXCONF_SETMIXER is not set
 # PTXCONF_TWOLAME is not set
 # PTXCONF_VORBIS_TOOLS is not set
+# PTXCONF_WEBRTC_AUDIO_PROCESSING is not set
 
 #
 # tools                         
 #
+# PTXCONF_BAYER2RGB3 is not set
 # PTXCONF_FONTCONFIG is not set
 # PTXCONF_IGT_GPU_TOOLS is not set
 # PTXCONF_IMAGEMAGICK is not set

@@ -1,6 +1,6 @@
 #
 # Automatically generated file; DO NOT EDIT.
-# PTXdist 2019.12.0
+# PTXdist 2020.08.0
 #
 PTXCONF__platformconfig_MAGIC__=y
 
@@ -19,7 +19,7 @@ PTXCONF_PLATFORM="iMX6"
 PTXCONF_PLATFORM_VERSION="-${PTXDIST_BSP_AUTOVERSION}"
 PTXCONF_RUNTIME=y
 PTXCONF_BUILDTIME=y
-PTXCONF_PLATFORMCONFIG_VERSION="2019.12.0"
+PTXCONF_PLATFORMCONFIG_VERSION="2020.08.0"
 
 #
 # architecture                  
@@ -130,6 +130,7 @@ PTXCONF_BAREBOX_ARCH_STRING="arm"
 # PTXCONF_GRUB is not set
 # PTXCONF_HOST_MXS_UTILS is not set
 # PTXCONF_OPTEE is not set
+# PTXCONF_TF_A is not set
 # PTXCONF_U_BOOT is not set
 # PTXCONF_X_LOAD is not set
 

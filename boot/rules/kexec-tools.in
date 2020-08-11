@@ -1,0 +1,26 @@
+## SECTION=shell_and_console
+
+menuconfig KEXEC_TOOLS
+	tristate
+	select ZLIB if KEXEC_TOOLS_ZLIB
+	prompt "kexec-tools                   "
+	help
+	  The kexec-tools are used to load a kernel in memory and reboot
+	  into the kernel loaded in memory using the kexec system call.
+
+if KEXEC_TOOLS
+
+config KEXEC_TOOLS_ZLIB
+	bool
+	prompt "Use zlib"
+	help
+	  FIXME
+
+config KEXEC_TOOLS_XEN
+	bool
+	depends on BROKEN
+	prompt "Xen support"
+	help
+	  kexec has been ported to xen for the hypervisor and domain 0.
+
+endif

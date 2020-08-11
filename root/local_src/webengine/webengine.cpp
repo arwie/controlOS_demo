@@ -26,8 +26,8 @@ int main(int argc, char *argv[])
 	QCoreApplication::setApplicationName("webengine");
 	QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts);
 	
-	QGuiApplication app(argc, argv);
 	QtWebEngine::initialize();
+	QGuiApplication app(argc, argv);
 	
 	QQmlApplicationEngine engine("/etc/webengine.qml");
 	
