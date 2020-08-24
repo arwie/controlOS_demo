@@ -15,6 +15,7 @@ menuconfig OPENCV
 	select V4L_UTILS		if OPENCV_V4L_LIBV4L2
 	select V4L_UTILS_LIBV4L1	if OPENCV_V4L_LIBV4L2
 	select V4L_UTILS_LIBV4L2	if OPENCV_V4L_LIBV4L2
+	select PYTHON3_NUMPY	if OPENCV_PYTHON
 	help
 	  Open Source Computer Vision Library
 
@@ -111,6 +112,7 @@ config OPENCV_DNN
 
 config OPENCV_GSTREAMER
 	bool
+	depends on STAGING
 	prompt "gstreamer"
 	help
 	  Gstreamer Support
@@ -140,7 +142,6 @@ config OPENCV_QT
 config OPENCV_PYTHON
 	bool
 	prompt "Python bindings"
-	select PYTHON3_NUMPY
 	help
 	  Python bindings
 

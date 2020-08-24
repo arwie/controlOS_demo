@@ -17,8 +17,8 @@ PACKAGES-$(PTXCONF_OPENCV) += opencv
 # Paths and names
 #
 
-OPENCV_VERSION	:= 4.2.0
-OPENCV_MD5	:= b02b54115f1f99cb9e885d1e5988ff70
+OPENCV_VERSION	:= 4.4.0
+OPENCV_MD5	:= 4b00f5cdb1cf393c4a84696362c5a72a
 OPENCV		:= opencv-$(OPENCV_VERSION)
 OPENCV_SUFFIX	:= zip
 OPENCV_URL	:= \
@@ -73,7 +73,8 @@ OPENCV_CONF_OPT		:= \
 	-DBUILD_opencv_ml:BOOL=$(call ptx/onoff,PTXCONF_OPENCV_ML) \
 	-DBUILD_opencv_objdetect:BOOL=$(call ptx/onoff,PTXCONF_OPENCV_OBJDETECT) \
 	-DBUILD_opencv_photo:BOOL=$(call ptx/onoff,PTXCONF_OPENCV_PHOTO) \
-	-DBUILD_opencv_python_bindings_generator=ON \
+	-DBUILD_opencv_python3=$(call ptx/onoff,PTXCONF_OPENCV_PYTHON) \
+	-DBUILD_opencv_python_bindings_generator=$(call ptx/onoff,PTXCONF_OPENCV_PYTHON) \
 	-DBUILD_opencv_python_tests=ON \
 	-DBUILD_opencv_stitching:BOOL=$(call ptx/onoff,PTXCONF_OPENCV_STITCHING) \
 	-DBUILD_opencv_ts:BOOL=OFF \
@@ -120,12 +121,12 @@ OPENCV_CONF_OPT		:= \
 	-DOPENCV_FORCE_3RDPARTY_BUILD=OFF \
 	-DOPENCV_GENERATE_PKGCONFIG=ON \
 	-DOPENCV_GENERATE_SETUPVARS=ON \
-	-DOPENCV_PYTHON3_VERSION=3.7 \
-	-DPYTHON3_EXECUTABLE=$(PTXDIST_SYSROOT_CROSS)/bin/python3.7 \
-	-DPYTHON_INCLUDE_DIR=$(PTXDIST_SYSROOT_TARGET)/usr/include/python3.7m \
-	-DPYTHON_LIBRARY=$(PTXDIST_SYSROOT_TARGET)/bin/python3.7 \
-	-DPYTHON3_NUMPY_INCLUDE_DIRS=$(PTXDIST_SYSROOT_TARGET)/usr/lib/python3.7/site-packages/numpy/core/include/ \
-	-DOPENCV_PYTHON3_INSTALL_PATH=/usr/lib/python3.7/site-packages \
+	-DOPENCV_PYTHON3_VERSION=$(PYTHON3_MAJORMINOR) \
+	-DPYTHON3_EXECUTABLE=$(PTXDIST_SYSROOT_CROSS)/bin/python$(PYTHON3_MAJORMINOR) \
+	-DPYTHON_INCLUDE_DIR=$(PTXDIST_SYSROOT_TARGET)/usr/include/python$(PYTHON3_MAJORMINOR)m \
+	-DPYTHON_LIBRARY=$(PTXDIST_SYSROOT_TARGET)/bin/python$(PYTHON3_MAJORMINOR) \
+	-DPYTHON3_NUMPY_INCLUDE_DIRS=$(PTXDIST_SYSROOT_TARGET)$(PYTHON3_SITEPACKAGES)/numpy/core/include/ \
+	-DOPENCV_PYTHON3_INSTALL_PATH=$(PYTHON3_SITEPACKAGES) \
 	-DOPENCV_SKIP_PYTHON_LOADER=ON \
 	-DOPENCV_WARNINGS_ARE_ERRORS:BOOL=OFF \
 	-DPROTOBUF_UPDATE_FILES=OFF \
@@ -228,7 +229,11 @@ $(STATEDIR)/opencv.targetinstall:
 	@$(foreach lib, $(OPENCV_LIBS-y), \
 		$(call install_lib, opencv, 0, 0, 0644, $(lib));)
 	@$(call install_tree, opencv, 0, 0, -, /usr/bin)
-	@$(call install_tree, opencv, 0, 0, -, /usr/lib/python$(PYTHON3_MAJORMINOR)/site-packages)
+
+ifdef PTXCONF_OPENCV_PYTHON
+	@$(call install_tree, opencv, 0, 0, -, $(PYTHON3_SITEPACKAGES))
+endif
+
 	@$(call install_finish, opencv)
 	@$(call touch)
 
