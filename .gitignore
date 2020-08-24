@@ -1,4 +1,4 @@
-.git-af
+.git-controlOS
 /src
 /**/configs/**/*.old
 /boot/platform-*/

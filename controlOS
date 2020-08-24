@@ -1,0 +1,20 @@
+#!/bin/sh
+
+SCRIPT=$(realpath $0)
+BASEDIR=$(dirname $SCRIPT)
+
+COS="$BASEDIR/.git-controlOS"
+
+if [ ! -d "$COS" ]; then
+	echo "ERROR: $COS not found"
+	exit 1
+fi
+
+export GIT_DIR=$COS
+export GIT_WORK_TREE=$BASEDIR
+
+
+
+export PROMPT_COMMAND="PS1=controlOS:\$(realpath --relative-to=$BASEDIR/.. .)'\\$ '"
+
+exec /bin/bash --login

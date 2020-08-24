@@ -1,5 +1,5 @@
 {% comment 
-# Copyright (c) 2017 Artur Wiebe <artur@4wiebe.de>
+# Copyright (c) 2020 Artur Wiebe <artur@4wiebe.de>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 # associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -20,30 +20,47 @@
 
 
 {% block html %}
-	
-	<ol class="breadcrumb">
-		<li class="breadcrumb-item active" data-l10n-id="remote"></li>
-	</ol>
-	<hr>
-
-	<a data-bind="click:activate" class="btn btn-primary btn-block" data-l10n-id="activate"></a>
-	
+<div class="form-group">
+	<label data-l10n-id="remote_port"></label>
+	<input data-bind="textInput:port" type="number" step="1" min="60000" max="65500" class="form-control">
+</div>
+<p>
+	<button data-bind="click:enable, enable:port" class="btn btn-primary" data-l10n-id="remote_enable"></button>
+	<button data-bind="click:disable" class="btn btn-secondary" data-l10n-id="remote_disable"></button>
+</p>
+<div data-bind="visible:status" class="alert alert-success">
+	<p data-l10n-id="remote_active"></p>
+	<pre data-bind="text:status"></pre>
+</div>
 {% end %}
 
 
 {% block model %}
-function() {
-	let self = this;
-	
-	
-	self.activate = function() {
-		$.post(ajaxUrl('remote'));
+class {
+	constructor() {
+		this.port   = ko.observable();
+		this.status = ko.observable();
 	}
 	
-	self.start = function()	{
+	disable() {
+		model.port(null);
+		model.enable();
+	}
+	enable() {
+		$.post(ajaxUrl('remote', {port:model.port()})).done(model.update);
 	}
 	
-	self.stop = function() {
+	update() {
+		return $.get(ajaxUrl('remote')).done(model.status);
+	}
+	
+	start() {
+		model.updateInterval = setInterval(model.update, 3000);
+		return model.update();
+	}
+	
+	stop() {
+		clearInterval(model.updateInterval);
 	}
 }
 {% end %}

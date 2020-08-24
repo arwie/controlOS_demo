@@ -39,6 +39,13 @@ update-revert = Revert last update
 update-revert-date = Date of last update
 
 
+remote = Remote access
+remote_active = Remote access is activated!
+remote_port = Service port number
+remote_enable = Activate
+remote_disable = Deactivate
+
+
 issue = Issue report
 issue_description = Issue description
 issue_contact = Contact person

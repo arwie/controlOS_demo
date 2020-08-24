@@ -36,6 +36,9 @@ issue_sendSuccess = Zpráva o problému byla úspěšně odeslána výrobci.
 issue_sendFail = Zpráva o problému nemohla být odeslána. Stáhněte si a ručně stahujte.
 
 
+remote = Vzdálený přístup
+
+
 network = Síť
 network_save = {save}
 network_status = Stav sítě

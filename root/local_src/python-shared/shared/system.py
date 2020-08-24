@@ -19,8 +19,14 @@ import subprocess
 
 
 
+def statusText(unit):
+	return subprocess.run(['/usr/bin/systemctl', '--no-pager', '--full', 'status', unit], stdout=subprocess.PIPE, text=True).stdout
+
 def restart(unit):
 	subprocess.run(['/usr/bin/systemctl', '--no-block', 'restart', unit])
+
+def stop(unit):
+	subprocess.run(['/usr/bin/systemctl', '--no-block', 'stop', unit])
 
 
 def reboot():

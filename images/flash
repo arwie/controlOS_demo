@@ -13,7 +13,7 @@ fi
 
 
 echo "writing image to $2 ..."
-sudo sh -c "xzcat $1 | dd of=$2 bs=64K"
+sudo sh -c "xzcat $1 | dd of=$2 bs=1M status=progress"
 
 sync
 

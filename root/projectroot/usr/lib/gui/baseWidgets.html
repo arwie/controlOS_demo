@@ -110,6 +110,10 @@ ko.bindingHandlers.checkbox = {
 	}
 };
 
+ko.bindingHandlers.src = {update: function (element, valueAccessor) {
+	element.setAttribute('src', ko.utils.unwrapObservable(valueAccessor()));
+}};
+
 ko.bindingHandlers.l10n = {update: function (element, valueAccessor) {
 	let value = ko.utils.unwrapObservable(valueAccessor());
 	if (value)

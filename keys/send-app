@@ -16,6 +16,4 @@ $SSH "mount -o remount,rw LABEL=ROOT && rm -f /version"												|| exit 1
 tar -cvC root/local_src/python-shared shared | $SSH tar -xC /usr/lib/python3.7/site-packages		|| exit 1
 tar -cvC root/projectroot             usr    | $SSH tar -xC /										|| exit 1
 
-$SSH systemctl daemon-reload																		|| exit 1
-$SSH systemctl --quiet stop gui.service studio.service												|| exit 1
-$SSH mc-update --console																			|| exit 1
+$SSH "systemctl daemon-reload && systemctl --quiet stop gui.service studio.service && mc-update --console"

@@ -25,7 +25,7 @@ var loader = new STLLoader();
 export default function loadStl(file, materialProps)
 {
 	let bone = new THREE.Bone();
-	loader.load('/static/sim/'+file, (geometry) => {
+	loader.load(file, (geometry) => {
 		bone.add(new THREE.Mesh(geometry, new THREE.MeshPhongMaterial(materialProps))); 
 	});
 	return bone;

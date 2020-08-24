@@ -191,7 +191,7 @@ public function getBit(byval input_ as long, byval bit_ as long) as long
 end function
 
 
-function word2long(byval value_ as long) as long
+public function word2long(byval value_ as long) as long
 	if value_ band 0x8000 then
 		word2long = value_ bor 0xFFFF0000
 	else
@@ -199,6 +199,55 @@ function word2long(byval value_ as long) as long
 	end if
 end function
 
+
+public function bool(byval value_ as long) as long
+	bool = value_<>0
+end function
+
+
+public function lIf(byval ifValue_ as long, byval condition_ as long) as long
+	if condition_ then
+		lIf = ifValue_
+	end if
+end function
+
+public function lIfElse(byval ifValue_ as long, byval condition_ as long, byval elseValue_ as long) as long
+	if condition_ then
+		lIfElse = ifValue_
+	else
+		lIfElse = elseValue_
+	end if
+end function
+
+
+public function dIf(byval ifValue_ as double, byval condition_ as long) as double
+	if condition_ then
+		dIf = ifValue_
+	end if
+end function
+
+public function dIfElse(byval ifValue_ as double, byval condition_ as long, byval elseValue_ as double) as double
+	if condition_ then
+		dIfElse = ifValue_
+	else
+		dIfElse = elseValue_
+	end if
+end function
+
+
+public function sIf(byval ifValue_ as string, byval condition_ as long) as string
+	if condition_ then
+		sIf = ifValue_
+	end if
+end function
+
+public function sIfElse(byval ifValue_ as string, byval condition_ as long, byval elseValue_ as string) as string
+	if condition_ then
+		sIfElse = ifValue_
+	else
+		sIfElse = elseValue_
+	end if
+end function
 
 
 public function blinkHerz(byval herz_ as double) as long

@@ -1,0 +1,10 @@
+#!/bin/sh
+
+HOST=sys
+
+SCRIPT=$(realpath $0)
+BASEDIR=$(dirname $SCRIPT)
+
+
+scp -i $BASEDIR/ssh/id_rsa $1/* root@$HOST:/etc/app/.
+ssh -i $BASEDIR/ssh/id_rsa root@$HOST "reboot"

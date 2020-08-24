@@ -69,7 +69,7 @@ $(STATEDIR)/system.targetinstall:
 	# development tools
 	@$(call install_alternative, system, 0, 0, 0644, /root/.profile)
 	@$(call install_alternative, system, 0, 0, 0644, /usr/lib/systemd/system/debug.target)
-	@$(call install_alternative, system, 0, 0, 0644, /etc/systemd/system/remote.service)
+	@$(call install_alternative, system, 0, 0, 0644, /usr/lib/systemd/system/remote@.service)
 	@$(call install_alternative, system, 0, 0, 0644, /usr/lib/systemd/system/dev-disk-by\\x2dlabel-INSTALL.device)
 	
 	# journal helpers

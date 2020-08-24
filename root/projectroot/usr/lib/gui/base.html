@@ -93,9 +93,9 @@ String.prototype.hashCode = function() {
 	return hash;
 };
 
-ko.subscribeTree = function(model, notify) {
+ko.subscribeMapping = function(model, notify) {
 	return ko.pureComputed(()=>{
-		return ko.toJS(model);
+		return ko.mapping.toJS(model);
 	}).subscribe(notify);
 };
 

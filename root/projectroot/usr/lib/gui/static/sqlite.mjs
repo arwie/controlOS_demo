@@ -63,4 +63,16 @@ export default class SqliteTable {
 			this.url('swap', {id:id, swap:swap})
 		);
 	}
+	
+	loadMapping(id, mapping) {
+		return this.load(id).done((data)=>{
+			if ('__autosave__' in mapping)
+				mapping.__autosave__.dispose();
+			ko.mapping.fromJS(data, mapping);
+			mapping.__autosave__ = ko.subscribeMapping(mapping, ()=>{
+				//console.log("autosave", ko.mapping.toJS(mapping));
+				this.save(id, ko.mapping.toJS(mapping));
+			});
+		});
+	}
 }

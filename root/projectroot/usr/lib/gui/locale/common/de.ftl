@@ -39,6 +39,13 @@ update-revert = Update widerrufen
 update-revert-date = Datum des letzten Updates
 
 
+remote = Fernzugriff
+remote_active = Fernzugriff ist aktiviert!
+remote_port = Service-Port-Nummer
+remote_enable = Aktivieren
+remote_disable = Deaktivieren
+
+
 issue = Problembericht
 issue_description = Beschreibung des Problems
 issue_contact = Kontaktperson

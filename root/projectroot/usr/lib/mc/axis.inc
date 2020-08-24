@@ -161,7 +161,7 @@ function _defaultDriveSetup($ax) {
 		break;case 'stepim':
 			ll(lib().'_deviceWrite(0x1003, 0, 8, 0)');			#Clear Error History
 			ll('positionfactor				= 4096');
-			ll('positionerrordelay			= 2');
+			ll('positionerrordelay			= '.($ax['bus']=='etc' ? 5 : 2));
 	}
 	call(libGet('driveSetup'));
 }

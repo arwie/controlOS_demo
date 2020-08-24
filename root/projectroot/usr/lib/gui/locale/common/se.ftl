@@ -22,3 +22,6 @@ locale = Språk
 
 
 save = Spara
+
+
+remote = Fjärranslutning

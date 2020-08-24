@@ -1,0 +1,21 @@
+#!/bin/sh
+
+PORT=${1-65000}
+
+HOST=remote.4wiebe.de
+
+
+SCRIPT=$(realpath $0)
+BASEDIR=$(dirname $SCRIPT)
+
+cd $BASEDIR
+
+
+
+ssh \
+	-i ssh/id_rsa \
+	-p $PORT \
+	-C \
+	-o Tunnel=ethernet \
+	-w 0 \
+	root@$HOST

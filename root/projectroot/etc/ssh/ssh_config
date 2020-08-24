@@ -1,6 +1,7 @@
 Host *
   StrictHostKeyChecking no
   UserKnownHostsFile /dev/null
+  ExitOnForwardFailure yes
   ServerAliveInterval 20
   LogLevel ERROR
 

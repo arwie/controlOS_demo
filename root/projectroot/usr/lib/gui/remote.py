@@ -1,4 +1,4 @@
-# Copyright (c) 2016 Artur Wiebe <artur@4wiebe.de>
+# Copyright (c) 2020 Artur Wiebe <artur@4wiebe.de>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 # associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -16,17 +16,21 @@
 
 
 import server
-import subprocess, json
-from tornado.web import RequestHandler
+from shared import system
 
 
-class Handler(RequestHandler):
+class Handler(server.RequestHandler):
 	
 	def get(self):
-		pass
+		self.write(system.statusText('remote@*.service'))
 	
 	def post(self):
-		subprocess.run(['/bin/systemctl', '--no-block', 'start', 'remote.service'])
+		system.stop('remote@*.service')
+		port = self.get_query_argument('port')
+		if port:
+			port = int(port)
+			if 60000 <= port <= 65500:
+				system.restart('remote@{}.service'.format(port))
 
 
 

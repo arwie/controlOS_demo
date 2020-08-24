@@ -307,14 +307,18 @@ function libEnd() { global $lib;
 		l('end sub');
 		
 		l('public sub '.lib().'_prgStop');
+			if (lib('prg')['event']) ll('eventoff '.lib().'_prgEvent');
+			ll(lib().'_stopTrigger()');
 			call(lib('prgStop'), true);
 		l('end sub');
 		
 		l('function prgRunning as long');
 		ll('prgRunning = (('.lib('prg')['file'].'.state band 0xF) = TASK_RUNNING)');
 		l('end function');
+		
 		l('sub prgExit');
-		ll('idletask '.$lib['prg']['file']);
+			ll(lib().'_prgStop()');
+			ll('idletask '.lib('prg')['file']);
 		l('end sub');
 	}
 
@@ -344,8 +348,6 @@ program
 	if <?=$name?>_active then
 		<?if ($prg['event']) l("eventon {$name}_prgEvent")?>
 		call <?=$name?>_prg
-		<?if ($prg['event']) l("eventoff {$name}_prgEvent")?>
-		call <?=$name?>_stopTrigger
 	end if
 	call <?=$name?>_prgStop
 end program
