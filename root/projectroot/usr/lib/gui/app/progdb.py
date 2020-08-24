@@ -6,8 +6,8 @@ import logging, json
 
 
 class ProgdbTableHandler(TableHandler):
-	def initialize(self, tableName):
-		super().initialize(progdb.progdb, tableName, doPost={
+	def initialize(self, table):
+		super().initialize(table, doPost={
 			'touch':	self.doTouch,
 		})
 	
@@ -37,7 +37,7 @@ class ProgdbTableHandler(TableHandler):
 
 class ProgsHandler(ProgdbTableHandler):
 	def initialize(self):
-		super().initialize('progs')
+		super().initialize(progdb.progs)
 	
 	def doCopy(self):
 		prog = super().doCopy()
@@ -54,7 +54,7 @@ class ProgsHandler(ProgdbTableHandler):
 
 class PointsHandler(TableHandler):
 	def initialize(self):
-		super().initialize(progdb.progdb, 'points')
+		super().initialize(progdb.points)
 	
 	def doList(self):
 		points = self.table.list({'prog_id':self.get_query_argument('prog_id')})

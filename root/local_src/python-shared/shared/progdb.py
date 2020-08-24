@@ -20,3 +20,5 @@ class Progdb(sqlite.Sqlite):
 
 
 progdb = Progdb()
+progs	= sqlite.Table(progdb, 'progs')
+points	= sqlite.Table(progdb, 'points')

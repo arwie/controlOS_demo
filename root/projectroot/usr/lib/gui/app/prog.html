@@ -101,19 +101,13 @@ class {
 				model.newPoint({x:data.here.x.toFixed(2), y:data.here.y.toFixed(2), z:data.here.z.toFixed(2), r:data.here.r.toFixed(2)});
 		});
 		return [
-			progdb.progs.load(page.params.id).done((prog)=>{
-				ko.mapping.fromJS(prog, model.prog);
-				model.progObserver = ko.subscribeTree(model.prog, ()=>{
-					progdb.progs.save(page.params.id, ko.mapping.toJS(model.prog));
-				});
-			}),
+			progdb.progs.loadMapping(page.params.id, model.prog),
 			model.list()
 		];
 	}
 	
 	stop() {
 		model.mc.close();
-		model.progObserver.dispose();
 	}
 	
 	breadcrumb() {
