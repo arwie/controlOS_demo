@@ -11,4 +11,4 @@ cd $BASEDIR/..
 SSH="ssh -i keys/ssh/id_rsa root@$HOST"
 
 
-pv images/update | $SSH "cat > /mnt/init/..update && mv /mnt/init/..update /mnt/init/update && reboot"
+pv images/update | $SSH "cat > /mnt/init/..update && sync && mv /mnt/init/..update /mnt/init/update && reboot"

@@ -1,6 +1,6 @@
 #!/usr/bin/sh
 
-# Copyright (c) 2019 Artur Wiebe <artur@4wiebe.de>
+# Copyright (c) 2020 Artur Wiebe <artur@4wiebe.de>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 # associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -21,12 +21,9 @@
 set -e	#exit script on first error
 
 
-rm -rf /var/revert
-mkdir  /var/revert
-
-tar -cC/mnt/root  .				| xz -T0 > /var/revert/update
-tar -cC/var       etc local		| xz -T0 > /var/revert/data
-
+cp /var/revert/* /mnt/init
 sync
 
-mv /mnt/init/.update /mnt/init/update
+rm -rf /var/revert
+
+reboot

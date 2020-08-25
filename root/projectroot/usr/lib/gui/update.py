@@ -17,7 +17,7 @@
 
 import server
 from shared import system
-import os, shutil
+import pathlib, os, shutil, subprocess
 
 
 class Handler(server.RequestHandler):
@@ -25,8 +25,8 @@ class Handler(server.RequestHandler):
 		self.write(open('/version', encoding='utf8').read())
 	
 	def put(self):
-		with open('/mnt/init/..update', 'wb') as f:
-			f.write(self.request.files['update'][0]['body'])
+		pathlib.Path('/mnt/init/..update').write_bytes(self.request.files['update'][0]['body'])
+		os.sync()
 		shutil.move('/mnt/init/..update', '/mnt/init/.update')
 		system.restart('update-apply.service')
 
@@ -34,14 +34,11 @@ class Handler(server.RequestHandler):
 class RevertHandler(server.RequestHandler):
 	def get(self):
 		try:
-			self.write(str(os.path.getmtime('/mnt/init/revert')))
+			self.write(str(os.path.getmtime('/var/revert')))
 		except: pass
 	
 	def post(self):
-		shutil.move('/mnt/init/revert/update', '/mnt/init/update')
-		shutil.move('/mnt/init/revert/data',   '/mnt/init/data')
-		shutil.rmtree('/mnt/init/revert')
-		system.reboot()
+		subprocess.run(['/usr/bin/update-revert'])
 
 
 

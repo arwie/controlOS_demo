@@ -53,6 +53,7 @@ $(STATEDIR)/system.targetinstall:
 	# update
 	@$(call install_copy,        system, 0, 0, 0755, /mnt/init)
 	@$(call install_copy,        system, 0, 0, 0755, /mnt/root)
+	@$(call install_alternative, system, 0, 0, 0755, /usr/bin/update-revert)
 	@$(call install_alternative, system, 0, 0, 0755, /usr/sbin/update-apply)
 	@$(call install_alternative, system, 0, 0, 0644, /usr/lib/systemd/system/update-apply.service)
 	@$(call install_alternative, system, 0, 0, 0644, /usr/lib/systemd/system/reboot.service)
