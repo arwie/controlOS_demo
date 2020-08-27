@@ -9,36 +9,19 @@
 
 
 {% block body %}
-<nav class="navbar navbar-expand-md fixed-top navbar-light bg-light">
-	<a href="#" class="navbar-brand" data-l10n-id="title"></a>
-	<button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbar-collapse">
-		<span class="navbar-toggler-icon"></span>
-	</button>
-	<div class="collapse navbar-collapse" id="navbar-collapse">
-		<ul class="navbar-nav">
-			{% include "app/menu.html" %}
-		</ul>
-		<ul class="navbar-nav ml-auto">
-			{% include "nav-diag.html" %}
-			{% include "nav-admin.html" %}
-			{% include "locale.html" %}
-			{% include "poweroff.html" %}
-		</ul>
+<navBar>
+	<div class="navbar-nav">
+		{% include "app/menu.html" %}
 	</div>
-</nav>
-<main class="container-fluid" style="padding-top:4.5rem">
+	<div class="navbar-nav ml-auto">
+		<navLocale></navLocale>
+		<navPoweroff></navPoweroff>
+	</div>
+</navBar>
+<main class="container-fluid">
 	<breadcrumb></breadcrumb>
 	
 	{% module page("homepage.html", start=True) %}
-	
-	{% module page("report.html") %}
-	{% module page("log.html") %}
-	{% module page("issue.html") %}
-	{% module page("debug.html") %}
-	{% module page("update.html") %}
-	{% module page("remote.html") %}
-	{% module page("network/network.html") %}
-	{% module page("backup.html") %}
 	
 	{% module page("app/app.html") %}
 </main>

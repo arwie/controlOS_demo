@@ -1,13 +1,12 @@
 {% extends "base.html" %}
 
 {% block html %}
-<nav class="navbar navbar-expand fixed-top navbar-dark bg-dark">
-	<span class="navbar-brand" data-l10n-id="controlOS"></span>
-	<ul class="navbar-nav">
-			<li class="nav-item"><a class="nav-link" href="#extlog"      data-l10n-id="extlog"></a></li>
-	</ul>
-</nav>
-<main class="container-fluid" style="padding-top:4.5rem">
+<navBar>
+	<div class="navbar-nav">
+		<pageLink params="path:'extlog'"></pageLink>
+	</div>
+</navBar>
+<main class="container-fluid">
 	{% module page("extlog.html") %}
 </main>
 {% end %}

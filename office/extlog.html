@@ -4,7 +4,7 @@
 {% block html %}
 <p>
 	<uploadButton params="upload:$model.importJournal, l10n:'extlog_import', css:'btn-primary'"></uploadButton>
-	<button data-bind="click:clearJournal" class="btn" data-l10n-id="extlog_clear"></button>
+	<button data-bind="click:clearJournal" class="btn btn-secondary" data-l10n-id="extlog_clear"></button>
 </p>
 {% module page("log.html") %}
 {% end %}

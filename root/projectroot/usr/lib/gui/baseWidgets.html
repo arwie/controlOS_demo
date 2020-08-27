@@ -17,6 +17,73 @@
 %}
 
 
+<script type="text/html" id="navBar">
+	<nav class="navbar navbar-expand-md fixed-top navbar-light bg-light">
+		<a href="#" class="navbar-brand">
+			<!-- ko if:$component.image -->
+				<img data-bind="src:$component.image" height="22" class="d-inline-block align-baseline"/>
+			<!-- /ko -->
+			<!-- ko if:!$component.image -->
+				<span data-l10n-id="title"></span>
+			<!-- /ko -->
+		</a>
+		<button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbar-collapse">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div data-bind="template:{nodes:$componentTemplateNodes}" class="collapse navbar-collapse" id="navbar-collapse"></div>
+	</nav>
+	<div style="padding-top:4.5rem">
+</script>
+<script>ko.components.register('navbar', {template:{element:'navBar'}})</script>
+
+
+<script type="text/html" id="pageLink">
+	<a data-bind="
+			attr:{'href':'#'+$component.path},
+			visible:$component.visibleState?gui.isState($component.visibleState):true,
+			css:{active:pager.page.find($component.path).isVisible},
+			l10n:$component.l10n?$component.l10n:$component.path.substring($component.path.lastIndexOf('/')+1),
+			class:$($element).parents().hasClass('dropdown-menu')?'dropdown-item':'nav-link',
+		"
+		onclick="$('#navbar-collapse').collapse('hide')">
+	</a>
+</script>
+<script>ko.components.register('pagelink', {template:{element:'pageLink'}})</script>
+
+
+<script type="text/html" id="navDropdown">
+	<div class="nav-item dropdown">
+		<a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
+			<!-- ko if:$component.icon -->
+				<i class="fas" data-bind="class:'fa-'+$component.icon"></i>
+			<!-- /ko -->
+			<!-- ko if:$component.l10n -->
+			<span data-bind="l10n:$component.l10n, class:$component.icon?'d-none d-xl-inline':''"></span>
+			<!-- /ko -->
+		</a>
+		<div data-bind="template:{nodes:$componentTemplateNodes}, css:{'dropdown-menu-right':$component.right}" class="dropdown-menu"></div>
+	</div>
+</script>
+<script>ko.components.register('navdropdown', {template:{element:'navDropdown'}})</script>
+
+
+<script type="text/html" id="navLocale">
+	<navDropdown params="icon:'language', l10n:'locale', right:true">
+		<!-- ko foreach:document.querySelector('meta[name=availableLanguages]').content.split(',') -->
+			<button data-bind="click:()=>{document.l10n.requestLanguages([$data])}, l10n:'locale_'+$data" class="dropdown-item"></button>
+		<!-- /ko -->
+	</navDropdown>
+</script>
+<script>ko.components.register('navlocale', {template:{element:'navLocale'}})</script>
+
+<script type="text/html" id="navPoweroff">
+	<navDropdown params="icon:'power-off', right:true">
+		<button onclick="$.post(ajaxUrl('system/poweroff'))" class="dropdown-item" data-l10n-id="poweroff"></button>
+	</navDropdown>
+</script>
+<script>ko.components.register('navpoweroff', {template:{element:'navPoweroff'}})</script>
+
+
 <script type="text/html" id="breadcrumb">
 	<ol data-bind="visible:$root.breadcrumb, foreach:$root.breadcrumb" class="breadcrumb">
 		<li class="breadcrumb-item">
