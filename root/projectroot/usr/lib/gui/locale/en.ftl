@@ -11,6 +11,7 @@ teach_speed		= Speed
 teach_tool		= Gripper
 teach_grip		= Grip
 teach_goto		= Move to position
+teach_conv		= Conveyor
 
 tool_none		= No gripper
 tool_magnet		= Magnet

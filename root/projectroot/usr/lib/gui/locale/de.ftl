@@ -10,6 +10,7 @@ teach_speed		= Geschwindigkeit
 teach_tool		= Greifer
 teach_grip		= Greifen
 teach_goto		= Bewege zu Position
+teach_conv		= Förderband
 
 tool_none		= Kein Greifer
 tool_magnet		= Magnet

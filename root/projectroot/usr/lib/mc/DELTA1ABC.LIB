@@ -60,6 +60,7 @@ public function <?=lib()?>_homingLoop as long
 			if getBit(driveStatus, 10) then
 				absEnable = getBit(driveStatus, 12)
 				<?=lib()?>_disableDetach()
+				sleep 100
 				<?=lib()?>_deviceWrite(0x6060, 0, 8, 8)
 			end if
 		end if
