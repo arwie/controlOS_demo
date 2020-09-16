@@ -4,6 +4,7 @@ menuconfig OPENCV
 	tristate
 	prompt "opencv                        "
 	select HOST_CMAKE
+	select HOST_SYSTEM_PYTHON3
 	select GCCLIBS_CXX
 	select ZLIB
 	select LIBPNG
@@ -70,6 +71,7 @@ config OPENCV_ML
 config OPENCV_OBJDETECT
 	bool
 	prompt "objdetect"
+	select OPENCV_CALIB3D
 	select OPENCV_IMGPROC
 	help
 	  Object Detection
