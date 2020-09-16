@@ -119,11 +119,25 @@ static void mccom_send_self(int channelId, int *error) noexcept
 	}
 }
 
-static void mccom_reset(int channelId) noexcept
+static int mccom_count(int channelId, int *error) noexcept
 {
+	*error = 0;
+	try {
+		return manager.getChannel(channelId)->count();
+	} catch (exception& e) {
+		*error = 1;
+		logMsg(LogError(e.what()).func(__func__));
+	}
+	return 0;
+}
+
+static void mccom_reset(int channelId, int *error) noexcept
+{
+	*error = 0;
 	try {
 		manager.getChannel(channelId)->reset();
 	} catch (exception& e) {
+		*error = 1;
 		logMsg(LogError(e.what()).func(__func__));
 	}
 }
@@ -294,8 +308,12 @@ extern "C" {
 		mccom_send_self(channelId, error);
 	}
 
-	void MCCOM_RESET(int channelId) {
-		mccom_reset(channelId);
+	int MCCOM_COUNT(int channelId, int *error) {
+		return mccom_count(channelId, error);
+	}
+
+	void MCCOM_RESET(int channelId, int *error) {
+		mccom_reset(channelId, error);
 	}
 
 	void MCCOM_CLOSE(int channelId) {

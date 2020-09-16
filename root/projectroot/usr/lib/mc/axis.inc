@@ -136,9 +136,10 @@ end sub
 }
 
 
-function _defaultDriveUpdate($ax) { lib('driveUpdate')['hash'][] = 4;
+function _defaultDriveUpdate($ax) { lib('driveUpdate')['hash'][] = 5;
 	switch ($ax['device']) {
 		case 'cdhd':
+			ll(lib().'_deviceWrite(0x2109, 0, 16, 0)');			#disable smoothing
 		break;case 'stepim':
 	}
 	call(libGet('driveUpdate'));

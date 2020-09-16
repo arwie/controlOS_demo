@@ -43,7 +43,7 @@
 			visible:$component.visibleState?gui.isState($component.visibleState):true,
 			css:{active:pager.page.find($component.path).isVisible},
 			l10n:$component.l10n?$component.l10n:$component.path.substring($component.path.lastIndexOf('/')+1),
-			class:$($element).parents().hasClass('dropdown-menu')?'dropdown-item':'nav-link',
+			class:($($element).parents().hasClass('dropdown-menu')?'dropdown-item':'nav-link')+($component.css?' '+$component.css:''),
 		"
 		onclick="$('#navbar-collapse').collapse('hide')">
 	</a>

@@ -27,6 +27,8 @@ public:
 
 	virtual int receive(MessagePtr& message, chrono::milliseconds timeout)	{ throw logic_error("receive() not implemented"); }
 
+	virtual int count()		{ return 0; }
+
 	virtual void open()		{ logMsg(LogDebug("channel opened")); }
 	virtual void reset()	{}
 	virtual ~Channel()		{}
@@ -88,6 +90,13 @@ public:
 		pushMessage(make_unique<Message>(message));
 	}
 
+
+	int count() override
+	{
+		{ lock_guard<mutex> lock(blockMtx);
+			return receiveQueue.size();
+		}
+	}
 
 	void reset() override
 	{

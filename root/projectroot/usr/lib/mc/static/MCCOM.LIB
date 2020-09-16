@@ -38,7 +38,8 @@ import_c MCCOM_OPEN(byval as long, as long) as long
 import_c MCCOM_RECEIVE(byval as long, byval as long, as long) as long
 import_c MCCOM_SEND(byval as long, as long)
 import_c MCCOM_SEND_SELF(byval as long, as long)
-import_c MCCOM_RESET(byval as long)
+import_c MCCOM_COUNT(byval as long, as long) as long
+import_c MCCOM_RESET(byval as long, as long)
 import_c MCCOM_CLOSE(byval as long)
 import_c MCCOM_CLOSE_ALL()
 import_c MCCOM_CLEAR(as long)
@@ -95,8 +96,21 @@ public sub com_sendSelf(byval channelId as long)
 end sub
 
 
+public function com_count(byval channelId as long) as long
+  dim err as long
+  com_count = MCCOM_COUNT(channelId, err)
+  if err then
+    throw com_error
+  end if
+end function
+
+
 public sub com_reset(byval channelId as long)
-  MCCOM_RESET(channelId)
+  dim err as long
+  MCCOM_RESET(channelId, err)
+  if err then
+    throw com_error
+  end if
 end sub
 
 

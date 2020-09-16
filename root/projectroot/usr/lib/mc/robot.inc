@@ -126,10 +126,7 @@ public sub <?=lib()?>_disable
 	while isMoving > 0
 		sleep 1
 	end while
-	while enable
-		enable = false
-		sleep 1
-	end while
+	enable = false
 	<?if ($rbt)
 		call(lib()."_disabled = true")?>
 	<?foreach ($axes as $ax)
