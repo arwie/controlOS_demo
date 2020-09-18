@@ -20,14 +20,14 @@ common shared conv_frame as moving frame of xyzr
 end sub
 
 
-<?drive_update(2)?>
-	conv_driveTune(30000, 0, 0, 415, 3500, 35)
+<?drive_update(3)?>
+	conv_driveTune(30000, 0, 0, 414, 3000, 30)
 end sub
 
 
 <?drive_setup()?>
-	positionfactor				= positionfactor / 107
-	direction					= 1
+	positionfactor				= positionfactor * 5/107
+	direction					= -1
 end sub
 
 
@@ -35,7 +35,7 @@ end sub
 	absolute					= false
 	axistype					= 0
 	
-	<?axis_setupSpeed(300)?>
+	<?axis_setupSpeed(250)?>
 	
 	positionerrormax			= 5
 end sub
