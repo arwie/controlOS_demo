@@ -1,0 +1,52 @@
+
+dim shared this_center as location of xyzr
+
+
+<?lib_prgStart()?>
+	conv_enableAttach()
+	delta1_enableAttach()
+	tool_select(tool_typeLaser)
+	tool_grip(true)
+	masterFrame = conv_frame
+	trigger delta1 ndof=1 value=conv.positioncommand-10  MasterFrame=conv_frame
+	slave = 5
+	sleep 500
+	this_center = here-conv_frame.zero
+	sinewave conv 150 SineWaveFreq=1 abs=false
+end sub
+
+
+<?lib_prgLoop()?>
+	moves conv_frame.zero+this_center	vrate=30
+	waitForMotion
+	sleep 1000
+
+	moves conv_frame.zero+this_center + #{+40,+40,0,0}	vrate=30
+	moves conv_frame.zero+this_center + #{-40,+40,0,0}	vrate=30
+	moves conv_frame.zero+this_center + #{-40,-40,0,0}	vrate=30
+	moves conv_frame.zero+this_center + #{+40,-40,0,0}	vrate=30
+
+	moves conv_frame.zero+this_center + #{+40,0,0,0}
+	circle angle=360 circleCenter=conv_frame.zero+this_center	vrate=30
+
+	waitForMotion
+end sub
+
+
+<?lib_prgStop()?>
+	slave = off
+	stop conv
+	masterFrame = NONE
+	delta1_disable()
+	conv_disable()
+	tool_select(tool_typeNone)
+end sub
+
+
+<?lib_prgError()?>
+	stop stoptype=ABORT
+	convtest_stopTrigger()
+	if not prgRunning then
+		convtest_prgStop()
+	end if
+end sub

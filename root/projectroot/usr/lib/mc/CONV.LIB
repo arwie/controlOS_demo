@@ -7,16 +7,19 @@
 
 common shared conv_frame as moving frame of xyzr
 
+dim shared this_upStream		as location of xyzr = #{<?=conf(lib(),'upstream',  'x', 0)?>, <?=conf(lib(),'upstream',  'y', +150)?>, 0,0}
+dim shared this_downStream		as location of xyzr = #{<?=conf(lib(),'downstream','x', 0)?>, <?=conf(lib(),'downstream','y', -150)?>, 0,0}
+dim shared this_streamLength	as double = distl(this_upStream, this_downStream)
 
 
 <?lib_init()?>
 	conv_frame.type						= 0
 	conv_frame.numberDegreesOfFreedom	= 1
 	conv_frame.masterSource				= positionCommand
-	conv_frame.upStream[1]				= #{ 150,0,0,0}
-	conv_frame.downStream[1]			= #{-150,0,0,0}
+	conv_frame.upStream[1]				= this_upStream
+	conv_frame.downStream[1]			= this_downStream
 	conv_frame.upMaster[1]				= 0
-	conv_frame.downMaster[1]			= 300
+	conv_frame.downMaster[1]			= conv_frame.upMaster[1] + this_streamLength
 end sub
 
 
@@ -26,8 +29,9 @@ end sub
 
 
 <?drive_setup()?>
-	positionfactor				= positionfactor * 5/107
-	direction					= -1
+	dim streamCounts_ as long = <?=conf(lib(),'downstream','c', 'positionfactor')?> - <?=conf(lib(),'upstream','c', 0)?>'
+	positionfactor				= abs(streamCounts_) / this_streamLength
+	direction					= sgn(streamCounts_)
 end sub
 
 

@@ -1,9 +1,6 @@
 {% include "common/de.ftl" %}
 
 
-paint		= Zeichnen: Kontinuierliche Pfad-Interpolation
-paint_nav	= Zeichnen
-
 teach			= Teachen
 teach_position	= Position
 teach_speed		= Geschwindigkeit
@@ -19,6 +16,9 @@ tool_laser		= Laser-Pointer
 progs				= Programme
 prog_name			= Name
 prog_description	= Beschreibung
+
+paint		= Zeichnen: Kontinuierliche Pfad-Interpolation
+paint_nav	= Zeichnen
 
 cvpath			= Computer Vision: Path
 cvpath_scan		= Scannen
