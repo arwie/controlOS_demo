@@ -1,0 +1,38 @@
+<?com_udpReceiver(55300)?>
+
+
+common shared arduino_connected		as long
+
+dim shared this_signal				as double
+dim shared this_inButton			as long
+
+
+<?input('inButton', 'long')?>
+	value_ = this_inButton
+end sub
+
+
+
+<?com_prgReceive('this_udpReceiver', 500)?>
+	select case receive_
+	case com_receiveMessage
+		arduino_connected = true
+		this_signal			= com_getDouble("/signal")
+		this_inButton		= com_getBool("/button")
+	
+	case com_receiveTimeout
+		this_inButton		= false
+		if arduino_connected then
+			arduino_connected = false
+			<?logWarning('arduino disconnected')?>
+		end if
+	
+	end select
+end sub
+
+
+
+<?lib_debug()?>
+	com_putBool("connected",		arduino_connected)
+	com_putDouble("signal",			this_signal)
+end sub

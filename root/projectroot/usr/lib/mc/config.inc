@@ -23,5 +23,7 @@ includeLib('DELTA1R.LIB');
 
 includeLib('CONV.LIB');
 
+includeLib('ARDUINO.LIB');
+
 
 device_order(['delta1a','delta1b','delta1c','delta1r','conv']);
