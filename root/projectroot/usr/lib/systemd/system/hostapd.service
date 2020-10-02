@@ -2,6 +2,7 @@
 StopWhenUnneeded=true
 ConditionPathExists=/etc/hostapd.conf.d/local.conf
 After=network.target
+Wants=hostapd-psk.service
 
 [Service]
 RuntimeDirectory=hostapd

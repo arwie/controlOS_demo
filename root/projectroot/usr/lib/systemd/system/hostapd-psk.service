@@ -1,0 +1,7 @@
+[Unit]
+ConditionPathExists=!/etc/hostapd/hostapd.wpa_psk
+Before=hostapd.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/sh -c 'echo "00:00:00:00:00:00 $(cat /proc/sys/kernel/random/uuid)" > /etc/hostapd/hostapd.wpa_psk'
