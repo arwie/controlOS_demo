@@ -421,6 +421,7 @@ PTXCONF_TIMEZONE_UTC=y
 #
 # BusyBox' bc is selected!
 #
+# PTXCONF_BOSSAC is not set
 # PTXCONF_BSDIFF is not set
 PTXCONF_BUSYBOX=y
 
