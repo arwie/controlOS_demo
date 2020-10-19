@@ -1,0 +1,7 @@
+## SECTION=project_specific
+
+config ARDUINO
+	tristate
+	prompt "arduino"
+	help
+	  FIXME

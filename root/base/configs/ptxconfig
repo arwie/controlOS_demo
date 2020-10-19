@@ -3,6 +3,7 @@
 # PTXdist 2020.08.0
 #
 # PTXCONF_APP is not set
+# PTXCONF_ARDUINO is not set
 PTXCONF_GUI=y
 PTXCONF_PYTHON_SHARED=y
 # PTXCONF_QEMU is not set

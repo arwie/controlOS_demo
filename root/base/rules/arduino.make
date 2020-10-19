@@ -1,0 +1,74 @@
+# -*-makefile-*-
+#
+# Copyright (C) 2020 by Artur Wiebe <artur@4wiebe.de>
+#
+# For further information about the PTXdist project and license conditions
+# see the README file.
+#
+
+#
+# We provide this package
+#
+PACKAGES-$(PTXCONF_ARDUINO) += arduino
+
+#
+# Paths and names
+#
+ARDUINO_VERSION	:= 1
+ARDUINO			:= arduino-$(ARDUINO_VERSION)
+ARDUINO_URL		:= file://local_src/arduino
+ARDUINO_DIR		:= $(BUILDDIR)/$(ARDUINO)
+ARDUINO_LICENSE	:= unknown
+
+# ----------------------------------------------------------------------------
+# Prepare
+# ----------------------------------------------------------------------------
+
+ARDUINO_CONF_TOOL	:= NO
+
+# ----------------------------------------------------------------------------
+# Compile
+# ----------------------------------------------------------------------------
+
+$(STATEDIR)/arduino.compile:
+	@$(call targetinfo)
+	
+	@cd $(ARDUINO_DIR) && \
+		find -mindepth 1 -maxdepth 1 -type d -exec ./build {} $(ARDUINO_PKGDIR)/usr/lib/arduino \;
+	
+	@$(call touch)
+
+# ----------------------------------------------------------------------------
+# Install
+# ----------------------------------------------------------------------------
+
+$(STATEDIR)/arduino.install:
+	@$(call targetinfo)
+	@$(call touch)
+
+# ----------------------------------------------------------------------------
+# Target-Install
+# ----------------------------------------------------------------------------
+
+$(STATEDIR)/arduino.targetinstall:
+	@$(call targetinfo)
+	@$(call install_init, arduino)
+	@$(call install_fixup, arduino,PRIORITY,optional)
+	@$(call install_fixup, arduino,SECTION,base)
+	@$(call install_fixup, arduino,AUTHOR,"Artur Wiebe <artur@4wiebe.de>")
+	@$(call install_fixup, arduino,DESCRIPTION,missing)
+	
+	@$(call install_glob, arduino, 0, 0, -, /usr/lib/arduino, *.ino.bin, , no)
+	
+	@$(call install_finish, arduino)
+	@$(call touch)
+
+# ----------------------------------------------------------------------------
+# Clean
+# ----------------------------------------------------------------------------
+
+$(STATEDIR)/arduino.clean:
+	@$(call targetinfo)
+	@$(call clean_pkg, ARDUINO)
+
+# vim: syntax=make

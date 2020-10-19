@@ -7,3 +7,4 @@
 /initramfs/platform-*/
 /mccom/platform-*/
 __pycache__
+root/local_src/arduino/*/build/
