@@ -77,6 +77,9 @@ CONFIG_TUN=m
 
 CONFIG_RTC_HCTOSYS=y
 
+## Arduino
+CONFIG_USB_ACM=m
+
 
 ## unused features
 # CONFIG_SWAP is not set
