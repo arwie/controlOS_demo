@@ -34,7 +34,8 @@ $(STATEDIR)/arduino.compile:
 	@$(call targetinfo)
 	
 	@cd $(ARDUINO_DIR) && \
-		find -mindepth 1 -maxdepth 1 -type d -exec ./build {} $(ARDUINO_PKGDIR)/usr/lib/arduino \;
+		find -mindepth 1 -maxdepth 1 -type d -print0 | \
+			xargs -0 -n1 -I{} ./build {} $(ARDUINO_PKGDIR)/usr/lib/arduino
 	
 	@$(call touch)
 
