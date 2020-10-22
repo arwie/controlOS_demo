@@ -1,0 +1,23 @@
+## SECTION=project_specific
+
+menuconfig PYLON
+	bool
+	select LIBC_PTHREAD
+	select LIBC_RT
+	select LIBC_DL
+	select LIBC_M
+	select GCCLIBS_CXX
+	select GCCLIBS_GCC_S
+	prompt "pylon"
+	help
+	  Basler camera SDK
+
+if PYLON
+
+config PYLON_PYTHON
+	bool
+	prompt "Python bindings"
+	help
+	  Python bindings
+
+endif

@@ -5,6 +5,7 @@
 # PTXCONF_APP is not set
 # PTXCONF_ARDUINO is not set
 PTXCONF_GUI=y
+# PTXCONF_PYLON is not set
 PTXCONF_PYTHON_SHARED=y
 # PTXCONF_QEMU is not set
 PTXCONF_STX_MC=y
