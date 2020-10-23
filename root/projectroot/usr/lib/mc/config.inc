@@ -14,6 +14,7 @@ includeLib('PROG.LIB');
 includeLib('TEACH.LIB');
 
 includeLib('TOOL.LIB');
+includeLib('CAMERA.LIB');
 
 includeLib('DELTA1.LIB');
 includeLib('DELTA1A.LIB', 'DELTA1ABC.LIB');

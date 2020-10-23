@@ -1,0 +1,35 @@
+
+dim shared this_triggerTimeout		as long
+
+
+<?output('outTrigger', 'long', 'delta1b')?>
+	system.dout[10000+delta1b_deviceAddress*100+0][1] = value_
+end sub
+
+
+
+public sub camera_trigger
+	camera_outTrigger(true)
+	this_triggerTimeout = system.clock + 16
+end sub
+
+
+
+<?lib_start()?>
+	camera_outTrigger(false)
+end sub
+
+
+<?lib_prgEvent(1)?>
+	if this_triggerTimeout then
+		if system.clock > this_triggerTimeout then
+			this_triggerTimeout = false
+			camera_outTrigger(false)
+		end if
+	end if
+end sub
+
+
+<?lib_prgPoll(1000)?>
+end sub
+
