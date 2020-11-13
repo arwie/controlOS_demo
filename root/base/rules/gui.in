@@ -2,6 +2,8 @@
 
 config GUI
 	bool
+	select PYTHON3_TORNADO	if RUNTIME
+	select PYTHON3_SQLITE	if RUNTIME
 	prompt "gui"
 	help
 	  FIXME

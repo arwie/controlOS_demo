@@ -1,0 +1,111 @@
+#!/usr/bin/python -Bu
+
+# Copyright (c) 2020 Artur Wiebe <artur@4wiebe.de>
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+# associated documentation files (the "Software"), to deal in the Software without restriction,
+# including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so,
+# subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+# INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+# WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+
+import shared, logging, argparse, subprocess, pathlib, json, tempfile, hashlib, socket
+from http.server import BaseHTTPRequestHandler, HTTPStatus
+from systemd import daemon
+
+
+parser = argparse.ArgumentParser()
+parser.add_argument("name", nargs='?', help="name of the arduino sketch")
+parser.add_argument("--console", action="store_true", help="log also to console")
+args = parser.parse_args()
+
+if args.console:
+	logging.root.addHandler(logging.StreamHandler())
+
+
+
+def insertJson(binary, char, data):
+	data = json.dumps(data, separators=(',',':')).encode() + b'\0'
+	return binary.replace(char*len(data), data, 1)
+
+
+def insertSyswlanLogin(binary):
+	return insertJson(binary, b'W', {
+		'bssid':	[int(h,16) for h in pathlib.Path('/sys/class/net/syswlan/address').read_text().strip().split(':')],
+		'psk':		pathlib.Path('/etc/hostapd/hostapd.wpa_psk').read_text().strip().split()[1]
+	})
+
+
+def update(name, syswlan=True):
+	binary = pathlib.Path('/usr/lib/arduino/{}.ino.bin'.format(name)).read_bytes()
+	
+	if syswlan:
+		binary = insertSyswlanLogin(binary)
+	
+	md5 = hashlib.md5(binary).hexdigest()
+	return (insertJson(binary, b'U', {
+		'sys':	socket.gethostbyname('sys'),
+		'name':	name,
+		'md5':	md5
+	}), md5)
+
+
+def upload(binary):
+	with tempfile.NamedTemporaryFile() as binfile:
+		binfile.write(binary)
+		try:
+			subprocess.run(['bossac', '-aewvRU', '--offset=0x2000', binfile.name], stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, check=True, text=True)
+		except subprocess.CalledProcessError as e:
+			raise Exception(e.stderr) from e
+
+
+
+class updateHttpHandler(BaseHTTPRequestHandler):
+	def log_error(self, format, *args):
+		logging.error(format%args)
+	def log_request(self, code='-', size='-'):
+		logging.info('HTTP request for: {} / version: {} / response: {}'.format(self.name, self.version, code))
+	
+	def do_GET(self):
+		self.name    = self.path.strip('/')
+		self.version = self.headers.get('Content-Version', failobj=0)
+		try:
+			binary, md5 = update(self.name)
+		except Exception as e:
+			logging.exception('ERROR in arduino-update')
+			self.send_error(HTTPStatus.INTERNAL_SERVER_ERROR, str(e))
+			return
+		
+		if md5 == self.headers.get('Content-MD5'):
+			self.send_response(HTTPStatus.NOT_MODIFIED)
+			self.end_headers()
+			return
+		
+		self.send_response(HTTPStatus.OK)
+		self.send_header("Content-Length", str(len(binary)))
+		self.end_headers()
+		self.wfile.write(binary)
+
+
+
+if daemon.listen_fds():
+	systemdSocket = socket.fromfd(daemon.LISTEN_FDS_START, socket.AF_INET6, socket.SOCK_STREAM)
+	updateHttpHandler(systemdSocket, systemdSocket.getpeername(), None)
+	exit()
+
+try:
+	logging.info('upload aduino project: {}'.format(args.name))
+	binary, md5 = update(args.name)
+	upload(binary)
+	logging.info('arduino updated successfully')
+except:
+	logging.exception('ERROR in arduino-update')
+	exit(1)

@@ -1,0 +1,3 @@
+[Service]
+WorkingDirectory=/usr/lib/arduino
+ExecStart=/usr/lib/arduino/arduino-update

@@ -1,4 +1,4 @@
-<?engage(['arduino','data'])?>
+<?engage(['arduino','data','camera'])?>
 
 <?com_websocket(55100)?>
 

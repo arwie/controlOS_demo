@@ -15,39 +15,43 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-#define WIFININA_USE_SAMD		true
-#include <WiFiNINA_Generic.h>
+// BUGFIX: arduino.h falsly defines max and min which breaks compiling string.h
+#undef max
+#undef min
+
+#include <ArduinoJson.h>
+#include <ArduinoLowPower.h>
+#include <Sodaq_wdt.h>
 
 
-void syswlan_check()
+
+void reset()
 {
-	if (WiFi.status() != WL_CONNECTED)
-		resetError("syswlan not connected (any more)");
+	sodaq_wdt_enable(WDT_PERIOD_1DIV64);	//reset via watchdog
+	delay(1000);
+}
+
+void resetError(const char *msg)
+{
+	Serial.print("ERROR: "); Serial.println(msg);
+	reset();
+}
+
+void poweroffError(const char *msg)
+{
+	Serial.print("ERROR: "); Serial.println(msg);
+	LowPower.deepSleep();
 }
 
 
-void syswlan_begin(const IPAddress& ip)
+void debugWaitSerial()
 {
-	StaticJsonDocument<256> login;
-	deserializeJson(login, "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW");
-	
-	int nets = WiFi.scanNetworks();
-	for (int net=0; net<nets; ++net)
-	{
-		byte bssid[6];
-		WiFi.BSSID(net, bssid);
-		
-		for (int i=0; i<6; ++i) {
-			if (bssid[5-i] != login["bssid"][i])
-				goto continueNets;
-		}
-		
-		WiFi.config(ip);
-		WiFi.begin(WiFi.SSID(net), login["psk"]);
-		
-		break;
-		continueNets:;
-	}
-	syswlan_check();
-	Serial.print("syswlan connected:");Serial.print(WiFi.SSID()); Serial.print(" RSSI:");Serial.print(WiFi.RSSI()); Serial.print(" localIP:");Serial.println(WiFi.localIP());
+	while (!Serial) { ; }
+}
+
+
+bool blinkHerz(float herz)
+{
+	int wavelength = 1000.0 / herz;
+	return (millis() % wavelength) < (wavelength / 2);
 }

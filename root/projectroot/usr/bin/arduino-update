@@ -1,7 +1,0 @@
-#!/usr/bin/python -Bu
-
-
-from shared import arduino
-
-
-arduino.upload(arduino.update('/usr/lib/arduino/buttons.ino.bin'))

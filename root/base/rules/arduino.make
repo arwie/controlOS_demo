@@ -61,6 +61,13 @@ $(STATEDIR)/arduino.targetinstall:
 	
 	@$(call install_glob, arduino, 0, 0, -, /usr/lib/arduino, *.ino.bin, , no)
 	
+	@$(call install_alternative, arduino, 0, 0, 0755, /usr/lib/arduino/arduino-update)
+	@$(call install_link, arduino, /usr/lib/arduino/arduino-update, /usr/bin/arduino-update)
+	
+	@$(call install_alternative, arduino, 0, 0, 0644, /usr/lib/systemd/system/arduino-update@.service)
+	@$(call install_alternative, arduino, 0, 0, 0644, /usr/lib/systemd/system/arduino-update.socket)
+	@$(call install_link,        arduino, ../arduino-update.socket, /usr/lib/systemd/system/sockets.target.wants/arduino-update.socket)
+	
 	@$(call install_finish, arduino)
 	@$(call touch)
 

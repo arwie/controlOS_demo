@@ -2,6 +2,8 @@
 
 config STX_MC
 	bool
+	select PHP5				if RUNTIME
+	select PYTHON3_PEXPECT	if RUNTIME
 	prompt "stx-mc"
 	help
 	  FIXME

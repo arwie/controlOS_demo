@@ -15,39 +15,45 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-#define WIFININA_USE_SAMD		true
-#include <WiFiNINA_Generic.h>
+#include <ArduinoOTA.h>
+#include <ArduinoHttpClient.h>
 
 
-void syswlan_check()
+void update(const int version = 0)
 {
-	if (WiFi.status() != WL_CONNECTED)
-		resetError("syswlan not connected (any more)");
-}
-
-
-void syswlan_begin(const IPAddress& ip)
-{
-	StaticJsonDocument<256> login;
-	deserializeJson(login, "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW");
+	StaticJsonDocument<256> update;
+	deserializeJson(update, "UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU");
 	
-	int nets = WiFi.scanNetworks();
-	for (int net=0; net<nets; ++net)
-	{
-		byte bssid[6];
-		WiFi.BSSID(net, bssid);
-		
-		for (int i=0; i<6; ++i) {
-			if (bssid[5-i] != login["bssid"][i])
-				goto continueNets;
-		}
-		
-		WiFi.config(ip);
-		WiFi.begin(WiFi.SSID(net), login["psk"]);
-		
-		break;
-		continueNets:;
+	WiFiClient tcp;
+	HttpClient client(tcp, update["sys"].as<const char*>(), 8101);
+	
+	client.beginRequest();
+	client.get(update["name"].as<const char*>());
+	client.sendHeader("Content-MD5", update["md5"].as<const char*>());
+	client.sendHeader("Content-Version", version);
+	client.endRequest();
+	
+	if (client.responseStatusCode() != 200) {	//200:OK
+		client.stop();
+		return;
 	}
-	syswlan_check();
-	Serial.print("syswlan connected:");Serial.print(WiFi.SSID()); Serial.print(" RSSI:");Serial.print(WiFi.RSSI()); Serial.print(" localIP:");Serial.println(WiFi.localIP());
+	
+	long length = client.contentLength();
+	
+	if (!InternalStorage.open(length)) {
+		client.stop();
+		Serial.println("update is too large");
+		return;
+	}
+	
+	for (byte b; length > 0; --length) {
+		if (!client.readBytes(&b, 1))
+			resetError("update download timeout");
+		InternalStorage.write(b);
+	}
+	
+	InternalStorage.close();
+	client.stop();
+	
+	InternalStorage.apply();
 }

@@ -15,39 +15,46 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-#define WIFININA_USE_SAMD		true
-#include <WiFiNINA_Generic.h>
+#define _WEBSOCKETS_LOGLEVEL_			1		// 0:DISABLED, 1:ERROR, 2:WARN, 3:INFO, 4:DEBUG
+#define WEBSOCKETS_USE_WIFININA			true
+#define WEBSOCKETS_WIFININA_USE_SAMD	true
+#include <WebSockets2_Generic.h>
 
 
-void syswlan_check()
+class WebsocketsClientJson : public websockets2_generic::WebsocketsClient
 {
-	if (WiFi.status() != WL_CONNECTED)
-		resetError("syswlan not connected (any more)");
-}
-
-
-void syswlan_begin(const IPAddress& ip)
-{
-	StaticJsonDocument<256> login;
-	deserializeJson(login, "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW");
+public:
 	
-	int nets = WiFi.scanNetworks();
-	for (int net=0; net<nets; ++net)
+	void begin(const char* host, int port, const char* path = "/")
 	{
-		byte bssid[6];
-		WiFi.BSSID(net, bssid);
-		
-		for (int i=0; i<6; ++i) {
-			if (bssid[5-i] != login["bssid"][i])
-				goto continueNets;
-		}
-		
-		WiFi.config(ip);
-		WiFi.begin(WiFi.SSID(net), login["psk"]);
-		
-		break;
-		continueNets:;
+		if (!connect(host, port, path))
+			resetError("websocket connecting failed");
 	}
-	syswlan_check();
-	Serial.print("syswlan connected:");Serial.print(WiFi.SSID()); Serial.print(" RSSI:");Serial.print(WiFi.RSSI()); Serial.print(" localIP:");Serial.println(WiFi.localIP());
-}
+	
+	bool sendJson(const JsonDocument& data)
+	{
+		String msg;
+		serializeJson(data, msg);
+		Serial.print("sending:"); Serial.println(msg);
+		return send(msg);
+	}
+	
+	template <size_t jsonCapacity>
+	void onMessageJson(std::function<void(JsonDocument& data)> callback)
+	{
+		onMessage([callback](websockets2_generic::WebsocketsMessage msg)
+		{
+			Serial.print("received:"); Serial.println(msg.data());
+			StaticJsonDocument<jsonCapacity> data;
+			deserializeJson(data, msg.data());
+			callback(data);
+		});
+	}
+	
+	void loop()
+	{
+		poll();
+		if (!available())
+			resetError("websocket disconnected");
+	}
+};
