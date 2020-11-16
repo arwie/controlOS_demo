@@ -5,6 +5,8 @@ config WEBENGINE
 	prompt "webengine"
 	select HOST_QT5
 	select QT5
+	select QT5_PLATFORM_EGLFS
+	select QT5_OPENGL
 	select QT5_ICU
 	select QT5_INPUT_LIBINPUT
 	select QT5_MODULE_QTWEBENGINE
