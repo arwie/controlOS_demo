@@ -1,4 +1,4 @@
-.git-controlOS
+/.git-controlOS
 /src
 /**/configs/**/*.old
 /boot/platform-*/
@@ -7,4 +7,5 @@
 /initramfs/platform-*/
 /mccom/platform-*/
 __pycache__
-root/local_src/arduino/*/build/
+/root/local_src/arduino/*/build/
+/virtualbox/vm

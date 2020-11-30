@@ -1,0 +1,21 @@
+#!/bin/sh
+
+BASEDIR=$(dirname $(realpath $0))
+
+cd $BASEDIR
+
+
+if [ ! -d vm ]; then
+	echo "ERROR: vbox not present!"
+	exit 1
+fi
+
+
+UUID=$(cat vm/uuid)
+
+vboxmanage controlvm $UUID poweroff  &&  sleep 3
+
+vboxmanage unregistervm --delete $UUID
+#vboxmanage closemedium --delete vm/system.vdi
+
+rm -rf vm

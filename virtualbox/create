@@ -1,0 +1,55 @@
+#!/bin/sh
+
+BASEDIR=$(dirname $(realpath $0))
+
+cd $BASEDIR
+
+
+if [ -d vm ]; then
+	echo "ERROR: vbox already present, delete first!"
+	exit 1
+fi
+mkdir vm
+
+
+# generate new uuid
+cp --no-preserve=mode /proc/sys/kernel/random/uuid vm/.
+UUID=$(cat vm/uuid)
+
+
+# create and configure new vm
+vboxmanage createvm --uuid=$UUID \
+	--register \
+	--ostype=Linux_64 \
+	--basefolder=$BASEDIR/vm \
+	--name=$(basename $(dirname $BASEDIR))
+
+vboxmanage modifyvm $UUID \
+	--firmware=efi64 \
+	--memory=1024 \
+	--cpus=2 \
+	--nic1=hostonly \
+	--nicpromisc1=allow-all \
+	--nic2=nat \
+	--rtcuseutc=on \
+	--graphicscontroller=vmsvga \
+	--vram=16 \
+	--audio=none
+
+
+# create and attach system disk
+xzcat ../images/system.img.xz | \
+	vboxmanage convertfromraw stdin vm/system.vdi 4294967296
+
+vboxmanage storagectl $UUID \
+	--add=sata \
+	--name=sata \
+	--controller=IntelAhci \
+	--portcount=1 \
+	--hostiocache=on
+
+vboxmanage storageattach $UUID \
+	--medium=vm/system.vdi \
+	--storagectl=sata \
+	--type=hdd \
+	--port=0

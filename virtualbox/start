@@ -1,0 +1,16 @@
+#!/bin/sh
+
+BASEDIR=$(dirname $(realpath $0))
+
+cd $BASEDIR
+
+
+if [ ! -d vm ]; then
+	echo "ERROR: vbox not present!"
+	exit 1
+fi
+
+
+UUID=$(cat vm/uuid)
+
+vboxmanage startvm $UUID
