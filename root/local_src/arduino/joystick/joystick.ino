@@ -70,7 +70,7 @@ bool controlDelta(JsonDocument& data) {
 				sendCmd(data, -2);
 				gripSent = true;
 			}
-		} else {
+		} else if (abs(abs(a)-abs(b))>0.5) {
 			gripSent = false;
 		}
 	}
