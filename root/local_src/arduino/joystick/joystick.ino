@@ -31,7 +31,7 @@ void setup() {
 	update(version);
 	
 	joystickCenter();
-	Serial.print(xCenter); Serial.print(" # "); Serial.println(yCenter);
+	//Serial.print(xCenter); Serial.print(" # "); Serial.println(yCenter);
 	
 	wsClient.begin("90.0.0.1", 55001);
 	wsClient.onMessageJson<256>(handleInfo);

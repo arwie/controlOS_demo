@@ -76,7 +76,7 @@ function webSocket(url, onMessageJson) {
 		onMessageJson(JSON.parse(e.data), first);
 		first = false;
 	};
-	ws.sendJson = (data)=>{
+	ws.sendJson = (data={})=>{
 		ws.send(JSON.stringify(data));
 	};
 	return ws;

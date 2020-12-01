@@ -115,6 +115,7 @@ class {
 		this.info = ko.mapping.fromJS({});
 		this.speed = ko.observable('5');
 		this.gotoPos = ko.mapping.fromJS({x:0, y:0, z:0, r:0});
+		this.watchdog = null;
 	}
 	
 	moveStop()			{ model.sendCmd(0); }
@@ -139,6 +140,11 @@ class {
 	}
 	
 	sendCmd(cmd, args={}) {
+		if (cmd>0)
+			this.watchdog = setInterval(model.mc.sendJson, 50);
+		else
+			clearInterval(this.watchdog);
+		
 		args.cmd = cmd;
 		args.speed = parseFloat(model.speed());
 		model.mc.sendJson(args);

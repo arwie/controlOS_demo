@@ -17,14 +17,16 @@ end sub
 		allDisable()
 	case com_receiveTimeout
 		if anyEnabled then
+			allStop()
 			if system.clock > this_disableTimeout then
 				allDisable()
 			end if
 		end if
-	
 	case com_receiveMessage
-		this_disableTimeout = system.clock + 30000
 		handleMessage()
+		this_disableTimeout = system.clock + 20000
+	case com_receiveNotify
+		this_disableTimeout = system.clock + 20000
 	end select
 	
 	com_clear()
@@ -37,14 +39,14 @@ end sub
 
 
 <?lib_prgStop()?>
-	tool_select(tool_typeNone)
 	allDisable()
+	tool_select(tool_typeNone)
 	delta1.velocityoverride = 100
+	conv.velocityoverride   = 100
 end sub
 
 
 <?lib_prgError()?>
-	allStop()
 	if not prgRunning then
 		teach_prgStop()
 		teach_stopTrigger()
@@ -67,10 +69,7 @@ sub handleMessage
 			conv.velocityoverride = 3*speed_
 			if not anyMoving or distl(dir_, this_moveDir)>0 or distr(dir_, this_moveDir)>0 then
 				this_moveDir = dir_
-				while anyMoving
-					allStop()
-					sleep 1
-				end while
+				allStop()
 				select case cmd_
 				case 1
 					delta1_enable()
@@ -129,19 +128,23 @@ sub movesLimit(byval dir_ as location of xyzr)
 end sub
 
 
-sub allDisable
-	delta1_disable()
-	conv_disable()
-end sub
-
-sub allStop
-	stop delta1 stoptype=ABORT
-	stop conv   stoptype=ABORT
-end sub
-
 function anyMoving as long
 	anyMoving = delta1.isMoving or conv.isMoving
 end function
+
+sub allStop
+	while anyMoving
+		stop delta1 stoptype=ABORT
+		stop conv   stoptype=ABORT
+		sleep 1
+	end while
+end sub
+
+sub allDisable
+	allStop()
+	delta1_disable()
+	conv_disable()
+end sub
 
 function anyEnabled as long
 	anyEnabled = not (delta1_disabled and conv_disabled)
