@@ -14,7 +14,7 @@
 
 <div class="form-group">
 	<label data-l10n-id="teach_speed"></label>
-	<input data-bind="value:$model.speed" type="range" min="1" max="15" step="1" class="custom-range">
+	<input data-bind="value:$model.speed" type="range" min="1" max="15" step="0.1" class="custom-range">
 </div>
 
 <div class="form-group">
@@ -52,39 +52,39 @@
 
 <div class="row my-5">
 	<div class="col">
-		<button data-bind="press:{start:()=>{$model.moveDim(3,-1)}, stop:$model.moveStop}" class="btn btn-block btn-lg btn-secondary"><i class="fa fa-minus"></i> Z</button>
+		<button data-bind="press:{start:()=>{$model.moveDelta({x:0,y:0,z:-1,r:0})}, stop:$model.moveStop}" class="btn btn-block btn-lg btn-secondary"><i class="fa fa-minus"></i> Z</button>
 	</div>
 	<div class="col"></div>
 	<div class="col">
-		<button data-bind="press:{start:()=>{$model.moveDim(2,-1)}, stop:$model.moveStop}" class="btn btn-block btn-lg btn-secondary"><i class="fa fa-minus"></i> Y</button>
+		<button data-bind="press:{start:()=>{$model.moveDelta({x:0,y:-1,z:0,r:0})}, stop:$model.moveStop}" class="btn btn-block btn-lg btn-secondary"><i class="fa fa-minus"></i> Y</button>
 	</div>
 	<div class="col"></div>
 	<div class="col">
-		<button data-bind="press:{start:()=>{$model.moveDim(4,-1)}, stop:$model.moveStop}" class="btn btn-block btn-lg btn-secondary"><i class="fa fa-minus"></i> R</button>
+		<button data-bind="press:{start:()=>{$model.moveDelta({x:0,y:0,z:0,r:-1})}, stop:$model.moveStop}" class="btn btn-block btn-lg btn-secondary"><i class="fa fa-minus"></i> R</button>
 	</div>
 </div>
 <div class="row my-5">
 	<div class="col"></div>
 	<div class="col">
-		<button data-bind="press:{start:()=>{$model.moveDim(1,-1)}, stop:$model.moveStop}" class="btn btn-block btn-lg btn-secondary"><i class="fa fa-minus"></i> X</button>
+		<button data-bind="press:{start:()=>{$model.moveDelta({x:-1,y:0,z:0,r:0})}, stop:$model.moveStop}" class="btn btn-block btn-lg btn-secondary"><i class="fa fa-minus"></i> X</button>
 	</div>
 	<div class="col"></div>
 	<div class="col">
-		<button data-bind="press:{start:()=>{$model.moveDim(1, 1)}, stop:$model.moveStop}" class="btn btn-block btn-lg btn-secondary"><i class="fa fa-plus" ></i> X</button>
+		<button data-bind="press:{start:()=>{$model.moveDelta({x:1,y:0,z:0,r:0})}, stop:$model.moveStop}" class="btn btn-block btn-lg btn-secondary"><i class="fa fa-plus" ></i> X</button>
 	</div>
 	<div class="col"></div>
 </div>
 <div class="row my-5">
 	<div class="col">
-		<button data-bind="press:{start:()=>{$model.moveDim(3, 1)}, stop:$model.moveStop}" class="btn btn-block btn-lg btn-secondary"><i class="fa fa-plus" ></i> Z</button>
+		<button data-bind="press:{start:()=>{$model.moveDelta({x:0,y:0,z:1,r:0})}, stop:$model.moveStop}" class="btn btn-block btn-lg btn-secondary"><i class="fa fa-plus" ></i> Z</button>
 	</div>
 	<div class="col"></div>
 	<div class="col">
-		<button data-bind="press:{start:()=>{$model.moveDim(2, 1)}, stop:$model.moveStop}" class="btn btn-block btn-lg btn-secondary"><i class="fa fa-plus" ></i> Y</button>
+		<button data-bind="press:{start:()=>{$model.moveDelta({x:0,y:1,z:0,r:0})}, stop:$model.moveStop}" class="btn btn-block btn-lg btn-secondary"><i class="fa fa-plus" ></i> Y</button>
 	</div>
 	<div class="col"></div>
 	<div class="col">
-		<button data-bind="press:{start:()=>{$model.moveDim(4, 1)}, stop:$model.moveStop}" class="btn btn-block btn-lg btn-secondary"><i class="fa fa-plus"></i> R</button>
+		<button data-bind="press:{start:()=>{$model.moveDelta({x:0,y:0,z:0,r:1})}, stop:$model.moveStop}" class="btn btn-block btn-lg btn-secondary"><i class="fa fa-plus"></i> R</button>
 	</div>
 </div>
 
@@ -119,15 +119,15 @@ class {
 	
 	moveStop()			{ model.sendCmd(0); }
 	
-	moveDim(dim, dir)	{ model.sendCmd(1, {dim:dim, dir:dir}); }
-	moveConv(dir)		{ model.sendCmd(11, {dir:dir}); }
+	moveDelta(dir)		{ model.sendCmd(1,  {abs:false, dir:dir}); }
+	moveConv(dir)		{ model.sendCmd(11, {dir:{x:dir,y:dir,z:dir,r:dir}}); }
 	
 	goto() {
 		document.activeElement.blur();
 		let pos = {};
 		for (let key of ['x','y','z','r']) 
 			pos[key] = parseFloat(model.gotoPos[key]());
-		model.sendCmd(2, {pos:pos});
+		model.sendCmd(1, {abs:true, dir:pos});
 	}
 	
 	selectTool(ctx, event) {
@@ -140,7 +140,7 @@ class {
 	
 	sendCmd(cmd, args={}) {
 		args.cmd = cmd;
-		args.speed = parseInt(model.speed());
+		args.speed = parseFloat(model.speed());
 		model.mc.sendJson(args);
 		//console.log(args); 
 	}

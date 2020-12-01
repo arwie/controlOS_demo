@@ -9,36 +9,85 @@
 
 #define xInput			4
 #define yInput			2
-#define analogDamping	40
+#define analogDamping	60
 
 
 float xCenter, yCenter;
 
+WebsocketsClientJson wsClient;
+
 
 
 void setup() {
+	pinMode(LED_BUILTIN, OUTPUT);
+	digitalWrite(LED_BUILTIN, HIGH);
+	
 	while (!Serial) { ; }
+	
+	syswlan_begin(IPAddress(90,0,0,31));
+	update(version);
 	
 	IMU.begin();
 	
 	joystickCenter();
-	
 	Serial.print(xCenter); Serial.print(" # "); Serial.println(yCenter);
+	
+	wsClient.begin("90.0.0.1", 55001);
+	
+	digitalWrite(LED_BUILTIN, LOW);
 }
 
 
 
 void loop() {
+	static bool idle = true;
 	//calibrateJoystick();	return;
 	//calibrateIMU();		return;
 	
-	auto x = +joystickDirection(analogReadFiltered<xInput, analogDamping>(), 486, xCenter, 754);
+	auto x = +joystickDirection(analogReadFiltered<xInput, analogDamping>(), 465, xCenter, 727);
 	auto y = -joystickDirection(analogReadFiltered<yInput, analogDamping>(), 342, yCenter, 685);
-	
 	Serial.print(x); Serial.print(" / "); Serial.println(y);
 	
-	delay(200);
+	StaticJsonDocument<256> data;
+	
+	if (abs(x)>0 || abs(y)>0) {
+		data["abs"]			= false;
+		data["dir"]["x"]	= 0;
+		data["dir"]["y"]	= 0;
+		data["dir"]["z"]	= 0;
+		data["dir"]["r"]	= 0;
+		
+		if (abs(x)>abs(y)) {
+			data["dir"]["x"]	= x>0 ? 1 : -1;
+			data["speed"]		= 10*abs(x);
+		} else {
+			data["dir"]["y"]	= y>0 ? 1 : -1;
+			data["speed"]		= 10*abs(y);
+		}
+		
+		sendCmd(data, 1);
+		idle = false;
+	} else {
+		if (!idle) {
+			sendCmd(data, 0);
+			idle = true;
+		}
+	}
+	
+	
+	wsClient.loop();
+	delay(25);
+	digitalWrite(LED_BUILTIN, LOW);
+	delay(25);
 }
+
+
+void sendCmd(JsonDocument& data, const int cmd) {
+	data["cmd"] = cmd;
+	wsClient.sendJson(data);
+	digitalWrite(LED_BUILTIN, HIGH);
+}
+
 
 
 void joystickCenter() {
@@ -59,7 +108,7 @@ float joystickDirection(float v, const int vMin, const float vCenter, const int 
 		v = -1.0;
 	if (v > +1.0)
 		v = +1.0;
-	if (abs(v) < 0.15)
+	if (abs(v) < 0.10)
 		v = 0.0;
 	return v*abs(v);
 }

@@ -1,5 +1,6 @@
 <?com_websocket(55001)?>
 
+dim shared this_moveDir as location of xyzr
 dim shared this_disableTimeout as long
 
 
@@ -38,6 +39,7 @@ end sub
 <?lib_prgStop()?>
 	tool_select(tool_typeNone)
 	allDisable()
+	delta1.velocityoverride = 100
 end sub
 
 
@@ -53,75 +55,77 @@ end sub
 
 sub handleMessage
 	dim cmd_ as long
+	dim speed_ as double
+	dim dir_ as location of xyzr
 	try
 		cmd_ = com_getLong("/cmd")
-		if cmd_>0 and not anyMoving then
-			select case cmd_
-			case 1
-				delta1_enable()
-				moveLimit(com_getLong("/dim"), com_getLong("/dir"), com_getLong("/speed"))
-			case 2
-				delta1_enable()
-				moves com_getLocationXyzr("/pos") velocityrate=com_getLong("/speed")
-			case 11
-				conv_enable()
-				jog conv com_getLong("/dir") * bound(6*com_getLong("/speed")/100.0, 0.01, 1) * conv.velocitymax
-			end select
-		else
+		select case cmd_
+		case is>0
+			dir_ = com_getLocationXyzr("/dir")
+			speed_ = com_getDouble("/speed")
+			delta1.velocityoverride = speed_
+			conv.velocityoverride = 3*speed_
+			if not anyMoving or distl(dir_, this_moveDir)>0 or distr(dir_, this_moveDir)>0 then
+				this_moveDir = dir_
+				while anyMoving
+					allStop()
+					sleep 1
+				end while
+				select case cmd_
+				case 1
+					delta1_enable()
+					if com_getBool("/abs") then
+						moves delta1 dir_
+					else
+						movesLimit(dir_)
+					end if
+				case 11
+					conv_enable()
+					jog conv dir_{1} * conv.velocitymax
+				end select
+			end if
+		case 0
 			allStop()
-			select case cmd_
-			case -1
-				tool_select(com_getLong("/tool"))
-			case -2
-				tool_grip(com_getBool("/grip"))
-			end select
-		end if
+		case -1
+			tool_select(com_getLong("/tool"))
+		case -2
+			tool_grip(com_getBool("/grip"))
+		end select
 	<?catchLog()?>
 end sub
 
 
-sub moveLimit(byval dim_ as long, byval dir_ as long, byval speed_ as long)
-	dim target_ as location of xyzr = setPoint
-	dim step_   as location of xyzr
+sub movesLimit(byval dir_ as location of xyzr)
+	dim target_ as location of xyzr = delta1.setpoint:inverse(delta1.tool)
 	dim steps_  as long
 	dim orientationfollowing_ as long
 	
-	if dir_ > 0 then
-		step_ = #{+200, +200, 150, +179}
-	else
-		step_ = #{-200, -200,   0, -179}
+	if dir_{1}<>0 then
+		steps_ = abs(dIfElse(-200, dir_{1}<0, 200) - target_{1})
+	end if
+	if dir_{2}<>0 then
+		steps_ = abs(dIfElse(-200, dir_{2}<0, 200) - target_{2})
+	end if
+	if dir_{3}<>0 then
+		steps_ = abs(dIfElse(   0, dir_{3}<0, 130) - target_{3})
+	end if
+	if dir_{4}<>0 then
+		steps_ = abs(dIfElse(-179, dir_{4}<0, 179) - target_{4})
+		orientationfollowing_ = lIfElse(4, dir_{4}>0, 6)
 	end if
 	
-	select case dim_
-	case 1
-		steps_ = abs(target_{1} - step_{1})
-		target_{1} = step_{1}
-		step_ = #{dir_, 0, 0, 0}
-	case 2
-		steps_ = abs(target_{2} - step_{2})
-		target_{2} = step_{2}
-		step_ = #{0, dir_, 0, 0}
-	case 3
-		steps_ = abs(target_{3} - step_{3})
-		target_{3} = step_{3}
-		step_ = #{0, 0, dir_, 0}
-	case 4
-		steps_ = 1
-		target_{4} = step_{4}
-		if dir_ > 0 then
-			orientationfollowing_ = 4
-		else
-			orientationfollowing_ = 6
-		end if
-	end select
-	
-	while not isMoving and useDecrement(steps_)
+	target_ = delta1.setpoint + steps_*dir_
+	while not delta1.isMoving and steps_>0
 		try
-			moves target_ velocityrate=speed_ orientationfollowing=orientationfollowing_
+			'print target_; " steps:"; steps_
+			moves delta1 target_ orientationfollowing=orientationfollowing_
 		catch 3121
-			target_ = target_ - step_
+		catch 3176
+		finally
+			target_ = target_ - dir_
+			decrement(steps_)
 		end try
-	end while
+	end while 
 end sub
 
 
