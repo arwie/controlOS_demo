@@ -7,6 +7,7 @@ dim shared this_disableTimeout as long
 <?lib_prgStart()?>
 	attach delta1
 	attach conv
+	delta1_torque(20)
 	tool_select(tool_typeLaser)
 	tool_grip(true)
 end sub
@@ -43,6 +44,7 @@ end sub
 	tool_select(tool_typeNone)
 	delta1.velocityoverride = 100
 	conv.velocityoverride   = 100
+	delta1_torque(100)
 end sub
 
 
