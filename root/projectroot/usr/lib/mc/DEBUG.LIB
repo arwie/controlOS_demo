@@ -48,10 +48,6 @@ end sub
 end sub
 
 
-<?lib_prgError()?>
-end sub
-
-
 
 sub pollData
 <?

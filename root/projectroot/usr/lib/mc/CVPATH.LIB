@@ -27,10 +27,7 @@ end sub
 
 
 <?lib_prgError()?>
-	if not prgRunning then
-		cvpath_prgStop()
-		cvpath_stopTrigger()
-	end if
+	stop stoptype=ABORT
 end sub
 
 

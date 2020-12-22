@@ -49,10 +49,7 @@ end sub
 
 
 <?lib_prgError()?>
-	if not prgRunning then
-		teach_prgStop()
-		teach_stopTrigger()
-	end if
+	allStop()
 end sub
 
 

@@ -33,10 +33,6 @@ end sub
 
 <?lib_prgError()?>
 	stop stoptype=ABORT
-	if not prgRunning then
-		prog_prgStop()
-		prog_stopTrigger()
-	end if
 end sub
 
 

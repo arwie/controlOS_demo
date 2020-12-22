@@ -33,21 +33,19 @@ dim shared comLogChannel as long
 
 
 
-public sub log_message(byval prio_ as long, byval message_ as string)
+public sub log_message(byval prio_ as long, byval message_ as string, byval lib_ as string, byval scope_ as string)
 	com_store()
 	com_putLong("/clock", system.clock)
 	com_putLong("/priority", prio_)
 	com_putStringRef("/message", message_)
+	com_putStringRef("/lib", lib_)
+	com_putStringRef("/code_func", scope_)
 	com_putString("/prg", programname)
 end sub
 
 
 public sub log_putMessageId(byval messageId_ as string)
 	com_putStringRef("/message_id", messageId_)
-end sub
-
-public sub log_putCodeFunc(byval codeFunc_ as string)
-	com_putStringRef("/code_func", codeFunc_)
 end sub
 
 public sub log_putReport(byval report_ as string)
@@ -75,7 +73,7 @@ end sub
 
 
 public sub log_debugMessage(byval message_ as string)
-	log_message(log_prioDebug, message_)
+	log_message(log_prioDebug, message_, "-", scope)
 	log_send()
 end sub
 
@@ -110,11 +108,6 @@ end sub
 	case com_receiveNotify
 		log_stopTrigger()
 	end select
-end sub
-
-
-<?lib_prgError()?>
-	log_stopTrigger()
 end sub
 
 

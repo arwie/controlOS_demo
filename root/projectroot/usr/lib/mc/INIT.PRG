@@ -33,9 +33,8 @@ program continue
 ?>
 		catch 19004	'ignore drive errors of unattached axes
 		catch else
-			call log_message(log_prioError, system.error)
+			call log_message(log_prioError, system.error, "init", "onSystemError")
 			call com_putLong("/error", system.errornumber)
-			call log_putCodeFunc("onSystemError")
 			call log_send
 			logErrorHistory = true
 	end onSystemError
@@ -49,7 +48,7 @@ program continue
 	while not init_wait(1000)
 		if logErrorHistory then
 			logErrorHistory = false
-			call log_message(log_prioNotice, "mc error history")
+			call log_message(log_prioNotice, "mc error history", "init", "errorhistory")
 			call com_putString("/errorhistory", vesexecute("?errorhistorydelta"))
 			call log_send
 		end if
@@ -70,7 +69,7 @@ terminate program
 
 
 sub logSystemStart
-	call log_message(log_prioNotice, "mc system start")
+	call log_message(log_prioNotice, "mc system start", "init", "start")
 	call com_putString("/system", vesexecute("?system.information"))
 	call com_putString("/errorhistory", vesexecute("?errorhistorydelta"))
 	call com_putString("/version", version)
@@ -81,7 +80,7 @@ end sub
 
 
 sub logSystemStop
-	call log_message(log_prioNotice, "mc system stop")
+	call log_message(log_prioNotice, "mc system stop", "init", "stop")
 	call com_putString("/errorhistory", vesexecute("?errorhistorydelta"))
 	call log_send
 end sub

@@ -28,7 +28,7 @@ program continue
 
 	onError
 		catch else
-			log_message(log_prioError, AUTOEXEC.PRG.error)
+			log_message(log_prioError, AUTOEXEC.PRG.error, "init", "onError")
 			com_putLong("/error", AUTOEXEC.PRG.errornumber)
 			log_putTrnErr()
 			log_send()
@@ -42,7 +42,7 @@ program continue
 
 
 	if system.numberaxes < <?=count($axes)?> then
-		log_message(log_prioCritical, "MC license not sufficient!")
+		log_message(log_prioCritical, "MC license not sufficient!", "init", "numberaxes")
 		com_putLong("/numberaxes", system.numberaxes)
 		log_send()
 	end if

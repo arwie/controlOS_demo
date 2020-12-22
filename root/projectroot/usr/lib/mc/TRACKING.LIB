@@ -110,9 +110,6 @@ end sub
 <?lib_prgError()?>
 	stop stoptype=ABORT
 	tracking_stopTrigger()
-	if not prgRunning then
-		tracking_prgStop()
-	end if
 end sub
 
 

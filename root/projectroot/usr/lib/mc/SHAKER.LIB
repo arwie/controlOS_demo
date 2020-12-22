@@ -56,10 +56,6 @@ end sub
 
 <?lib_prgError()?>
 	stop stoptype=ABORT
-	if not prgRunning then
-		shaker_prgStop()
-		shaker_stopTrigger()
-	end if
 end sub
 
 

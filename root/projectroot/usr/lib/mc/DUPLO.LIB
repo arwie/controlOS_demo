@@ -34,10 +34,7 @@ end sub
 
 
 <?lib_prgError()?>
-	if not prgRunning then
-		duplo_prgStop()
-		duplo_stopTrigger()
-	end if
+	stop stoptype=ABORT
 end sub
 
 

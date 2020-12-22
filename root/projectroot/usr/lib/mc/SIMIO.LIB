@@ -76,10 +76,6 @@ end sub
 end sub
 
 
-<?lib_prgError()?>
-end sub
-
-
 
 sub handleOverride
 	try

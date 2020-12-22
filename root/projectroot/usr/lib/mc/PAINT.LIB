@@ -33,10 +33,6 @@ end sub
 
 <?lib_prgError()?>
 	stop stoptype=ABORT
-	if not prgRunning then
-		paint_prgStop()
-		paint_stopTrigger()
-	end if
 end sub
 
 

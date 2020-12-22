@@ -31,17 +31,18 @@ function device(&$dev) { global $lib;
 	}
 	
 	set('device')[lib()] = $dev;
-	$lib['device'] = get('device')[lib()];
 	
 	if ($dev['bus']) {
 		l('common shared '.lib().'_deviceAddress as const long = '.get('device')[lib()]['address']);
+		lib('end', function() {
+			_deviceFunctions(get('device')[lib()]);
+		});
 	}
 }
 
 
-function deviceLibEnd($dev) {
-	if (!$dev['bus']) return;
-	
+function _deviceFunctions($dev)
+{
 	$ifNotSimulated = function($body) use ($dev) {
 		if ($dev['simulated']) 
 			throwLog(lib().' device is simulated', ['com_putString("/index", hex$(index_)+"h")']);

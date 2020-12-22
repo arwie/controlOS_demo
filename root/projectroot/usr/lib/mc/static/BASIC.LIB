@@ -254,3 +254,17 @@ public function blinkHerz(byval herz_ as double) as long
 	dim wavelength_ as long = 1000 / herz_
 	blinkHerz = (system.clock mod wavelength_) < (wavelength_ / 2)
 end function
+
+
+public sub taskWaitKill(byval task_ as string, running_ as long)
+	while running_ or (taskstate(task_) band 0x0F)=TASK_RUNNING or (taskstate(task_) band 0x100)
+		sleep 1
+	end while
+	while taskstate(task_)<>TASK_KILLED
+		try
+			killtask$ task_
+		catch else
+			sleep 1
+		end try
+	end while
+end sub
