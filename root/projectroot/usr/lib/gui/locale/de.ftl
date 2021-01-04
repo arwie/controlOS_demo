@@ -12,6 +12,7 @@ teach_conv		= Förderband
 tool_none		= Kein Greifer
 tool_magnet		= Magnet
 tool_laser		= Laser-Pointer
+tool_probe		= Sonde
 
 progs				= Programme
 prog_name			= Name

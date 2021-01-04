@@ -13,6 +13,7 @@ teach_conv		= Conveyor
 tool_none		= No gripper
 tool_magnet		= Magnet
 tool_laser		= Laser pointer
+tool_probe		= Probe
 
 progs				= Programs
 prog_name			= Name
