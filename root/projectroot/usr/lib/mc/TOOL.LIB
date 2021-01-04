@@ -31,7 +31,7 @@ public sub tool_select(byval toolType_ as long)
 	case tool_typeMagnet
 		delta1.tool = #{0,0,6+65,0}
 	case tool_typeLaser
-		delta1.tool = #{37*cosDeg(-60), 37*sinDeg(-60), 0, 0} + #{0, 1, 0, 0}
+		delta1.tool = #{37*cosDeg(-60), 37*sinDeg(-60), 6+70, 0} + #{0, 1, 0, 0}
 	case tool_typeProbe
 		delta1.tool = #{31*cosDeg(120), 31*sinDeg(120), 6+70, 0}
 	case else
