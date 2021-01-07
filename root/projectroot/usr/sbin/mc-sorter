@@ -1,0 +1,122 @@
+#!/usr/bin/python -Bu
+
+from shared import websocket
+import numpy as np
+import cv2 as cv
+from pypylon import pylon
+from operator import itemgetter
+import logging
+
+logging.root.addHandler(logging.StreamHandler())
+
+
+conf = {"m": [[4426.628456070167, 0.0, 586.286817678153], [0.0, 4441.817619859583, 450.23923705670006], [0.0, 0.0, 1.0]], "d": [[0.6816792488504552, 13.163809587701673, -0.0030967100410058254, -0.009383985136120576, -278.2028681797848]], "h": [[-1.134127831694609, -0.0022365285204225633, 1424.0015425889146], [0.005937869210278502, -1.1433504013529034, 1050.2621853650708], [6.476014545996702e-06, 1.0637922360192212e-06, 1.0]]}
+
+m = np.array(conf['m'])
+d = np.array(conf['d'])
+h = np.array(conf['h'])
+n,_ = cv.getOptimalNewCameraMatrix(m, d, (960,1280), 1, (960,1280))
+
+
+def show(img, time=0):
+	cv.namedWindow('image', cv.WINDOW_NORMAL)
+	cv.resizeWindow('image', 900,900)
+	cv.imshow('image', img)
+	cv.waitKey(time)
+
+
+camera = pylon.InstantCamera(pylon.TlFactory.GetInstance().CreateFirstDevice())
+camera.Open()
+camera.TriggerMode.SetValue('On')
+camera.BslImmediateTriggerMode.SetValue('On')
+camera.PixelFormat.SetValue('RGB8')
+camera.BslColorSpaceMode.SetValue('RGB')
+camera.ExposureAuto.SetValue('Off')
+camera.ExposureTime.SetValue(1000)
+camera.GainAuto.SetValue('Off')
+camera.Gain.SetValue(15)
+camera.StartGrabbing(pylon.GrabStrategy_LatestImageOnly)
+
+
+cvConverter = pylon.ImageFormatConverter()
+cvConverter.OutputPixelFormat  = pylon.PixelType_BGR8packed
+cvConverter.OutputBitAlignment = pylon.OutputBitAlignment_MsbAligned
+
+
+
+def retrieveImage():
+	with camera.RetrieveResult(5000, pylon.TimeoutHandling_ThrowException) as result:
+		img = cvConverter.Convert(result).GetArray()
+		img = cv.undistort(img, m, d, None, n)
+		img = cv.warpPerspective(img, h, (1400,1000))
+		return img
+
+
+def findItems(img, trigger=0):
+	green = img[:,:,1]
+	
+	green = cv.blur(green, (15,15))
+	#ret,green = cv.threshold(green, 0, 255, cv.THRESH_OTSU)
+	ret,green = cv.threshold(green, 150, 255, cv.THRESH_BINARY)
+	#show(green)
+	
+	green = cv.morphologyEx(green, cv.MORPH_CLOSE, cv.getStructuringElement(cv.MORPH_ELLIPSE, (25,25)))
+	#show(green)
+	
+	contours,h = cv.findContours(green, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
+	
+	items = []
+	
+	for c in contours:
+		cv.drawContours(img, [c], -1, (0, 255, 0), 1)
+		
+		a = cv.contourArea(c)
+		if a<230000: continue
+		
+		
+		(x,y),r	= cv.minEnclosingCircle(c)
+		if abs(r-300)>10: continue
+		
+		items.append({
+			'x':	trigger - x/10,
+			'y':	y/10,
+			'z':	-11,
+			'r':	0
+		})
+		
+		cv.circle(img, (int(x),int(y)),int(r), (0,0,255), 5)
+		cv.circle(img, (int(x),int(y)),20, (0,0,255), -1)
+	
+	items.sort(key=itemgetter('x'))
+	return items
+
+
+
+class SorterClient(websocket.Client):
+	def __init__(self):
+		self.initialize('90.0.0.1', 55003)
+		self.minTrigger = 0
+	
+	async def onMessageJson(self, msg):
+		img = retrieveImage()
+		items = findItems(img, msg['trigger'])
+		for item in items:
+			if item['x'] < self.minTrigger:
+				print('duplicate: ', item)
+				continue
+			self.writeMessageJson({'item':item})
+			self.minTrigger = item['x'] + 5
+			print(item)
+		show(img, 10)
+
+
+websocket.run(SorterClient())
+exit()
+
+
+while(True):
+	img = retrieveImage()
+	items = findItems(img)
+	show(img, 333)
+	
+	print(items)

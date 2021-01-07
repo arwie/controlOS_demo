@@ -5,20 +5,23 @@
 ])?>
 
 
-common shared conv_frame as moving frame of xyzr
+common shared conv_frame		as moving frame of xyzr
 
-dim shared this_upStream		as location of xyzr = #{<?=conf(lib(),'upstream',  'x', 0)?>, <?=conf(lib(),'upstream',  'y', +150)?>, 0,0}
-dim shared this_downStream		as location of xyzr = #{<?=conf(lib(),'downstream','x', 0)?>, <?=conf(lib(),'downstream','y', -150)?>, 0,0}
-dim shared this_streamLength	as double = distl(this_upStream, this_downStream)
+dim shared this_confUpStream	as location of xyzr = #{<?=conf(lib(),'upstream',  'x')?>, <?=conf(lib(),'upstream',  'y')?>, <?=conf(lib(),'upstream',  'z')?>, 0}
+dim shared this_confDownStream	as location of xyzr = #{<?=conf(lib(),'downstream','x')?>, <?=conf(lib(),'downstream','y')?>, <?=conf(lib(),'downstream','z')?>, 0}
+dim shared this_streamLength	as double = distl(this_confUpStream, this_confDownStream)
 
 
 <?lib_init()?>
+	dim streamVector_ as location of xyzr = this_confDownStream - this_confUpStream
+	dim streamRot_ as double = atan2Deg(streamVector_{2}, streamVector_{1})
+	
 	conv_frame.type						= 0
 	conv_frame.numberDegreesOfFreedom	= 1
 	conv_frame.masterSource				= positionCommand
-	conv_frame.upStream[1]				= this_upStream
-	conv_frame.downStream[1]			= this_downStream
-	conv_frame.upMaster[1]				= 0
+	conv_frame.upStream[1]				= this_confUpStream   +#{0,0,0,streamRot_}
+	conv_frame.downStream[1]			= this_confDownStream +#{0,0,0,streamRot_}
+	conv_frame.upMaster[1]				= abs(<?=conf(lib(),'upstream','c')?>-<?=conf(lib(),'trigger','c')?>) / positionfactor
 	conv_frame.downMaster[1]			= conv_frame.upMaster[1] + this_streamLength
 end sub
 

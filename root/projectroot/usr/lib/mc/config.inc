@@ -9,6 +9,7 @@ includeLib('CVPATH.LIB');
 includeLib('O3D.LIB');
 includeLib('SHAKER.LIB');
 includeLib('TRACKING.LIB');
+includeLib('SORTER.LIB');
 includeLib('PAINT.LIB');
 includeLib('PROG.LIB');
 includeLib('TEACH.LIB');
