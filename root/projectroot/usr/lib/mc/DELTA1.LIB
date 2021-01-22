@@ -34,7 +34,7 @@ end sub
 	absolute					= true
 	positionerrordelay			= 5
 
-	positionerrormax			= 10
+	positionerrormax			= 5
 	positionerrorsettle			= 1
 
 	couplingmatrix[1][1]		= 1
@@ -88,7 +88,7 @@ end sub
 	decelerationstop			= decelerationmax
 	jerk						= jerkmax
 
-	<?robot_setupSpeed([1200, 900], 100, 25)?>
+	<?robot_setupSpeed([1500, 1200], 70, 20)?>
 	
 	base						= #{0, 0, -540, 0}
 

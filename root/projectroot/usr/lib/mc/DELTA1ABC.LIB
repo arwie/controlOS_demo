@@ -40,9 +40,9 @@ end sub
 	
 	axistype					= 0
 	
-	<?axis_setupSpeed(600, 50, 50)?>
+	<?axis_setupSpeed(800, 70, 20)?>
 	
-	positionerrormax			= 5
+	positionerrormax			= 4
 end sub
 
 
@@ -74,6 +74,10 @@ end function
 	<?=lib()?>_deviceWrite(0x6073, 0, 16, torquemax*value_/100)
 end sub
 
+
+public function <?=lib()?>_rpm as double
+	<?=lib()?>_rpm = (velocitycommand * positionfactor/4096) * 60
+end function
 
 
 <?lib_debug()?>

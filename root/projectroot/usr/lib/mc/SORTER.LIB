@@ -4,7 +4,6 @@
 dim shared this_scanDistance	as const long		= 80
 
 dim shared this_placePos		as const location of xyzr	= #{-79, 15, 112, 0}
-dim shared this_pickHeight		as const double		= 15
 
 dim shared this_nextScanPos as double
 
@@ -69,15 +68,15 @@ end sub
 
 sub fetchItem(byval item_ as location of xyzr)
 	slave = 5
-	moves conv_frame.zero:#{0, item_{2}, item_{3}-this_pickHeight, item_{4}}
+	moves conv_frame.zero:#{0, item_{2}, item_{3}-5, item_{4}}
 	waitForMotion
 	while not isMovingFrameSynchronized>0
 		sleep 1
 	end while
 	
-	moves #{0, 0, +this_pickHeight, 0} abs=false
+	moves #{0, 0,  +5, 0} abs=false
 	tool_grip(true)
-	moves #{0, 0, -this_pickHeight, 0} abs=false
+	moves #{0, 0, -15, 0} abs=false
 	
 	waitForMotion
 	slave = off
@@ -85,9 +84,9 @@ sub fetchItem(byval item_ as location of xyzr)
 	moves this_placePos - #{0,0,20,0}
 	moves this_placePos
 	tool_grip(false)
-	moves #{0,-45,-3,0}	abs=false
-	moves #{0,0,9,0}	abs=false
-	moves #{0,70,0,0}	abs=false arate=15 drate=20
+	moves #{0,-45,-4,0}	abs=false
+	moves #{0,0,10,0}	abs=false
+	moves #{0,70,0,0}	abs=false arate=15 drate=30
 	moves this_placePos - #{0,0,20,0}
 	waitForMotion
 end sub

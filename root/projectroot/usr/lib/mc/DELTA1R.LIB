@@ -23,7 +23,7 @@ end sub
 	absolute					= true
 	axistype					= 1
 	
-	<?axis_setupSpeed(900, 150, 50)?>
+	<?axis_setupSpeed(1200, 70, 20)?>
 	
-	positionerrormax			= 45
+	positionerrormax			= 30
 end sub
