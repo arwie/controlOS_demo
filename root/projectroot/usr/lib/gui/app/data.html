@@ -1,0 +1,60 @@
+{% extends "../page.html" %}
+
+
+{% block html %}
+<navChildrenTabs params="l10n:'data'"></navChildrenTabs>
+
+<div data-bind="page:{id:'ppm', role: 'start'}">
+	<div data-bind="using:info" class="jumbotron">
+		<div class="row mb-5">
+			<div class="col">
+				<h3 data-l10n-id="data_ppmParts"></h3>
+				<h1 data-bind="text:ppm.parts()" class="display-3"></h1>
+			</div>
+			<div class="col text-right">
+				<h3 data-l10n-id="data_ppmTime"></h3>
+				<h1 data-bind="text:$model.millisToMinSecMil(ppm.time())" class="display-3"></h1>
+			</div>
+		</div>
+		<h1 data-l10n-id="data_ppmPpm"></h1>
+		<h1 data-bind="text:ppm.ppm().toFixed(1)" class="display-1"></h1>
+	</div>
+	<button data-bind="click:reset" class="btn btn-warning" data-l10n-id="reset"></button>
+</div>
+{% end %}
+
+
+{% block model %}
+class {
+	constructor() {
+		this.info = ko.mapping.fromJS({});
+	}
+	
+	millisToMinSecMil(millis) {
+		let mins = Math.floor(millis / 60000);
+		let secs = ((millis % 60000) / 1000).toFixed(0);
+		let mils = Math.floor((millis % 1000) / 100);
+		return mins + ":" + (secs < 10 ? '0' : '') + secs + ":" + mils;
+	}
+	
+	reset() {
+		model.mcData.sendJson();
+	}
+	
+	start(started) {
+		model.mcData  = webSocket(wsUrl('mc', 55000), (msg, first)=>{
+			ko.mapping.fromJS(msg, model.info);
+			if (first) started();
+		});
+	}
+	
+	stop() {
+		model.mcData.close();
+	}
+}
+{% end %}
+
+
+{% block guard %}
+	return gui.isState('mc@data');
+{% end %}

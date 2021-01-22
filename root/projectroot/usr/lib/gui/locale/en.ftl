@@ -2,6 +2,14 @@
 
 title	= ARTUR WIEBE
 
+reset			= Reset
+
+data			= Visualization
+data_ppm		= Performance
+data_ppmTime	= Time
+data_ppmParts	= Parts
+data_ppmPpm		= Parts per Minute
+
 teach			= Teach
 teach_position	= Position
 teach_speed		= Speed

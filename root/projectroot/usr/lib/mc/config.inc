@@ -1,6 +1,5 @@
 <?
 includeLib('APP.LIB');
-includeLib('DATA.LIB');
 
 includeLib('CONVTEST.LIB');
 includeLib('INNOCISE.LIB');
@@ -26,6 +25,7 @@ includeLib('DELTA1R.LIB');
 includeLib('CONV.LIB');
 
 includeLib('ARDUINO.LIB');
+includeLib('DATA.LIB');
 
 
 device_order(['delta1a','delta1b','delta1c','delta1r','conv']);

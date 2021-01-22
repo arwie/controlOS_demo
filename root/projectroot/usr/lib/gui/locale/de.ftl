@@ -1,6 +1,12 @@
 {% include "common/de.ftl" %}
 
 
+data			= Visualisierung
+data_ppm		= Leistung
+data_ppmTime	= Zeit
+data_ppmParts	= Teile
+data_ppmPpm		= Teile pro Minute
+
 teach			= Teachen
 teach_position	= Position
 teach_speed		= Geschwindigkeit

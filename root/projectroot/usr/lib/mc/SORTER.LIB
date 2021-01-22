@@ -1,15 +1,16 @@
 <?com_websocket(55003)?>
 
 
-dim shared this_scanDistance	as const long		= 90
+dim shared this_scanDistance	as const long		= 80
 
-dim shared this_placePos		as const location of xyzr	= #{-100, 0, 100, 0}
+dim shared this_placePos		as const location of xyzr	= #{-79, 15, 112, 0}
 dim shared this_pickHeight		as const double		= 15
 
 dim shared this_nextScanPos as double
 
 
 <?lib_start()?>
+	data_ppmReset()
 	this_nextScanPos = 0
 end sub
 
@@ -19,7 +20,7 @@ end sub
 	delta1_enableAttach()
 	tool_select(tool_typeMagnet)
 	masterFrame = conv_frame
-	jog conv 100
+	jog conv 150
 	
 	'delta1_torque(30)
 	'vrate = 30
@@ -48,6 +49,7 @@ end sub
 
 <?lib_prgError()?>
 	sorter_stopTrigger()
+	idletask sorter.prg
 end sub
 
 <?lib_prgStop()?>
@@ -61,6 +63,7 @@ sub handleItem(byval item_ as location of xyzr)
 	if (conv.positionCommand+conv_frame.downMaster[1]-item_{1})>120 then
 		trigger delta1 ndof=1 value=item_{1} masterFrame=conv_frame
 		fetchItem(item_)
+		data_ppmPlace()
 	end if
 end sub
 
@@ -74,17 +77,19 @@ sub fetchItem(byval item_ as location of xyzr)
 	
 	moves #{0, 0, +this_pickHeight, 0} abs=false
 	tool_grip(true)
-	waitForMotion
-	sleep 10
 	moves #{0, 0, -this_pickHeight, 0} abs=false
 	
 	waitForMotion
 	slave = off
 	
+	moves this_placePos - #{0,0,20,0}
 	moves this_placePos
-	waitForMotion
 	tool_grip(false)
-	sleep 10
+	moves #{0,-45,-3,0}	abs=false
+	moves #{0,0,9,0}	abs=false
+	moves #{0,70,0,0}	abs=false arate=15 drate=20
+	moves this_placePos - #{0,0,20,0}
+	waitForMotion
 end sub
 
 

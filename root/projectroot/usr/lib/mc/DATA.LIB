@@ -1,10 +1,40 @@
 <?com_websocket(55000)?>
 
+dim shared this_ppmStartTime		as long
+dim shared this_ppmParts			as long
+dim shared this_ppmPpm				as double
 
 
-<?lib_prgPoll(100)?>
+
+<?com_prgReceive('this_websocket', 100)?>
+	select case receive_
+	case com_receiveNotify
+		data_ppmReset()
+	end select
+	
 	com_clear()
-	com_putLocationXyzr("/delta1/setpoint",	setpoint)
-	com_putLocationXyzr("/delta1/here",		here)
+	com_putLocationXyzr("/delta1/setpoint",	delta1.setpoint)
+	com_putLocationXyzr("/delta1/here",		delta1.here)
+	com_with("/ppm")
+		com_putLong("time",		lIf(system.clock-this_ppmStartTime, this_ppmStartTime))
+		com_putLong("parts",	this_ppmParts)
+		com_putDouble("ppm",	this_ppmPpm)
 	com_send(this_websocket)
+end sub
+
+
+
+public sub data_ppmReset
+	this_ppmPpm			= 0
+	this_ppmParts		= 0
+	this_ppmStartTime	= 0
+end sub
+
+public sub data_ppmPlace
+	if not this_ppmStartTime then
+		this_ppmStartTime = system.clock
+	else
+		increment(this_ppmParts)
+		this_ppmPpm = this_ppmParts / ((system.clock-this_ppmStartTime) / 60000)
+	end if
 end sub
