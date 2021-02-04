@@ -34,6 +34,7 @@ function axis($ax) { global $lib;
 	device($ax);
 	
 	l('common shared '.lib().'_disabled as long = true');
+	l('common shared '.lib().'_driveError as long');
 	l('common shared '.lib().'_driveLogErrorHandled as long');
 	
 	lib('debug', [
@@ -190,7 +191,7 @@ function _driveFunctions($ax) {
 ?>
 public sub <?=lib()?>_driveSave
 	<?=lib()?>_deviceWrite(0x<?=($ax['device']=='stepim' && $ax['bus']=='etc')?'2E04':'1010'?>, 1, 32, 0x65766173)
-	sleep <?=($ax['device']=='stepim' && $ax['bus']=='can')?'3500':'500'?>'
+	sleep <?=($ax['device']=='stepim' && $ax['bus']=='can')?'3500':'1000'?>'
 end sub
 
 <?if ($ax['device']=='stepim') {?>
@@ -202,13 +203,15 @@ public sub <?=lib()?>_driveSetupAddress(byval currentAddress_ as long)
 end sub
 <?}?>
 
-public sub <?=lib()?>_driveTune(byval posProportional_ as long, byval posIntegral_ as long, byval posDerivative_ as long, byval posVelFeedForward_ as long, byval velProportional_ as long, byval velIntegral_ as long)
-	<?=lib()?>_deviceWrite(0x201E, 0, 32, posDerivative_)
-	<?=lib()?>_deviceWrite(0x2020, 0, 32, posIntegral_)
+public sub <?=lib()?>_driveTune(byval posProportional_ as long, byval posIntegralSaturation_ as long, byval posIntegral_ as long, byval posDerivative_ as long, byval posVelFeedForward_ as long, byval velFilter_ as long, byval velProportional_ as long, byval velIntegral_ as long)
 	<?=lib()?>_deviceWrite(0x2022, 0, 32, posProportional_)
+	<?=lib()?>_deviceWrite(0x2077, 0, 32, posIntegralSaturation_)
+	<?=lib()?>_deviceWrite(0x2020, 0, 32, posIntegral_)
+	<?=lib()?>_deviceWrite(0x201E, 0, 32, posDerivative_)
 	<?=lib()?>_deviceWrite(0x2023, 0, 32, posVelFeedForward_)
-	<?=lib()?>_deviceWrite(0x2026, 0, 32, velIntegral_)
+	<?=lib()?>_deviceWrite(0x20D9, 0, 16, velFilter_)
 	<?=lib()?>_deviceWrite(0x2027, 0, 32, velProportional_)
+	<?=lib()?>_deviceWrite(0x2026, 0, 32, velIntegral_)
 end sub
 <?}?>
 
@@ -233,6 +236,7 @@ public function <?=lib()?>_driveLogError as long
 					end select
 				else
 					<?=lib()?>_driveLogError = log_prioError
+					<?=lib()?>_driveError = errorcode_
 				end if
 				if <?=lib()?>_driveLogError then
 					<?logMessage(lib().'_driveLogError', '"'.lib().' drive error: "+drivelog_errorString(errorcode_)', [function() use ($ax) {?>

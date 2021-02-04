@@ -9,7 +9,7 @@
 	<?=lib()?>_deviceWrite(0x607C, 0, 32, 0)					'Home Offset
 	<?=lib()?>_deviceWrite(0x2F22, 0, 16, 1000)					'Home On Edge Current Saturation [mA]
 	
-	<?=lib()?>_driveTune(18000, 0, 0, 350, 8000, 200)
+	<?=lib()?>_driveTune(18000, 100000, 0, 0, 350, 100, 8000, 200)
 	
 	<?=lib()?>_deviceWrite(0x20E0, 1, 16, 1)					'Digital Input Mode
 	

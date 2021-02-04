@@ -98,7 +98,7 @@ public sub <?=lib()?>_enable
 	<?foreach ($axes as $ax)
 		call("dim {$ax}DriveFault_ as long = {$ax}.driveStatus band 0x8")?>
 	<?foreach ($axes as $ax)
-		call("{$ax}_disabled = false")?>
+		call(["{$ax}_disabled = false", "{$ax}_driveError = false"])?>
 	<?if ($rbt)
 		call(lib()."_disabled = false")?>
 	if not enable then

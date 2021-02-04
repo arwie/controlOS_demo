@@ -63,7 +63,9 @@ function pageUrl(url, params=null, subpage=null, breadcrumb=[]) {
 	breadcrumb = [].concat(breadcrumb);
 	if (breadcrumb.length)
 		params = Object.assign({breadcrumb:JSON.stringify(breadcrumb)}, params);
-	return '#'+url + (params ? '?'+$.param(params) : '') + (subpage ? '/'+subpage : '');
+	if (!url.startsWith('#'))
+		url = '#'+url;
+	return url + (params ? '?'+$.param(params) : '') + (subpage ? '/'+subpage : '');
 }
 function navigate(url, params=null, subpage=null, breadcrumb=[]) {
 	pager.navigate(pageUrl(url, params, subpage, breadcrumb));

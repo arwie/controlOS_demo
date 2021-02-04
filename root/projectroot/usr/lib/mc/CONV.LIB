@@ -27,7 +27,7 @@ end sub
 
 
 <?drive_update(3)?>
-	conv_driveTune(30000, 0, 0, 414, 3000, 30)
+	conv_driveTune(30000, 100000, 0, 0, 414, 100, 3000, 30)
 end sub
 
 

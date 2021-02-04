@@ -109,9 +109,9 @@ class LocaleHandler(web.RequestHandler):
 
 
 class PageModule(web.UIModule):
-	def render(self, page, start=False):
+	def render(self, page, start=False, modal=False):
 		_id = os.path.splitext(os.path.basename(page))[0]
-		return self.render_string(page, id=_id, start=start)
+		return self.render_string(page, id=_id, start=start, modal=modal)
 
 
 

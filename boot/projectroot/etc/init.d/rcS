@@ -49,6 +49,8 @@ sync
 sleep 3
 blockdev --rereadpt $DISKDEV
 sleep 2
+
+efibootmgr -c -d $DISKDEV -p 1 -l /EFI/BOOT/BOOTx64.EFI -L "controlOS"
 }
 
 
