@@ -103,10 +103,10 @@ public sub <?=lib()?>_enable
 		call(lib()."_disabled = false")?>
 	if not enable then
 		try
-			while not enable
+			do
 				enable = true
 				sleep 1
-			end while
+			loop until enable
 			sleep 20 'needed!
 		catch else
 			<?logError()?>
@@ -123,10 +123,16 @@ public sub <?=lib()?>_enableAttach
 end sub
 
 public sub <?=lib()?>_disable
-	while isMoving > 0
+	if enable then
+		while isMoving > 0
+			sleep 1
+		end while
+		sleep 20
+	end if
+	do
+		enable = false
 		sleep 1
-	end while
-	enable = false
+	loop while enable <?if ($rbt) foreach ($axes as $ax) echo " or {$ax}.enable"?>'
 	<?if ($rbt)
 		call(lib()."_disabled = true")?>
 	<?foreach ($axes as $ax)

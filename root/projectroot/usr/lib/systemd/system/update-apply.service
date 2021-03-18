@@ -6,11 +6,10 @@ RequiresMountsFor=/var
 RequiresMountsFor=/mnt/root
 RequiresMountsFor=/mnt/init
 ConditionPathExists=/mnt/init/.update
-Wants=reboot.service
-Before=reboot.service
 
 [Service]
 Type=oneshot
 RemainAfterExit=yes
+ExecStart=/bin/systemctl --no-block reboot
 ExecStop=/usr/sbin/update-apply
 TimeoutStopSec=600

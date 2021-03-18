@@ -117,7 +117,10 @@ class PageModule(web.UIModule):
 
 
 def addDocument(match, html):
-	handlers.append(('/'+match, DocumentHandler, {'html': html}))
+	handlers.append(('/'+match, DocumentHandler, {'html':html}))
+
+def addRedirect(match, target):
+	handlers.append(('/'+match, web.RedirectHandler, {'url':'/'+target, 'permanent':False}))
 
 def addAjax(match, handler, params={}):
 	handlers.append((ajaxPrefix+match, handler, params))

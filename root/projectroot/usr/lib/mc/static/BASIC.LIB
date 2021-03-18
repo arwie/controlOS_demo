@@ -112,6 +112,13 @@ public function outside(byval value_ as double, byval min_ as double, byval max_
 end function
 
 
+public function sgnOpposite(byval a_ as double, byval b_ as double) as long
+	dim sgnA_ as long = sgn(a_)
+	dim sgnB_ as long = sgn(b_)
+	sgnOpposite = (sgnA_>0 and sgnB_<0) or (sgnA_<0 and sgnB_>0)
+end function
+
+
 public sub increment(value_ as long)
 	value_ = value_ + 1
 end sub
@@ -138,6 +145,17 @@ end function
 public function useDecrement(value_ as long) as long
 	useDecrement = value_
 	value_ = value_ - 1
+end function
+
+
+public function cycleDiff(byval value_ as double, old_ as double) as double
+	cycleDiff = value_ - old_
+	old_ = value_
+end function
+
+public function cycleDiffL(byval value_ as long, old_ as long) as long
+	cycleDiffL = value_ - old_
+	old_ = value_
 end function
 
 

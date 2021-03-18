@@ -1,5 +1,5 @@
 {% comment 
-# Copyright (c) 2017 Artur Wiebe <artur@4wiebe.de>
+# Copyright (c) 2021 Artur Wiebe <artur@4wiebe.de>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 # associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -21,7 +21,7 @@
 
 {% block html %}
 <p>
-	<a download href="{{ajax_url('backup')}}" class="btn btn-primary" data-l10n-id="backup-download"></a>
+	<a download data-bind="attr:{'href':location.protocol+'//'+location.hostname+':8100'}" class="btn btn-primary" data-l10n-id="backup-download"></a>
 	<uploadButton params="upload:$model.upload, l10n:'backup-restore', css:'btn-warning'"></uploadButton>
 </p>
 {% end %}

@@ -1,0 +1,75 @@
+#!/usr/bin/python -Bu
+
+# Copyright (c) 2021 Artur Wiebe <artur@4wiebe.de>
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+# associated documentation files (the "Software"), to deal in the Software without restriction,
+# including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so,
+# subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+# INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+# WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+
+import logging, argparse, subprocess, os, shutil, tempfile
+from shared import system
+
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--bare", action="store_true", help="install unencrypted update (from stdin)")
+parser.add_argument("--revert", action="store_true", help="revert last installed update")
+parser.add_argument("--console", action="store_true", help="log also to console")
+args = parser.parse_args()
+
+if args.console:
+	logging.root.addHandler(logging.StreamHandler())
+
+
+def install():
+	os.chdir('/mnt/init')
+	try: 
+		with tempfile.TemporaryDirectory(prefix='update_') as gpghome:
+			status = system.run(['gpg','--options=/etc/gpg/gpg.conf','--decrypt','--passphrase-file=/etc/gpg/common.symkey','--keyring=/etc/gpg/update.pubkey','--output=..update'], env={'GNUPGHOME':gpghome}).stderr.decode()
+		for key in ['NEED_PASSPHRASE_SYM','DECRYPTION_INFO','DECRYPTION_OKAY','GOODSIG','VALIDSIG']:
+			if not key in status:
+				raise Exception('unexpected gpg status output')
+	except:
+		system.run(['rm', '-f', '..update'])
+		raise
+	os.sync()
+	shutil.move('..update', '.update')
+	system.restart('update-apply.service')
+
+
+def bare():
+	os.chdir('/mnt/init')
+	system.run(['dd', 'of=..update'])
+	os.sync()
+	shutil.move('..update', 'update')
+	system.reboot(False)
+
+
+def revert():
+	for f in ['update', 'data']:
+		shutil.copy('/var/revert/'+f, '/mnt/init')
+	os.sync()
+	shutil.rmtree('/var/revert', ignore_errors=True)
+	system.reboot(False)
+
+
+try:
+	if args.revert:
+		revert()
+	elif args.bare:
+		bare()
+	else:
+		install()
+except:
+	logging.exception('ERROR in update')
+	exit(1)

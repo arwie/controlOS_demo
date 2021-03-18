@@ -25,7 +25,8 @@ function libBegin($file, $from, $type) { global $lib;
 
 	l('common shared '.lib().'_active  as long');
 	l('dim shared lib_activeNotify as long');
-	l('dim shared lib_prgRunning as long');
+	
+	call(libGet('begin'));
 }
 
 function &lib($what='name', $add=false) { global $lib;
@@ -145,6 +146,8 @@ function lib_prg($prio='prgPriorityNormal') {
 	lib('prg')['name'] = lib();
 	lib('prg')['file'] = strtoupper(lib().'.PRG');
 	lib('prg')['prio'] = $prio;
+	lib('begin', 'dim shared lib_prgRunning as long');
+	lib('debug', 'com_putLong("lib/prgRunning", lib_prgRunning)');
 	l('public sub '.lib().'_prg');
 }
 function lib_prgPoll($interval, $prio='prgPriorityNormal') {
@@ -258,7 +261,6 @@ function libEnd() { global $lib;
 			lll('com_with("/debug/'.lib().'/")');
 			lll('com_putBool("lib/started", '.lib().'_started)');
 			lll('com_putBool("lib/active", '.lib().'_active)');
-			if (lib('prg')) lll('com_putLong("lib/prgRunning", lib_prgRunning)');
 			call(lib('debug'));
 		ll('catch else');
 			lll('com_putString("-", error)');
@@ -300,10 +302,12 @@ function libEnd() { global $lib;
 		}
 		
 		l('public sub '.lib().'_prgError');
-			logError(['com_putString("/status",'.lib('prg')['file'].'.status)', lib('prgError')['log']]);
-			call(lib('prgError'));
-			ll('if ('.lib('prg')['file'].'.state band 0xF)<>TASK_RUNNING then');
-				lll(lib().'_prgStop()');
+			ll('if lib_prgRunning then'); //workaroud: errorhandler runs twice for same bug
+				logError(['com_putString("/status",'.lib('prg')['file'].'.status)', lib('prgError')['log']]);
+				call(lib('prgError'));
+				lll('if ('.lib('prg')['file'].'.state band 0xF)<>TASK_RUNNING then');
+					llll(lib().'_prgStop()');
+				lll('end if');
 			ll('end if');
 		l('end sub');
 		

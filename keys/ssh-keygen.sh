@@ -17,8 +17,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-SCRIPT=$(readlink -f $0)
-BASEDIR=$(dirname $SCRIPT)
+BASEDIR=$(dirname $(realpath $0))
 
 
 SSHHOME_HOST="$BASEDIR/ssh"
@@ -28,14 +27,14 @@ SSHDHOME_TRGT="$BASEDIR/../root/projectroot/etc/ssh"
 KEYNAME="id_rsa"
 
 
-mkdir  -p  $SSHHOME_HOST
-rm     -rf $SSHHOME_HOST/*
+rm -rf $SSHHOME_HOST
+mkdir  $SSHHOME_HOST
 
 ssh-keygen  -f $SSHHOME_HOST/$KEYNAME  -N ""
 
 
-mkdir  -p  $SSHHOME_TRGT
-rm     -rf $SSHHOME_TRGT/*
+rm -rf $SSHHOME_TRGT
+mkdir  $SSHHOME_TRGT
 
 ssh-keygen  -f $SSHHOME_TRGT/$KEYNAME  -N ""
 

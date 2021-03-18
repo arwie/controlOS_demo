@@ -73,7 +73,10 @@ function async($prio='prgPriorityNormal')
 					call(['while not com_receive(asyncNotify, 100) and '.lib().'_active', 'end while']);
 				lll('end if');
 			ll('end if');
-			call(['if not '.lib().'_active then', 'throw errorApplication', 'end if']);
+			ll('if not '.lib().'_active then');
+				logNotice('async: lib triggered to stop during asyncWait');
+				lll('throw errorApplication');
+			ll('end if');
 		l('end sub');
 	
 		l('sub asyncExec(byval cmd_ as long)');

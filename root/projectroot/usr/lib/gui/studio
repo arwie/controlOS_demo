@@ -31,7 +31,15 @@ import backup
 import mc
 
 
-server.addDocument('',		'studio.html')
+server.addDocument('studio', 'studio.html')
+
+try:
+	import startup
+	server.addDocument('', 'startup/startup.html')
+except ModuleNotFoundError:
+	server.addRedirect('', 'studio')
+except:
+	logging.exception('failed to include startup page')
 
 
 server.run()

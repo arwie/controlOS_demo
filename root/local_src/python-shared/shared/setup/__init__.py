@@ -1,4 +1,4 @@
-# Copyright (c) 2019 Artur Wiebe <artur@4wiebe.de>
+# Copyright (c) 2021 Artur Wiebe <artur@4wiebe.de>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 # associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -15,7 +15,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-import collections, logging
+import collections
 from shared.conf import Conf
 
 
@@ -33,11 +33,11 @@ except:
 
 
 try:
-	from shared import setup_app
-	setup_app.setup_app(setup, conf)
-except ImportError: pass
+	from . import app
 except:
-	logging.exception('application setup failed')
+	import importlib.util, logging
+	if importlib.util.find_spec('shared.setup.app') is not None:
+		logging.exception('application setup failed')
 
 
 if conf and conf.has_section('setup'):

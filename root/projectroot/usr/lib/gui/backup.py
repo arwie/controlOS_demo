@@ -1,4 +1,4 @@
-# Copyright (c) 2016 Artur Wiebe <artur@4wiebe.de>
+# Copyright (c) 2021 Artur Wiebe <artur@4wiebe.de>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 # associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -16,20 +16,13 @@
 
 
 import server
-from shared		import backup
+import subprocess
 
 
 
 class Handler(server.RequestHandler):
-
-	async def get(self):
-		self.set_header('Content-Type',        'application/octet-stream')
-		self.set_header('Content-Disposition', 'attachment; filename=backup.txz')
-		self.write(await server.run_in_executor(backup.store))
-	
-
 	async def put(self):
-		await server.run_in_executor(backup.restore, self.request.files['backup'][0]['body'])
+		await server.run_in_executor(lambda:subprocess.run(['backup','--restore'], input=self.request.files['backup'][0]['body']))
 
 
 

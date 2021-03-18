@@ -83,4 +83,14 @@ network_port = Port
 network_user = Benutzer
 
 
+simio = SimIO
+simio_list-in = Eingänge
+simio_list-out = Ausgänge
+simio_type = Typ
+simio_app = Anwendung
+simio_io-in = Eingang
+simio_io-out = Ausgang
+simio_override = Override
+
+
 sim = Simulation

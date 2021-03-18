@@ -1,4 +1,4 @@
-# Copyright (c) 2019 Artur Wiebe <artur@4wiebe.de>
+# Copyright (c) 2021 Artur Wiebe <artur@4wiebe.de>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 # associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -16,19 +16,17 @@
 
 
 import server
-from shared import system
-import pathlib, os, shutil, subprocess
+import pathlib, os, subprocess
 
 
 class Handler(server.RequestHandler):
 	def get(self):
-		self.write(open('/version', encoding='utf8').read())
+		try:
+			self.write(pathlib.Path('/version').read_text())
+		except: pass
 	
-	def put(self):
-		pathlib.Path('/mnt/init/..update').write_bytes(self.request.files['update'][0]['body'])
-		os.sync()
-		shutil.move('/mnt/init/..update', '/mnt/init/.update')
-		system.restart('update-apply.service')
+	async def put(self):
+		await server.run_in_executor(lambda:subprocess.run(['update'], input=self.request.files['update'][0]['body']))
 
 
 class RevertHandler(server.RequestHandler):
@@ -37,8 +35,8 @@ class RevertHandler(server.RequestHandler):
 			self.write(str(os.path.getmtime('/var/revert')))
 		except: pass
 	
-	def post(self):
-		subprocess.run(['/usr/bin/update-revert'])
+	async def post(self):
+		await server.run_in_executor(lambda:subprocess.run(['update','--revert']))
 
 
 

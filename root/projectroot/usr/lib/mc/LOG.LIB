@@ -41,6 +41,7 @@ public sub log_message(byval prio_ as long, byval message_ as string, byval lib_
 	com_putStringRef("/lib", lib_)
 	com_putStringRef("/code_func", scope_)
 	com_putString("/prg", programname)
+	com_putLong("/context", programContext)
 end sub
 
 
@@ -54,7 +55,7 @@ public sub log_putReport(byval report_ as string)
 end sub
 
 public sub log_putFile(byval name_ as string)
-	com_putString("/"+name_, sh("awk '{print NR $s}' /FFS0/SSMC/"+name_))
+	'com_putString("/"+name_, sh("awk '{print NR $s}' /FFS0/SSMC/"+name_))
 end sub
 
 public sub log_putTrnErr

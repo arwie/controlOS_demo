@@ -2,13 +2,7 @@
 
 HOST=${1-sys}
 
-SCRIPT=$(realpath $0)
-BASEDIR=$(dirname $SCRIPT)
-
-cd $BASEDIR/..
+BASEDIR=$(dirname $(realpath $0))
 
 
-SSH="ssh -i keys/ssh/id_rsa root@$HOST"
-
-
-pv images/update | $SSH "cat > /mnt/init/..update && sync && mv /mnt/init/..update /mnt/init/update && reboot"
+pv $BASEDIR/../images/update | ssh -i $BASEDIR/ssh/id_rsa root@$HOST "update --console --bare"

@@ -1,0 +1,8 @@
+## SECTION=image2
+
+config IMAGE_UPDATE
+	bool
+	select IMAGE_ROOT_TGZ
+	prompt "Generate images/update"
+	help
+	  FIXME

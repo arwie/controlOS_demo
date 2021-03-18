@@ -1,0 +1,10 @@
+[Unit]
+ConditionPathExists=!/etc/gpg/%i.symkey
+DefaultDependencies=no
+After=sysinit.target
+Before=basic.target
+
+[Service]
+Type=oneshot
+StandardOutput=file:/etc/gpg/%i.symkey
+ExecStart=gpg --options=/etc/gpg/gpg.conf --homedir=/tmp --no-keyring --armor --gen-random 2 64

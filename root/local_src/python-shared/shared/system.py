@@ -19,18 +19,26 @@ import subprocess
 
 
 
+def run(cmd, capture=False, **kwargs):
+	try:
+		proc = subprocess.run(cmd, check=True, stderr=subprocess.PIPE, stdout=(subprocess.PIPE if capture else None), **kwargs)
+		return proc.stdout if capture else proc
+	except subprocess.CalledProcessError as e:
+		raise Exception(e.stderr.decode() if isinstance(e.stderr, bytes) else e.stderr) from e
+
+
 def statusText(unit):
-	return subprocess.run(['/usr/bin/systemctl', '--no-pager', '--full', 'status', unit], stdout=subprocess.PIPE, text=True).stdout
+	return run(['systemctl', '--no-pager', '--full', 'status', unit], True, text=True)
 
 def restart(unit):
-	subprocess.run(['/usr/bin/systemctl', '--no-block', 'restart', unit])
+	run(['systemctl', '--no-block', 'restart', unit])
 
 def stop(unit):
-	subprocess.run(['/usr/bin/systemctl', '--no-block', 'stop', unit])
+	run(['systemctl', '--no-block', 'stop', unit])
 
 
-def reboot():
-	subprocess.run(['/usr/bin/systemctl', '--no-block', 'reboot'])
+def reboot(kexec=True):
+	run(['reboot-kexec' if kexec else 'reboot'])
 
 def poweroff():
-	subprocess.run(['/usr/bin/systemctl', '--no-block', 'poweroff'])
+	run(['poweroff'])

@@ -1,6 +1,4 @@
-#!/usr/bin/sh
-
-# Copyright (c) 2020 Artur Wiebe <artur@4wiebe.de>
+# Copyright (c) 2021 Artur Wiebe <artur@4wiebe.de>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 # associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -16,14 +14,32 @@
 # WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+#
+# We provide this package
+#
+IMAGE_PACKAGES-$(PTXCONF_IMAGE_UPDATE) += image-update
 
+#
+# Paths and names
+#
+IMAGE_UPDATE		:= image-update
+IMAGE_UPDATE_DIR	:= $(BUILDDIR)/$(IMAGE_UPDATE)
+IMAGE_UPDATE_IMAGE	:= $(IMAGEDIR)/update
 
-set -e	#exit script on first error
+# ----------------------------------------------------------------------------
+# Image
+# ----------------------------------------------------------------------------
 
+IMAGE_UPDATE_GPGHOME := ${PTXDIST_WORKSPACE}/../keys/gpg
+IMAGE_UPDATE_GPG := gpg --homedir=$(IMAGE_UPDATE_GPGHOME) -v --batch --yes --compress-algo=none --lock-never --no-random-seed-file --no-permission-warning --no-secmem-warning
 
-cp /var/revert/* /mnt/init
-sync
+$(IMAGE_UPDATE_IMAGE):
+	@$(call targetinfo)
+	
+	gzip -dc $(IMAGE_ROOT_TGZ_IMAGE) | xz -T0 -zc > $(IMAGE_UPDATE_IMAGE)
+	
+	$(IMAGE_UPDATE_GPG) --sign --local-user=update --symmetric --passphrase-file=$(IMAGE_UPDATE_GPGHOME)/common.symkey --output=$(IMAGE_UPDATE_IMAGE).gpg $(IMAGE_UPDATE_IMAGE)
+	
+	@$(call finish)
 
-rm -rf /var/revert
-
-reboot
+# vim: syntax=make

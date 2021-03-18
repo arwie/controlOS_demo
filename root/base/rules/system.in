@@ -3,6 +3,8 @@
 config SYSTEM
 	bool
 	select BUSYBOX				if RUNTIME
+	select GNUPG				if RUNTIME
+	select KEXEC_TOOLS			if RUNTIME
 	select PYTHON3_SYSTEMD		if RUNTIME
 	select HOSTAPD				if RUNTIME
 	select WPA_SUPPLICANT		if RUNTIME

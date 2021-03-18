@@ -1,4 +1,6 @@
-# Copyright (c) 2017 Artur Wiebe <artur@4wiebe.de>
+#!/usr/bin/python -Bu
+
+# Copyright (c) 2021 Artur Wiebe <artur@4wiebe.de>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 # associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -15,16 +17,22 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-import subprocess
+import server
+from shared.conf import Conf
+from shared import system
 
 
 
-def store():
-	return subprocess.run(['/usr/bin/tar', '-cJ', '-C/var/etc', '.'], stdout=subprocess.PIPE, check=True).stdout
+class Handler(server.RequestHandler):
+	def initialize(self):
+		self.confFile = '/etc/app/setup.conf'
+	
+	def get(self):
+		self.write(Conf(self.confFile).dict())
+	
+	def post(self):
+		Conf(self.confFile, self.readJson()).save()
+		system.reboot()
 
 
-def restore(backup):
-	subprocess.run(['/usr/bin/find', '/var/etc', '-delete', '-mindepth', '1'], check=True)
-	subprocess.run(['/usr/bin/tar', '-xJ', '-C/var/etc'], input=backup, check=True)
-	subprocess.run(['/usr/bin/systemctl', '--no-block', 'reboot'], check=True)
-
+server.addAjax(__name__, Handler)

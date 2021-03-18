@@ -21,7 +21,7 @@ from email.mime.application	import MIMEApplication
 import subprocess
 from tornado import template
 from datetime import datetime
-from shared import backup, network
+from shared import network
 from shared.conf import Conf
 import logging, json
 
@@ -104,7 +104,7 @@ class Issue(MIMEMultipart):
 		
 		# attach backup
 		self.attach(MIMEApplication(
-			backup.store(),
+			subprocess.run(['backup'], stdout=subprocess.PIPE).stdout,
 			name='backup.txz'
 		))
 		

@@ -39,9 +39,12 @@
 
 <script type="text/html" id="pageLink">
 	<a data-bind="
-			attr:{'href':'#'+$component.path},
+			attr:{
+				'href':$component.path?'#'+$component.path:($component.port?location.protocol+'//'+location.hostname+':'+$component.port:'')+'/'+($component.page?$component.page:''),
+				'target':$component.path?'_self':'_blank'
+			},
 			visible:$component.visibleState?gui.isState($component.visibleState):true,
-			css:{active:pager.page.find($component.path).isVisible},
+			css:{active:$component.path?pager.page.find($component.path).isVisible:false},
 			l10n:$component.l10n?$component.l10n:$component.path.substring($component.path.lastIndexOf('/')+1),
 			class:($($element).parents().hasClass('dropdown-menu')?'dropdown-item':'nav-link')+($component.css?' '+$component.css:''),
 		"

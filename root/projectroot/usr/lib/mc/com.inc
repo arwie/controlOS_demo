@@ -39,8 +39,8 @@ function com_websocket($port, $args=[], $name=false)
 	lib('start', function() use ($port, $args, $name) {
 		com_openWebsocket($name, $port, $args);
 	});
-	lib('stopTrigger', ['com_store()', "com_sendSelf({$name})", 'com_restore()']);
-	lib('stop','com_close('.$name.')');
+	lib('stopTrigger', "com_sendSelf({$name})");
+	lib('stop', "com_close({$name})");
 }
 
 function com_udpReceiver($port, $name=false)
@@ -52,8 +52,8 @@ function com_udpReceiver($port, $name=false)
 	lib('start', function() use ($port, $name) {
 		com_openUdpReceiver($name, $port);
 	});
-	lib('stopTrigger', ['com_store()', "com_sendSelf({$name})", 'com_restore()']);
-	lib('stop','com_close('.$name.')');
+	lib('stopTrigger', "com_sendSelf({$name})");
+	lib('stop', "com_close({$name})");
 }
 
 function com_fifo($name=false)
@@ -62,11 +62,24 @@ function com_fifo($name=false)
 		$name = 'this_fifo';
 		l("dim shared {$name} as long");
 	}
-	lib('start', function() use ($name) {
+	lib('init', function() use ($name) {
 		com_openFifo($name);
 	});
-	lib('stopTrigger', ['com_store()', "com_send({$name})", 'com_restore()']);
-	lib('stop', 'com_close('.$name.')');
+	lib('stopTrigger', "com_sendSelf({$name})");
+	lib('stop', "com_reset({$name})");
+}
+
+function com_notify($name=false)
+{
+	if (!$name) {
+		$name = 'this_notify';
+		l("dim shared {$name} as long");
+	}
+	lib('init', function() use ($name) {
+		com_openNotify($name);
+	});
+	lib('stopTrigger', "com_send({$name})");
+	lib('stop', "com_reset({$name})");
 }
 
 
