@@ -1,6 +1,7 @@
 
 common shared tool_typeNone			as const long = 0
 common shared tool_typeMagnet		as const long = 1
+common shared tool_typeVacuum		as const long = 2
 common shared tool_typeLaser		as const long = 10
 common shared tool_typeProbe		as const long = 11
 
@@ -8,28 +9,36 @@ common shared tool_type				as long
 common shared tool_gripped			as long
 
 
-<?output('outGrip', 'long', 'delta1c')?>
+<?output('outTcp', 'long', 'delta1c')?>
 	system.dout[10000+delta1c_deviceAddress*100+0][1] = not value_
 end sub
 
-<?output('outLaser', 'long', 'delta1c')?>
+<?output('outValve', 'long', 'delta1c')?>
 	system.dout[10000+delta1c_deviceAddress*100+1][1] = not value_
 end sub
 
 
 <?lib_init()?>
-	tool_outGrip(false)
-	tool_outLaser(false)
+	resetOutputs()
 end sub
 
 
 
+sub resetOutputs
+	tool_gripped = false
+	tool_outTcp(false)
+	tool_outValve(false)
+end sub
+
+
 public sub tool_select(byval toolType_ as long)
-	tool_grip(false)
+	resetOutputs()
 	tool_type = toolType_
 	select case tool_type
 	case tool_typeMagnet
 		delta1.tool = #{0,0,6+65,0}
+	case tool_typeVacuum
+		delta1.tool = #{0,0,6+50,0}
 	case tool_typeLaser
 		delta1.tool = #{37*cosDeg(-60), 37*sinDeg(-60), 6+70, 0} + #{0, 1, 0, 0}
 	case tool_typeProbe
@@ -46,9 +55,10 @@ public sub tool_grip(byval grip_ as long)
 	case tool_typeNone
 	case tool_typeProbe
 	case tool_typeLaser
-		tool_outLaser(grip_)
+	case tool_typeVacuum
+		tool_outValve(grip_)
 	case else
-		tool_outGrip(grip_)
+		tool_outTcp(grip_)
 	end select
 end sub
 
