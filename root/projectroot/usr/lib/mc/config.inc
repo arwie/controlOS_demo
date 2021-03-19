@@ -22,10 +22,11 @@ includeLib('DELTA1B.LIB', 'DELTA1ABC.LIB');
 includeLib('DELTA1C.LIB', 'DELTA1ABC.LIB');
 includeLib('DELTA1R.LIB');
 
+includeLib('EXTRA.LIB');
 includeLib('CONV.LIB');
 
 includeLib('ARDUINO.LIB');
 includeLib('DATA.LIB');
 
 
-device_order(['delta1a','delta1b','delta1c','delta1r','conv']);
+device_order(['delta1a','delta1b','delta1c','delta1r','conv','extra']);

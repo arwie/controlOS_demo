@@ -1,0 +1,54 @@
+<?axis([
+	'device'		=> 'stepim',
+	'bus'			=> 'can',
+])?>
+
+
+
+<?drive_update(1)?>
+	<?=lib()?>_driveTune(18000, 100000, 0, 0, 350, 100, 8000, 200)
+	
+	<?=lib()?>_deviceWrite(0x20E0, 1, 16, 1)					'Digital Input Mode
+	
+	<?=lib()?>_deviceWrite(0x209C, 1, 16, 13)					'Digital Output Functionality
+	<?=lib()?>_deviceWrite(0x209C, 2, 16, 13)
+	<?=lib()?>_deviceWrite(0x209B, 1, 16, 0)					'Digital Outputs Polarity
+	<?=lib()?>_deviceWrite(0x209B, 2, 16, 0)
+end sub
+
+
+<?drive_setup()?>
+	positionfactor				= positionfactor / 360
+	direction					= 1
+	torquemax					= <?=driveCache(lib().'_deviceRead(0x6075, 0)')?>		'Motor Rated Current [mA]
+end sub
+
+
+<?axis_setup()?>
+	absolute					= true
+	
+	positionmin					= -360
+	positionmax					= +360
+	positionminenable			= true
+	positionmaxenable			= true
+	
+	axistype					= 1
+	
+	<?axis_setupSpeed(800, 70, 20)?>
+	
+	positionerrormax			= 3
+end sub
+
+
+
+
+
+<?output('torque', 'double', lib())?>
+	value_ = bound(value_, 5, 100)
+	<?=lib()?>_deviceWrite(0x6073, 0, 16, torquemax*value_/100)
+end sub
+
+
+public function <?=lib()?>_rpm as double
+	<?=lib()?>_rpm = (velocitycommand * positionfactor/4096) * 60
+end function
