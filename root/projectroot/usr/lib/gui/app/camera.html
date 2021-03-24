@@ -1,0 +1,32 @@
+{% extends "../page.html" %}
+
+
+{% block html %}
+	<img data-bind="src:$model.image" class="img-fluid">
+{% end %}
+
+
+{% block model %}
+class {
+	constructor() {
+		this.image = ko.observable();
+	}
+	
+	start() {
+		model.wsImage = new WebSocket(wsUrl('sys', 55003));
+		model.wsImage.onmessage = (msg)=>{
+			model.image(URL.createObjectURL(msg.data));
+		};
+	}
+	
+	stop() {
+		model.wsImage.close();
+		model.image(null);
+	}
+}
+{% end %}
+
+
+{% block guard %}
+	return gui.isState('mc@sorter');
+{% end %}

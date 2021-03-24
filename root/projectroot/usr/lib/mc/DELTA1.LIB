@@ -34,7 +34,7 @@ end sub
 	absolute					= true
 	positionerrordelay			= 5
 
-	positionerrormax			= 5
+	positionerrormax			= 6
 	positionerrorsettle			= 1
 
 	couplingmatrix[1][1]		= 1

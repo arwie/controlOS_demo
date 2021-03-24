@@ -4,9 +4,10 @@ from shared import websocket
 import numpy as np
 import cv2 as cv
 from pypylon import pylon
-from operator import itemgetter
 import logging
+import tornado, asyncio
 
+logging.getLogger('tornado.access').setLevel(logging.WARNING)
 logging.root.addHandler(logging.StreamHandler())
 
 
@@ -18,13 +19,6 @@ h = np.array(conf['h'])
 n,_ = cv.getOptimalNewCameraMatrix(m, d, (960,1280), 1, (960,1280))
 
 
-def show(img, time=0):
-	cv.namedWindow('image', cv.WINDOW_NORMAL)
-	cv.resizeWindow('image', 900,900)
-	cv.imshow('image', img)
-	cv.waitKey(time)
-
-
 camera = pylon.InstantCamera(pylon.TlFactory.GetInstance().CreateFirstDevice())
 camera.Open()
 camera.TriggerMode.SetValue('On')
@@ -32,9 +26,9 @@ camera.BslImmediateTriggerMode.SetValue('On')
 camera.PixelFormat.SetValue('RGB8')
 camera.BslColorSpaceMode.SetValue('RGB')
 camera.ExposureAuto.SetValue('Off')
-camera.ExposureTime.SetValue(1000)
+camera.ExposureTime.SetValue(2000)
 camera.GainAuto.SetValue('Off')
-camera.Gain.SetValue(15)
+camera.Gain.SetValue(8)
 camera.StartGrabbing(pylon.GrabStrategy_LatestImageOnly)
 
 
@@ -52,44 +46,91 @@ def retrieveImage():
 		return img
 
 
+colors = [
+	(0, 0, 255),
+	(0, 255, 0),
+	(255, 0, 0),
+	(0, 255, 255),
+]
+
+
 def findItems(img, trigger=0):
-	green = img[:,:,1]
-	
-	green = cv.blur(green, (15,15))
-	#ret,green = cv.threshold(green, 0, 255, cv.THRESH_OTSU)
-	ret,green = cv.threshold(green, 150, 255, cv.THRESH_BINARY)
-	#show(green)
-	
-	green = cv.morphologyEx(green, cv.MORPH_CLOSE, cv.getStructuringElement(cv.MORPH_ELLIPSE, (25,25)))
-	#show(green)
-	
-	contours,h = cv.findContours(green, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
-	
 	items = []
 	
-	for c in contours:
-		cv.drawContours(img, [c], -1, (0, 255, 0), 1)
+	hsv = cv.blur(img, (15,15))
+	#show(hsv)
+	hsv = cv.bitwise_not(hsv)
+	#show(hsv)
+	hsv = cv.cvtColor(hsv, cv.COLOR_BGR2HSV_FULL)
+	#show(hsv[:,:,0])
+	#show(hsv[:,:,1])
+	#show(hsv[:,:,2])
+	
+	ret,bw = cv.threshold(hsv[:,:,1], 50, 255, cv.THRESH_BINARY)
+	#show(bw)
+	
+	contours,h = cv.findContours(bw, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
+	cv.drawContours(img, contours, -1, (255,255,0), 3)
+	
+	
+	for cnt in contours:
+		area = cv.contourArea(cnt)
+		if abs(area-65000) > 15000:
+			continue
+		print(area)
 		
-		a = cv.contourArea(c)
-		if a<230000: continue
+		mask = np.zeros_like(bw)
+		cv.drawContours(mask, [cnt], -1, 255, -1)
+		hue,*_ = cv.mean(hsv[:,:,0], mask=mask)
+		color = (np.abs(np.array([125,200,30,170])-hue)).argmin() 
+		#print('hue:', hue, 'color:',color)
 		
-		
-		(x,y),r	= cv.minEnclosingCircle(c)
-		if abs(r-300)>10: continue
+		(x,y),r	= cv.minEnclosingCircle(cnt)
+		cv.circle(img, (int(x),int(y)), 20, colors[color], -1)
+		cv.circle(img, (int(x),int(y)), 20, (255,255,0), 5)
 		
 		items.append({
-			'x':	trigger - x/10,
-			'y':	y/10,
-			'z':	-11,
-			'r':	0
+			'pos': {
+				'x':	trigger - x/10,
+				'y':	y/10,
+				'z':	-25,
+				'r':	0
+			},
+			'color':	int(color)
 		})
 		
-		cv.circle(img, (int(x),int(y)),int(r), (0,0,255), 5)
-		cv.circle(img, (int(x),int(y)),20, (0,0,255), -1)
 	
-	items.sort(key=itemgetter('x'))
+	items.sort(key=lambda e: e['pos']['x'])
 	return items
 
+
+imageConnections = []
+
+class ImageHandler(tornado.websocket.WebSocketHandler):
+	def check_origin(self, origin):
+		return True
+	def open(self):
+		print('connected')
+		imageConnections.append(self)
+	def on_close(self):
+		imageConnections.remove(self)
+
+def startImageHandler():
+	tornado.web.Application([('/', ImageHandler)]).listen(55003)
+
+def sendImage(image):
+	ret,png = cv.imencode('.jpg', cv.resize(image, None, fx=0.6,fy=0.6))
+	png = png.tobytes()
+	for conn in imageConnections:
+		conn.write_message(png, binary=True)
+
+def show(img, time=0):
+	sendImage(img)
+	return
+	cv.namedWindow('image', cv.WINDOW_NORMAL)
+	cv.resizeWindow('image', 900,900)
+	cv.imshow('image', img)
+	cv.waitKey(time)
 
 
 class SorterClient(websocket.Client):
@@ -97,16 +138,19 @@ class SorterClient(websocket.Client):
 		self.initialize('90.0.0.1', 55003)
 		self.minTrigger = 0
 	
+	async def onInit(self):
+		startImageHandler()
+	
 	async def onMessageJson(self, msg):
 		img = retrieveImage()
 		items = findItems(img, msg['trigger'])
 		for item in items:
-			if item['x'] < self.minTrigger:
+			if item['pos']['x'] < self.minTrigger:
 				print('duplicate: ', item)
 				continue
-			self.writeMessageJson({'item':item})
-			self.minTrigger = item['x'] + 5
 			print(item)
+			self.writeMessageJson(item)
+			self.minTrigger = item['pos']['x'] + 5
 		show(img, 10)
 
 
@@ -114,9 +158,16 @@ websocket.run(SorterClient())
 exit()
 
 
-while(True):
-	img = retrieveImage()
-	items = findItems(img)
-	show(img, 333)
-	
-	print(items)
+async def testLoop():
+	while(True):
+		await asyncio.sleep(1)
+		
+		img = retrieveImage()
+		items = findItems(img)
+		show(img, 333)
+
+		print(items)
+
+asyncio.get_event_loop().create_task(testLoop())
+startImageHandler()
+tornado.ioloop.IOLoop.current().start()
