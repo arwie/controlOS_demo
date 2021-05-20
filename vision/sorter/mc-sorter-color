@@ -26,7 +26,7 @@ camera.BslImmediateTriggerMode.SetValue('On')
 camera.PixelFormat.SetValue('RGB8')
 camera.BslColorSpaceMode.SetValue('RGB')
 camera.ExposureAuto.SetValue('Off')
-camera.ExposureTime.SetValue(3000)
+camera.ExposureTime.SetValue(2000)
 camera.GainAuto.SetValue('Off')
 camera.Gain.SetValue(8)
 camera.StartGrabbing(pylon.GrabStrategy_LatestImageOnly)
@@ -46,12 +46,26 @@ def retrieveImage():
 		return img
 
 
+colors = [
+	(0, 0, 255),
+	(0, 255, 0),
+	(255, 0, 0),
+	(0, 255, 255),
+]
+
+
 def findItems(img, trigger=0):
 	items = []
 	
-	hsv = cv.blur(img, (25,25))
+	hsv = cv.blur(img, (15,15))
+	#show(hsv)
 	hsv = cv.bitwise_not(hsv)
+	#show(hsv)
 	hsv = cv.cvtColor(hsv, cv.COLOR_BGR2HSV_FULL)
+	#show(hsv[:,:,0])
+	#show(hsv[:,:,1])
+	#show(hsv[:,:,2])
+	
 	ret,bw = cv.threshold(hsv[:,:,1], 50, 255, cv.THRESH_BINARY)
 	#show(bw)
 	
@@ -61,34 +75,28 @@ def findItems(img, trigger=0):
 	
 	for cnt in contours:
 		area = cv.contourArea(cnt)
+		if abs(area-65000) > 15000:
+			continue
 		print(area)
-		if abs(area-34000) > 6000:
-			continue
 		
-		M = cv.moments(cnt)
-		x = int(M['m10']/M['m00'])
-		y = int(M['m01']/M['m00'])
-		cv.circle(img, (x,y), 20, (0,255,0), -1)
+		mask = np.zeros_like(bw)
+		cv.drawContours(mask, [cnt], -1, 255, -1)
+		hue,*_ = cv.mean(hsv[:,:,0], mask=mask)
+		color = (np.abs(np.array([125,200,30,170])-hue)).argmin() 
+		#print('hue:', hue, 'color:',color)
 		
-		if x < 250 or 1150 < x:
-			continue
-		
-		edge = max(cnt[:,0], key=lambda p:cv.norm(np.array([p[0]-x,p[1]-y])))
-		edge = (edge[0],edge[1])
-		cv.circle(img, edge, 10, (0,255,255), -1)
-		#cv.circle(img, (x,y), int(cv.norm(np.array([edge[0]-x,edge[1]-y]))), (0,255,0), 1)
-		
-		r = np.arctan2(edge[1]-y,edge[0]-x)*180/np.pi
-		cv.line(img, (x,y),edge, (0,255,0), 5)
+		(x,y),r	= cv.minEnclosingCircle(cnt)
+		cv.circle(img, (int(x),int(y)), 20, colors[color], -1)
+		cv.circle(img, (int(x),int(y)), 20, (255,255,0), 5)
 		
 		items.append({
 			'pos': {
 				'x':	trigger - x/10,
 				'y':	y/10,
-				'z':	-10,
-				'r':	r
+				'z':	-25,
+				'r':	0
 			},
-			'color':	0
+			'color':	int(color)
 		})
 		
 	

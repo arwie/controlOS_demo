@@ -3,7 +3,8 @@
 
 dim shared this_scanDistance	as const long		= 80
 
-dim shared this_placePos		as const location of xyzr	= #{-79, 15, 112, 0}
+dim shared this_placePos		as const location of xyzr	= #{52, 59, -26, 0}
+dim shared this_placePart		as long
 
 dim shared this_nextScanPos as double
 
@@ -11,29 +12,33 @@ dim shared this_nextScanPos as double
 <?lib_start()?>
 	data_ppmReset()
 	this_nextScanPos = 0
+	this_placePart = 0
 end sub
 
 
 <?lib_prgStart()?>
 	conv_enableAttach()
+	extra_enableAttach()
 	delta1_enableAttach()
 	tool_select(tool_typeVacuum)
 	masterFrame = conv_frame
-	jog conv 100
+	jog conv 80
 	
 	'delta1_torque(30)
-	'vrate = 30
+	vrate = 50
+	arate = 50
+	drate = 50
 end sub
 
 
 <?lib_prgEvent(1)?>
-	dim conv_ as double = conv.positionCommand
-	if conv_>=this_nextScanPos then
+	if conv.positionCommand>=this_nextScanPos then
+		this_nextScanPos = conv.positionCommand + this_scanDistance
 		camera_trigger()
+		sleep 4
 		com_clear()
-		com_putDouble("/trigger",	conv_)
+		com_putDouble("/trigger", conv.positionCommand)
 		com_send(this_websocket)
-		this_nextScanPos = conv_ + this_scanDistance
 	end if
 end sub
 
@@ -71,7 +76,8 @@ end sub
 
 sub fetchItem(byval pos_ as location of xyzr, byval color_ as long)
 	slave = 5
-	moves conv_frame.zero:#{0, pos_{2}, pos_{3}-5, pos_{4}}
+	moves conv_frame.zero:#{0, pos_{2}, pos_{3}-5, -conv_frame.zero{4}}
+	move extra pos_{4} +conv_frame.downStream[1]{4} -135
 	waitForMotion
 	while not isMovingFrameSynchronized>0
 		sleep 1
@@ -80,43 +86,43 @@ sub fetchItem(byval pos_ as location of xyzr, byval color_ as long)
 	moves #{0, 0, +5, 0} abs=false
 	waitForMotion
 	tool_grip(true)
-	sleep 100
-	moves #{0, 0, -5, 0} abs=false
-	
+	sleep 300
+	moves #{0, 0, -10, 0} abs=false
 	waitForMotion
 	slave = off
 	
-	select case color_
-	case 0
-		moves #{ -23, -16, 112, -90}
-	case 1
-		moves #{-107, -16, 112, -90}
-	case 2
-		moves #{ -42,  61, 112, -90}
-	case 3
-		moves #{-126,  61, 112, -90}
-	end select
-	moves #{0, 0, +5, 0} abs=false
+	machineTable = extra_machineTable
+	moves this_placePos - #{int(this_placePart/5)*35, (this_placePart mod 5)*30, 0,0}
+	increment(this_placePart)
+	waitForMotion extra
+	moves #{0, 0, +7, 0} abs=false vrate=5
 	tool_grip(false)
-	moves #{0, 0, -5, 0} abs=false
+	moves #{0, 0, -7, 0} abs=false
+	'move extra +2 abs=false
+	'move extra -4 abs=false
+	'move extra +2 abs=false
+	waitForMotion
+	machineTable = #{0,0,0,0}
 end sub
 
 
 
 function anyMoving as long
-	anyMoving = delta1.isMoving or conv.isMoving
+	anyMoving = delta1.isMoving or conv.isMoving or extra.isMoving
 end function
 
 sub allStop
 	while anyMoving
-		stop delta1 stoptype=ABORT
-		stop conv   stoptype=ABORT
-		sleep 1
+		stop delta1
+		stop extra
+		stop conv
+		sleep 16
 	end while
 end sub
 
 sub allDisable
 	allStop()
 	delta1_disable()
+	extra_disable()
 	conv_disable()
 end sub
