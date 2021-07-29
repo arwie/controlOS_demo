@@ -2,7 +2,7 @@
 
 HOST=${1-sys}
 
-BASEDIR=$(dirname $0)
+BASEDIR=$(dirname $(realpath $0))
 
 cd $BASEDIR/..
 

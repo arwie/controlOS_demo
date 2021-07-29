@@ -5,8 +5,7 @@ PORT=${1-65000}
 HOST=remote.4wiebe.de
 
 
-SCRIPT=$(realpath $0)
-BASEDIR=$(dirname $SCRIPT)
+BASEDIR=$(dirname $(realpath $0))
 
 cd $BASEDIR
 

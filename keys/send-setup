@@ -2,8 +2,7 @@
 
 HOST=sys
 
-SCRIPT=$(realpath $0)
-BASEDIR=$(dirname $SCRIPT)
+BASEDIR=$(dirname $(realpath $0))
 
 
 scp -i $BASEDIR/ssh/id_rsa $1/* root@$HOST:/etc/app/.

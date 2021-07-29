@@ -2,8 +2,7 @@
 
 HOST=sys
 
-SCRIPT=$0
-BASEDIR=$(dirname $SCRIPT)
+BASEDIR=$(dirname $(realpath $0))
 
 cd $BASEDIR
 

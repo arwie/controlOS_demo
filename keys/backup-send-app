@@ -1,0 +1,10 @@
+#!/bin/sh
+
+BASEDIR=$(dirname $(realpath $0))
+
+FILE="$1"
+HOST=${2-sys}
+
+SSH="ssh -i $BASEDIR/ssh/id_rsa root@$HOST"
+
+gpg --homedir=$BASEDIR/gpg --decrypt --no-permission-warning "$FILE" | $SSH "tar -xJ -C/ etc/app  && reboot"
