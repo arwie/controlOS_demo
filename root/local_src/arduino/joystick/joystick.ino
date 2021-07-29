@@ -209,14 +209,6 @@ float joystickDirection(float v, const int vMin, const float vCenter, const int 
 }
 
 
-template <int input, int weight>
-float analogReadFiltered() {
-	static float value = analogRead(input);
-	value = (weight/100.0)*value + ((100-weight)/100.0)*analogRead(input);
-	return value;
-}
-
-
 void calibrateJoystick() {
 	static int maxX = 0,	maxY = 0;
 	static int minX = 1024,	minY = 1024;
