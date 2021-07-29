@@ -16,11 +16,9 @@ PACKAGES-$(PTXCONF_MCCOM) += mccom
 #
 # Paths and names
 #
-MCCOM_VERSION	:= 1
-MCCOM			:= mccom-$(MCCOM_VERSION)
-MCCOM_URL		:= lndir://$(PTXDIST_WORKSPACE)/local_src/mccom
+MCCOM			:= mccom
+MCCOM_URL		:= lndir://$(PTXDIST_WORKSPACE)/local_src/$(MCCOM)
 MCCOM_DIR		:= $(BUILDDIR)/$(MCCOM)
-MCCOM_LICENSE	:= unknown
 
 # ----------------------------------------------------------------------------
 # Prepare

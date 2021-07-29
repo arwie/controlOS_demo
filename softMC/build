@@ -3,7 +3,7 @@
 SCRIPT=$(readlink -f $0)
 BASEDIR=$(dirname $SCRIPT)
 
-PLATFORMS='configs/i586/platformconfig configs/i686/platformconfig configs/iMX6/platformconfig'
+PLATFORMS='base/configs/i586/platformconfig base/configs/i686/platformconfig base/configs/iMX6/platformconfig'
 
 cd $BASEDIR
 
