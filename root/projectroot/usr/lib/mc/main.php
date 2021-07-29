@@ -41,6 +41,10 @@ function common($name, $type='long', $init=null) {
 	set('init')['begin'][] = "common shared $name as $type".($init ? " = $init" : '');
 }
 
+function config($config) {
+	set('config')[] = $config;
+}
+
 
 require 'lib.inc';
 require 'com.inc';

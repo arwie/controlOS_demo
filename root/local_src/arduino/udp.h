@@ -1,4 +1,4 @@
-// Copyright (c) 2020 Artur Wiebe <artur@4wiebe.de>
+// Copyright (c) 2021 Artur Wiebe <artur@4wiebe.de>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 // associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -15,51 +15,29 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-// BUGFIX: arduino.h falsly defines max and min which breaks compiling string.h
-#undef max
-#undef min
-
-#include <ArduinoJson.h>
-#include <ArduinoLowPower.h>
-#include <Sodaq_wdt.h>
+#include <WiFiUdp_Generic.h>
 
 
-
-void reset()
+class UdpSenderJson
 {
-	sodaq_wdt_enable(WDT_PERIOD_1DIV64);	//reset via watchdog
-	delay(1000);
-}
-
-void resetError(const char *msg)
-{
-	Serial.print("ERROR: "); Serial.println(msg);
-	reset();
-}
-
-void poweroffError(const char *msg)
-{
-	Serial.print("ERROR: "); Serial.println(msg);
-	LowPower.deepSleep();
-}
-
-
-void debugWaitSerial()
-{
-	while (!Serial) { ; }
-}
-
-
-bool blinkHerz(float herz)
-{
-	int wavelength = 1000.0 / herz;
-	return (millis() % wavelength) < (wavelength / 2);
-}
-
-
-template <int input, int weight>
-float analogReadFiltered() {
-	static float value = analogRead(input);
-	value = (weight/100.0)*value + ((100-weight)/100.0)*analogRead(input);
-	return value;
-}
+public:
+	
+	void begin(const IPAddress& receiverIp, const int receiverPort) {
+		ip   = receiverIp;
+		port = receiverPort;
+		udp.begin(0);
+	}
+	
+	bool sendJson(const JsonDocument& data)
+	{
+		udp.beginPacket(ip, port);
+		//Serial.print("sending:"); serializeJson(data, Serial); Serial.println();
+		serializeJson(data, udp);
+		return udp.endPacket();
+	}
+	
+private:
+	IPAddress ip;
+	int port;
+	WiFiUDP udp;
+};

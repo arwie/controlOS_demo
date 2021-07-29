@@ -21,7 +21,29 @@
 locale = Jazyk
 
 
+help = Nápověda
+poweroff = Vypnutí napájení
+
 save = Uložit
+apply = Použít
+connect = Připojení
+disconnect = Odpojit
+
+
+update = Aktualizace
+update-version = Aktuální verze
+update-version-name = Verze
+update-version-id = ID
+update-file = Aktualizace ze souboru
+update-revert = Vrátit poslední aktualizaci
+update-revert-date = Datum poslední aktualizace
+
+
+remote = Vzdálený přístup
+remote_active = Vzdálený přístup je aktivován!
+remote_port = Číslo portu služby
+remote_enable = Aktivovat
+remote_disable = Deaktivovat
 
 
 issue = Hlášení o problému
@@ -36,15 +58,12 @@ issue_sendSuccess = Zpráva o problému byla úspěšně odeslána výrobci.
 issue_sendFail = Zpráva o problému nemohla být odeslána. Stáhněte si a ručně stahujte.
 
 
-remote = Vzdálený přístup
-
-
 network = Síť
 network_save = {save}
 network_status = Stav sítě
 network_syswlan = Bezdrátový přístupový bod
 network_lan = LAN
-network_wlan = Fi
+network_wlan = WiFi
 network_dhcp = Automatická konfigurace sítě (DHCP)
 network_maunal = Manuální konfigurace sítě
 network_hostname = Hostname
@@ -62,3 +81,16 @@ network_nossl = Nesprávné připojení (nešifrované)
 network_host = Host
 network_port = Port
 network_user = Uživatel
+
+
+simio = SimIO
+simio_list-in = Vstupy
+simio_list-out = Výstupy
+simio_type = Typ
+simio_app = Aplikace
+simio_io-in = Vstup
+simio_io-out = Výstup
+simio_override = Přepínání
+
+
+sim = Simulace

@@ -31,12 +31,6 @@ program
 	system.errorhandlermode		= 0
 	system.doubleformat			= 1
 
-
-<?if (get('config')['modbus']) {?>
-	oload MODBUS.O
-	load  MODBUS.LIB
-<?}?>
-	
 	oload MCCOM.O
 	load  MCCOM.LIB
 	
@@ -44,5 +38,7 @@ program
 
 	load LOG.LIB
 	load STATE.LIB
+
+	<?call(get('config'))?>
 
 end program

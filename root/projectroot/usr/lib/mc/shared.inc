@@ -48,14 +48,18 @@ function setup($section=null, $key=null) {
 }
 
 
-function awaitCondition($result, $condition, $timeout, $ifnot=false) {
-	ll($result.' = system.clock + '.$timeout);
-	ll('while not ('.$condition.') and system.clock < '.$result);
+function awaitCondition($condition, $timeout, $result=false, $ifnot=false) {
+	ll('com_store()');
+	ll('com_putLong("/timeout", system.clock + '.$timeout.')');
+	ll('while not ('.$condition.') and system.clock < com_getLong("/timeout")');
 	lll('sleep '.min(100, $timeout));
 	ll('end while');
-	ll($result.' = '.$condition);
+	ll('com_restore()');
+	if ($result) {
+		ll("$result = $condition");
+	}
 	if ($ifnot) {
-		ll('if not '.$result.' then');
+		ll('if not ('.($result?:$condition).') then');
 			call($ifnot);
 		ll('end if');
 	}
