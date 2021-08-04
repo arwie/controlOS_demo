@@ -2,4 +2,4 @@
 StopWhenUnneeded=true
 
 [Service]
-ExecStart=/usr/sbin/shaker
+ExecStart=/usr/sbin/mc-shaker

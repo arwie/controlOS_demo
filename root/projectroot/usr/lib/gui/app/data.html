@@ -6,18 +6,20 @@
 
 <div data-bind="page:{id:'ppm', role: 'start'}">
 	<div data-bind="using:info" class="jumbotron">
-		<div class="row mb-5">
-			<div class="col">
+		<div class="row align-items-end">
+			<div class="col-auto">
 				<h3 data-l10n-id="data_ppmParts"></h3>
 				<h1 data-bind="text:ppm.parts()" class="display-3"></h1>
 			</div>
-			<div class="col text-right">
+			<div class="col text-center">
+				<h2 data-l10n-id="data_ppmPpm"></h1>
+				<h1 data-bind="text:ppm.ppm().toFixed(1)" class="display-2"></h1>
+			</div>
+			<div class="col-auto text-right">
 				<h3 data-l10n-id="data_ppmTime"></h3>
 				<h1 data-bind="text:$model.millisToMinSecMil(ppm.time())" class="display-3"></h1>
 			</div>
 		</div>
-		<h1 data-l10n-id="data_ppmPpm"></h1>
-		<h1 data-bind="text:ppm.ppm().toFixed(1)" class="display-1"></h1>
 	</div>
 	<button data-bind="click:reset" class="btn btn-warning" data-l10n-id="reset"></button>
 </div>
@@ -32,7 +34,7 @@ class {
 	
 	millisToMinSecMil(millis) {
 		let mins = Math.floor(millis / 60000);
-		let secs = ((millis % 60000) / 1000).toFixed(0);
+		let secs = Math.floor((millis % 60000) / 1000).toFixed(0);
 		let mils = Math.floor((millis % 1000) / 100);
 		return mins + ":" + (secs < 10 ? '0' : '') + secs + ":" + mils;
 	}

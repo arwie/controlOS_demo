@@ -44,5 +44,6 @@ app_mode-2		= {paint}
 app_mode-3		= Conveyor sorter
 app_mode-4		= LEGO brick mover
 app_mode-5		= {o3d}
+app_mode-6		= VarioShaker
 app_mode-7		= INNOCISE Gecko gripper
 app_mode-8		= Conveyor Test

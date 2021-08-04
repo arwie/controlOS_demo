@@ -40,3 +40,4 @@ app_mode-1		= Einfache Punkt-zu-Punkt Programmierung (SQLite Beispiel)
 app_mode-2		= {paint}
 app_mode-3		= Förderband-Sortierer
 app_mode-5		= {o3d}
+app_mode-6		= VarioShaker

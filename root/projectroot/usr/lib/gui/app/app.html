@@ -3,7 +3,6 @@
 
 {% block html %}
 	{% module page("app/appctl.html") %}
-	{% module page("app/data.html") %}
 	{% module page("app/teach.html") %}
 	{% module page("app/progs.html") %}
 	{% module page("app/prog.html") %}
@@ -12,6 +11,8 @@
 	{% module page("app/shaker.html") %}
 	{% module page("app/cvpath.html") %}
 	{% module page("app/camera.html") %}
+	
+	{% module page("app/data.html", modal=True) %}
 {% end %}
 
 

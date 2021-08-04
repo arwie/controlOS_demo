@@ -25,7 +25,7 @@ class WebsocketsClientJson : public websockets2_generic::WebsocketsClient
 {
 public:
 	
-	void begin(const char* host, int port, const char* path = "/")
+	void begin(const char* host, const int port, const char* path = "/")
 	{
 		if (!connect(host, port, path))
 			resetError("websocket connecting failed");

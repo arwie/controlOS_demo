@@ -52,7 +52,6 @@ end sub
 
 
 <?lib_prgError()?>
-	sorter_stopTrigger()
 	try
 		idletask sorter.prg
 	catch else

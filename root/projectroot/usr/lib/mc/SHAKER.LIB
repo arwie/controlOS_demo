@@ -1,97 +1,65 @@
 <?com_websocket(55003)?>
 
-dim shared this_travHeight		as const double	= 71
-dim shared this_pickHeight		as const double	= 105.5
-dim shared this_scanPos			as const location of xyzr = #{120, 0, this_travHeight, 0}
-
-dim shared this_placePos		as location of xyzr = #{116, 78, 73, 0}
-dim shared this_objectCount		as long
+dim shared this_shakerPos		as const location of xyzr = #{-151.35, 107.8, 125, -90.44}
+dim shared this_safePos			as const location of xyzr = #{ 0, 0,  80, 0}
+dim shared this_placePos		as const location of xyzr = #{80, 0, 100, 0}
+dim shared this_pickHeight		as const double	= 18
 
 
 
-<?output('outShake', 'long', 'delta1a')?>
-	system.dout[10000+delta1a_deviceAddress*100+1][1] = not value_
-end sub
-
-<?output('outLight', 'long', 'delta1b')?>
-	system.dout[10000+delta1b_deviceAddress*100+1][1] = not value_
-end sub
-
-
-
-<?lib_init()?>
-	shaker_outShake(false)
-	shaker_outLight(false)
+<?lib_start()?>
+	data_ppmReset()
 end sub
 
 
 <?lib_prgStart()?>
-	this_objectCount = 0
 	delta1_enableAttach()
 	tool_select(tool_typeMagnet)
-	moves #{0, 0, this_travHeight, 0} vrate=30
+	blendingmethod = 1 'continuous path
+	
+	'delta1_torque(30)
+	vrate = 90
+	
+	moves this_safePos  vrate=50
+	moves this_placePos vrate=50
+	waitForMotion
 end sub
 
 
 <?com_prgReceive('this_websocket', 1500)?>
-	shaker_outLight(false)
 	select case receive_
-	case com_receiveNotify
-		shakeAndScan()
 	case com_receiveMessage
-		fetchObject()
-	case com_receiveDisconnect
-		moves #{0, 0, this_travHeight, 0} vrate=30
-		waitForMotion
-		shaker_stopTrigger()
+		fetch(com_getLocationXyzr("/pos"))
+		place()
+	case com_receiveNotify
+		com_clear()
+		com_send(this_websocket)
 	end select
 end sub
 
 
 <?lib_prgStop()?>
+	allDisable()
 	tool_select(tool_typeNone)
-	delta1_disable()
 end sub
 
 
 <?lib_prgError()?>
-	stop stoptype=ABORT
+	try
+		idletask shaker.prg
+	catch else
+	end try
 end sub
 
 
-<?lib_stopTrigger()?>
-	stop stoptype=ABORT
-end sub
-
-
-sub shakeAndScan
-	moves this_scanPos vrate=50
-	shaker_outShake(true)
-	sleepActive(300)
-	shaker_outShake(false)
-	shaker_outLight(true)
-	sleepActive(600)
-	waitForMotion
-	com_clear()
-	com_send(this_websocket)
-end sub
-
-sub fetchObject
-	dim pickPos_  as location of xyzr = com_getLocationXyzr("/pos")
-	dim placePos_ as location of xyzr = this_placePos + #{-26*int(this_objectCount / 7), -26*(this_objectCount mod 7), 0,0}
-	increment(this_objectCount)
-	moves posWithHeight(pickPos_, this_travHeight)
-	moves posWithHeight(pickPos_, this_pickHeight) drate=30
+sub fetch(byval pickPos_ as location of xyzr)
+	moves this_safePos cp=60
+	moves this_shakerPos:pickPos_ - #{0, 0, this_pickHeight, 0}
+	moves +#{0, 0, this_pickHeight, 0} abs=false drate=25
 	tool_grip(true)
 	waitForMotion
 	sleepActive(50)
-	moves posWithHeight(pickPos_, this_travHeight) arate=50
-	moves posWithHeight(placePos_, this_travHeight)
-	moves placePos_
-	waitForMotion
-	tool_grip(false)
-	sleepActive(10)
-	moves posWithHeight(placePos_, this_travHeight)
+	moves -#{0, 0, this_pickHeight, 0} abs=false arate=25
 end sub
 
 
@@ -99,3 +67,31 @@ function posWithHeight(byval pos_ as location of xyzr, byval height_ as double) 
 	pos_{3} = height_
 	posWithHeight = pos_
 end function
+
+
+sub place
+	moves this_safePos cp=60
+	moves this_placePos
+	waitForMotion
+	tool_grip(false)
+	data_ppmPlace()
+	sleepActive(20)
+end sub
+
+
+
+function anyMoving as long
+	anyMoving = delta1.isMoving
+end function
+
+sub allStop
+	while anyMoving
+		stop delta1
+		sleep 16
+	end while
+end sub
+
+sub allDisable
+	allStop()
+	delta1_disable()
+end sub

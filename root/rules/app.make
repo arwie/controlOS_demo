@@ -17,9 +17,9 @@ $(STATEDIR)/app.targetinstall:
 	@$(call install_alternative, app, 0, 0, 0644, /usr/lib/systemd/system/mc-sorter.service)
 	@$(call install_link,        app, ../mc-sorter.service, /usr/lib/systemd/system/mc@sorter.target.wants/mc-sorter.service)
 
-	@$(call install_alternative, app, 0, 0, 0755, /usr/sbin/shaker)
-	@$(call install_alternative, app, 0, 0, 0644, /usr/lib/systemd/system/shaker.service)
-	@$(call install_link,        app, ../shaker.service, /usr/lib/systemd/system/mc@shaker.target.wants/shaker.service)
+	@$(call install_alternative, app, 0, 0, 0755, /usr/sbin/mc-shaker)
+	@$(call install_alternative, app, 0, 0, 0644, /usr/lib/systemd/system/mc-shaker.service)
+	@$(call install_link,        app, ../mc-shaker.service, /usr/lib/systemd/system/mc@shaker.target.wants/mc-shaker.service)
 
 	@$(call install_finish,app)
 	@$(call touch)

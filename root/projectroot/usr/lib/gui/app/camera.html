@@ -2,7 +2,7 @@
 
 
 {% block html %}
-	<img data-bind="src:$model.image" class="img-fluid">
+	<img data-bind="src:$model.image" class="img-fluid mb-3">
 {% end %}
 
 
@@ -28,5 +28,5 @@ class {
 
 
 {% block guard %}
-	return gui.isState('mc@sorter');
+	return gui.isState('mc@shaker');
 {% end %}
