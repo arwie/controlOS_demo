@@ -1,3 +1,0 @@
-#!/bin/sh
-#touch "$DESTDIR/etc/machine-id"
-#$DESTDIR/usr/sbin/enable-rc-once machine-id

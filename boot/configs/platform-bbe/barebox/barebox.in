@@ -1,0 +1,22 @@
+# CONFIG_MACH_AFI_GF is not set
+# CONFIG_MACH_BEAGLE is not set
+# CONFIG_MACH_PHYTEC_SOM_AM335X is not set
+# CONFIG_MACH_VSCOM_BALTOS is not set
+# CONFIG_MACH_WAGO_PFC_AM35XX is not set
+
+# CONFIG_CMD_BAREBOX_UPDATE is not set
+
+# CONFIG_MENU is not set
+# CONFIG_STATE is not set
+# CONFIG_BLSPEC is not set
+# CONFIG_BOOTCHOOSER is not set
+
+# CONFIG_FS_EXT4 is not set
+# CONFIG_FS_UBIFS is not set
+
+# CONFIG_NET is not set
+# CONFIG_MTD is not set
+# CONFIG_USB_HOST is not set
+# CONFIG_USB_GADGET is not set
+# CONFIG_VIRTIO_MENU is not set
+# CONFIG_BUS_OMAP_GPMC is not set

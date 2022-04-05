@@ -1,4 +1,4 @@
-# Copyright (c) 2017 Artur Wiebe <artur@4wiebe.de>
+# Copyright (c) 2021 Artur Wiebe <artur@4wiebe.de>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 # associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -18,74 +18,43 @@
 from email.mime.multipart	import MIMEMultipart
 from email.mime.text		import MIMEText
 from email.mime.application	import MIMEApplication
-import subprocess
-from tornado import template
-from datetime import datetime
-from shared import network
 from shared.conf import Conf
-import logging, json
+from shared import system
+import logging, pathlib
 
 
 
-def renderLogHtml(data):
-	
-	def processMessage(msg):
-		msg['_SOURCE_REALTIME_TIMESTAMP'] = datetime.utcfromtimestamp(int(msg.get('_SOURCE_REALTIME_TIMESTAMP' if '_SOURCE_REALTIME_TIMESTAMP' in msg else '__REALTIME_TIMESTAMP', 0))/1000000).strftime('%d.%m.%Y, %H:%M:%S')
-		msg['PRIORITY'] = int(msg.get('PRIORITY', 6))
-		msg = {k:v for k,v in msg.items() if not k.startswith('__')}
-		return msg
-	
-	return template.Template("""\
-		<!DOCTYPE html>
-		<html>
-		<head>
-			<meta charset="utf-8"/>
-			<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-			<style>{{bootstrapCss}}</style>
-		</head>
-		<script>
-			function toggleDisplay(div) { div.style.display = div.style.display == "none" ? "block" : "none"; }
-		</script>
-		<body>
-			<table class="table table-sm table-hover">
-			<tbody>
-			{% for msg in messages %}
-				<tr class="{{ {2:'table-danger', 3:'table-danger', 4:'table-warning', 5:'table-info'}.get(msg['PRIORITY']) }}">
-					<td>{{msg.get('_SOURCE_REALTIME_TIMESTAMP')}}</td>
-					<td>{{ {0:'Emergency', 1:'Alert', 2:'Critical', 3:'Error', 4:'Warning', 5:'Notice', 6:'Info', 7:'Debug'}.get(msg['PRIORITY']) }}</td>
-					<td>{{msg.get('_HOSTNAME')}}</td>
-					<td>{{msg.get('SYSLOG_IDENTIFIER')}}</td>
-					<td width="70%">
-						<a onclick="toggleDisplay(this.nextElementSibling);return false" href="#"><strong style="white-space:pre-line">{{msg.get('MESSAGE')}}</strong></a>
-						<div style="display:none">
-							<p></p>
-							<table class="table table-sm">
-							<tbody>
-							{% for key,value in msg.items() %}
-								<tr>
-									<td>{{key}}</td>
-									<td style="white-space:pre-line">{{value}}</td>
-								</tr>
-							{% end %}
-							</tbody>
-							</table>
-						</div>
-					</td>
-				</tr>
-			{% end %}
-			</tbody>
-			</table>
-		</body>
-		</html>
-		""").generate(
-				bootstrapCss	= open('/usr/lib/gui/static/bootstrap.css').read(),
-				messages		= [ processMessage(json.loads(l.decode())) for l in data.splitlines() ],
-			)
+def getVersion():
+	return pathlib.Path('/version').read_text()
 
+def getBackup():
+	return system.run(['backup'], True)
+
+def getNetwork():
+	from shared import network
+	return network.status()
+
+def getJournal():
+	return system.run('set -o pipefail; journalctl --merge --no-pager --output=export --since=-28days | xz -T0', True)
+
+def getShortLog():
+	return system.run(['journalctl','--merge','--no-pager','--quiet','--output=short','--priority=notice','--reverse','--lines=100'], True)
+
+
+attachments = {
+	'version':		getVersion,
+	'backup.gpg':	getBackup,
+	'network':		getNetwork,
+	'journal.xz':	getJournal,
+	'shortLog':		getShortLog,
+}
+
+try:
+	from shared import issue_app
+except ImportError: pass
 
 
 class Issue(MIMEMultipart):
-	
 	def __init__(self, text):
 		super().__init__()
 		conf = Conf('/etc/issue.conf')
@@ -94,38 +63,11 @@ class Issue(MIMEMultipart):
 		self['To']		= conf.get('issue', 'to')
 		self['Subject']	= conf.get('issue', 'subject', fallback='issue report')
 		
-		# attach version
-		try:
-			self.attach(MIMEApplication(
-				open('/version', encoding='utf8').read(),
-				name='version'
-			))
-		except: pass
-		
-		# attach backup
-		self.attach(MIMEApplication(
-			subprocess.run(['backup'], stdout=subprocess.PIPE).stdout,
-			name='backup.txz'
-		))
-		
-		# attach full journal export
-		self.attach(MIMEApplication(
-			subprocess.run('journalctl --merge --no-pager --output=export --since=-28days | xz -T0', shell=True, stdout=subprocess.PIPE).stdout,
-			name='journal.xz'
-		))
-		
-		# attach rendered journal html
-		try:
-			self.attach(MIMEApplication(
-				renderLogHtml(subprocess.run(['/usr/bin/journalctl', '--merge', '--no-pager', '--output=json', '--all', '--priority=notice', '--lines=300', '--until=now', '--reverse'], stdout=subprocess.PIPE).stdout),
-				name='log.html'
-			))
-		except Exception as e:
-			logging.error(e)
-		
-		# attach network status
-		self.attach(MIMEApplication(
-			network.status(),
-			name='network.txt'
-		))
-
+		for name,contents in attachments.items():
+			if callable(contents):
+				try:
+					contents = contents()
+				except Exception as e:
+					logging.exception(e)
+					contents = str(e)
+			self.attach(MIMEApplication(contents, name=name))

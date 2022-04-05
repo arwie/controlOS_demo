@@ -1,0 +1,24 @@
+CONFIG_EXTRA_FIRMWARE="am335x-pm-firmware.elf am335x-bone-scale-data.bin am335x-evm-scale-data.bin"
+
+# CONFIG_SMP is not set
+# CONFIG_EFI is not set
+# CONFIG_USB_SUPPORT is not set
+# CONFIG_ATA is not set
+# CONFIG_VIRT_DRIVERS is not set
+# CONFIG_VIRTIO_MENU is not set
+# CONFIG_GREYBUS is not set
+# CONFIG_RC_CORE is not set
+# CONFIG_MTD is not set
+# CONFIG_AUXDISPLAY is not set
+# CONFIG_UIO is not set
+# CONFIG_PPS is not set
+# CONFIG_W1 is not set
+# CONFIG_RTC_CLASS is not set
+# CONFIG_VHOST_MENU is not set
+# CONFIG_STAGING is not set
+# CONFIG_IIO is not set
+# CONFIG_FPGA is not set
+# CONFIG_COUNTER is not set
+# CONFIG_VT is not set
+# CONFIG_INPUT is not set
+# CONFIG_TI_PRUSS is not set

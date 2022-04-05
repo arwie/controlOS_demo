@@ -20,11 +20,16 @@ import subprocess
 
 
 def run(cmd, capture=False, **kwargs):
+	if capture:
+		kwargs['stdout'] = subprocess.PIPE
 	try:
-		proc = subprocess.run(cmd, check=True, stderr=subprocess.PIPE, stdout=(subprocess.PIPE if capture else None), **kwargs)
+		proc = subprocess.run(cmd, shell=isinstance(cmd, str), check=True, stderr=subprocess.PIPE, **kwargs)
 		return proc.stdout if capture else proc
 	except subprocess.CalledProcessError as e:
-		raise Exception(e.stderr.decode() if isinstance(e.stderr, bytes) else e.stderr) from e
+		errorText = e.stderr if (e.stderr or capture or not e.stdout) else e.stdout
+		if isinstance(errorText, bytes):
+			errorText = errorText.decode()
+		raise Exception(errorText) from e
 
 
 def statusText(unit):

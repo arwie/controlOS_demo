@@ -21,7 +21,7 @@
 
 {% block html %}
 <p>
-	<a download data-bind="attr:{'href':location.protocol+'//'+location.hostname+':8100'}" class="btn btn-primary" data-l10n-id="backup-download"></a>
+	<a data-bind="attr:{'href':location.protocol+'//'+location.hostname+':8100'}" target="_blank" class="btn btn-primary" data-l10n-id="backup-download"></a>
 	<uploadButton params="upload:$model.upload, l10n:'backup-restore', css:'btn-warning'"></uploadButton>
 </p>
 {% end %}

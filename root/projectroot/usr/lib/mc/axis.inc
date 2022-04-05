@@ -130,6 +130,7 @@ public sub <?=lib()?>_axisSetup
 	}
 	
 	_defaultAxisSetup($ax);
+	call(libGet('axisSetup'));
 ?>
 	detach
 end sub
@@ -181,8 +182,6 @@ function _defaultAxisSetup($ax) {
 	ll('velocityexternalfactor		= positionexternalfactor / 1000');
 	
 	ll('smoothFactor				= -1');
-	
-	call(libGet('axisSetup'));
 }
 
 

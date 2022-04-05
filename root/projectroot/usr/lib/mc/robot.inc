@@ -51,7 +51,12 @@ function robot($rbt) { global $lib;
 }
 
 
-function robot_setup() { global $lib;
+function robot_configGroup() {
+	lib('robotConfigGroup', ['robotConfigGroup()','configGroup']);
+	l('sub robotConfigGroup');
+}
+
+function robot_setup() {
 	lib('robotSetup', 'robotSetup()');
 	l('sub robotSetup');
 }
@@ -59,6 +64,12 @@ function robot_setup() { global $lib;
 
 function robot_setupSpeed($vel, $accTimeMs=500, $jerkTimeMs=250) {
 ?>
+	velocitycruise			= velocitymax
+	acceleration			= accelerationmax
+	deceleration			= decelerationmax
+	decelerationstop		= decelerationmax
+	jerk					= jerkmax
+	
 	velocitymaxtrans		= <?=$vel[0]?>'
 	accelerationmaxtrans	= <?=1000/$accTimeMs?>  * velocitymaxtrans
 	jerkmaxtrans			= <?=1000/$jerkTimeMs?> * accelerationmaxtrans
@@ -150,7 +161,9 @@ function _robotFunctions($rbt) {
 ?>
 public sub <?=lib()?>_robotSetup
 	attach
+	<?call(libGet('robotConfigGroup'))?>
 	<?_defaultRobotSetup($rbt)?>
+	<?call(libGet('robotSetup'))?>
 	detach
 end sub
 <?
@@ -158,9 +171,44 @@ end sub
 
 
 function _defaultRobotSetup(&$rbt) {
+	if ($rbt['model']) {?>
+		absolute					= true
+		
+		rmin						= 0
+		rmax						= MAXDOUBLE
+		xmin						= -rmax
+		xmax						= rmax
+		ymin						= -rmax
+		ymax						= rmax
+		zmin						= -rmax
+		zmax						= rmax
+		base.xmin					= xmin
+		base.xmax					= xmax
+		base.ymin					= ymin
+		base.ymax					= ymax
+		base.zmin					= zmin
+		base.zmax					= zmax
+		machinetable.xmin			= xmin
+		machinetable.xmax			= xmax
+		machinetable.ymin			= ymin
+		machinetable.ymax			= ymax
+		machinetable.zmin			= zmin
+		machinetable.zmax			= zmax
+		workpiece.xmin				= xmin
+		workpiece.xmax				= xmax
+		workpiece.ymin				= ymin
+		workpiece.ymax				= ymax
+		workpiece.zmin				= zmin
+		workpiece.zmax				= zmax
+		tool.xmin					= xmin
+		tool.xmax					= xmax
+		tool.ymin					= ymin
+		tool.ymax					= ymax
+		tool.zmin					= zmin
+		tool.zmax					= zmax
+	<?}
 	foreach ($rbt['axes'] as $ax) { $j += 1; $jnt = 'j'.$j;
 		ll($jnt.'.positionmin			= '.$ax.'.positionmin');
 		ll($jnt.'.positionmax			= '.$ax.'.positionmax');
 	}
-	call(libGet('robotSetup'));
 }

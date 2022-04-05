@@ -30,7 +30,7 @@ done
 
 install_flash()
 {
-BOARD="$(cat /sys/devices/virtual/dmi/id/board_name)@$(cat /sys/devices/virtual/dmi/id/board_vendor)"
+BOARD="$(boardmodel)"
 if [ -f "/etc/install/$BOARD" ]; then
 	. "/etc/install/$BOARD"
 else
@@ -50,7 +50,9 @@ sleep 3
 blockdev --rereadpt $DISKDEV
 sleep 2
 
-efibootmgr -c -d $DISKDEV -p 1 -l /EFI/BOOT/BOOTx64.EFI -L "controlOS"
+if [ -d /sys/firmware/efi ]; then
+	efibootmgr -c -d $DISKDEV -p 1 -l /EFI/BOOT/BOOTx64.EFI -L "controlOS"
+fi
 }
 
 
@@ -155,7 +157,7 @@ echo "starting root system"
 mount -r /mnt/root
 
 . /mnt/root/boot/boot.conf
-kexec --load /mnt/root/boot/$IMAGE --command-line="$BOOTARGS"
+kexec --load /mnt/root/boot/$IMAGE  ${DTB:+--dtb=/mnt/root/boot/$DTB}  ${BOOTARGS:+--command-line="$BOOTARGS"}
 kexec --exec
 }
 

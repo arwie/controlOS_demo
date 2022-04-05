@@ -38,6 +38,8 @@ $(STATEDIR)/system.targetinstall:
 	@$(call install_copy,        system, 0, 0, 0755, /mnt/install)
 	@$(call install_copy,        system, 0, 0, 0755, /mnt/backup)
 
+	@$(call install_alternative, system, 0, 0, 0755, /usr/bin/boardmodel)
+
 	@$(call install_finish,system)
 	@$(call touch)
 

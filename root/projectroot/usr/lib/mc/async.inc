@@ -107,7 +107,7 @@ function async_function($name, $args=[], $pre=false, $post=false)
 	
 	$f = [
 		'name'			=> $name,
-		'nameSync'		=> $name.'_',
+		'nameSync'		=> 'this_'.$name,
 		'cmd'			=> count(lib('async')['functions']?:[]),
 		'comGet'		=> $pp($comGet),
 	];
@@ -128,9 +128,4 @@ function async_function($name, $args=[], $pre=false, $post=false)
 	l('end sub');
 	
 	l('sub '.$f['nameSync'].$pp($params, false));
-}
-
-
-function async_call($name, $args='') {
-	ll("{$name}_({$args})");
 }

@@ -1,0 +1,45 @@
+CONFIG_CMDLINE_BOOL=y
+CONFIG_CMDLINE="mitigations=off console=tty0"
+
+CONFIG_KERNEL_XZ=y
+CONFIG_INITRAMFS_SOURCE="# Automatically set by PTXDist"
+CONFIG_INITRAMFS_ROOT_UID=0
+CONFIG_INITRAMFS_ROOT_GID=0
+# CONFIG_RD_GZIP is not set
+# CONFIG_RD_BZIP2 is not set
+# CONFIG_RD_LZMA is not set
+# CONFIG_RD_XZ is not set
+# CONFIG_RD_LZO is not set
+# CONFIG_RD_LZ4 is not set
+# CONFIG_RD_ZSTD is not set
+
+
+## unused features
+# CONFIG_MODULES is not set
+# CONFIG_SWAP is not set
+# CONFIG_CGROUPS is not set
+# CONFIG_AUDIT is not set
+# CONFIG_VIRTUALIZATION is not set
+# CONFIG_WIRELESS is not set
+# CONFIG_DEBUG_KERNEL is not set
+# CONFIG_IKCONFIG is not set
+# CONFIG_IKHEADERS is not set
+
+# CONFIG_FS_VERITY is not set
+# CONFIG_SECURITY is not set
+# CONFIG_MD is not set
+# CONFIG_MISC_FILESYSTEMS is not set
+# CONFIG_NETWORK_FILESYSTEMS is not set
+# CONFIG_JFS_FS is not set
+# CONFIG_GFS2_FS is not set
+# CONFIG_BTRFS_FS is not set
+# CONFIG_F2FS_FS is not set
+
+# CONFIG_NET is not set
+# CONFIG_WLAN is not set
+# CONFIG_DRM is not set
+# CONFIG_SOUND is not set
+# CONFIG_GNSS is not set
+# CONFIG_HWMON is not set
+# CONFIG_MEDIA_SUPPORT is not set
+# CONFIG_ACCESSIBILITY is not set

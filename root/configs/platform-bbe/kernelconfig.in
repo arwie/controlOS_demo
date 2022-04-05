@@ -1,0 +1,31 @@
+
+## WLAN-Dongle Wi-Pi
+## firmware/rt2870.bin
+CONFIG_RT2X00=m
+CONFIG_RT2800USB=m
+CONFIG_RT2800USB_RT33XX=y
+CONFIG_RT2800USB_RT35XX=y
+CONFIG_RT2800USB_RT3573=y
+CONFIG_RT2800USB_RT53XX=y
+CONFIG_RT2800USB_RT55XX=y
+
+
+# CONFIG_BT is not set
+# CONFIG_GNSS is not set
+# CONFIG_MEDIA_SUPPORT is not set
+# CONFIG_ACCESSIBILITY is not set
+# CONFIG_VIRT_DRIVERS is not set
+# CONFIG_VIRTIO_MENU is not set
+# CONFIG_GREYBUS is not set
+# CONFIG_RC_CORE is not set
+# CONFIG_AUXDISPLAY is not set
+# CONFIG_UIO is not set
+# CONFIG_MTD is not set
+# CONFIG_PPS is not set
+# CONFIG_STAGING is not set
+# CONFIG_IIO is not set
+# CONFIG_FPGA is not set
+# CONFIG_COUNTER is not set
+# CONFIG_INPUT is not set
+# CONFIG_TYPEC is not set
+# CONFIG_TI_PRUSS is not set

@@ -35,7 +35,7 @@ function conf($file=null, $section=null, $key=null, $default=null) {
 	if (is_null($key))
 		return array_key_exists($file, $conf) && array_key_exists($section, $conf[$file]); 
 	
-	return (array_key_exists($file, $conf) && array_key_exists($section, $conf[$file]) && array_key_exists($key, $conf[$file][$section])) ? $conf[$file][$section][$key] : $default;
+	return (array_key_exists($file, $conf) && array_key_exists($section, $conf[$file]) && array_key_exists($key, $conf[$file][$section]) && strlen($conf[$file][$section][$key])) ? $conf[$file][$section][$key] : $default;
 }
 
 

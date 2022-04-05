@@ -40,6 +40,10 @@ update-revert-date = 最終更新
 
 
 remote = リモートアクセス
+remote_active = Remote access is activated!
+remote_port = Service port number
+remote_enable = Activate
+remote_disable = Deactivate
 
 
 issue = 発行レポート
@@ -77,3 +81,16 @@ network_nossl = 安全でない接続（暗号化されていない）
 network_host = ホスト
 network_port = 港
 network_user = ユーザー
+
+
+simio = SimIO
+simio_list-in = Inputs
+simio_list-out = Outputs
+simio_type = Type
+simio_app = Application
+simio_io-in = Input
+simio_io-out = Output
+simio_override = Override
+
+
+sim = Simulation

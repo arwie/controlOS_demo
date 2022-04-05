@@ -1,0 +1,25 @@
+From eebaf036407dd3be50d57771c9432abb8dc5a900 Mon Sep 17 00:00:00 2001
+From: Artur Wiebe <artur@4wiebe.de>
+Date: Fri, 26 Nov 2021 11:28:59 +0100
+Subject: [PATCH] disable concurrent mode
+
+---
+ Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Makefile b/Makefile
+index 3e641d5..1cd340f 100644
+--- a/Makefile
++++ b/Makefile
+@@ -18,7 +18,7 @@ EXTRA_CFLAGS += -Wno-unused-label
+ EXTRA_CFLAGS += -Wno-unused-parameter
+ EXTRA_CFLAGS += -Wno-unused-function
+ EXTRA_CFLAGS += -Wno-unused
+-EXTRA_CFLAGS += -DCONFIG_CONCURRENT_MODE
++#EXTRA_CFLAGS += -DCONFIG_CONCURRENT_MODE
+ 
+ ccflags-y += -D__CHECK_ENDIAN__
+ 
+-- 
+2.33.1
+

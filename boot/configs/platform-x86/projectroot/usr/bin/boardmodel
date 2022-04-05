@@ -1,0 +1,3 @@
+#!/bin/sh
+
+exec echo $(cat /sys/devices/virtual/dmi/id/board_name)@$(cat /sys/devices/virtual/dmi/id/board_vendor)

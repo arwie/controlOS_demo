@@ -1,0 +1,296 @@
+## SECTION=scripting_languages
+
+menuconfig PHP5
+	tristate
+	prompt "php5                          "
+	select LIBCURL		if PHP5_EXT_CURL
+	select LIBXML2		if PHP5_XML_LIBXML2
+	select LIBXML2_C14N	if PHP5_XML_LIBXML2
+	select LIBXML2_DTD	if PHP5_XML_LIBXML2
+	select LIBXML2_XINCLUDE	if PHP5_XML_LIBXML2
+	select LIBXML2_READER	if PHP5_XML_LIBXML2_READER
+	select LIBXML2_WRITER	if PHP5_XML_LIBXML2_WRITER
+	select LIBXSLT		if PHP5_XML_LIBXML2_XSLT
+	select MYSQLDB		if PHP5_EXT_MYSQL
+	select PHP5_XML		if PHP5_EXT_SOAP
+	select SQLITE		if PHP5_EXT_SQLITE3
+	select ZLIB		if PHP5_EXT_ZLIB
+	select OPENSSL		if PHP5_EXT_OPENSSL
+	help
+	  Old version that need to be updated. Fails to build with gcc >= 9.x on
+	  on some architectures (AArch64).
+
+if PHP5
+
+config PHP5_INI
+	bool
+	prompt "install /etc/php5/php.ini"
+	default y
+	help
+	  Installs (if present) the
+	  "./projectroot/etc/php5/php.ini" file from your
+	  workspace, otherwise a generic one from the ptxdist
+	  directory.
+
+# ----------------------------------------------------------------------------
+# SAPI Modules
+# ----------------------------------------------------------------------------
+
+choice
+	prompt "SAPI Module"
+	default PHP5_SAPI_NONE
+
+config PHP5_SAPI_AOLSERVER
+	bool
+	prompt "aolserver"
+	depends on BROKEN
+	help
+	  Use AOLserver.
+
+config PHP5_SAPI_APXS2FILTER
+	bool
+	# needs apache
+	depends on BROKEN
+	prompt "apxs2filter"
+	help
+	  EXPERIMENTAL: Build shared Apache 2.0 Filter module. FILE is the optional
+	  pathname to the Apache apxs tool [apxs]
+
+config PHP5_SAPI_APXS2
+	bool
+	# needs apache
+	depends on BROKEN
+	prompt "apache mod_php (apxs2)"
+	help
+	  Build shared Apache 2.0 Handler module.
+
+config PHP5_SAPI_CAUDIUM
+	bool
+	prompt "caudium"
+	depends on BROKEN
+	help
+	  Build PHP as a Pike module for use with Caudium.
+
+config PHP5_SAPI_CONTINUITY
+	bool
+	prompt "continuity"
+	depends on BROKEN
+	help
+	  Build PHP as Continuity Server module.
+
+config PHP5_SAPI_EMBEDDED
+	bool
+	prompt "embedded"
+	help
+	  Enable building of embedded SAPI library.
+
+config PHP5_SAPI_ISAPI
+	bool
+	prompt "isapi"
+	depends on BROKEN
+	help
+	  Build PHP as an ISAPI module for use with Zeus
+
+config PHP5_SAPI_MILTER
+	bool
+	prompt "milter"
+	depends on BROKEN
+	help
+	  Build PHP as Milter application.
+
+config PHP5_SAPI_NSAPI
+	bool
+	prompt "nsapi"
+	depends on BROKEN
+	help
+	  Build PHP as NSAPI module for Netscape/iPlanet/SunONE.
+
+config PHP5_SAPI_PHTTPD
+	bool
+	prompt "phttpd"
+	depends on BROKEN
+	help
+	  Build PHP as phttpd module.
+
+config PHP5_SAPI_PI3WEB
+	bool
+	prompt "pi3web"
+	depends on BROKEN
+	help
+	  Build PHP as Pi3Web module
+
+config PHP5_SAPI_ROXEN
+	bool
+	prompt "roxen"
+	depends on BROKEN
+	help
+	  Build PHP as a Pike module. DIR is the base Roxen
+
+config PHP5_SAPI_ROXEN_ZTS
+	bool
+	prompt "roxen-zts"
+	depends on BROKEN
+	help
+	  Build the Roxen module using Zend Thread Safety.
+
+config PHP5_SAPI_THTTPD
+	bool
+	prompt "thttpd"
+	depends on BROKEN
+	help
+	  Build PHP as thttpd module
+
+config PHP5_SAPI_TUX
+	bool
+	prompt "tux"
+	depends on BROKEN
+	help
+	  Build PHP as a TUX module.
+
+config PHP5_SAPI_WEBJAMES
+	bool
+	prompt "webjames"
+	depends on BROKEN
+	help
+	  Build PHP as a WebJames module (RISC OS only).
+
+config PHP5_SAPI_CGI
+	bool
+	prompt "cgi"
+	help
+	  Build CGI version of PHP.
+
+config PHP5_SAPI_NONE
+	bool
+	prompt "none"
+	select PHP5_SAPI_CLI
+
+endchoice
+
+config PHP5_SAPI_CLI
+	bool
+	prompt "cli"
+	help
+	  Build CLI (commandline interface) version of PHP
+
+# ----------------------------------------------------------------------------
+# General Settings
+# ----------------------------------------------------------------------------
+
+menuconfig PHP5_XML
+	bool
+	prompt "xml support                 "
+	help
+	  Support for XML.
+
+if PHP5_XML
+
+choice
+	prompt "xml library"
+
+	config PHP5_XML_LIBXML2
+		bool "libxml2"
+		help
+		  Use libxml2 as xml backend.
+endchoice
+
+if PHP5_XML_LIBXML2
+
+config PHP5_XML_LIBXML2_READER
+	bool
+	prompt "xml reader support"
+	help
+	  XMLReader support
+
+config PHP5_XML_LIBXML2_WRITER
+	bool
+	select LIBXML2_WRITER
+	prompt "xml writer support"
+	help
+	  XMLWriter support
+
+config PHP5_XML_LIBXML2_DOM
+	bool
+	select LIBXML2_DOM
+	prompt "DOM support"
+	help
+	  libxml2 DOM support
+
+config PHP5_XML_LIBXML2_XSLT
+	bool
+	select PHP5_XML_LIBXML2_DOM
+	prompt "xslt support"
+	help
+	  XMLWriter support
+
+config PHP5_XML_LIBXML2_SIMPLEXML
+	bool
+	prompt "simple xml support"
+	help
+	  simple xml support
+
+endif	# PHP5_XML_LIBXML2
+
+endif	# PHP5_XML
+
+# ----------------------------------------------------------------------------
+# Extensions
+# ----------------------------------------------------------------------------
+
+menu "Extensions                  "
+
+config PHP5_EXT_CURL
+	bool
+	prompt "curl"
+	help
+	  Enable CURL support for PHP.
+
+config PHP5_EXT_MYSQL
+	bool
+	prompt "mysql"
+	help
+	  Enable MySQL database support for PHP.
+
+config PHP5_EXT_SOAP
+	bool
+	prompt "soap"
+	select PHP5_XML
+	help
+	  Enable SOAP support for PHP.
+
+config PHP5_EXT_SOCKETS
+	bool
+	prompt "sockets"
+	help
+	  Enable sockets support for PHP.
+
+config PHP5_EXT_SQLITE3
+	bool
+	prompt "sqlite3"
+	help
+	  Enable sqlite3 support for PHP.
+
+config PHP5_EXT_ZLIB
+	bool
+	prompt "zlib"
+	help
+	  Enable zlib support for PHP.
+
+config PHP5_EXT_OPENSSL
+	bool
+	# Fails to build with OpenSSL 1.1.x
+	depends on BROKEN
+	prompt "openssl"
+	help
+	  Enable openssl support for PHP.
+
+config PHP5_EXT_PEAR
+	bool
+	prompt "pear [BROKEN]"
+	depends on BROKEN
+	help
+	  pear
+
+endmenu
+
+endif

@@ -23,6 +23,7 @@ class TableHandler(server.RequestHandler):
 	def initialize(self, table, doGet={}, doPost={}):
 		self.table = table
 		self.db    = table.db
+		self.dbr   = table.dbr
 		self.doGet = {**{
 			'list':		self.doList,
 			'load':		self.doLoad,

@@ -3,8 +3,7 @@ Name=sys
 
 [Network]
 DHCPServer=yes
-IPForward=yes
-IPMasquerade=yes
+IPMasquerade=ipv4
 
 [DHCPServer]
 PoolOffset=200

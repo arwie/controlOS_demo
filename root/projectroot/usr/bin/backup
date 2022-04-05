@@ -35,7 +35,7 @@ if args.console:
 def restore():
 	with tempfile.TemporaryDirectory(prefix='backup_', dir='/var/tmp') as gpghome:
 		os.chdir(gpghome)
-		status = system.run('set -o pipefail; gpg --options=/etc/gpg/gpg.conf --decrypt --passphrase-file=/etc/gpg/backup.symkey | tar -xJ', shell=True, env={'GNUPGHOME':gpghome}).stderr.decode()
+		status = system.run('set -o pipefail; gpg --options=/etc/gpg/gpg.conf --decrypt --passphrase-file=/etc/gpg/backup.symkey | tar -xJ', env={'GNUPGHOME':gpghome}).stderr.decode()
 		for key in ['NEED_PASSPHRASE_SYM','DECRYPTION_INFO','DECRYPTION_OKAY']:
 			if not key in status:
 				raise Exception('unexpected gpg status output')
@@ -46,7 +46,7 @@ def restore():
 
 def store(capture):
 	with tempfile.TemporaryDirectory(prefix='backup_') as gpghome:
-		return system.run('set -o pipefail; tar -cJ -C/var etc local | gpg --options=/etc/gpg/gpg.conf --symmetric --passphrase-file=/etc/gpg/backup.symkey --encrypt --recipient-file=/etc/gpg/backup.pubkey', capture, shell=True, env={'GNUPGHOME':gpghome})
+		return system.run('set -o pipefail; tar -cJ -C/var etc local | gpg --options=/etc/gpg/gpg.conf --symmetric --passphrase-file=/etc/gpg/backup.symkey --encrypt --recipient-file=/etc/gpg/backup.pubkey', capture, env={'GNUPGHOME':gpghome})
 
 
 class storeHttpHandler(BaseHTTPRequestHandler):

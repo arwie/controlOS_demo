@@ -47,19 +47,20 @@ class Table:
 	
 	def __init__(self, sqlite, table):
 		self.db		= sqlite.db
+		self.dbr	= sqlite.dbr
 		self.schema	= sqlite.schema[table]
 		self.table	= table
 		self.select	= ','.join(['id','ord']+[c for c,d in self.schema.items() if not d.startswith('BLOB')])
 	
 	def list(self, where={}, order='ord'):
-		return self.db.execute('SELECT {select} FROM {0.table} {where} ORDER BY {order}'.format(self,
+		return self.dbr.execute('SELECT {select} FROM {0.table} {where} ORDER BY {order}'.format(self,
 					select= self.select,
 					where = '' if not where else 'WHERE {}'.format(' AND '.join([c+'=:'+c for c in where.keys()])),
 					order = order
 				), where).fetchall()
 	
 	def load(self, id, select=None):
-		return self.db.execute('SELECT {select} FROM {0.table} WHERE id=:id'.format(self,
+		return self.dbr.execute('SELECT {select} FROM {0.table} WHERE id=:id'.format(self,
 					select = select if select else self.select
 				), {'id':id}).fetchone()
 	
@@ -107,9 +108,10 @@ class Sqlite:
 		
 		def dbFile(version): return pathlib.Path('{}.{}.sqlite'.format(path, version))
 		
-		self.db = sqlite3.connect(dbFile(schemaVersion))
+		self.file = dbFile(schemaVersion)
+		self.db = sqlite3.connect(self.file)
 		self.db.row_factory = rowToData
-		self.db.execute('PRAGMA synchronous  = OFF;')
+		self.db.execute('PRAGMA synchronous = OFF;')
 		
 		if not self.db.execute('SELECT * FROM sqlite_master;').fetchone():	# db empty
 			logging.info(__name__+": creating tables")
@@ -135,6 +137,10 @@ class Sqlite:
 					self.populate()
 		
 		self.db.execute('PRAGMA foreign_keys = ON;')	#check foreign keys after migrating
+		
+		self.dbr = sqlite3.connect(self.file, check_same_thread=False)
+		self.dbr.execute('PRAGMA query_only = ON;')
+		self.dbr.row_factory = rowToData
 	
 	
 	def create(self, definition):

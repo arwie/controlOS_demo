@@ -21,11 +21,11 @@ from tornado import process, iostream
 
 
 
-def setArgs(journalFile):
+def setArgs(journalFile, *args):
 	global journalArgs
-	journalArgs = ['/usr/bin/journalctl', '--file='+journalFile]
+	journalArgs = ['/usr/bin/journalctl', '--file='+journalFile, *args]
 
-setArgs('/var/log/journal/*/*')
+setArgs('/var/log/journal/*/*', '--merge')
 
 
 
@@ -59,7 +59,6 @@ class Handler(server.WebSocketHandler):
 		args.append('--output=json')
 		args.append('--all')
 		args.append('--follow')
-		args.append('--merge')
 		
 		self.task = asyncio.create_task(self.readJournal(args))
 

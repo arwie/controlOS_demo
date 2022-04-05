@@ -1,9 +1,9 @@
 #!/bin/sh
 
-SCRIPT=$(realpath $0)
-BASEDIR=$(dirname $SCRIPT)
+BASEDIR=$(dirname $(realpath $0))
 
 cd $BASEDIR
 
+BASECONFIGS="../../base/configs"
 
-cat ../../base/configs/platform-x86/x86_64_defconfig ../../base/configs/platform-x86/kernelconfig-common.in kernelconfig.in > kernelconfig
+cat $BASECONFIGS/platform-x86/x86_64_defconfig $BASECONFIGS/kernelconfig-common.in $BASECONFIGS/platform-x86/kernelconfig-platform.in kernelconfig.in > kernelconfig

@@ -275,16 +275,21 @@ end sub
 
 
 public sub com_putLocationXy(byval path as string, byval pos as location of xy)
-  call com_putDouble(path+"/x", pos{1})
-  call com_putDouble(path+"/y", pos{2})
+	com_putDouble(path+"/x", pos{1})
+	com_putDouble(path+"/y", pos{2})
 end sub
 
+public sub com_putLocationXyz(byval path as string, byval pos as location of xyz)
+	com_putDouble(path+"/x", pos{1})
+	com_putDouble(path+"/y", pos{2})
+	com_putDouble(path+"/z", pos{3})
+end sub
 
 public sub com_putLocationXyzr(byval path as string, byval pos as location of xyzr)
-  call com_putDouble(path+"/x", pos{1})
-  call com_putDouble(path+"/y", pos{2})
-  call com_putDouble(path+"/z", pos{3})
-  call com_putDouble(path+"/r", pos{4})
+	com_putDouble(path+"/x", pos{1})
+	com_putDouble(path+"/y", pos{2})
+	com_putDouble(path+"/z", pos{3})
+	com_putDouble(path+"/r", pos{4})
 end sub
 
 
@@ -293,9 +298,23 @@ public sub com_putJointXy(byval path as string, byval jnt as joint of xy)
 	com_putDouble(path+"/1", jnt{2})
 end sub
 
+public sub com_putJointXyz(byval path as string, byval jnt as joint of xyz)
+	com_putDouble(path+"/0", jnt{1})
+	com_putDouble(path+"/1", jnt{2})
+	com_putDouble(path+"/2", jnt{3})
+end sub
+
 public sub com_putJointXyzr(byval path as string, byval jnt as joint of xyzr)
 	com_putDouble(path+"/0", jnt{1})
 	com_putDouble(path+"/1", jnt{2})
 	com_putDouble(path+"/2", jnt{3})
 	com_putDouble(path+"/3", jnt{4})
+end sub
+
+public sub com_putJointXyzrp(byval path as string, byval jnt as joint of xyzrp)
+	com_putDouble(path+"/0", jnt{1})
+	com_putDouble(path+"/1", jnt{2})
+	com_putDouble(path+"/2", jnt{3})
+	com_putDouble(path+"/3", jnt{4})
+	com_putDouble(path+"/4", jnt{5})
 end sub

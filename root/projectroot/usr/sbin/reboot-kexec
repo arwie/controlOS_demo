@@ -1,6 +1,6 @@
 #!/usr/bin/sh
 
 . /boot/boot.conf
-kexec --load /boot/$IMAGE --command-line="$BOOTARGS"
+kexec --load /boot/$IMAGE  ${DTB:+--dtb=/boot/$DTB}  ${BOOTARGS:+--command-line="$BOOTARGS"}
 
 systemctl kexec

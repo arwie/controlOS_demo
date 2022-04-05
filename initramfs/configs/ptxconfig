@@ -1,6 +1,6 @@
 #
 # Automatically generated file; DO NOT EDIT.
-# PTXdist 2020.10.0
+# PTXdist 2022.01.0
 #
 
 #
@@ -60,10 +60,12 @@ PTXCONF_REPRODUCIBLE_TIMESTAMP_PTXDIST=y
 # PTXCONF_REPRODUCIBLE_TIMESTAMP_TOOLCHAIN is not set
 # PTXCONF_REPRODUCIBLE_TIMESTAMP_CUSTOM is not set
 PTXCONF_REPRODUCIBLE_TIMESTAMP="ptxdist"
+# end of Project Name & Version        
+
 PTXCONF_BSP=y
 PTXCONF_RUNTIME=y
 PTXCONF_BUILDTIME=y
-PTXCONF_CONFIGFILE_VERSION="2020.10.0"
+PTXCONF_CONFIGFILE_VERSION="2022.01.0"
 PTXCONF__ptxconfig_MAGIC__=y
 
 #
@@ -76,18 +78,17 @@ PTXCONF__ptxconfig_MAGIC__=y
 # PTXCONF_ALLYES is not set
 # PTXCONF_BROKEN is not set
 # PTXCONF_FIX_PERMISSIONS is not set
+# end of PTXdist Options               
 
 #
 # Host Tools                    
 #
 # PTXCONF_HOST_DFU_UTIL is not set
-# PTXCONF_HOST_GENGETOPT is not set
 # PTXCONF_HOST_MFGTOOLS is not set
 # PTXCONF_HOST_OPENOCD is not set
 # PTXCONF_HOST_QEMU is not set
 # PTXCONF_HOST_TESTFRAMEWORK is not set
 PTXCONF_HOST_ACL=y
-PTXCONF_HOST_ATTR=y
 PTXCONF_HOST_LIBARCHIVE=y
 PTXCONF_HOST_LIBCAP=y
 PTXCONF_HOST_LIBTIRPC=y
@@ -109,17 +110,21 @@ PTXCONF_HOST_FAKEROOT=y
 PTXCONF_HOST_LNDIR=y
 PTXCONF_HOST_PACKAGE_MANAGEMENT_OPKG=y
 PTXCONF_HOST_UNFS3=y
+# end of Host Tools                    
 
 #
 # Cross Tools                   
 #
 PTXCONF_CROSS_DUMMY_STRIP=y
 PTXCONF_CROSS_PKG_CONFIG_WRAPPER=y
+# end of Cross Tools                   
 
 #
 # Debug Tools                   
 #
 # PTXCONF_DEBUG_PACKAGES is not set
+# PTXCONF_DEBUG_PACKAGES_INSTALL is not set
+# PTXCONF_APITRACE is not set
 # PTXCONF_BINUTILS is not set
 # PTXCONF_BOOTCHART is not set
 # PTXCONF_CPPUNIT is not set
@@ -131,6 +136,8 @@ PTXCONF_CROSS_PKG_CONFIG_WRAPPER=y
 #
 # PTXCONF_GDB is not set
 # PTXCONF_GDBSERVER is not set
+# end of gdb                           
+
 # PTXCONF_LATRACE is not set
 # PTXCONF_LDD is not set
 # PTXCONF_LIBFAKETIME is not set
@@ -153,6 +160,7 @@ PTXCONF_CROSS_PKG_CONFIG_WRAPPER=y
 # PTXCONF_SYSSTAT is not set
 # PTXCONF_TRACE_CMD is not set
 # PTXCONF_VALGRIND is not set
+# end of Debug Tools                   
 
 #
 # ------------------------------------
@@ -191,6 +199,8 @@ PTXCONF_ROOTFS_VAR_LOCK=y
 # PTXCONF_ROOTFS_VAR_SPOOL is not set
 # PTXCONF_ROOTFS_VAR_SPOOL_CRON is not set
 # PTXCONF_ROOTFS_VAR_TMP is not set
+# end of /var                        
+# end of directories in rootfs         
 
 #
 # files in rootfs               
@@ -219,6 +229,8 @@ PTXCONF_ROOTFS_RESOLV_NONE=y
 # PTXCONF_ROOTFS_INIT_LINK is not set
 PTXCONF_ROOTFS_INIT_BIN=y
 # PTXCONF_ROOTFS_INIT_NONE is not set
+# end of files in rootfs               
+# end of Root Filesystem               
 
 #
 # Core (libc, locales)          
@@ -239,6 +251,8 @@ PTXCONF_BASE=y
 # PTXCONF_GCCLIBS_LIBLSAN is not set
 # PTXCONF_GCCLIBS_LIBTSAN is not set
 # PTXCONF_GCCLIBS_LIBUBSAN is not set
+# end of gcc libraries                 
+
 # PTXCONF_ICONV is not set
 # PTXCONF_GLOBAL_IPV6 is not set
 # PTXCONF_KERNEL_HEADER is not set
@@ -249,6 +263,7 @@ PTXCONF_LIBC_NSS_DNS=y
 PTXCONF_LIBC_NSS_FILES=y
 PTXCONF_NO_LIBC=y
 # PTXCONF_USBIP is not set
+# end of Core (libc, locales)          
 
 #
 # ------------------------------------
@@ -336,7 +351,7 @@ PTXCONF_BUSYBOX_NO_DEBUG_LIB=y
 # Library Tuning
 #
 # PTXCONF_BUSYBOX_FEATURE_USE_BSS_TAIL is not set
-# PTXCONF_BUSYBOX_FLOAT_DURATION is not set
+PTXCONF_BUSYBOX_FLOAT_DURATION=y
 PTXCONF_BUSYBOX_FEATURE_RTMINMAX=y
 # PTXCONF_BUSYBOX_FEATURE_RTMINMAX_USE_LIBC_DEFINITIONS is not set
 PTXCONF_BUSYBOX_FEATURE_BUFFERS_USE_MALLOC=y
@@ -359,6 +374,7 @@ PTXCONF_BUSYBOX_FEATURE_SKIP_ROOTFS=y
 # PTXCONF_BUSYBOX_MONOTONIC_SYSCALL is not set
 PTXCONF_BUSYBOX_IOCTL_HEX2STR_ERROR=y
 # PTXCONF_BUSYBOX_FEATURE_HWIB is not set
+# end of Settings
 
 #
 # Applets
@@ -396,6 +412,7 @@ PTXCONF_BUSYBOX_IOCTL_HEX2STR_ERROR=y
 # PTXCONF_BUSYBOX_RPM2CPIO is not set
 # PTXCONF_BUSYBOX_TAR is not set
 # PTXCONF_BUSYBOX_UNZIP is not set
+# end of Archival Utilities
 
 #
 # Coreutils
@@ -518,6 +535,7 @@ PTXCONF_BUSYBOX_FEATURE_FANCY_SLEEP=y
 # Common options for df, du, ls
 #
 # PTXCONF_BUSYBOX_FEATURE_HUMAN_READABLE is not set
+# end of Coreutils
 
 #
 # Console Utilities
@@ -538,6 +556,7 @@ PTXCONF_BUSYBOX_FEATURE_FANCY_SLEEP=y
 # PTXCONF_BUSYBOX_SETKEYCODES is not set
 # PTXCONF_BUSYBOX_SETLOGCONS is not set
 # PTXCONF_BUSYBOX_SHOWKEY is not set
+# end of Console Utilities
 
 #
 # Debian Utilities
@@ -546,6 +565,7 @@ PTXCONF_BUSYBOX_FEATURE_FANCY_SLEEP=y
 # PTXCONF_BUSYBOX_RUN_PARTS is not set
 # PTXCONF_BUSYBOX_START_STOP_DAEMON is not set
 # PTXCONF_BUSYBOX_WHICH is not set
+# end of Debian Utilities
 
 #
 # klibc-utils
@@ -554,6 +574,7 @@ PTXCONF_BUSYBOX_FEATURE_FANCY_SLEEP=y
 # PTXCONF_BUSYBOX_NUKE is not set
 # PTXCONF_BUSYBOX_RESUME is not set
 # PTXCONF_BUSYBOX_RUN_INIT is not set
+# end of klibc-utils
 
 #
 # Editors
@@ -565,6 +586,7 @@ PTXCONF_BUSYBOX_FEATURE_FANCY_SLEEP=y
 # PTXCONF_BUSYBOX_PATCH is not set
 # PTXCONF_BUSYBOX_SED is not set
 # PTXCONF_BUSYBOX_VI is not set
+# end of Editors
 
 #
 # Finding Utilities
@@ -574,6 +596,7 @@ PTXCONF_BUSYBOX_FEATURE_FANCY_SLEEP=y
 # PTXCONF_BUSYBOX_EGREP is not set
 # PTXCONF_BUSYBOX_FGREP is not set
 # PTXCONF_BUSYBOX_XARGS is not set
+# end of Finding Utilities
 
 #
 # Init Utilities
@@ -584,6 +607,7 @@ PTXCONF_BUSYBOX_FEATURE_FANCY_SLEEP=y
 # PTXCONF_BUSYBOX_REBOOT is not set
 # PTXCONF_BUSYBOX_INIT is not set
 # PTXCONF_BUSYBOX_LINUXRC is not set
+# end of Init Utilities
 
 #
 # Login/Password Management Utilities
@@ -606,6 +630,7 @@ PTXCONF_BUSYBOX_FEATURE_FANCY_SLEEP=y
 # PTXCONF_BUSYBOX_SU is not set
 # PTXCONF_BUSYBOX_SULOGIN is not set
 # PTXCONF_BUSYBOX_VLOCK is not set
+# end of Login/Password Management Utilities
 
 #
 # Linux Ext2 FS Progs
@@ -614,6 +639,7 @@ PTXCONF_BUSYBOX_FEATURE_FANCY_SLEEP=y
 # PTXCONF_BUSYBOX_FSCK is not set
 # PTXCONF_BUSYBOX_LSATTR is not set
 # PTXCONF_BUSYBOX_TUNE2FS is not set
+# end of Linux Ext2 FS Progs
 
 #
 # Linux Module Utilities
@@ -629,6 +655,7 @@ PTXCONF_BUSYBOX_FEATURE_FANCY_SLEEP=y
 #
 # Options common to multiple modutils
 #
+# end of Linux Module Utilities
 
 #
 # Linux System Utilities
@@ -742,6 +769,8 @@ PTXCONF_BUSYBOX_FEATURE_VOLUMEID_ROMFS=y
 # PTXCONF_BUSYBOX_FEATURE_VOLUMEID_UBIFS is not set
 # PTXCONF_BUSYBOX_FEATURE_VOLUMEID_UDF is not set
 # PTXCONF_BUSYBOX_FEATURE_VOLUMEID_XFS is not set
+# end of Filesystem/Volume identification
+# end of Linux System Utilities
 
 #
 # Miscellaneous Utilities
@@ -799,6 +828,7 @@ PTXCONF_BUSYBOX_FEATURE_VOLUMEID_ROMFS=y
 # PTXCONF_BUSYBOX_UBIRENAME is not set
 # PTXCONF_BUSYBOX_VOLNAME is not set
 # PTXCONF_BUSYBOX_WATCHDOG is not set
+# end of Miscellaneous Utilities
 
 #
 # Networking Utilities
@@ -861,6 +891,7 @@ PTXCONF_BUSYBOX_FEATURE_VOLUMEID_ROMFS=y
 # PTXCONF_BUSYBOX_DUMPLEASES is not set
 # PTXCONF_BUSYBOX_DHCPRELAY is not set
 # PTXCONF_BUSYBOX_UDHCPC is not set
+# end of Networking Utilities
 
 #
 # Print Utilities
@@ -868,6 +899,7 @@ PTXCONF_BUSYBOX_FEATURE_VOLUMEID_ROMFS=y
 # PTXCONF_BUSYBOX_LPD is not set
 # PTXCONF_BUSYBOX_LPR is not set
 # PTXCONF_BUSYBOX_LPQ is not set
+# end of Print Utilities
 
 #
 # Mail Utilities
@@ -876,6 +908,7 @@ PTXCONF_BUSYBOX_FEATURE_VOLUMEID_ROMFS=y
 # PTXCONF_BUSYBOX_POPMAILDIR is not set
 # PTXCONF_BUSYBOX_REFORMIME is not set
 # PTXCONF_BUSYBOX_SENDMAIL is not set
+# end of Mail Utilities
 
 #
 # Process Utilities
@@ -902,6 +935,7 @@ PTXCONF_BUSYBOX_FEATURE_VOLUMEID_ROMFS=y
 # PTXCONF_BUSYBOX_TOP is not set
 # PTXCONF_BUSYBOX_UPTIME is not set
 # PTXCONF_BUSYBOX_WATCH is not set
+# end of Process Utilities
 
 #
 # Runit Utilities
@@ -917,6 +951,7 @@ PTXCONF_BUSYBOX_FEATURE_VOLUMEID_ROMFS=y
 # PTXCONF_BUSYBOX_SVC is not set
 # PTXCONF_BUSYBOX_SVOK is not set
 # PTXCONF_BUSYBOX_SVLOGD is not set
+# end of Runit Utilities
 
 #
 # Shells
@@ -956,6 +991,7 @@ PTXCONF_BUSYBOX_FEATURE_SH_NOFORK=y
 # PTXCONF_BUSYBOX_FEATURE_SH_READ_FRAC is not set
 # PTXCONF_BUSYBOX_FEATURE_SH_HISTFILESIZE is not set
 # PTXCONF_BUSYBOX_FEATURE_SH_EMBEDDED_SCRIPTS is not set
+# end of Shells
 
 #
 # System Logging Utilities
@@ -964,6 +1000,8 @@ PTXCONF_BUSYBOX_FEATURE_SH_NOFORK=y
 # PTXCONF_BUSYBOX_LOGGER is not set
 # PTXCONF_BUSYBOX_LOGREAD is not set
 # PTXCONF_BUSYBOX_SYSLOGD is not set
+# end of System Logging Utilities
+
 # PTXCONF_BZIP2 is not set
 # PTXCONF_COLLECTD is not set
 # PTXCONF_COREUTILS is not set
@@ -981,6 +1019,7 @@ PTXCONF_BUSYBOX_FEATURE_SH_NOFORK=y
 # PTXCONF_FINDUTILS is not set
 # PTXCONF_GAWK is not set
 # PTXCONF_GREP is not set
+# PTXCONF_GT is not set
 # PTXCONF_GZIP is not set
 # PTXCONF_HTOP is not set
 # PTXCONF_HUB_CTRL is not set
@@ -998,11 +1037,9 @@ PTXCONF_BUSYBOX_FEATURE_SH_NOFORK=y
 # PTXCONF_LSUIO is not set
 # PTXCONF_MC is not set
 # PTXCONF_MEMEDIT is not set
-# PTXCONF_MEMSTAT is not set
 # PTXCONF_MEMTOOL is not set
 # PTXCONF_MINICOM is not set
 # PTXCONF_MINICOREDUMPER is not set
-# PTXCONF_MODULE_INIT_TOOLS is not set
 # PTXCONF_MONIT is not set
 # PTXCONF_MTD_OOPSLOG is not set
 # PTXCONF_MTD_UTILS is not set
@@ -1010,12 +1047,12 @@ PTXCONF_BUSYBOX_FEATURE_SH_NOFORK=y
 # PTXCONF_NANOCOM is not set
 # PTXCONF_NVME_CLI is not set
 # PTXCONF_NVMETCLI is not set
-# PTXCONF_P7ZIP is not set
 # PTXCONF_PARTED is not set
 # PTXCONF_PCIUTILS is not set
 # PTXCONF_PCMCIAUTILS is not set
 # PTXCONF_PICOCOM is not set
 # PTXCONF_PNPUTILS is not set
+# PTXCONF_PPS_TOOLS is not set
 # PTXCONF_PROCPS is not set
 # PTXCONF_PS3_UTILS is not set
 # PTXCONF_PSMISC is not set
@@ -1036,13 +1073,14 @@ PTXCONF_BUSYBOX_FEATURE_SH_NOFORK=y
 # PTXCONF_TREE is not set
 # PTXCONF_U_BOOT_TOOLS is not set
 # PTXCONF_UDEV_LEGACY is not set
+# PTXCONF_UHUBCTL is not set
 # PTXCONF_USB_MODESWITCH is not set
 # PTXCONF_USBUTILS is not set
 # PTXCONF_UTIL_LINUX_NG is not set
-# PTXCONF_WATCHDOG is not set
 # PTXCONF_WHICH is not set
 # PTXCONF_XMLSTARLET is not set
 # PTXCONF_ZSTD is not set
+# end of Shell & Console Tools         
 
 #
 # Scripting Languages           
@@ -1064,22 +1102,8 @@ PTXCONF_BUSYBOX_FEATURE_SH_NOFORK=y
 # PTXCONF_NET_IP_PERL is not set
 # PTXCONF_NET_SERVER_PERL is not set
 # PTXCONF_SOCKET6_PERL is not set
-# PTXCONF_PYTHON is not set
+# end of perl Extra Modules            
 
-#
-# python Extra Modules          
-#
-# PTXCONF_DBUS_PYTHON is not set
-# PTXCONF_FLUP is not set
-# PTXCONF_LIBV4L2_PYTHON is not set
-# PTXCONF_PYGOBJECT is not set
-# PTXCONF_PYSERIAL is not set
-# PTXCONF_PYTHON_IMAGING is not set
-# PTXCONF_PYTHON_PROTOBUF is not set
-# PTXCONF_PYTHON_PYRO is not set
-# PTXCONF_PYTHON_ROUTING is not set
-# PTXCONF_PYTHON_RPLICMP is not set
-# PTXCONF_PYZMQ is not set
 # PTXCONF_PYTHON3 is not set
 
 #
@@ -1087,6 +1111,7 @@ PTXCONF_BUSYBOX_FEATURE_SH_NOFORK=y
 #
 # PTXCONF_FLUP6 is not set
 # PTXCONF_PYSERIAL3 is not set
+# PTXCONF_PYTHON3_ADBUS is not set
 # PTXCONF_PYTHON3_AIOFILES is not set
 # PTXCONF_PYTHON3_AIOHTTP_JSON_RPC is not set
 # PTXCONF_PYTHON3_AIOHTTP_WSGI is not set
@@ -1107,41 +1132,56 @@ PTXCONF_BUSYBOX_FEATURE_SH_NOFORK=y
 # PTXCONF_PYTHON3_IPYTHON_GENUTILS is not set
 # PTXCONF_PYTHON3_IPYTHON is not set
 # PTXCONF_PYTHON3_JINJA2 is not set
+# PTXCONF_PYTHON3_LIBEVDEV is not set
 # PTXCONF_PYTHON3_LXML is not set
 # PTXCONF_PYTHON3_MAKO is not set
 # PTXCONF_PYTHON3_MARKUPSAFE is not set
 # PTXCONF_PYTHON3_MORE_ITERTOOLS is not set
 # PTXCONF_PYTHON3_MSGPACK is not set
 # PTXCONF_PYTHON3_MULTIDICT is not set
+# PTXCONF_PYTHON3_NETIFACES is not set
 # PTXCONF_PYTHON3_NUMPY is not set
 # PTXCONF_PYTHON3_OPCUA is not set
 # PTXCONF_PYTHON3_PACKAGING is not set
 # PTXCONF_PYTHON3_PATH_PY is not set
 # PTXCONF_PYTHON3_PEXPECT is not set
 # PTXCONF_PYTHON3_PICKLESHARE is not set
+# PTXCONF_PYTHON3_PIP is not set
 # PTXCONF_PYTHON3_PLUGGY is not set
 # PTXCONF_PYTHON3_PLY is not set
 # PTXCONF_PYTHON3_PSUTIL is not set
 # PTXCONF_PYTHON3_PTYPROCESS is not set
 # PTXCONF_PYTHON3_PY is not set
 # PTXCONF_PYTHON3_PYALSAAUDIO is not set
+# PTXCONF_PYTHON3_PYASN1 is not set
 # PTXCONF_PYTHON3_PYCPARSER is not set
+# PTXCONF_PYTHON3_PYCRYPTODOMEX is not set
 # PTXCONF_PYTHON3_PYPARSING is not set
+# PTXCONF_PYTHON3_PYRO is not set
+# PTXCONF_PYTHON3_PYSMI is not set
+# PTXCONF_PYTHON3_PYSNMP is not set
 # PTXCONF_PYTHON3_PYTEST is not set
 # PTXCONF_PYTHON3_PYTZ is not set
 # PTXCONF_PYTHON3_PYYAML is not set
 # PTXCONF_PYTHON3_SETUPTOOLS is not set
 # PTXCONF_PYTHON3_SIMPLEGENERIC is not set
 # PTXCONF_PYTHON3_SIX is not set
+# PTXCONF_PYTHON3_SNMPCLITOOLS is not set
 # PTXCONF_PYTHON3_SQLPARSE is not set
+# PTXCONF_PYTHON3_TABULATE is not set
 # PTXCONF_PYTHON3_TEXT_UNIDECODE is not set
 # PTXCONF_PYTHON3_TORNADO is not set
 # PTXCONF_PYTHON3_TRAITLETS is not set
 # PTXCONF_PYTHON3_TRANSITIONS is not set
+# PTXCONF_PYTHON3_URLLIB3 is not set
 # PTXCONF_PYTHON3_WCWIDTH is not set
+# PTXCONF_PYTHON3_WEBSOCKET_CLIENT is not set
 # PTXCONF_PYTHON3_WEBSOCKETS is not set
 # PTXCONF_PYTHON3_YARL is not set
+# PTXCONF_PYTHON3_YOYO_MIGRATIONS is not set
 # PTXCONF_PYTHON3_ZIPP is not set
+# end of python3 Extra Modules         
+# end of Scripting Languages           
 
 #
 # Bytecode Engines / VMs        
@@ -1151,6 +1191,8 @@ PTXCONF_BUSYBOX_FEATURE_SH_NOFORK=y
 # PTXCONF_JAMVM is not set
 # PTXCONF_NODEJS is not set
 # PTXCONF_NODEJS_PACKAGES is not set
+# PTXCONF_QEMU is not set
+# end of Bytecode Engines / VMs        
 
 #
 # Networking Tools              
@@ -1159,6 +1201,7 @@ PTXCONF_BUSYBOX_FEATURE_SH_NOFORK=y
 # PTXCONF_AUTOSSH is not set
 # PTXCONF_AVAHI is not set
 # PTXCONF_BATCTL is not set
+# PTXCONF_BIND is not set
 # PTXCONF_BING is not set
 # PTXCONF_BOA is not set
 # PTXCONF_BRIDGE_UTILS is not set
@@ -1174,6 +1217,7 @@ PTXCONF_BUSYBOX_FEATURE_SH_NOFORK=y
 # PTXCONF_DHCP is not set
 # PTXCONF_DNSMASQ is not set
 # PTXCONF_DROPBEAR is not set
+# PTXCONF_DUMP1090FA is not set
 # PTXCONF_ETHERWAKE is not set
 # PTXCONF_ETHTOOL is not set
 # PTXCONF_FCGI is not set
@@ -1195,6 +1239,7 @@ PTXCONF_BUSYBOX_FEATURE_SH_NOFORK=y
 # PTXCONF_LIBCGI is not set
 # PTXCONF_LIBCGICC is not set
 # PTXCONF_LIBCOAP is not set
+# PTXCONF_LIBCOAP2 is not set
 # PTXCONF_LIBCURL is not set
 # PTXCONF_LIBMBIM is not set
 # PTXCONF_LIBMICROHTTPD is not set
@@ -1219,7 +1264,6 @@ PTXCONF_BUSYBOX_FEATURE_SH_NOFORK=y
 # PTXCONF_LINUXPTP is not set
 # PTXCONF_LLDPD is not set
 # PTXCONF_LSH is not set
-# PTXCONF_MEMCACHED is not set
 # PTXCONF_MICROCOM is not set
 # PTXCONF_MII_DIAG is not set
 # PTXCONF_MOBILE_BROADBAND_PROVIDER_INFO is not set
@@ -1232,6 +1276,7 @@ PTXCONF_BUSYBOX_FEATURE_SH_NOFORK=y
 # PTXCONF_NET_SNMP is not set
 # PTXCONF_NETCAT is not set
 # PTXCONF_NETKIT_FTP is not set
+# PTXCONF_NETSNIFF_NG is not set
 # PTXCONF_NETTLE is not set
 # PTXCONF_NETWORKMANAGER is not set
 
@@ -1240,6 +1285,8 @@ PTXCONF_BUSYBOX_FEATURE_SH_NOFORK=y
 #
 # PTXCONF_NETWORKMANAGER_FORTISSLVPN is not set
 # PTXCONF_NETWORKMANAGER_OPENVPN is not set
+# end of networkmanager plugins        
+
 # PTXCONF_NFSUTILS is not set
 # PTXCONF_NFTABLES is not set
 # PTXCONF_NGINX is not set
@@ -1249,6 +1296,7 @@ PTXCONF_BUSYBOX_FEATURE_SH_NOFORK=y
 # PTXCONF_NSS is not set
 # PTXCONF_NTP is not set
 # PTXCONF_NTPCLIENT is not set
+# PTXCONF_OFONO is not set
 # PTXCONF_OPENFORTIVPN is not set
 # PTXCONF_OPENLDAP is not set
 # PTXCONF_OPENNHRP is not set
@@ -1256,7 +1304,6 @@ PTXCONF_BUSYBOX_FEATURE_SH_NOFORK=y
 # PTXCONF_OPENSSH is not set
 # PTXCONF_OPENSSL is not set
 # PTXCONF_OPENVPN is not set
-# PTXCONF_PORTMAP is not set
 # PTXCONF_PPP is not set
 # PTXCONF_PROFTPD is not set
 # PTXCONF_PUREFTPD is not set
@@ -1267,12 +1314,12 @@ PTXCONF_BUSYBOX_FEATURE_SH_NOFORK=y
 # PTXCONF_RSYNC is not set
 # PTXCONF_RSYNC3 is not set
 # PTXCONF_RSYSLOG is not set
-# PTXCONF_SIMPLERPL is not set
 # PTXCONF_SMCROUTE is not set
 # PTXCONF_SOCAT is not set
 # PTXCONF_SPAWN_FCGI is not set
 # PTXCONF_STRONGSWAN is not set
 # PTXCONF_STUNNEL is not set
+# PTXCONF_SYSKLOGD is not set
 # PTXCONF_SYSLOGNG is not set
 # PTXCONF_TCPDUMP is not set
 # PTXCONF_TNTNET is not set
@@ -1285,6 +1332,7 @@ PTXCONF_BUSYBOX_FEATURE_SH_NOFORK=y
 # PTXCONF_WPA_SUPPLICANT is not set
 # PTXCONF_WPAN_TOOLS is not set
 # PTXCONF_ZSYNC is not set
+# end of Networking Tools              
 
 #
 # Disk and File Utilities       
@@ -1308,6 +1356,7 @@ PTXCONF_BUSYBOX_FEATURE_SH_NOFORK=y
 # PTXCONF_LVM2 is not set
 # PTXCONF_MMC_UTILS is not set
 # PTXCONF_NCDU is not set
+# PTXCONF_NTFS_3G is not set
 # PTXCONF_OPKG is not set
 # PTXCONF_QUOTA_TOOLS is not set
 # PTXCONF_SAMBA is not set
@@ -1318,6 +1367,7 @@ PTXCONF_BUSYBOX_FEATURE_SH_NOFORK=y
 # PTXCONF_XFSPROGS is not set
 # PTXCONF_XZ is not set
 # PTXCONF_ZIP is not set
+# end of Disk and File Utilities       
 
 #
 # Communication Utilities       
@@ -1328,7 +1378,9 @@ PTXCONF_BUSYBOX_FEATURE_SH_NOFORK=y
 # PTXCONF_EFAX is not set
 # PTXCONF_HEIRLOOM_MAILX is not set
 # PTXCONF_IMX_UUC is not set
+# PTXCONF_LIBSERIALPORT is not set
 # PTXCONF_LIBSOCKETCAN is not set
+# PTXCONF_LIBUSBGX is not set
 # PTXCONF_LRZSZ is not set
 # PTXCONF_OPEN62541 is not set
 # PTXCONF_OPENCT is not set
@@ -1338,6 +1390,7 @@ PTXCONF_BUSYBOX_FEATURE_SH_NOFORK=y
 # PTXCONF_SJINN is not set
 # PTXCONF_SMTPCLIENT is not set
 # PTXCONF_SSMTP is not set
+# end of Communication Utilities       
 
 #
 # Applications                  
@@ -1352,6 +1405,7 @@ PTXCONF_BUSYBOX_FEATURE_SH_NOFORK=y
 # PTXCONF_MYSQLDB is not set
 # PTXCONF_RAUC_HAWKBIT_UPDATER is not set
 # PTXCONF_RAUC is not set
+# end of Applications                  
 
 #
 # Editors                       
@@ -1363,6 +1417,7 @@ PTXCONF_BUSYBOX_FEATURE_SH_NOFORK=y
 # PTXCONF_JOE is not set
 # PTXCONF_NANO is not set
 # PTXCONF_VIM is not set
+# end of Editors                       
 
 #
 # System Libraries              
@@ -1389,6 +1444,7 @@ PTXCONF_BUSYBOX_FEATURE_SH_NOFORK=y
 # PTXCONF_LIBCAP_NG is not set
 # PTXCONF_LIBCAP is not set
 # PTXCONF_LIBCGROUP is not set
+# PTXCONF_LIBCLI is not set
 # PTXCONF_LIBCONFIG is not set
 # PTXCONF_LIBCONFUSE is not set
 # PTXCONF_LIBDAEMON is not set
@@ -1418,6 +1474,7 @@ PTXCONF_BUSYBOX_FEATURE_SH_NOFORK=y
 # PTXCONF_LIBLIST is not set
 # PTXCONF_LIBLTDL is not set
 # PTXCONF_LIBLZO is not set
+# PTXCONF_LIBMD is not set
 # PTXCONF_LIBMEMCACHE is not set
 # PTXCONF_LIBMEMCACHED is not set
 # PTXCONF_LIBMXML is not set
@@ -1431,6 +1488,7 @@ PTXCONF_BUSYBOX_FEATURE_SH_NOFORK=y
 # PTXCONF_LIBPIPELINE is not set
 # PTXCONF_LIBPOPT is not set
 # PTXCONF_LIBRN is not set
+# PTXCONF_LIBRTLSDR is not set
 # PTXCONF_LIBSECCOMP is not set
 # PTXCONF_LIBSIGCPP is not set
 # PTXCONF_LIBSODIUM is not set
@@ -1440,11 +1498,11 @@ PTXCONF_BUSYBOX_FEATURE_SH_NOFORK=y
 # PTXCONF_LIBUCDAEMON is not set
 # PTXCONF_LIBUNWIND is not set
 # PTXCONF_LIBURCU is not set
+# PTXCONF_LIBURING is not set
 # PTXCONF_LIBUSB_COMPAT is not set
 # PTXCONF_LIBUSB is not set
 # PTXCONF_LIBUV is not set
 # PTXCONF_LIBWPE is not set
-# PTXCONF_LIBX86 is not set
 # PTXCONF_LIBXML2 is not set
 # PTXCONF_LIBXMLCONFIG is not set
 # PTXCONF_LIBXSLT is not set
@@ -1473,11 +1531,14 @@ PTXCONF_BUSYBOX_FEATURE_SH_NOFORK=y
 # PTXCONF_PROTOBUF is not set
 # PTXCONF_RAPIDJSON is not set
 # PTXCONF_READLINE is not set
+# PTXCONF_REDIS is not set
+# PTXCONF_SEATD is not set
 # PTXCONF_SERDISPLIB is not set
 # PTXCONF_SLANG is not set
 # PTXCONF_SPARSEHASH is not set
 # PTXCONF_SQLITE is not set
 # PTXCONF_SQLITECPP is not set
+# PTXCONF_TALLOC is not set
 # PTXCONF_TCLAP is not set
 # PTXCONF_TERMCAP is not set
 # PTXCONF_TIMESCALEDB is not set
@@ -1485,6 +1546,7 @@ PTXCONF_BUSYBOX_FEATURE_SH_NOFORK=y
 # PTXCONF_XERCES is not set
 # PTXCONF_YAJL is not set
 # PTXCONF_ZLIB is not set
+# end of System Libraries              
 
 #
 # Security                      
@@ -1493,9 +1555,12 @@ PTXCONF_BUSYBOX_FEATURE_SH_NOFORK=y
 #
 # SELinux                       
 #
+# PTXCONF_FSCRYPTCTL is not set
 # PTXCONF_IMA_EVM_UTILS is not set
 # PTXCONF_KEYUTILS is not set
 # PTXCONF_LIBSEPOL is not set
+# end of SELinux                       
+
 # PTXCONF_EASY_RSA is not set
 # PTXCONF_ECRYPTFS_UTILS is not set
 # PTXCONF_KRB5 is not set
@@ -1512,6 +1577,8 @@ PTXCONF_BUSYBOX_FEATURE_SH_NOFORK=y
 # PTXCONF_TPM2_ABRMD is not set
 # PTXCONF_TPM2_TOOLS is not set
 # PTXCONF_TPM2_TSS is not set
+# end of tpm                           
+# end of Security                      
 
 #
 # Middleware                    
@@ -1520,6 +1587,7 @@ PTXCONF_BUSYBOX_FEATURE_SH_NOFORK=y
 # PTXCONF_DBUS_GLIB is not set
 # PTXCONF_DBUS is not set
 # PTXCONF_EGGDBUS is not set
+# end of Middleware                    
 
 #
 # Scientific Apps               
@@ -1529,11 +1597,13 @@ PTXCONF_BUSYBOX_FEATURE_SH_NOFORK=y
 # PTXCONF_LIBMODBUS is not set
 # PTXCONF_LIBMODBUS3 is not set
 # PTXCONF_LIBPV is not set
+# end of Scientific Apps               
 
 #
 # Web Applications              
 #
 # PTXCONF_JVISU is not set
+# end of Web Applications              
 
 #
 # Test Suites                   
@@ -1541,18 +1611,20 @@ PTXCONF_BUSYBOX_FEATURE_SH_NOFORK=y
 # PTXCONF_ARM_MEMSPEED is not set
 # PTXCONF_BONNIEXX is not set
 # PTXCONF_CALIBRATOR is not set
+# PTXCONF_CATCH2 is not set
 # PTXCONF_CBENCHSUITE is not set
 # PTXCONF_CMOCKA is not set
 # PTXCONF_CPUBURN_ARM is not set
 # PTXCONF_DBENCH is not set
 # PTXCONF_EVTEST is not set
+# PTXCONF_FIO is not set
 # PTXCONF_FLASHBENCH is not set
+# PTXCONF_GOOGLETEST is not set
 # PTXCONF_HOST_PELTS is not set
 # PTXCONF_IOZONE is not set
 # PTXCONF_IPERF is not set
 # PTXCONF_IPERF3 is not set
 # PTXCONF_LINUX_SERIAL_TEST is not set
-# PTXCONF_LMBENCH is not set
 # PTXCONF_MBW is not set
 # PTXCONF_PELTS_TESTS is not set
 # PTXCONF_PIGLIT is not set
@@ -1561,6 +1633,7 @@ PTXCONF_BUSYBOX_FEATURE_SH_NOFORK=y
 # PTXCONF_STRESS is not set
 # PTXCONF_TIOBENCH is not set
 # PTXCONF_UNIXBENCH is not set
+# end of Test Suites                   
 
 #
 # Games                         
@@ -1568,6 +1641,7 @@ PTXCONF_BUSYBOX_FEATURE_SH_NOFORK=y
 # PTXCONF_CMATRIX is not set
 # PTXCONF_MMPONG is not set
 # PTXCONF_SUPERTUX is not set
+# end of Games                         
 
 #
 # Graphics & Multimedia         
@@ -1614,16 +1688,20 @@ PTXCONF_BUSYBOX_FEATURE_SH_NOFORK=y
 # PTXCONF_LIBSNDFILE is not set
 # PTXCONF_LIBSRTP is not set
 # PTXCONF_LIBTHEORA is not set
+# PTXCONF_LIBTIFF is not set
 # PTXCONF_LIBVORBIS is not set
+# PTXCONF_LIBWACOM is not set
 # PTXCONF_LIBWEBP is not set
 # PTXCONF_LIBX11_LOCALE is not set
 # PTXCONF_LIBXKBCOMMON is not set
+# PTXCONF_MEDIA_SESSION is not set
 # PTXCONF_MESA_DEMOS is not set
 # PTXCONF_MESALIB is not set
 # PTXCONF_MTDEV is not set
 # PTXCONF_OPENCV is not set
 # PTXCONF_OPUS is not set
 # PTXCONF_ORC is not set
+# PTXCONF_PIPEWIRE is not set
 # PTXCONF_PIXMAN is not set
 # PTXCONF_PSLIB is not set
 # PTXCONF_QPDF is not set
@@ -1644,6 +1722,8 @@ PTXCONF_BUSYBOX_FEATURE_SH_NOFORK=y
 # PTXCONF_WPEBACKEND_FDO is not set
 # PTXCONF_WPEWEBKIT is not set
 # PTXCONF_XKEYBOARD_CONFIG is not set
+# PTXCONF_ZBAR is not set
+# end of libs                          
 
 #
 # framebuffer                   
@@ -1654,11 +1734,13 @@ PTXCONF_BUSYBOX_FEATURE_SH_NOFORK=y
 # PTXCONF_FBTEST is not set
 # PTXCONF_FBUTILS is not set
 # PTXCONF_FBV is not set
+# end of framebuffer                   
 
 #
 # gstreamer 0.10                
 #
 # PTXCONF_LIBFSL_VPU is not set
+# end of gstreamer 0.10                
 
 #
 # gstreamer 1.0                 
@@ -1674,6 +1756,7 @@ PTXCONF_BUSYBOX_FEATURE_SH_NOFORK=y
 # PTXCONF_GST_RTSP_SERVER1 is not set
 # PTXCONF_GSTREAMER_VAAPI1 is not set
 # PTXCONF_GSTREAMER1 is not set
+# end of gstreamer 1.0                 
 
 #
 # gtk+ & friends                
@@ -1689,7 +1772,6 @@ PTXCONF_BUSYBOX_FEATURE_SH_NOFORK=y
 # PTXCONF_GOBJECT_INTROSPECTION_HELPER is not set
 # PTXCONF_GTK_ENGINES is not set
 # PTXCONF_GTK is not set
-# PTXCONF_GTK2 is not set
 # PTXCONF_JSON_GLIB is not set
 # PTXCONF_LIBGEE is not set
 # PTXCONF_LIBRSVG is not set
@@ -1697,19 +1779,15 @@ PTXCONF_BUSYBOX_FEATURE_SH_NOFORK=y
 # PTXCONF_PANGOMM is not set
 # PTXCONF_POPPLER_DATA is not set
 # PTXCONF_POPPLER is not set
+# end of gtk+ & friends                
 
 #
 # qt                            
 #
 # PTXCONF_BLUEZ_QT is not set
-# PTXCONF_PYTHON3_PYSIDE is not set
-# PTXCONF_PYTHON3_SHIBOKEN is not set
-# PTXCONF_QT4_DEMOS is not set
-# PTXCONF_QT4_EXAMPLES is not set
-# PTXCONF_QT4 is not set
 # PTXCONF_QT5 is not set
-# PTXCONF_QWT is not set
 # PTXCONF_QWT5 is not set
+# end of qt                            
 
 #
 # sdl                           
@@ -1725,6 +1803,7 @@ PTXCONF_BUSYBOX_FEATURE_SH_NOFORK=y
 # PTXCONF_SDL2 is not set
 # PTXCONF_SDL_IMAGE is not set
 # PTXCONF_SDL_MIXER is not set
+# end of sdl                           
 
 #
 # sound                         
@@ -1746,6 +1825,7 @@ PTXCONF_BUSYBOX_FEATURE_SH_NOFORK=y
 # PTXCONF_TWOLAME is not set
 # PTXCONF_VORBIS_TOOLS is not set
 # PTXCONF_WEBRTC_AUDIO_PROCESSING is not set
+# end of sound                         
 
 #
 # tools                         
@@ -1756,6 +1836,7 @@ PTXCONF_BUSYBOX_FEATURE_SH_NOFORK=y
 # PTXCONF_IMAGEMAGICK is not set
 # PTXCONF_QRENCODE is not set
 # PTXCONF_UVC_GADGET is not set
+# end of tools                         
 
 #
 # vaapi                         
@@ -1764,6 +1845,7 @@ PTXCONF_BUSYBOX_FEATURE_SH_NOFORK=y
 # PTXCONF_LIBVA_INTEL_DRIVER is not set
 # PTXCONF_LIBVA_UTILS is not set
 # PTXCONF_LIBVA is not set
+# end of vaapi                         
 
 #
 # wayland                       
@@ -1773,7 +1855,10 @@ PTXCONF_BUSYBOX_FEATURE_SH_NOFORK=y
 # PTXCONF_WAYLAND is not set
 # PTXCONF_WESTON is not set
 # PTXCONF_WLROOTS is not set
+# end of wayland                       
+
 # PTXCONF_XORG is not set
+# end of Graphics & Multimedia         
 
 #
 # ------------------------------------
@@ -1783,6 +1868,7 @@ PTXCONF_BUSYBOX_FEATURE_SH_NOFORK=y
 # Bare Metal                    
 #
 # PTXCONF_STELLARIS is not set
+# end of Bare Metal                    
 
 #
 # ------------------------------------

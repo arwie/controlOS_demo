@@ -59,7 +59,7 @@ public sub log_putFile(byval name_ as string)
 end sub
 
 public sub log_putTrnErr
-	com_putString("/TRN.ERR", sh("cat /RAM/TRN.ERR"))
+	com_putString("/TRN_ERR", sh("cat /RAM/TRN.ERR"))
 end sub
 
 

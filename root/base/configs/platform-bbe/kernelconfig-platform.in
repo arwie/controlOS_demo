@@ -1,0 +1,20 @@
+CONFIG_INITRAMFS_SOURCE="${PTXDIST_WORKSPACE}/../initramfs/platform-bbe/images/root.cpio"
+
+CONFIG_CMDLINE="console=ttyS0,115200n8"
+
+CONFIG_EXTRA_FIRMWARE="am335x-pm-firmware.elf am335x-bone-scale-data.bin am335x-evm-scale-data.bin"
+
+
+# CONFIG_SMP is not set
+# CONFIG_EFI is not set
+# CONFIG_VT is not set
+
+CONFIG_NEW_LEDS=y
+# CONFIG_LEDS_LP55XX_COMMON is not set
+
+
+## built-in wlan needs extra driver: https://github.com/lwfinger/rtl8723bu
+# CONFIG_RTL8XXXU is not set
+
+## external rtc
+CONFIG_RTC_DRV_PCF8563=y

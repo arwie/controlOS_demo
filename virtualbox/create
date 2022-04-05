@@ -38,7 +38,7 @@ vboxmanage modifyvm $UUID \
 
 
 # create and attach system disk
-xzcat ../images/system.img.xz | \
+xzcat ../boot/platform-x86/images/system.img.xz | \
 	vboxmanage convertfromraw stdin vm/system.vdi 4294967296
 
 vboxmanage storagectl $UUID \

@@ -15,6 +15,9 @@
 ' OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
+common shared deg2rad				as const double		= PI/180
+common shared rad2deg				as const double		= 180/PI
+
 common shared prgPriorityRealtime	as const long		= 6
 common shared prgPriorityHigh		as const long		= 8
 common shared prgPriorityNormal		as const long		= 10
@@ -166,24 +169,27 @@ end sub
 
 
 public function sinDeg(byval angle_ as double) as double
-	sinDeg = sin(angle_*PI/180)
+	sinDeg = sin(angle_*deg2rad)
 end function
 
 public function cosDeg(byval angle_ as double) as double
-	cosDeg = cos(angle_*PI/180)
+	cosDeg = cos(angle_*deg2rad)
 end function
 
 public function atan2Deg(byval opposite_ as double, byval adjacent_ as double) as double
-	atan2Deg = atan2(opposite_, adjacent_) * 180/PI
+	atan2Deg = atan2(opposite_, adjacent_) * rad2deg
 end function
 
 
 'return normalized angle between -180 and 180
 public function normDeg(byval angle_ as double) as double
 	normDeg = angle_ mod 360
-	if abs(normDeg) > 180 then
-		normDeg = normDeg - sgn(normDeg)*360
-	end if
+	select case normDeg
+		case is > +180
+			normDeg = normDeg - 360
+		case is < -180
+			normDeg = normDeg + 360
+	end select
 end function
 
 'return normalized angle between 0 and 360
@@ -218,19 +224,19 @@ public function word2long(byval value_ as long) as long
 end function
 
 
-public function bool(byval value_ as long) as long
+public function bool(byval value_ as double) as long
 	bool = value_<>0
 end function
 
 
-public function lIf(byval ifValue_ as long, byval condition_ as long) as long
-	if condition_ then
+public function lIf(byval ifValue_ as long, byval condition_ as double) as long		'condition_ must be as double! (MC bug)
+	if condition_<>0 then
 		lIf = ifValue_
 	end if
 end function
 
-public function lIfElse(byval ifValue_ as long, byval condition_ as long, byval elseValue_ as long) as long
-	if condition_ then
+public function lIfElse(byval ifValue_ as long, byval condition_ as double, byval elseValue_ as long) as long
+	if condition_<>0 then
 		lIfElse = ifValue_
 	else
 		lIfElse = elseValue_
@@ -238,14 +244,14 @@ public function lIfElse(byval ifValue_ as long, byval condition_ as long, byval 
 end function
 
 
-public function dIf(byval ifValue_ as double, byval condition_ as long) as double
-	if condition_ then
+public function dIf(byval ifValue_ as double, byval condition_ as double) as double
+	if condition_<>0 then
 		dIf = ifValue_
 	end if
 end function
 
-public function dIfElse(byval ifValue_ as double, byval condition_ as long, byval elseValue_ as double) as double
-	if condition_ then
+public function dIfElse(byval ifValue_ as double, byval condition_ as double, byval elseValue_ as double) as double
+	if condition_<>0 then
 		dIfElse = ifValue_
 	else
 		dIfElse = elseValue_
@@ -253,18 +259,24 @@ public function dIfElse(byval ifValue_ as double, byval condition_ as long, byva
 end function
 
 
-public function sIf(byval ifValue_ as string, byval condition_ as long) as string
-	if condition_ then
+public function sIf(byval ifValue_ as string, byval condition_ as double) as string
+	if condition_<>0 then
 		sIf = ifValue_
 	end if
 end function
 
-public function sIfElse(byval ifValue_ as string, byval condition_ as long, byval elseValue_ as string) as string
-	if condition_ then
+public function sIfElse(byval ifValue_ as string, byval condition_ as double, byval elseValue_ as string) as string
+	if condition_<>0 then
 		sIfElse = ifValue_
 	else
 		sIfElse = elseValue_
 	end if
+end function
+
+
+public function xyzrSet(byval xyzr_ as location of xyzr, byval index_ as long, byval value_ as double) as location of xyzr
+	xyzrSet = xyzr_
+	xyzrSet{index_} = value_
 end function
 
 

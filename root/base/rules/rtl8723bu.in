@@ -1,0 +1,8 @@
+## SECTION=project_specific
+
+config RTL8723BU
+	tristate
+	select KERNEL
+	prompt "rtl8723bu"
+	help
+	  Driver for Realtek RTL8723BU Wireless Adapter with Hardware ID 0bda:b720
