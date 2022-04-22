@@ -1,0 +1,5 @@
+/dts-v1/;
+
+#include "am335x-sancloud-bbe.dts"
+
+#include "dtsi/rtc.dtsi"

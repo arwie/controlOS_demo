@@ -1,6 +1,6 @@
 [Match]
-#     >PokiniF2         >iEi:USB1-3
-Path= pci-0000:01:00.0  pci-0000:00:1d.7-usb-0:3:1.0
+#     >BBE                                >PokiniF2         >iEi:USB1-3
+Path= platform-musb-hdrc.1-usb-0:1.4:1.2  pci-0000:01:00.0  pci-0000:00:1d.7-usb-0:3:1.0
 Type=wlan
 
 [Link]
