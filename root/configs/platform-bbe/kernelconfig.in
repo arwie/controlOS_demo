@@ -1,3 +1,5 @@
+CONFIG_PREEMPT_RT=y
+
 
 ## WLAN-Dongle Wi-Pi
 ## firmware/rt2870.bin
