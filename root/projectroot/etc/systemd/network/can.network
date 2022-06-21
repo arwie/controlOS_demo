@@ -1,0 +1,16 @@
+[Match]
+Name=can0
+
+
+[CAN]
+BitRate=1000000
+
+
+# Configuration on softMC3
+#3: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UNKNOWN mode DEFAULT group default qlen 1000
+#    link/can  promiscuity 0 
+#    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 0 
+#    bitrate 1000000 sample-point 0.733 
+#    tq 66 prop-seg 5 phase-seg1 5 phase-seg2 4 sjw 1
+#    flexcan: tseg1 4..16 tseg2 2..8 sjw 1..4 brp 1..256 brp-inc 1
+#    clock 30000000
