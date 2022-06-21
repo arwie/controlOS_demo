@@ -1,0 +1,7 @@
+## SECTION=communication
+
+config LELY_CANOPEN
+	tristate
+	prompt "lely-canopen"
+	help
+	  FIXME
