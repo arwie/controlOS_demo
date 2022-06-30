@@ -11,7 +11,13 @@
 
 
 #include <thread>
-#include <pthread.h>
+#include <sched.h>
+#include <unistd.h>
+#include <sys/mman.h>
+#include <malloc.h>
+
+#include <math.h>
+#define PI 3.14159265
 
 #include <bitset>
 #include <iostream>
@@ -19,14 +25,23 @@ using namespace std;
 using namespace std::chrono_literals;
 using namespace lely;
 
-int enable = false;
 bool enabled = false;
+int32_t  pcmd, pcmd0;
 uint16_t pdo_status;
 int32_t  pdo_pfb;
-int32_t  pdo_vfb;
+int32_t  pdo_pll, pllMax = 0;
 uint16_t errorCode = 0;
+chrono::microseconds syncJitter = {};
 
 
+inline void calcJitter() {
+	static chrono::time_point<chrono::steady_clock> lastSync = {};
+	auto thisSync = chrono::steady_clock::now();
+	auto thisJitter = chrono::duration_cast<chrono::microseconds>(thisSync - lastSync) - chrono::microseconds(4000);
+	if (thisJitter > syncJitter)
+		syncJitter = thisJitter;
+	lastSync = thisSync;
+}
 
 
 // This driver inherits from FiberDriver, which means that all CANopen event
@@ -43,13 +58,9 @@ class MyDriver : public canopen::FiberDriver {
   // a description of the error, if any.
   void OnBoot(canopen::NmtState /*st*/, char es, const std::string& what) noexcept override {
     if (!es || es == 'L') {
-      cout << "slave " << static_cast<int>(id()) << " booted sucessfully"
-                << std::endl;
-
-
+      cout << "slave " << static_cast<int>(id()) << " booted sucessfully" << std::endl;
     } else {
-      cout << "slave " << static_cast<int>(id())
-                << " failed to boot: " << what << std::endl;
+      cout << "slave " << static_cast<int>(id()) << " failed to boot: " << what << std::endl;
     }
   }
 
@@ -94,112 +105,171 @@ class MyDriver : public canopen::FiberDriver {
   // object index and sub-index of the object on the slave, not the local object
   // dictionary of the master.
 	void OnRpdoWrite(uint16_t idx, uint8_t subidx) noexcept override {
+		int16_t control = 0;
 		switch (idx) {
 		case 0x6041:
 			pdo_status	= rpdo_mapped[0x6041][0];
-			if (enable == 1) {
-				if (pdo_status & 0b1000) {
-					SubmitRead<uint16_t>(0x603F, 0, [](uint8_t id, uint16_t idx, uint8_t subidx, ::std::error_code ec, uint16_t value){errorCode = value;});
-					enable = false;
-				}
-				int16_t control = 0;
-				switch (pdo_status & 0b111) {
-				case 0b000:	control = 0x06; enabled = true; break;
-				case 0b001:	control = 0x07; break;
-				case 0b011:	control = 0x0F; break;
-				case 0b111:	control = 0x1F; break;
-				}
-				tpdo_mapped[0x6040][0] = control;
+			switch (pdo_status & 0b111) {
+			case 0b000:	control = 0x06; break;
+			case 0b001:	control = 0x07; break;
+			case 0b011:	control = 0x0F; break;
+			case 0b111:	control = 0x1F; enabled = true; break;
 			}
+			if (!errorCode && (pdo_status & 0b1000)) {
+				errorCode = -1;
+				SubmitRead<uint16_t>(0x603F, 0, [](uint8_t id, uint16_t idx, uint8_t subidx, error_code ec, uint16_t value){errorCode = value;});
+			}
+			tpdo_mapped[0x6040][0] = control;
 			break;
 		case 0x6064:
 			pdo_pfb	= rpdo_mapped[0x6064][0];
-			if (!enabled)
-				tpdo_mapped[0x607A][0] = pdo_pfb;
+			if (!enabled) {
+				pcmd0 = pcmd = pdo_pfb;
+			}
 			break;
-		case 0x606C:
-			pdo_vfb	= rpdo_mapped[0x606C][0];
-			if (pdo_vfb > 5000)
-				enable = -1;
-			if (enable == -1 && pdo_vfb == 0)
-				enable = 1;
+		case 0x2618:
+			pdo_pll = rpdo_mapped[0x2618][0];
+			pllMax = max(pdo_pll, pllMax);
 			break;
 		}
+	}
+
+	void OnSync(uint8_t cnt, const time_point& t) noexcept override {
+		static double sinTime = 0.0;
+
+		calcJitter();
+
+		if (enabled) {
+			pcmd = pcmd0 + 2048*(cos(0.4*sinTime)-1) - 1536*(cos(1.2*sinTime)-1);
+			sinTime += 2*PI / 250;
+		}
+		tpdo_mapped[0x607A][0] = pcmd;
 	}
 };
 
 
+static void setprio(int prio, int sched = SCHED_FIFO) {
+	struct sched_param param;
+	param.sched_priority = prio;
+	if (sched_setscheduler(0, sched, &param) < 0)
+		perror("sched_setscheduler");
+}
+
+static void configure_malloc_behavior(void) {
+	/* Now lock all current and future pages
+	 from preventing of being paged */
+	if (mlockall(MCL_CURRENT | MCL_FUTURE))
+		perror("mlockall failed:");
+
+	/* Turn off malloc trimming.*/
+	mallopt(M_TRIM_THRESHOLD, -1);
+
+	/* Turn off mmap usage. */
+	mallopt(M_MMAP_MAX, 0);
+}
+
+static void reserve_process_memory(int size) {
+	int i;
+	char *buffer;
+
+	buffer = (char*)malloc(size);
+
+	/* Touch each page in this piece of memory to get it mapped into RAM */
+	for (i = 0; i < size; i += sysconf(_SC_PAGESIZE)) {
+		/* Each write to this buffer will generate a pagefault.
+		 Once the pagefault is handled a page will be locked in
+		 memory and never given back to the system. */
+		buffer[i] = 0;
+	}
+
+	/* buffer will now be released. As Glibc is configured such that it
+	 never gives back memory to the kernel, the memory allocated above is
+	 locked for this process. All malloc() and new() calls come from
+	 the memory pool reserved and locked above. Issuing free() and
+	 delete() does NOT make this locking undone. So, with this locking
+	 mechanism we can build C++ applications that will never run into
+	 a major/minor pagefault, even with swapping enabled. */
+	free(buffer);
+}
+
+
 int main() {
-	cout << "Hello CANopen 2!" << endl;
-
-  // Initialize the I/O library. This is required on Windows, but a no-op on
-  // Linux (for now).
-  io::IoGuard io_guard;
-  // Create an I/O context to synchronize I/O services during shutdown.
-  io::Context ctx;
-  // Create an platform-specific I/O polling instance to monitor the CAN bus, as
-  // well as timers and signals.
-  io::Poll poll(ctx);
-  // Create a polling event loop and pass it the platform-independent polling
-  // interface. If no tasks are pending, the event loop will poll for I/O
-  // events.
-  ev::Loop loop(poll.get_poll());
-  // I/O devices only need access to the executor interface of the event loop.
-  auto exec = loop.get_executor();
-  // Create a timer using a monotonic clock, i.e., a clock that is not affected
-  // by discontinuous jumps in the system time.
-  io::Timer timer(poll, exec, CLOCK_MONOTONIC);
-  // Create a virtual SocketCAN CAN controller and channel, and do not modify
-  // the current CAN bus state or bitrate.
-  io::CanController ctrl("can0");
-  io::CanChannel chan(poll, exec);
-  chan.open(ctrl);
-
-  // Create a CANopen master with node-ID 1. The master is asynchronous, which
-  // means every user-defined callback for a CANopen event will be posted as a
-  // task on the event loop, instead of being invoked during the event
-  // processing by the stack.
-  canopen::AsyncMaster master(timer, chan, "master.dcf", "", 1);
-
-  // Create a driver for the slave with node-ID 2.
-  MyDriver driver(exec, master, 5);
-
-  // Create a signal handler.
-  io::SignalSet sigset(poll, exec);
-  // Watch for Ctrl+C or process termination.
-  sigset.insert(SIGHUP);
-  sigset.insert(SIGINT);
-  sigset.insert(SIGTERM);
-
-  // Submit a task to be executed when a signal is raised. We don't care which.
-  sigset.submit_wait([&](int /*signo*/) {
-    // If the signal is raised again, terminate immediately.
-    sigset.clear();
-    // Tell the master to start the deconfiguration process for all nodes, and
-    // submit a task to be executed once that process completes.
-    master.AsyncDeconfig().submit(exec, [&]() {
-      // Perform a clean shutdown.
-      ctx.shutdown();
-    });
-  });
-
-  // Start the NMT service of the master by pretending to receive a 'reset
-  // node' command.
-  master.Reset();
+	cout << "Hello openIMC!" << endl;
 
 
-	thread([]() {for (;;) {
-		cout <<dec<< "en:"<<enable << " - status:"<<std::bitset<16>(pdo_status) << " - pfb:"<<pdo_pfb << " - vfb:"<<pdo_vfb << " - err:"<<hex<<errorCode  << endl;
-		this_thread::sleep_for(std::chrono::milliseconds(333));
+	thread([]() {for (;;this_thread::sleep_for(chrono::milliseconds(1000))) {
+		cout << "status:"<<bitset<16>(pdo_status) << " - pfb:"<<dec<<pdo_pfb << " - pll:"<<dec<<pdo_pll<<":"<<pllMax << " - jitter:"<<dec<<syncJitter.count() << " - err:"<<hex<<errorCode  << endl;
+		pllMax = 0;
+		syncJitter = chrono::microseconds::zero();
 	}}).detach();
 
 
-	struct sched_param param; param.sched_priority = 10;
-	pthread_setschedparam(pthread_self(), SCHED_FIFO, &param);
-  // Run the event loop until no tasks remain (or the I/O context is shut down).
-  loop.run();
+	configure_malloc_behavior();
+	reserve_process_memory(10 * 1024 * 1024);
 
-  return 0;
+	system("chrt -fp 90 $(pgrep irq/.*-can0)");
+	system("chrt -fp 60 $(pgrep ksoftirqd/0)");
+
+	setprio(80);
+	//for (;;this_thread::sleep_for(chrono::microseconds(4000))) calcJitter();	//test RT
+
+
+	// Create an I/O context to synchronize I/O services during shutdown.
+	io::Context ctx;
+	// Create an platform-specific I/O polling instance to monitor the CAN bus, as
+	// well as timers and signals.
+	io::Poll poll(ctx);
+	// Create a polling event loop and pass it the platform-independent polling
+	// interface. If no tasks are pending, the event loop will poll for I/O
+	// events.
+	ev::Loop loop(poll.get_poll());
+	// I/O devices only need access to the executor interface of the event loop.
+	auto exec = loop.get_executor();
+	// Create a timer using a monotonic clock, i.e., a clock that is not affected
+	// by discontinuous jumps in the system time.
+	io::Timer timer(poll, exec, CLOCK_MONOTONIC);
+	// Create a virtual SocketCAN CAN controller and channel, and do not modify
+	// the current CAN bus state or bitrate.
+	io::CanController ctrl("can0");
+	io::CanChannel chan(poll, exec);
+	chan.open(ctrl);
+
+	// Create a CANopen master with node-ID 1. The master is asynchronous, which
+	// means every user-defined callback for a CANopen event will be posted as a
+	// task on the event loop, instead of being invoked during the event
+	// processing by the stack.
+	canopen::AsyncMaster master(timer, chan, "master.dcf", "", 1);
+
+	// Create a driver for the slave with node-ID 2.
+	MyDriver driver(exec, master, 5);
+
+	// Create a signal handler.
+	io::SignalSet sigset(poll, exec);
+	// Watch for Ctrl+C or process termination.
+	sigset.insert(SIGHUP);
+	sigset.insert(SIGINT);
+	sigset.insert(SIGTERM);
+
+	// Submit a task to be executed when a signal is raised. We don't care which.
+	sigset.submit_wait([&](int /*signo*/) {
+		// If the signal is raised again, terminate immediately.
+		sigset.clear();
+		// Tell the master to start the deconfiguration process for all nodes, and
+		// submit a task to be executed once that process completes.
+		master.AsyncDeconfig().submit(exec, [&]() {
+			// Perform a clean shutdown.
+			ctx.shutdown();
+		});
+	});
+
+	// Start the NMT service of the master by pretending to receive a 'reset
+	// node' command.
+	master.Reset();
+
+	// Run the event loop until no tasks remain (or the I/O context is shut down).
+	loop.run();
+
+	return 0;
 }
 
 

@@ -32,13 +32,15 @@ slave_5:
     2:
       transmission: 1
       mapping: 
-      - {index: 0x606C} #vfb 
+      - {index: 0x2618} #PLL status
     3:
       enabled: false
     4:
       enabled: false
   
   sdo:
-  - {index: 0x262C, value: 1500000}   #Sync Allowed Window
-  - {index: 0x6060, value: 8}         #Modes of Operation: 8 = cyclic synchronous position mode
+  - {index: 0x6040, value: 0x80}      #reset faluts
+  - {index: 0x6060, value: 8}         #Modes of Operation: 8 [cyclic synchronous position mode]
+  - {index: 0x262C, value: 150000}    #Sync Allowed Window
+  - {index: 0x262B, value: 3}         #Allowed Lost Syncs
   
