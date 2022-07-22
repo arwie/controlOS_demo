@@ -1,0 +1,8 @@
+## SECTION=scientific
+
+config RUCKIG
+	tristate
+	select HOST_CMAKE
+	prompt "ruckig"
+	help
+	  Ruckig generates trajectories on-the-fly, allowing robots and machines to react instantaneously to sensor input.
