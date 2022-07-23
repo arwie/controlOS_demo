@@ -9,7 +9,9 @@
 #include <lely/coapp/fiber_driver.hpp>
 #include <lely/coapp/master.hpp>
 
+#include <ruckig/ruckig.hpp>
 
+#include <random>
 #include <thread>
 #include <sched.h>
 #include <unistd.h>
@@ -32,6 +34,16 @@ int32_t  pdo_pfb;
 int32_t  pdo_pll, pllMax = 0;
 uint16_t errorCode = 0;
 chrono::microseconds syncJitter = {};
+
+using namespace ruckig;
+Ruckig<1> otg {0.004};
+InputParameter<1> otgInput;
+OutputParameter<1> otgOutput;
+double otgCalcTimeMax = 0;
+
+const double bounds = 5*4096;
+uniform_real_distribution<double> unif(-bounds, bounds);
+default_random_engine re;
 
 
 inline void calcJitter() {
@@ -125,6 +137,8 @@ class MyDriver : public canopen::FiberDriver {
 			pdo_pfb	= rpdo_mapped[0x6064][0];
 			if (!enabled) {
 				pcmd0 = pcmd = pdo_pfb;
+				otgInput.current_position = {(double)pdo_pfb};
+				otgInput.target_position  = {(double)pdo_pfb};
 			}
 			break;
 		case 0x2618:
@@ -135,13 +149,21 @@ class MyDriver : public canopen::FiberDriver {
 	}
 
 	void OnSync(uint8_t cnt, const time_point& t) noexcept override {
-		static double sinTime = 0.0;
+		//static double sinTime = 0.0;
 
 		calcJitter();
 
 		if (enabled) {
-			pcmd = pcmd0 + 2048*(cos(0.4*sinTime)-1) - 1536*(cos(1.2*sinTime)-1);
-			sinTime += 2*PI / 250;
+			//pcmd = pcmd0 + 3000*(cos(0.4*sinTime)-1) - 2000*(cos(1.2*sinTime)-1);
+			//sinTime += 2*PI / 250;
+
+			if (otg.update(otgInput, otgOutput) == Result::Working) {
+				pcmd = otgOutput.new_position[0];
+				otgCalcTimeMax = max(otgCalcTimeMax, otgOutput.calculation_duration);
+				otgOutput.pass_to_input(otgInput);
+			} else {
+				otgInput.target_position = {(double)pdo_pfb + unif(re)};
+			}
 		}
 		tpdo_mapped[0x607A][0] = pcmd;
 	}
@@ -198,9 +220,10 @@ int main() {
 
 
 	thread([]() {for (;;this_thread::sleep_for(chrono::milliseconds(1000))) {
-		cout << "status:"<<bitset<16>(pdo_status) << " - pfb:"<<dec<<pdo_pfb << " - pll:"<<dec<<pdo_pll<<":"<<pllMax << " - jitter:"<<dec<<syncJitter.count() << " - err:"<<hex<<errorCode  << endl;
+		cout << "status:"<<bitset<16>(pdo_status) << " - pfb:"<<dec<<pdo_pfb << " - pll:"<<dec<<pdo_pll<<":"<<pllMax << " - jitter:"<<dec<<syncJitter.count() << " - otgCalcTime:"<<dec<<otgOutput.calculation_duration<<":"<<otgCalcTimeMax << " - err:"<<hex<<errorCode  << endl;
 		pllMax = 0;
 		syncJitter = chrono::microseconds::zero();
+		otgCalcTimeMax = 0;
 	}}).detach();
 
 
@@ -265,6 +288,11 @@ int main() {
 	// Start the NMT service of the master by pretending to receive a 'reset
 	// node' command.
 	master.Reset();
+
+
+    otgInput.max_velocity		= { 5 * 4096 };
+    otgInput.max_acceleration	= { 1000/300 * otgInput.max_velocity[0]  };
+    otgInput.max_jerk			= { 1000/150 * otgInput.max_acceleration[0] };
 
 	// Run the event loop until no tasks remain (or the I/O context is shut down).
 	loop.run();

@@ -52,6 +52,7 @@
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="lely-can"/>
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="lely-co"/>
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="pthread"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="ruckig"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.linker.input.687990176" superClass="cdt.managedbuild.tool.gnu.cpp.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
@@ -123,6 +124,7 @@
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="lely-can"/>
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="lely-co"/>
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="pthread"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="ruckig"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.linker.input.398644476" superClass="cdt.managedbuild.tool.gnu.cpp.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
