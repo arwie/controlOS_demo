@@ -27,25 +27,16 @@ using namespace std;
 using namespace std::chrono_literals;
 using namespace lely;
 
-bool enabled = false;
-int32_t  pcmd, pcmd0;
-uint16_t pdo_status;
-int32_t  pdo_pfb;
-int32_t  pdo_pll, pllMax = 0;
-uint16_t errorCode = 0;
-chrono::microseconds syncJitter = {};
-
 using namespace ruckig;
-Ruckig<1> otg {0.004};
-InputParameter<1> otgInput;
-OutputParameter<1> otgOutput;
+Ruckig<4> otg {0.004};
+InputParameter<4> otgInput;
+OutputParameter<4> otgOutput;
 double otgCalcTimeMax = 0;
-
-const double bounds = 5*4096;
-uniform_real_distribution<double> unif(-bounds, bounds);
+uniform_real_distribution<double> unif(-8000, -330);
 default_random_engine re;
 
 
+chrono::microseconds syncJitter = {};
 inline void calcJitter() {
 	static chrono::time_point<chrono::steady_clock> lastSync = {};
 	auto thisSync = chrono::steady_clock::now();
@@ -60,10 +51,16 @@ inline void calcJitter() {
 // callbacks, such as OnBoot, run as a task inside a "fiber" (or stackful
 // coroutine).
 class MyDriver : public canopen::FiberDriver {
- public:
-  using FiberDriver::FiberDriver;
+public:
+	using FiberDriver::FiberDriver;
 
- private:
+ 	void setPcmd(double cmd) {
+ 		pcmd = cmd + offset;
+ 	}
+	void OnSync(uint8_t cnt, const time_point& t) noexcept override {
+ 		tpdo_mapped[0x607A][0] = pcmd;
+	}
+
   // This function gets called when the boot-up process of the slave completes.
   // The 'st' parameter contains the last known NMT state of the slave
   // (typically pre-operational), 'es' the error code (0 on success), and 'what'
@@ -117,56 +114,73 @@ class MyDriver : public canopen::FiberDriver {
   // object index and sub-index of the object on the slave, not the local object
   // dictionary of the master.
 	void OnRpdoWrite(uint16_t idx, uint8_t subidx) noexcept override {
-		int16_t control = 0;
 		switch (idx) {
+		case 0x6064:
+			pfb	= rpdo_mapped[0x6064][0];
+			if (!enabled) {
+				pcmd = offset = pfb;
+				tpdo_mapped[0x607A][0] = pcmd;
+			}
+			break;
+		case 0x2618:
+			pll = rpdo_mapped[0x2618][0];
+			pllMax = max(pll, pllMax);
+			break;
 		case 0x6041:
-			pdo_status	= rpdo_mapped[0x6041][0];
-			switch (pdo_status & 0b111) {
+			int16_t control = 0;
+			//break;
+			status	= rpdo_mapped[0x6041][0];
+			switch (status & 0b111) {
 			case 0b000:	control = 0x06; break;
 			case 0b001:	control = 0x07; break;
 			case 0b011:	control = 0x0F; break;
 			case 0b111:	control = 0x1F; enabled = true; break;
 			}
-			if (!errorCode && (pdo_status & 0b1000)) {
+			if (!errorCode && (status & 0b1000)) {
 				errorCode = -1;
-				SubmitRead<uint16_t>(0x603F, 0, [](uint8_t id, uint16_t idx, uint8_t subidx, error_code ec, uint16_t value){errorCode = value;});
+				SubmitRead<uint16_t>(0x603F, 0, [this](uint8_t id, uint16_t idx, uint8_t subidx, error_code ec, uint16_t value){errorCode = value;});
 			}
 			tpdo_mapped[0x6040][0] = control;
 			break;
-		case 0x6064:
-			pdo_pfb	= rpdo_mapped[0x6064][0];
-			if (!enabled) {
-				pcmd0 = pcmd = pdo_pfb;
-				otgInput.current_position = {(double)pdo_pfb};
-				otgInput.target_position  = {(double)pdo_pfb};
-			}
-			break;
-		case 0x2618:
-			pdo_pll = rpdo_mapped[0x2618][0];
-			pllMax = max(pdo_pll, pllMax);
-			break;
 		}
 	}
+
+	int32_t pcmd, offset;
+	int32_t pfb = 0;
+	uint16_t status, errorCode = 0;
+	int32_t pll, pllMax = 0;
+	bool enabled = false;
+};
+MyDriver *driver_1, *driver_2, *driver_3, *driver_5;
+
+class MyMaster : public canopen::AsyncMaster {
+public:
+	using AsyncMaster::AsyncMaster;
 
 	void OnSync(uint8_t cnt, const time_point& t) noexcept override {
 		//static double sinTime = 0.0;
 
 		calcJitter();
 
-		if (enabled) {
+		if (driver_1->enabled && driver_2->enabled && driver_3->enabled) {
 			//pcmd = pcmd0 + 3000*(cos(0.4*sinTime)-1) - 2000*(cos(1.2*sinTime)-1);
 			//sinTime += 2*PI / 250;
 
 			if (otg.update(otgInput, otgOutput) == Result::Working) {
-				pcmd = otgOutput.new_position[0];
+				driver_1->setPcmd(otgOutput.new_position[0]);
+				driver_2->setPcmd(otgOutput.new_position[1]);
+				driver_3->setPcmd(otgOutput.new_position[2]);
+				driver_5->setPcmd(otgOutput.new_position[3]);
 				otgCalcTimeMax = max(otgCalcTimeMax, otgOutput.calculation_duration);
 				otgOutput.pass_to_input(otgInput);
 			} else {
-				otgInput.target_position = {(double)pdo_pfb + unif(re)};
+				otgInput.target_position = {unif(re), unif(re), unif(re), unif(re)};
 			}
 		}
-		tpdo_mapped[0x607A][0] = pcmd;
+
+		canopen::AsyncMaster::OnSync(cnt, t);
 	}
+
 };
 
 
@@ -219,24 +233,6 @@ int main() {
 	cout << "Hello openIMC!" << endl;
 
 
-	thread([]() {for (;;this_thread::sleep_for(chrono::milliseconds(1000))) {
-		cout << "status:"<<bitset<16>(pdo_status) << " - pfb:"<<dec<<pdo_pfb << " - pll:"<<dec<<pdo_pll<<":"<<pllMax << " - jitter:"<<dec<<syncJitter.count() << " - otgCalcTime:"<<dec<<otgOutput.calculation_duration<<":"<<otgCalcTimeMax << " - err:"<<hex<<errorCode  << endl;
-		pllMax = 0;
-		syncJitter = chrono::microseconds::zero();
-		otgCalcTimeMax = 0;
-	}}).detach();
-
-
-	configure_malloc_behavior();
-	reserve_process_memory(10 * 1024 * 1024);
-
-	system("chrt -fp 90 $(pgrep irq/.*-can0)");
-	system("chrt -fp 60 $(pgrep ksoftirqd/0)");
-
-	setprio(80);
-	//for (;;this_thread::sleep_for(chrono::microseconds(4000))) calcJitter();	//test RT
-
-
 	// Create an I/O context to synchronize I/O services during shutdown.
 	io::Context ctx;
 	// Create an platform-specific I/O polling instance to monitor the CAN bus, as
@@ -261,10 +257,12 @@ int main() {
 	// means every user-defined callback for a CANopen event will be posted as a
 	// task on the event loop, instead of being invoked during the event
 	// processing by the stack.
-	canopen::AsyncMaster master(timer, chan, "master.dcf", "", 1);
+	MyMaster master(timer, chan, "master.dcf", "", 100);
 
-	// Create a driver for the slave with node-ID 2.
-	MyDriver driver(exec, master, 5);
+	MyDriver _driver_1(exec, master, 1); driver_1 = &_driver_1;
+	MyDriver _driver_2(exec, master, 2); driver_2 = &_driver_2;
+	MyDriver _driver_3(exec, master, 3); driver_3 = &_driver_3;
+	MyDriver _driver_5(exec, master, 5); driver_5 = &_driver_5;
 
 	// Create a signal handler.
 	io::SignalSet sigset(poll, exec);
@@ -285,16 +283,36 @@ int main() {
 		});
 	});
 
+
+    const double vmax = 10*4096;			otgInput.max_velocity		= { vmax, vmax, vmax, vmax };
+    const double amax = vmax*1000/200;		otgInput.max_acceleration	= { amax, amax, amax, amax };
+    const double jmax = amax*1000/100;		otgInput.max_jerk			= { jmax, jmax, jmax, jmax };
+    otgInput.synchronization = Synchronization::Phase;
+
+
+
+	thread([]() {for (;;this_thread::sleep_for(chrono::milliseconds(1000))) {
+		cout << "status1:"<<bitset<16>(driver_1->status) << " - pfb1:"<<dec<<driver_1->pfb << " - pll1:"<<dec<<driver_1->pll<<":"<<driver_1->pllMax << " - jitter:"<<dec<<syncJitter.count() << " - otgCalcTime:"<<dec<<otgOutput.calculation_duration<<":"<<otgCalcTimeMax << " - err1:"<<hex<<driver_1->errorCode  << endl;
+		driver_1->pllMax = 0;
+		syncJitter = chrono::microseconds::zero();
+		otgCalcTimeMax = 0;
+	}}).detach();
+
+
+	configure_malloc_behavior();
+	reserve_process_memory(10 * 1024 * 1024);
+
+	system("chrt -fp 90 $(pgrep irq/.*-can0)");
+	system("chrt -fp 60 $(pgrep ksoftirqd/0)");
+
+	setprio(80);
+	//for (;;this_thread::sleep_for(chrono::microseconds(4000))) calcJitter();	//test RT
+
 	// Start the NMT service of the master by pretending to receive a 'reset
 	// node' command.
 	master.Reset();
 
-
-    otgInput.max_velocity		= { 5 * 4096 };
-    otgInput.max_acceleration	= { 1000/300 * otgInput.max_velocity[0]  };
-    otgInput.max_jerk			= { 1000/150 * otgInput.max_acceleration[0] };
-
-	// Run the event loop until no tasks remain (or the I/O context is shut down).
+    // Run the event loop until no tasks remain (or the I/O context is shut down).
 	loop.run();
 
 	return 0;
