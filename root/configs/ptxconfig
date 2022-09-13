@@ -2212,6 +2212,7 @@ PTXCONF_LELY_CANOPEN=y
 # PTXCONF_POP3SPAM is not set
 # PTXCONF_SJINN is not set
 # PTXCONF_SMTPCLIENT is not set
+PTXCONF_SOEM=y
 # PTXCONF_SSMTP is not set
 # end of Communication Utilities       
 

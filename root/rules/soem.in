@@ -1,0 +1,8 @@
+## SECTION=communication
+
+config SOEM
+	tristate
+	select HOST_CMAKE
+	prompt "soem"
+	help
+	  Simple Open EtherCAT Master Library
