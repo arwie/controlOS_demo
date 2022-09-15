@@ -1,0 +1,13 @@
+diff --git a/script/ethercatctl.in b/script/ethercatctl.in
+index a7d8cd9bf6263679f9cd184be0d474058ab7ee28..ed11d99b8ce07c26ea3a12180b81d972c4067671 100755
+--- a/script/ethercatctl.in
++++ b/script/ethercatctl.in
+@@ -35,7 +35,7 @@ LSMOD=/sbin/lsmod
+ MODPROBE=/sbin/modprobe
+ RMMOD=/sbin/rmmod
+ MODINFO=/sbin/modinfo
+-IP=/bin/ip
++IP=/sbin/ip
+ 
+ ETHERCAT=@bindir@/ethercat
+ 

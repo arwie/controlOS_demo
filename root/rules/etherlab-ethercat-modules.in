@@ -1,0 +1,8 @@
+## SECTION=communication
+
+config ETHERLAB_ETHERCAT_MODULES
+	tristate
+	select KERNEL
+	prompt "etherlab-ethercat-modules"
+	help
+	  IgH EtherLab EtherCAT(R) Master - kernel modules

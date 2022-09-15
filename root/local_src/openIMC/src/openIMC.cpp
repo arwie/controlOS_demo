@@ -1,15 +1,5 @@
 
-#include <lely/ev/loop.hpp>
-#include <lely/io2/linux/can.hpp>
-#include <lely/io2/posix/poll.hpp>
-
-#include <lely/io2/sys/io.hpp>
-#include <lely/io2/sys/sigset.hpp>
-#include <lely/io2/sys/timer.hpp>
-#include <lely/coapp/fiber_driver.hpp>
-#include <lely/coapp/master.hpp>
-
-#include <ruckig/ruckig.hpp>
+#include <ecrt.h>
 
 #include <random>
 #include <thread>
@@ -25,14 +15,14 @@
 #include <iostream>
 using namespace std;
 using namespace std::chrono_literals;
-using namespace lely;
 
+#include <ruckig/ruckig.hpp>
 using namespace ruckig;
-Ruckig<4> otg {0.004};
-InputParameter<4> otgInput;
-OutputParameter<4> otgOutput;
+Ruckig<1> otg {0.004};
+InputParameter<1> otgInput;
+OutputParameter<1> otgOutput;
 double otgCalcTimeMax = 0;
-uniform_real_distribution<double> unif(-8000, -330);
+uniform_real_distribution<double> unif(0, 3*1000000);
 default_random_engine re;
 
 
@@ -45,143 +35,6 @@ inline void calcJitter() {
 		syncJitter = thisJitter;
 	lastSync = thisSync;
 }
-
-
-// This driver inherits from FiberDriver, which means that all CANopen event
-// callbacks, such as OnBoot, run as a task inside a "fiber" (or stackful
-// coroutine).
-class MyDriver : public canopen::FiberDriver {
-public:
-	using FiberDriver::FiberDriver;
-
- 	void setPcmd(double cmd) {
- 		pcmd = cmd + offset;
- 	}
-	void OnSync(uint8_t cnt, const time_point& t) noexcept override {
- 		tpdo_mapped[0x607A][0] = pcmd;
-	}
-
-  // This function gets called when the boot-up process of the slave completes.
-  // The 'st' parameter contains the last known NMT state of the slave
-  // (typically pre-operational), 'es' the error code (0 on success), and 'what'
-  // a description of the error, if any.
-  void OnBoot(canopen::NmtState /*st*/, char es, const std::string& what) noexcept override {
-    if (!es || es == 'L') {
-      cout << "slave " << static_cast<int>(id()) << " booted sucessfully" << std::endl;
-    } else {
-      cout << "slave " << static_cast<int>(id()) << " failed to boot: " << what << std::endl;
-    }
-  }
-
-  // This function gets called during the boot-up process for the slave. The
-  // 'res' parameter is the function that MUST be invoked when the configuration
-  // is complete. Because this function runs as a task inside a coroutine, it
-  // can suspend itself and wait for an asynchronous function, such as an SDO
-  // request, to complete.
-  void OnConfig(std::function<void(std::error_code ec)> res) noexcept override {
-    try {
-      // Perform a few SDO write requests to configure the slave. The
-      // AsyncWrite() function returns a future which becomes ready once the
-      // request completes, and the Wait() function suspends the coroutine for
-      // this task until the future is ready.
-
-      // Configure the slave to monitor the heartbeat of the master (node-ID 1)
-      // with a timeout of 2000 ms.
-//      Wait(AsyncWrite<uint32_t>(0x1016, 1, (1 << 16) | 2000));
-      // Configure the slave to produce a heartbeat every 1000 ms.
-//      Wait(AsyncWrite<uint16_t>(0x1017, 0, 1000));
-      // Configure the heartbeat consumer on the master.
-//      ConfigHeartbeat(2000ms);
-
-      // Reset object 4000:00 and 4001:00 on the slave to 0.
-//      Wait(AsyncWrite<uint32_t>(0x4000, 0, 0));
-//      Wait(AsyncWrite<uint32_t>(0x4001, 0, 0));
-
-      // Report success (empty error code).
-      res({});
-    } catch (canopen::SdoError& e) {
-      // If one of the SDO requests resulted in an error, abort the
-      // configuration and report the error code.
-      res(e.code());
-    }
-  }
-
-
-  // This function gets called every time a value is written to the local object
-  // dictionary of the master by an RPDO (or SDO, but that is unlikely for a
-  // master), *and* the object has a known mapping to an object on the slave for
-  // which this class is the driver. The 'idx' and 'subidx' parameters are the
-  // object index and sub-index of the object on the slave, not the local object
-  // dictionary of the master.
-	void OnRpdoWrite(uint16_t idx, uint8_t subidx) noexcept override {
-		switch (idx) {
-		case 0x6064:
-			pfb	= rpdo_mapped[0x6064][0];
-			if (!enabled) {
-				pcmd = offset = pfb;
-				tpdo_mapped[0x607A][0] = pcmd;
-			}
-			break;
-		case 0x2618:
-			pll = rpdo_mapped[0x2618][0];
-			pllMax = max(pll, pllMax);
-			break;
-		case 0x6041:
-			int16_t control = 0;
-			//break;
-			status	= rpdo_mapped[0x6041][0];
-			switch (status & 0b111) {
-			case 0b000:	control = 0x06; break;
-			case 0b001:	control = 0x07; break;
-			case 0b011:	control = 0x0F; break;
-			case 0b111:	control = 0x1F; enabled = true; break;
-			}
-			if (!errorCode && (status & 0b1000)) {
-				errorCode = -1;
-				SubmitRead<uint16_t>(0x603F, 0, [this](uint8_t id, uint16_t idx, uint8_t subidx, error_code ec, uint16_t value){errorCode = value;});
-			}
-			tpdo_mapped[0x6040][0] = control;
-			break;
-		}
-	}
-
-	int32_t pcmd, offset;
-	int32_t pfb = 0;
-	uint16_t status, errorCode = 0;
-	int32_t pll, pllMax = 0;
-	bool enabled = false;
-};
-MyDriver *driver_1, *driver_2, *driver_3, *driver_5;
-
-class MyMaster : public canopen::AsyncMaster {
-public:
-	using AsyncMaster::AsyncMaster;
-
-	void OnSync(uint8_t cnt, const time_point& t) noexcept override {
-		//static double sinTime = 0.0;
-
-		calcJitter();
-
-		if (driver_1->enabled && driver_2->enabled && driver_3->enabled) {
-			//pcmd = pcmd0 + 3000*(cos(0.4*sinTime)-1) - 2000*(cos(1.2*sinTime)-1);
-			//sinTime += 2*PI / 250;
-
-			if (otg.update(otgInput, otgOutput) == Result::Working) {
-				driver_1->setPcmd(otgOutput.new_position[0]);
-				driver_2->setPcmd(otgOutput.new_position[1]);
-				driver_3->setPcmd(otgOutput.new_position[2]);
-				driver_5->setPcmd(otgOutput.new_position[3]);
-				otgCalcTimeMax = max(otgCalcTimeMax, otgOutput.calculation_duration);
-				otgOutput.pass_to_input(otgInput);
-			} else {
-				otgInput.target_position = {unif(re), unif(re), unif(re), unif(re)};
-			}
-		}
-
-		canopen::AsyncMaster::OnSync(cnt, t);
-	}
-
-};
 
 
 static void setprio(int prio, int sched = SCHED_FIFO) {
@@ -229,91 +82,186 @@ static void reserve_process_memory(int size) {
 }
 
 
+
+#define PERIOD_NS   (4000000)
+#define NSEC_PER_SEC (1000000000)
+#define TIMESPEC2NS(T) ((uint64_t) (T).tv_sec * NSEC_PER_SEC + (T).tv_nsec)
+
+
+static ec_master_t *master = NULL;
+static ec_domain_t *domain1 = NULL;
+static uint8_t *domain1_pd = NULL;
+static ec_slave_config_t *cdhd = NULL;
+
+static uint16_t status = 0, errorCode = 0;
+static int32_t pfb = -123, offset = 0;
+static int32_t pcmd;
+
+static int off_control, off_pcmd;
+static int off_status, off_pfb;
+static bool enabled = false;
+
+
+void cyclic_task()
+{
+	calcJitter();
+
+    // receive process data
+    ecrt_master_receive(master);
+    ecrt_domain_process(domain1);
+
+    status	= EC_READ_U16(domain1_pd + off_status);
+    pfb		= EC_READ_S32(domain1_pd + off_pfb);
+
+	if (!enabled) {
+		pcmd = offset = pfb;
+	} else {
+		if (otg.update(otgInput, otgOutput) == Result::Working) {
+			pcmd = otgOutput.new_position[0] + offset;
+			otgCalcTimeMax = max(otgCalcTimeMax, otgOutput.calculation_duration);
+			otgOutput.pass_to_input(otgInput);
+		} else {
+			otgInput.target_position = {unif(re)};
+		}
+	}
+
+    int16_t control = 0;
+	switch (status & 0b111) {
+    	case 0b000:	control = 0x06; break;
+    	case 0b001:	control = 0x07; break;
+    	case 0b011:	control = 0x0F; break;
+    	case 0b111:	control = 0x1F; enabled = true; break;
+	}
+
+	EC_WRITE_U16(domain1_pd + off_control, control);
+	EC_WRITE_S32(domain1_pd + off_pcmd, pcmd);
+
+	struct timespec time;
+	clock_gettime(CLOCK_MONOTONIC, &time);
+	//ecrt_master_sync_reference_clock(master);
+	//ecrt_master_sync_slave_clocks(master);
+
+    // send process data
+    ecrt_domain_queue(domain1);
+    ecrt_master_send(master);
+}
+
+template<class type>
+void sdoWrite(uint16_t slave, uint16_t index, uint8_t subIndex, const type value) {
+	uint32_t abort_code;
+	if (ecrt_master_sdo_download(master, slave, index, subIndex, (uint8_t *)&value, sizeof(type), &abort_code))
+		cout << "ERROR: ecrt_master_sdo_download: " << abort_code << endl;
+
+}
+
 int main() {
 	cout << "Hello openIMC!" << endl;
 
-
-	// Create an I/O context to synchronize I/O services during shutdown.
-	io::Context ctx;
-	// Create an platform-specific I/O polling instance to monitor the CAN bus, as
-	// well as timers and signals.
-	io::Poll poll(ctx);
-	// Create a polling event loop and pass it the platform-independent polling
-	// interface. If no tasks are pending, the event loop will poll for I/O
-	// events.
-	ev::Loop loop(poll.get_poll());
-	// I/O devices only need access to the executor interface of the event loop.
-	auto exec = loop.get_executor();
-	// Create a timer using a monotonic clock, i.e., a clock that is not affected
-	// by discontinuous jumps in the system time.
-	io::Timer timer(poll, exec, CLOCK_MONOTONIC);
-	// Create a virtual SocketCAN CAN controller and channel, and do not modify
-	// the current CAN bus state or bitrate.
-	io::CanController ctrl("can0");
-	io::CanChannel chan(poll, exec);
-	chan.open(ctrl);
-
-	// Create a CANopen master with node-ID 1. The master is asynchronous, which
-	// means every user-defined callback for a CANopen event will be posted as a
-	// task on the event loop, instead of being invoked during the event
-	// processing by the stack.
-	MyMaster master(timer, chan, "master.dcf", "", 100);
-
-	MyDriver _driver_1(exec, master, 1); driver_1 = &_driver_1;
-	MyDriver _driver_2(exec, master, 2); driver_2 = &_driver_2;
-	MyDriver _driver_3(exec, master, 3); driver_3 = &_driver_3;
-	MyDriver _driver_5(exec, master, 5); driver_5 = &_driver_5;
-
-	// Create a signal handler.
-	io::SignalSet sigset(poll, exec);
-	// Watch for Ctrl+C or process termination.
-	sigset.insert(SIGHUP);
-	sigset.insert(SIGINT);
-	sigset.insert(SIGTERM);
-
-	// Submit a task to be executed when a signal is raised. We don't care which.
-	sigset.submit_wait([&](int /*signo*/) {
-		// If the signal is raised again, terminate immediately.
-		sigset.clear();
-		// Tell the master to start the deconfiguration process for all nodes, and
-		// submit a task to be executed once that process completes.
-		master.AsyncDeconfig().submit(exec, [&]() {
-			// Perform a clean shutdown.
-			ctx.shutdown();
-		});
-	});
-
-
-    const double vmax = 10*4096;			otgInput.max_velocity		= { vmax, vmax, vmax, vmax };
-    const double amax = vmax*1000/200;		otgInput.max_acceleration	= { amax, amax, amax, amax };
-    const double jmax = amax*1000/100;		otgInput.max_jerk			= { jmax, jmax, jmax, jmax };
+    const double vmax = 2.5*1000000;		otgInput.max_velocity		= { vmax };
+    const double amax = vmax*1000/200;		otgInput.max_acceleration	= { amax };
+    const double jmax = amax*1000/100;		otgInput.max_jerk			= { jmax };
     otgInput.synchronization = Synchronization::Phase;
 
-
-
 	thread([]() {for (;;this_thread::sleep_for(chrono::milliseconds(1000))) {
-		cout << "status1:"<<bitset<16>(driver_1->status) << " - pfb1:"<<dec<<driver_1->pfb << " - pll1:"<<dec<<driver_1->pll<<":"<<driver_1->pllMax << " - jitter:"<<dec<<syncJitter.count() << " - otgCalcTime:"<<dec<<otgOutput.calculation_duration<<":"<<otgCalcTimeMax << " - err1:"<<hex<<driver_1->errorCode  << endl;
-		driver_1->pllMax = 0;
+		cout << "status:"<<bitset<16>(status) << " - pfb:"<<dec<<pfb << " - jitter:"<<dec<<syncJitter.count() << " - otgCalcTime:"<<dec<<otgOutput.calculation_duration<<":"<<otgCalcTimeMax << " - err:"<<hex<<errorCode  << endl;
 		syncJitter = chrono::microseconds::zero();
 		otgCalcTimeMax = 0;
 	}}).detach();
 
-
 	configure_malloc_behavior();
 	reserve_process_memory(10 * 1024 * 1024);
 
-	system("chrt -fp 90 $(pgrep irq/.*-can0)");
-	system("chrt -fp 60 $(pgrep ksoftirqd/0)");
+	//system("chrt -fp 90 $(pgrep irq/44-4a100000)");
+	//system("chrt -fp 90 $(pgrep irq/45-4a100000)");
+	//system("chrt -fp 60 $(pgrep ksoftirqd/0)");
+
+	master = ecrt_request_master(0);
+	if (!master) {
+		cout << "ERROR: ecrt_request_master" << endl;
+	}
+
+	sdoWrite<int8_t>(0, 0x1C12, 0, 0);
+	sdoWrite<int16_t>(0, 0x1C12, 1, 0x1600);
+	sdoWrite<int8_t>(0, 0x1C12, 0, 1);
+
+	sdoWrite<int8_t>(0, 0x1600, 0, 0);
+	sdoWrite<int32_t>(0, 0x1600, 1, 0x60400010);
+	sdoWrite<int32_t>(0, 0x1600, 2, 0x607A0020);
+	sdoWrite<int8_t>(0, 0x1600, 0, 2);
+
+	sdoWrite<int8_t>(0, 0x1C13, 0, 0);
+	sdoWrite<int16_t>(0, 0x1C13, 1, 0x1A00);
+	sdoWrite<int8_t>(0, 0x1C13, 0, 1);
+
+	sdoWrite<int8_t>(0, 0x1A00, 0, 0);
+	sdoWrite<int32_t>(0, 0x1A00, 1, 0x60410010);
+	sdoWrite<int32_t>(0, 0x1A00, 2, 0x60640020);
+	sdoWrite<int8_t>(0, 0x1A00, 0, 2);
+
+	sdoWrite<int16_t>(0, 0x6040, 0, 0x80);	//reset faluts
+	sdoWrite<int8_t>(0, 0x6060, 0, 8);		//Modes of Operation: 8 [cyclic synchronous position mode]
+
+	sdoWrite<int8_t>(0, 0x60C2, 1, 4000/100);
+	sdoWrite<int8_t>(0, 0x60C2, 2, -4);
+
+	domain1 = ecrt_master_create_domain(master);
+	if (!domain1) {
+		cout << "ERROR: ecrt_master_create_domain" << endl;
+	}
+
+	if (!(cdhd = ecrt_master_slave_config(master, 0,0, 0x000002e1,0x00000000))) {
+		cout << "ERROR: ecrt_master_slave_config" << endl;
+	}
+
+	off_control = ecrt_slave_config_reg_pdo_entry(cdhd, 0x6040, 0, domain1, NULL);
+	if (off_control < 0)
+		cout << "ERROR: ecrt_slave_config_reg_pdo_entry(control)" << endl;
+
+	off_pcmd = ecrt_slave_config_reg_pdo_entry(cdhd, 0x607A, 0, domain1, NULL);
+	if (off_pcmd < 0)
+		cout << "ERROR: ecrt_slave_config_reg_pdo_entry(pcmd)" << endl;
+
+	off_status = ecrt_slave_config_reg_pdo_entry(cdhd, 0x6041, 0, domain1, NULL);
+	if (off_status < 0)
+		cout << "ERROR: ecrt_slave_config_reg_pdo_entry(status)" << endl;
+
+	off_pfb = ecrt_slave_config_reg_pdo_entry(cdhd, 0x6064, 0, domain1, NULL);
+	if (off_pfb < 0)
+		cout << "ERROR: ecrt_slave_config_reg_pdo_entry(pfb)" << endl;
+
+	// configure SYNC signals for this slave
+	ecrt_slave_config_dc(cdhd, 0x0700, PERIOD_NS, 4400000, 0, 0);
+
+	printf("Activating master...\n");
+	if (ecrt_master_activate(master))
+		cout << "ERROR: ecrt_master_activate" << endl;
+
+	if (!(domain1_pd = ecrt_domain_data(domain1))) {
+		cout << "ERROR: ecrt_domain_data" << endl;
+	}
 
 	setprio(80);
-	//for (;;this_thread::sleep_for(chrono::microseconds(4000))) calcJitter();	//test RT
 
-	// Start the NMT service of the master by pretending to receive a 'reset
-	// node' command.
-	master.Reset();
+	struct timespec wakeup_time;
+    clock_gettime(CLOCK_MONOTONIC, &wakeup_time);
+    wakeup_time.tv_sec += 1; /* start in future */
+    wakeup_time.tv_nsec = 0;
 
-    // Run the event loop until no tasks remain (or the I/O context is shut down).
-	loop.run();
+    while (1) {
+        clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, &wakeup_time, NULL);
+
+        ecrt_master_application_time(master, TIMESPEC2NS(wakeup_time));
+
+        cyclic_task();
+
+        wakeup_time.tv_nsec += PERIOD_NS;
+        while (wakeup_time.tv_nsec >= NSEC_PER_SEC) {
+            wakeup_time.tv_nsec -= NSEC_PER_SEC;
+            wakeup_time.tv_sec++;
+        }
+    }
+
+
 
 	return 0;
 }

@@ -1,0 +1,8 @@
+## SECTION=communication
+
+config ETHERLAB_ETHERCAT
+	tristate
+	select ETHERLAB_ETHERCAT_MODULES	if RUNTIME
+	prompt "etherlab-ethercat"
+	help
+	  IgH EtherLab EtherCAT(R) Master 
