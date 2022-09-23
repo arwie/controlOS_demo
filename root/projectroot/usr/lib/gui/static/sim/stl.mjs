@@ -15,18 +15,18 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-import * as THREE				from '/static/three/build/three.module.js';
-import { STLLoader }			from '/static/three/examples/jsm/ext/STLLoader.js';
+import * as THREE				from '/static/three/three.module.js';
+import { STLLoader }			from '/static/three/STLLoader.js';
 
 
-var loader = new STLLoader();
+const loader = new STLLoader();
 
 
-export default function loadStl(file, materialProps)
+export default function loadStl(file, material)
 {
 	let bone = new THREE.Bone();
-	loader.load(file, (geometry) => {
-		bone.add(new THREE.Mesh(geometry, new THREE.MeshPhongMaterial(materialProps))); 
+	if (file) loader.load(file, (geometry) => {
+		bone.add(new THREE.Mesh(geometry, material.isMaterial ? material : new THREE.MeshPhongMaterial(material))); 
 	});
 	return bone;
 }

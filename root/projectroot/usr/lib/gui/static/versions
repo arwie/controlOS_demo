@@ -6,6 +6,6 @@ bootstrap			4.6.0
 l20n				5.0.0
 pep					0.4.3
 font-awesome		5.11.2
-three				r117
+three				r141	(patched import paths)
 ace (noconflict)	1.4.7
 chart				3.7.0

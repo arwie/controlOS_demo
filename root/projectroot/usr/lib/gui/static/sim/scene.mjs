@@ -15,8 +15,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-import * as THREE				from '/static/three/build/three.module.js';
-import { OrbitControls }		from '/static/three/examples/jsm/ext/OrbitControls.js';
+import * as THREE				from '/static/three/three.module.js';
+import { OrbitControls }		from '/static/three/OrbitControls.js';
 
 
 
@@ -25,42 +25,65 @@ export default class Scene extends THREE.Scene {
 	constructor() {
 		super();
 		
-		this.renderer = new THREE.WebGLRenderer();
+		this.renderer = new THREE.WebGLRenderer({antialias:true});
 		this.renderer.domElement.style.width  = '100%';
 		this.renderer.domElement.style.height = '100%';
 		this.renderer.setClearColor(0xffffff);
 		
-		this.camera = new THREE.PerspectiveCamera(50, 0, 0.1, 10000);
-		this.camera.position.set(-2000, -2000, 2000);
-		this.camera.up.set(0, 0, 1);
-		this.add(this.camera);
-		
-		this.camera.add(new THREE.PointLight(0xffffff, 0.5));
 		let hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444);
 		hemiLight.position.set(0, 0, 1);
 		this.add(hemiLight);
 		
-		this.controls = new OrbitControls(this.camera, this.renderer.domElement);
-		this.controls.rotateSpeed = 0.5;
-		this.controls.addEventListener('change', this.render.bind(this));
+		this.cameraLight = new THREE.PointLight(0xffffff, 0.5);
+		this.setCamera();
 		
 		new ResizeObserver(()=>{
-			const canvas = this.renderer.domElement;
-			this.renderer.setSize(canvas.clientWidth, canvas.clientHeight, false);
-			this.camera.aspect = canvas.clientWidth / canvas.clientHeight;
-			this.camera.updateProjectionMatrix();
+			this.renderer.setSize(this.element.clientWidth, this.element.clientHeight, false);
+			this.camera.elementResize();
 			this.render();
-		}).observe(this.renderer.domElement);
-	}
-	
-	setWorld(world) {
-		this.remove(this.sceneWorld);
-		this.sceneWorld = world;
-		this.add(this.sceneWorld)
+		}).observe(this.element);
 	}
 	
 	get element() {
 		return this.renderer.domElement;
+	}
+	
+	setCamera(perspective=true) {
+		if (this.camera) 
+			this.camera.controls.enabled = false;
+		
+		const setupCameraDefaults = (camera, zoom, elementResize)=>{
+			camera.position.set(0, 0, camera.far / 10);
+			camera.zoom = zoom
+			camera.up.set(0, 0, 1);
+			camera.elementResize = ()=>{
+				elementResize(camera, this.element.clientWidth, this.element.clientHeight);
+				camera.updateProjectionMatrix();
+			}
+			camera.elementResize();
+			camera.controls = new OrbitControls(camera, this.element);
+			camera.controls.rotateSpeed = 0.5;
+			camera.controls.addEventListener('change', this.render.bind(this));
+			return camera;
+		}
+		
+		if (perspective) {
+			this.camera = (this.perspectiveCamera ??= setupCameraDefaults(new THREE.PerspectiveCamera(33, 0, 0.1, 100000), 1, (camera, w,h)=>{
+				camera.aspect = w / h;
+			}));
+		} else {
+			this.camera = (this.orthographicCamera ??= setupCameraDefaults(new THREE.OrthographicCamera(0, 0, 0, 0, 0, 100000), 0.15, (camera, w,h)=>{
+				camera.left		= w / -2;
+				camera.right	= w /  2;
+				camera.top		= h /  2;
+				camera.bottom	= h / -2;
+			}));
+		}
+		
+		this.camera.add(this.cameraLight);
+		this.camera.controls.enabled = true;
+		this.add(this.camera);
+		this.render();
 	}
 	
 	render() {

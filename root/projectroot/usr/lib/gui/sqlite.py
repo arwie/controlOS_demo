@@ -15,7 +15,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-import server
+import server, inspect
 
 
 
@@ -36,14 +36,18 @@ class TableHandler(server.RequestHandler):
 			'swap':		self.doSwap,
 		}, **doPost}
 	
-	def get(self):
+	async def get(self):
 		result = self.doGet[self.get_query_argument('do', 'list')]()
+		if inspect.isawaitable(result):
+			result = await result
 		if result is not None:
 			self.writeJson(result)
 	
-	def post(self):
+	async def post(self):
 		with self.table.db:
 			result = self.doPost[self.get_query_argument('do')]()
+			if inspect.isawaitable(result):
+				result = await result
 			if result is not None:
 				self.writeJson(result)
 	

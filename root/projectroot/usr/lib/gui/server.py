@@ -166,6 +166,7 @@ settings = {
 	'static_path':				os.path.dirname(__file__)+'/static',
 	'cookie_secret':			base64.b64encode(os.urandom(64)).decode('ascii'),
 	"compiled_template_cache":	False,
+	"static_hash_cache":		False,
 	"ui_modules": {
 		"page": PageModule
 	},
