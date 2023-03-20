@@ -85,10 +85,13 @@ end sub
 
 
 <?lib_prgEvent(1)?>
+	dim dummy_ as long
 	try
 		<?foreach($etc as $dev)
-			if($dev['elementid'])
-				lll('dropLong(EC_PDO_READ('.$dev['address'].', 0x6041, 0))')?>
+			if($dev['elementid']) {
+				lll('dummy_ = EC_PDO_READ('.$dev['address'].', 0x6041, 0)');
+				break;
+			}?>
 		'pass
 	catch EC_DOMAIN_WC_INCOMPLETE.num
 		<?logWarning([function(){?>

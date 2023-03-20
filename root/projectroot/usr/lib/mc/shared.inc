@@ -15,6 +15,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
+error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);
+
 
 function conf($file=null, $section=null, $key=null, $default=null) {
 	static $conf = null;
@@ -44,7 +46,7 @@ function setup($section=null, $key=null) {
 	if (!isset($setup)) {
 		$setup = json_decode(exec('python -c "from shared.setup import setup; import sys,json; json.dump(setup,sys.stdout)"'), true) ?: [];
 	}
-	return is_null($section) ? $setup : (is_null($key) ? $setup[$section] : $setup[$section][$key]);
+	return is_null($section) ? $setup : (is_null($key) ? $setup[$section] : ($setup[$section][$key] ?? null));
 }
 
 
@@ -52,7 +54,7 @@ function awaitCondition($condition, $timeout, $result=false, $ifnot=false) {
 	ll('com_store()');
 	ll('com_putLong("/timeout", system.clock + '.$timeout.')');
 	ll('while not ('.$condition.') and system.clock < com_getLong("/timeout")');
-	lll('sleep '.min(100, $timeout));
+	lll('sleep '.min(20, $timeout));
 	ll('end while');
 	ll('com_restore()');
 	if ($result) {
@@ -77,6 +79,9 @@ function lll($basic)	{ echo "\t\t".$basic."\n"; }
 function llll($basic)	{ echo "\t\t\t".$basic."\n"; }
 function lllll($basic)	{ echo "\t\t\t\t".$basic."\n"; }
 
+function b($bool) {
+	return $bool?'true':'false';
+}
 function s($str) {
 	if (!is_string($str))
 		$str = json_encode($str);

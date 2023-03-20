@@ -28,7 +28,7 @@ end sub
 
 <?lib_prgEvent()?>
 	<?foreach (get('libs')['app'] as $l=>$lib)
-		if ($lib['simio'])
+		if (isset($lib['simio']))
 			ll("{$l}_simio()")?>
 end sub
 

@@ -25,23 +25,31 @@ common shared log_prioNotice	as const long	= 5
 common shared log_prioInfo		as const long	= 6
 common shared log_prioDebug		as const long	= 7
 
-common shared log_priority		as const long	= <?=debug() ? 'log_prioDebug' : 'log_prioInfo'?> 
-common shared log_priorityPrint	as const long	= <?=debug() ? 'log_prioDebug' : 'log_prioWarning'?> 
+common shared log_priority		as const long	= <?=debug() ? 'log_prioDebug' : 'log_prioInfo'?>'
+common shared log_priorityPrint	as const long	= <?=debug() ? 'log_prioDebug' : 'log_prioWarning'?>'
+
+dim shared this_phase			as string
 
 
 dim shared comLogChannel as long
 
 
 
+public sub log_phase(byval phase_ as string)
+	this_phase = sIfElse(phase_, len(phase_), "idle")
+end sub
+
+
 public sub log_message(byval prio_ as long, byval message_ as string, byval lib_ as string, byval scope_ as string)
 	com_store()
-	com_putLong("/clock", system.clock)
+	com_putLong("/_clock", system.clock)
 	com_putLong("/priority", prio_)
 	com_putStringRef("/message", message_)
 	com_putStringRef("/lib", lib_)
+	com_putStringRef("/phase", this_phase)
 	com_putStringRef("/code_func", scope_)
 	com_putString("/prg", programname)
-	com_putLong("/context", programContext)
+	com_putLong("/_context", programContext)
 end sub
 
 
@@ -54,12 +62,21 @@ public sub log_putReport(byval report_ as string)
 	com_putLong("/reports", true)
 end sub
 
+
 public sub log_putFile(byval name_ as string)
-	'com_putString("/"+name_, sh("awk '{print NR $s}' /FFS0/SSMC/"+name_))
+	log_putAttachment(name_, "/FFS0/SSMC")
+end sub
+
+public sub log_putRecord(byval name_ as string)
+	log_putAttachment(name_, "/RAM")
 end sub
 
 public sub log_putTrnErr
-	com_putString("/TRN_ERR", sh("cat /RAM/TRN.ERR"))
+	log_putAttachment("TRN.ERR", "/RAM/")
+end sub
+
+public sub log_putAttachment(byval file_ as string, byval path_ as string)
+	com_putString("/_attachment/"+file_, path_)
 end sub
 
 

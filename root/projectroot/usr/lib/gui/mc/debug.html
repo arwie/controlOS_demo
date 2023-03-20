@@ -20,26 +20,28 @@
 
 
 {% block html %}
-<div class="row">
+<div class="row h-100">
 	
-	<div class="col-md-2">
-		<div data-bind="foreach: sections" class="list-group">
-			<label class="list-group-item">
-				<span data-bind="text: name"></span>
-				<input type="checkbox" data-bind="checked: show" class="pull-right">
-			</label>
-		</div>
+	<div class="col-md-2 h-100 overflow-scroll">
+		<ul data-bind="foreach:sections" class="list-group">
+			<li class="list-group-item">
+				<input data-bind="checked:show, id:'mc_debug-'+name" type="checkbox" class="form-check-input me-1">
+				<label data-bind="text:name.toUpperCase(), attr:{'for':'mc_debug-'+name}" class="form-check-label stretched-link"></label>
+			</li>
+		</ul>
 	</div>
 	
-	<div class="col">
-		<table data-bind="foreach: {data: sections, as: 'section'}" class="table table-sm table-hover">
-			<tbody data-bind="foreach:section.keys(), visible: section.show">
+	<div class="col h-100 overflow-scroll">
+		<table data-bind="foreach:{data:sections, as:'section'}" class="table table-sm table-hover">
+			<!-- ko if:section.show() || $model.showAll -->
+			<tbody data-bind="foreach:section.keys">
 				<tr>
-					<th class="col-md-2" data-bind="text: section.name"></th>
-					<td class="col-md-3" data-bind="text: $data"></td>
-					<td class="col" data-bind="text: section.value($data)"></td>
+					<th data-bind="text:section.name" width="10%"></th>
+					<td data-bind="text:$data"        width="20%"></td>
+					<td data-bind="click:()=>{section.openField($data)}, html:section.value($data)" style="white-space:pre-wrap"></td>
 				</tr>
 			</tbody>
+			<!-- /ko -->
 		</table>
 	</div>
 	
@@ -48,21 +50,38 @@
 
 
 {% block script %}
-function DebugSection(name, values) {
-	let self = this;
-
-	self.name	= name;
-	self.values	= ko.observable(values);
-	self.show	= ko.observable(true);
+class Section {
+	constructor(name, values) {
+		this.name	= name;
+		this.keys	= Object.keys(values).sort();
+		this.values	= ko.observable(values);
+		this.show	= ko.observable(false);
+		this.open	= ko.observableArray();
+		
+		this.show.subscribe(()=>{model.updateShowAll()});
+	}
 	
-	self.keys	= function() {
-		return Object.keys(self.values());
-	};
+	openField(field) {
+		if (!this.open.remove(field).length)
+			this.open.push(field);
+	}
 	
-	self.value	= function(key) {
-		return ko.pureComputed(function() {
-			let value = self.values()[key];
-			return typeof value == 'object' ? JSON.stringify(value, null, 2) : value;
+	value(key) {
+		return ko.pureComputed(()=>{
+			let value = this.values()[key];
+			switch(typeof value) {
+				case 'object':
+					if (this.open().includes(key))
+						value = JSON.stringify(value, null, 2);
+					else
+						value = `<a href="#">data</a>`;
+					break;
+				case 'number':
+					if (!Number.isInteger(value))
+						value = value.toFixed(3);
+					break;
+			}
+			return value;
 		});
 	}
 }
@@ -70,32 +89,32 @@ function DebugSection(name, values) {
 
 
 {% block model %}
-function() {
-	let self = this;
-	
-	self.sections = ko.observableArray();
-	
-	self.start = function()
-	{
-		self.ws = new WebSocket(wsUrl('mc', 5610));
-		
-		self.ws.onmessage = function (e) {
-			let msg = JSON.parse(e.data).debug;
-			
-			if (!self.sections().length) {
-				Object.keys(msg).forEach(function (key) {
-					self.sections.push(new DebugSection(key, msg[key]));
-				});
-			}
-			
-			self.sections().forEach(function (section) {
-				section.values(msg[section.name]);
-			});
-		}
+class {
+	constructor() {
+		this.sections	= ko.observableArray();
+		this.showAll	= ko.observable(true);
 	}
 	
-	self.stop = function() {
-		self.ws.close();
+	updateShowAll() {
+		model.showAll(model.sections().filter(s => s.show()).length == 0);
+	}
+	
+	start() {
+		model.mc = webSocket(wsUrl('mc', 5610), (data)=>{
+			const msg = data.debug;
+			if (!model.sections().length) {
+				Object.keys(msg).sort().forEach((key)=>{
+					model.sections.push(new Section(key, msg[key]));
+				});
+			}
+			model.sections().forEach((section)=>{
+				section.values(msg[section.name]);
+			});
+		});
+	}
+	
+	stop() {
+		model.mc.close();
 	}
 }
 {% end %}

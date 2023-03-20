@@ -19,13 +19,13 @@ function device(&$dev) { global $lib;
 	static $dio = 64;
 
 	$dev['device']		= conf('device',lib(),'device',    $dev['device']);
-	$dev['simulated']	= device_simulated(lib())       || $dev['simulated'];
-	$dev['address']		= conf('device',lib(),'address',   $dev['address'])		?: 0;
+	$dev['simulated']	= device_simulated(lib())       || ($dev['simulated'] ?? false);
+	$dev['address']		= conf('device',lib(),'address',   ($dev['address'] ?? 0));
 	$dev['bus']			= conf('device',lib(),'bus',       $dev['bus']);
 	
-	$dev['writeBit'] = $dev['writeBit'] ?: [];
+	$dev['writeBit'] = $dev['writeBit'] ?? [];
 	foreach ($dev['writeBit'] as &$bit) {
-		$bit['offset'] = $bit['offset'] ?: 0;
+		$bit['offset'] = $bit['offset'] ?? 0;
 		$bit['dio'] = $dio;
 		$dio += $bit['size'];
 	}
@@ -99,7 +99,7 @@ function _deviceFunctions($dev)
 function device_order($order) {
 	$address = 1;
 	foreach ($order as $lib) {
-		if (get('device')[$lib] && !get('device')[$lib]['simulated'] && !get('device')[$lib]['address'])
+		if (isset(get('device')[$lib]) && !get('device')[$lib]['simulated'] && !get('device')[$lib]['address'])
 			set('device')[$lib]['address'] = $address++;
 	}
 }
@@ -118,7 +118,7 @@ function device_busDevices($bus, $simulated=false) {
 function device_axes() {
 	$axes = [];
 	foreach(get('device') as $dev) {
-		if($dev['elementid'])
+		if(isset($dev['elementid']))
 			$axes[$dev['name']] = $dev;
 	}
 	return $axes;

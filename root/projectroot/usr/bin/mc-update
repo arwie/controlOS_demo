@@ -23,11 +23,7 @@ import shared, logging, argparse, tempfile, socket, os, pexpect
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--force", help="force update all files on mc", action="store_true")
-parser.add_argument("--console", help="log also to console", action="store_true")
 args = parser.parse_args()
-
-if args.console:
-	logging.root.addHandler(logging.StreamHandler())
 
 
 virginIp   = '90.0.0.1'
@@ -73,7 +69,7 @@ def getType():
 
 
 def build(outdir, mctype):
-	stderr = run(['php5', '-n', '-ddisplay_errors=stderr', 'main.php', outdir, mctype], cwd='/usr/lib/mc', stdout=DEVNULL, stderr=PIPE, check=True, text=True).stderr
+	stderr = run(['php', '-n', '-ddisplay_errors=stderr', 'main.php', outdir, mctype], cwd='/usr/lib/mc', stdout=DEVNULL, stderr=PIPE, check=True, text=True).stderr
 	if stderr:
 		logging.warning("php build:\n"+stderr);
 

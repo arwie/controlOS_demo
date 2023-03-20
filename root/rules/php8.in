@@ -1,0 +1,75 @@
+## SECTION=scripting_languages
+# php6 configuration
+
+menuconfig PHP8
+	tristate
+	prompt "php8                          "
+	select GLIBC_M
+	help
+	  PHP, which stands for "PHP: Hypertext Preprocessor" is a widely-used
+	  general-purpose scripting language that is especially suited for web
+	  development and can be embedded into HTML.
+
+if PHP8
+
+config PHP8_INI
+	bool
+	prompt "install /etc/php8/php.ini"
+	default y
+	help
+	  Installs (if present) the
+	  "./projectroot/etc/php8/php.ini" file from your
+	  workspace, otherwise a generic one from the ptxdist
+	  directory.
+
+# ----------------------------------------------------------------------------
+# SAPI Modules (add more on demand)
+# ----------------------------------------------------------------------------
+
+choice
+	prompt "SAPI Module"
+	default PHP8_SAPI_NONE
+	help
+	  Select one of the SAP (Server Application Programming) Interfaces to
+	  be supported at run-time. It is possible to select no SAP interface
+	  here, then your PHP supports a command line interface (CLI) only.
+
+config PHP8_SAPI_CGI
+	bool
+	prompt "cgi"
+	help
+	  Build standard CGI version of PHP.
+
+config PHP8_SAPI_NONE
+	bool
+	prompt "none"
+	select PHP8_SAPI_CLI
+	help
+	  This forces a command line interface variant only.
+
+endchoice
+
+config PHP8_SESSION
+	bool
+	prompt "session support"
+	default y
+	help
+	  A session is a way to store information to be used across multiple
+	  pages. The information is stored locally only.
+
+config PHP8_FILTER
+	bool
+	prompt "filter support"
+	default y
+	help
+	  This extension filters data by either validating or sanitizing it.
+	  This is especially useful when the data source contains unknown (or foreign) data, like user supplied input.
+	  For example, this data may come from an HTML form.
+
+config PHP8_SAPI_CLI
+	bool
+	prompt "cli"
+	help
+	  Build command line interface (CLI) version of PHP
+
+endif

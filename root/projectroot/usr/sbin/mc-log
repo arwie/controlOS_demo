@@ -17,7 +17,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-from shared import websocket
+from shared import websocket, system
 import logging, argparse, time, json, struct, sys
 
 
@@ -30,11 +30,13 @@ args = parser.parse_args()
 
 def export(msg):
 	for key, value in msg.items():
-		if not isinstance(value, str):
-			value = json.dumps(value)
-		if '\n' in value:
-			print(key.upper())
+		if isinstance(value, str) and '\n' in value:
 			value = value.translate({ord(c):None for c in '\r'}).encode()
+		if isinstance(value, dict) or isinstance(value, list):
+			value = json.dumps(value, indent=4).encode()
+		
+		if isinstance(value, bytes):
+			print(key.upper())
 			sys.stdout.buffer.write(struct.pack('<Q', len(value)))
 			sys.stdout.buffer.write(value)
 			print()
@@ -47,6 +49,15 @@ def process(msg):
 	msg['__REALTIME_TIMESTAMP']		= int(time.time()      * 1000000)
 	msg['__MONOTONIC_TIMESTAMP']	= int(time.monotonic() * 1000000)
 	msg['SYSLOG_IDENTIFIER']		= msg.get('lib', 'mc')
+	
+	if '_attachment' in msg:
+		for file,dir in msg['_attachment'].items():
+			path = dir+'/'+file
+			try:
+				content = system.run(['ssh','mc'], True, input=("cat "+path).encode())
+				msg[file.replace('.','_')] = content.decode() if dir.endswith('/') else content
+			except Exception as e:
+				logging.exception('failed to get attachment from mc: '+path)
 	
 	export(msg)
 

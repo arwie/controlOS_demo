@@ -39,6 +39,7 @@ $(STATEDIR)/stx-mc.targetinstall:
 	@$(call install_alternative, stx-mc, 0, 0, 0644, /usr/lib/systemd/system/mc-state.socket)
 	@$(call install_link,        stx-mc, ../mc-state.socket, /usr/lib/systemd/system/sockets.target.wants/mc-state.socket)
 	
+	@$(call install_alternative, stx-mc, 0, 0, 0644, /etc/ssh/ssh_config.d/mc)
 	@$(call install_alternative, stx-mc, 0, 0, 0755, /usr/bin/mc-update)
 	@$(call install_alternative, stx-mc, 0, 0, 0644, /usr/lib/systemd/system/mc-update.service)
 	@$(call install_alternative, stx-mc, 0, 0, 0644, /usr/lib/systemd/system/mc-update.timer)

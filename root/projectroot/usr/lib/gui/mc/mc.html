@@ -21,19 +21,19 @@
 
 
 {% block html %}
-<div class="row">
-<div class="col-lg-2">
-	<nav data-bind="foreach:$page.children" class="nav nav-pills flex-column">
-		<a data-bind="page-href:$data, css:{active:isVisible}, attr:{'data-l10n-id':'mc_'+getId()}" class="nav-link"></a>
-	</nav>
-</div>
+<div class="row h-100">
+	<div class="col-lg-2">
+		<nav data-bind="foreach:$page.children" class="nav nav-pills flex-column">
+			<a data-bind="page-href:$data, css:{active:isVisible}, attr:{'data-l10n-id':'mc_'+getId()}" class="nav-link"></a>
+		</nav>
+	</div>
 
-<div class="col">
-	{% module page("mc/license.html") %}
-	{% module page("mc/basic.html") %}
-	{% module page("mc/term.html") %}
-	{% module page("mc/reset.html") %}
-</div>
+	<div class="col h-100">
+		{% module page("mc/license.html") %}
+		{% module page("mc/basic.html") %}
+		{% module page("mc/term.html") %}
+		{% module page("mc/reset.html") %}
+	</div>
 </div>
 {% end %}
 

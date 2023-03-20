@@ -34,7 +34,7 @@ program continue
 			log_send()
 	end onError
 
-
+	log_phase("init-sys")
 	state_init()
 	log_init()
 	state_start()
@@ -68,7 +68,7 @@ program continue
 
 <?
 	foreach (array_reverse(get('libs')['app']) as $l=>$lib) {
-		if ($lib['axis'] || $lib['robot'])
+		if (isset($lib['axis']) || isset($lib['robot']))
 			ll('error_ = vesexecute("withGlobal '.$l.'")');
 		ll('loadGlobal '.$lib['file']);
 	}

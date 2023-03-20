@@ -63,13 +63,13 @@ end sub
 	<?if ($can) l('can_start()')?>
 
 	<?foreach($axes as $ax=>$axis) 
-			if ($axis['simulated']) {
-				call(['try', "$ax.busnumber = 0", 'catch 19017', "$ax.busnumber = 1", 'end try']);
-				ll($ax.'.simulated					= true');
-			} else {
-				ll($ax.'.busnumber					= '.$axis['bus'].'_busnumber');
-				ll($ax.'.driveaddress				= '.$axis['address']);
-			}
+		if ($axis['simulated']) {
+			call(['try', "$ax.busnumber = 0", 'catch 19017', "$ax.busnumber = 1", 'end try']);
+			ll($ax.'.simulated		= true');
+		} else {
+			ll($ax.'.busnumber		= '.$axis['bus'].'_busnumber');
+			ll($ax.'.driveaddress	= '.$axis['address']);
+		}
 	?>
 
 	drivelog_init()
@@ -79,10 +79,13 @@ end sub
 	debug_init()
 	debug_start()
 
+	log_phase("init-app")
 	<?foreach (array_reverse(get('libs')['app']) as $l=>$lib) 
 		ll("{$l}_init()")?>
 
+	log_phase("start-app")
 	<?=reset(get('libs')['app'])['name']?>_start()
+	log_phase("")
 end sub
 
 

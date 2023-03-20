@@ -24,7 +24,7 @@ function &set($what, $set=true) { global $out;
 	if ($out && $set) 
 		return $fake;
 	
-	$real[$what] = $real[$what] ?: [];
+	$real[$what] = $real[$what] ?? [];
 	return $real[$what];
 }
 function get($what) {
@@ -38,7 +38,10 @@ set('mc')['type'] = $argv[2];
 function common($name, $type='long', $init=null) {
 	if (strpos($name, '_')===false)
 		$name = lib().'_'.$name;
-	set('init')['begin'][] = "common shared $name as $type".($init ? " = $init" : '');
+	set('common')['begin'][] = "common shared $name as $type".($init ? " = $init" : '');
+}
+function commonBlock($block, $begin=false) {
+	set('common')[$begin?'begin':'end'][] = $block;
 }
 
 function config($config) {
@@ -113,7 +116,7 @@ file_put_contents($out.'IO.DAT', ob_get_clean());
 
 ob_start();
 	l('ipaddressmask '.gethostbyname('mc').':255.255.255.0');
-	l('defaultgw '.gethostbyname('sys'));
+	//l('defaultgw '.gethostbyname('sys'));
 file_put_contents($argv[1].'/FWCONFIG', ob_get_clean());
 
 

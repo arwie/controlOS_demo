@@ -33,7 +33,7 @@ function &lib($what='name', $add=false) { global $lib;
 	if ($add) $lib[$what][] = $add; else return $lib[$what];
 }
 function libGet($what) {
-	return get('lib')[lib()][$what];
+	return get('lib')[lib()][$what] ?? null;
 }
 
 
@@ -74,12 +74,13 @@ function logMessage($prio, $message=null, $report=null, $log=[]) {
 		if (is_string($message))
 			$log['message'] = strpos($message,'"')===false ? s($message) : $message;
 	}
-	if (!$log['message']) {
+	$extra = [];
+	if (!isset($log['message'])) {
 		$log['message'] = 'taskerror(programname)';
 		$extra[] = 'com_putLong("/error", taskerrornumber(programname))';
 	}
 	ll("log_message($prio, {$log['message']}, ".s(lib()).", scope)");
-	if ($log['report']) {
+	if (isset($log['report'])) {
 		$extra[] = "log_putReport({$log['report']})";
 	}
 	unset($log['message'], $log['report']);
@@ -182,8 +183,8 @@ function lib_prgEvent($scantime=5) { global $lib;
 
 function lib_prgError($log=false) {
 	lib('prgError')['log'] = $log;
-	lib('prgError', 'lib_prgError()');
-	l('sub lib_prgError');
+	lib('prgError', 'lib_prgError(asyncError)');
+	l('sub lib_prgError(byval asyncError as long)');
 }
 
 
@@ -285,7 +286,7 @@ function libEnd() { global $lib;
 			ll('lib_prgRunning = 2');
 		l('end sub');
 		
-		if (lib('prg')['event']) {
+		if (isset(lib('prg')['event'])) {
 			l('public sub '.lib().'_prgEvent');
 				ll('if lib_prgRunning=2 then');
 					lll('lib_prgRunning = 3');
@@ -302,17 +303,18 @@ function libEnd() { global $lib;
 		}
 		
 		l('public sub '.lib().'_prgError');
+			ll('dim asyncError as long = ('.lib('prg')['file'].'.state band 0xF)=TASK_RUNNING');
 			ll('if lib_prgRunning then'); //workaroud: errorhandler runs twice for same bug
-				logError(['com_putString("/status",'.lib('prg')['file'].'.status)', lib('prgError')['log']]);
+				logError(['com_putString("/status",'.lib('prg')['file'].'.status)', lib('prgError')['log']??null]);
 				call(lib('prgError'));
-				lll('if ('.lib('prg')['file'].'.state band 0xF)<>TASK_RUNNING then');
+				lll('if not asyncError then');
 					llll(lib().'_prgStop()');
 				lll('end if');
 			ll('end if');
 		l('end sub');
 		
 		l('public sub '.lib().'_prgStop');
-			if (lib('prg')['event']) ll('eventoff '.lib().'_prgEvent');
+			if (isset(lib('prg')['event'])) ll('eventoff '.lib().'_prgEvent');
 			ll('lib_prgRunning = -1');
 			ll(lib().'_stopTrigger()');
 			call(lib('prgStop'), true);
@@ -337,14 +339,14 @@ program
 		catch else
 			<?=$name?>_prgError()
 	end onError
-	<?if ($prg['event']) {?>
+	<?if (isset($prg['event'])) {?>
 		onevent <?=$name?>_prgEvent scantime=<?=$prg['event']?> priority=<?=$prg['prio']?>-1
 			<?=$name?>_prgEvent()
 		end onevent
 	<?}?>
 	<?=$name?>_prgStart()
 	if <?=$name?>_active then
-		<?if ($prg['event']) l("eventon {$name}_prgEvent")?>
+		<?if (isset($prg['event'])) l("eventon {$name}_prgEvent")?>
 		<?=$name?>_prg()
 	end if
 	<?=$name?>_prgStop()

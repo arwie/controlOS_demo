@@ -48,7 +48,7 @@ function async($prio='prgPriorityNormal')
 			ll('select case receive_');
 			ll('case com_receiveMessage');
 				lll('asyncFunction = com_getJson("")');
-				lll('select case com_getLong("/cmd")');
+				lll('select case com_getCmd');
 				lll('case -1');
 					llll('com_send(asyncNotify)');
 				foreach(lib('async')['functions'] as $f) {
@@ -80,8 +80,7 @@ function async($prio='prgPriorityNormal')
 		l('end sub');
 	
 		l('sub asyncExec(byval cmd_ as long)');
-			ll('com_putLong("/cmd", cmd_)');
-			ll('com_send(asyncBuffer)');
+			ll('com_sendCmd(asyncBuffer, cmd_)');
 			ll('com_clear()');
 			ll('com_send(asyncBuffer)');	//send notify after each function
 			ll('com_restore()');
@@ -92,6 +91,7 @@ function async($prio='prgPriorityNormal')
 
 function async_function($name, $args=[], $pre=false, $post=false)
 {
+	$params = $paramsPure = $paramsCall = $comPut = $comGet = [];
 	foreach ($args as $arg=>$type) {
 		if ($type) {
 			$params[] = $paramsPure[] = 'byval '.$arg.' as '.(is_string($type)?$type:$type[0]);
@@ -108,7 +108,7 @@ function async_function($name, $args=[], $pre=false, $post=false)
 	$f = [
 		'name'			=> $name,
 		'nameSync'		=> 'this_'.$name,
-		'cmd'			=> count(lib('async')['functions']?:[]),
+		'cmd'			=> count(lib('async')['functions']??[]),
 		'comGet'		=> $pp($comGet),
 	];
 	lib('async')['functions'][] = $f;

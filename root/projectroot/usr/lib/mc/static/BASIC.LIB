@@ -171,9 +171,15 @@ end sub
 public function sinDeg(byval angle_ as double) as double
 	sinDeg = sin(angle_*deg2rad)
 end function
+public function asinDeg(byval value_ as double) as double
+	asinDeg = asin(value_) * rad2deg
+end function
 
 public function cosDeg(byval angle_ as double) as double
 	cosDeg = cos(angle_*deg2rad)
+end function
+public function acosDeg(byval value_ as double) as double
+	acosDeg = acos(value_) * rad2deg
 end function
 
 public function atan2Deg(byval opposite_ as double, byval adjacent_ as double) as double
@@ -214,12 +220,20 @@ public function getBit(byval input_ as long, byval bit_ as long) as long
 	getBit = (input_ band (1 shl bit_)) > 0
 end function
 
+public function parityBit(byval value_ as long) as long
+	dim bit_ as long
+	for bit_ = 0 to 31
+		parityBit = parityBit + getBit(value_, bit_)
+	next
+	parityBit = parityBit mod 2
+end function
 
-public function word2long(byval value_ as long) as long
+
+public function short2long(byval value_ as long) as long
 	if value_ band 0x8000 then
-		word2long = value_ bor 0xFFFF0000
+		short2long = value_ bor 0xFFFF0000
 	else
-		word2long = value_
+		short2long = value_
 	end if
 end function
 
@@ -270,6 +284,15 @@ public function sIfElse(byval ifValue_ as string, byval condition_ as double, by
 		sIfElse = ifValue_
 	else
 		sIfElse = elseValue_
+	end if
+end function
+
+
+public function xyzrIfElse(byval ifValue_ as location of xyzr, byval condition_ as double, byval elseValue_ as location of xyzr) as location of xyzr
+	if condition_<>0 then
+		xyzrIfElse = ifValue_
+	else
+		xyzrIfElse = elseValue_
 	end if
 end function
 

@@ -104,7 +104,7 @@ function com_openWebsocket($name, $port, $args=[]) {
 }
 
 function com_openUdpSender($name, $address, $port) {
-	com_open($name, 'udpSender', ['com_putString("/address",'.s($address).')', 'com_putLong("/port",'.$port.')']);
+	com_open($name, 'udpSender', ['com_putString("/address",'.$address.')', 'com_putLong("/port",'.$port.')']);
 }
 function com_openUdpReceiver($name, $port) {
 	com_open($name, 'udpReceiver', ['com_putLong("/port",'.$port.')']);

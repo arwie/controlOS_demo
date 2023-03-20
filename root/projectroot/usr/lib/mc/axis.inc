@@ -21,8 +21,8 @@ function axis($ax) { global $lib;
 	$ax['elementid']	= $elementid++;
 	$ax['name']			= lib();
 	
-	$ax['setup']		= $ax['setup']		?: strtoupper($ax['name']).'.DAT';
-	$ax['firmware']		= $ax['firmware']	?: strtoupper($ax['device']).'.O';
+	$ax['setup']		= $ax['setup']		?? strtoupper($ax['name']).'.DAT';
+	$ax['firmware']		= $ax['firmware']	?? strtoupper($ax['device']).'.O';
 
 	switch ($ax['device']) {
 		case 'cdhd':
@@ -90,7 +90,8 @@ function axis_setupSpeed($vel, $accTimeMs=500, $jerkTimeMs=250) {
 	deceleration		= decelerationmax
 	jerk				= jerkmax
 	decelerationstop	= decelerationmax
-	velocityoverspeed	= 10 * velocitymax
+	velocityoverspeed	= 8 * velocitymax
+	velocitySafetyLimit	= 2 * velocityoverspeed
 <?
 }
 
@@ -134,6 +135,12 @@ public sub <?=lib()?>_axisSetup
 ?>
 	detach
 end sub
+
+public sub <?=lib()?>_simulate(byval sim_ as long)
+	<?if (!$ax['simulated']) {?>
+		simulated = sim_
+	<?}?>
+end sub
 <?
 }
 
@@ -173,7 +180,7 @@ function _defaultDriveSetup($ax) {
 function _defaultAxisSetup($ax) {
 	if ($ax['simulated']) {
 		ll('positionerrordelay		= 4');
-		ll('positionerrormax		= MAXDOUBLE');
+		ll('positionerrormax		= 1000000000');
 	}
 	
 	ll('velocityfactor				= positionfactor / 1000');

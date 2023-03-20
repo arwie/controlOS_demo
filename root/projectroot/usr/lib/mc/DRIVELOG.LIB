@@ -71,7 +71,7 @@ end sub
 
 
 
-<?set('init')['end'][] = function() {?>
+<?commonBlock(function() {?>
 public function drivelog_errorString(byval error_ as long) as string
 	select case error_
 	case 0x2214
@@ -186,6 +186,8 @@ public function drivelog_errorString(byval error_ as long) as string
 		drivelog_errorString = "ServoSense Encoder Fault"
 	case 0x7390
 		drivelog_errorString = "Sankyo absolute encoder fault"
+	case 0x7582
+		drivelog_errorString = "Fieldbus target command lost"
 	case 0x7781
 		drivelog_errorString = "Motor setup failed"
 	case 0x7782
@@ -271,7 +273,7 @@ public function drivelog_errorString(byval error_ as long) as string
 	end select
 	drivelog_errorString = drivelog_errorString + " ("+hex$(error_)+"h)"
 end function
-<?}?>
+<?})?>
 
 <?
 /*

@@ -30,7 +30,7 @@
 	</li>
 </ul>
 
-<div data-bind="page:{id:'files', role:'start'}">
+<div data-bind="page:{id:'files', role:'start'}" class="h-100 overflow-scroll">
 	<div data-bind="foreach:files" class="row">
 		<div class="col">
 			<ul data-bind="foreach:$data" class="nav nav-pills flex-column">
@@ -42,8 +42,8 @@
 	</div>
 </div>
 
-<div data-bind="page:{id:'code'}">
-	<div id="mc-basic-editor"></div>
+<div data-bind="page:{id:'code'}" class="h-100 pb-3">
+	<div id="mc_basic-editor" class="h-100"></div>
 </div>
 {% end %}
 
@@ -62,10 +62,8 @@ class {
 	}
 	
 	load() {
-		if (!model.editor) model.editor = ace.edit("mc-basic-editor", {
+		if (!model.editor) model.editor = ace.edit("mc_basic-editor", {
 			readOnly:		true,
-			minLines:		24,
-			maxLines:		40,
 			fontSize:		16,
 		});
 		return $.get(ajaxUrl('mc.basic', {file:model.file()})).done((data)=>{

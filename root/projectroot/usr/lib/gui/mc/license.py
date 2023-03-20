@@ -16,22 +16,20 @@
 
 
 import server
-from subprocess import run, PIPE
-from tornado import gen
+from shared import system
 
 
 def prg(t, d):
-	return 'program\n{} "{}"\nend program\n'.format(t, d).encode()
+	return 'program\n{} "{}"\nend program\n'.format(t, d.strip()).encode()
 
 
 class Handler(server.RequestHandler):
 	
-	@gen.coroutine
 	def post(self):
 		license = self.readJson()
-		run(['ssh', 'mc', 'cat > /FFS0/SN'],  input=prg('sn',  license['sn']),  stderr=PIPE, check=True)
-		run(['ssh', 'mc', 'cat > /FFS0/UAC'], input=prg('uac', license['uac']), stderr=PIPE, check=True)
-		run(['ssh', 'mc', 'sudo reboot'], stderr=PIPE, check=True)
+		system.run(['ssh', 'mc', 'cat > /FFS0/SN'],  input=prg('sn',  license['sn']))
+		system.run(['ssh', 'mc', 'cat > /FFS0/UAC'], input=prg('uac', license['uac']))
+		system.run(['ssh', 'mc', 'sudo reboot'])
 
 
 server.addAjax(__name__, Handler)

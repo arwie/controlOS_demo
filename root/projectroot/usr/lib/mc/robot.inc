@@ -76,6 +76,7 @@ function robot_setupSpeed($vel, $accTimeMs=500, $jerkTimeMs=250) {
 	velocitytrans			= velocitymaxtrans
 	accelerationtrans		= accelerationmaxtrans
 	decelerationtrans		= accelerationmaxtrans
+	decelerationstoptrans	= decelerationtrans
 	jerktrans				= jerkmaxtrans
 	
 	velocitymaxrot			= <?=$vel[1]?>'
@@ -84,6 +85,7 @@ function robot_setupSpeed($vel, $accTimeMs=500, $jerkTimeMs=250) {
 	velocityrot				= velocitymaxrot
 	accelerationrot			= accelerationmaxrot
 	decelerationrot			= accelerationmaxrot
+	decelerationstoprot		= decelerationrot
 	jerkrot					= jerkmaxrot
 	
 	velocitySyncTran		= velocitytrans
@@ -175,7 +177,7 @@ function _defaultRobotSetup(&$rbt) {
 		absolute					= true
 		
 		rmin						= 0
-		rmax						= MAXDOUBLE
+		rmax						= 1000000000
 		xmin						= -rmax
 		xmax						= rmax
 		ymin						= -rmax
@@ -207,7 +209,7 @@ function _defaultRobotSetup(&$rbt) {
 		tool.zmin					= zmin
 		tool.zmax					= zmax
 	<?}
-	foreach ($rbt['axes'] as $ax) { $j += 1; $jnt = 'j'.$j;
+	foreach ($rbt['axes'] as $j=>$ax) { $jnt = 'j'.($j+1);
 		ll($jnt.'.positionmin			= '.$ax.'.positionmin');
 		ll($jnt.'.positionmax			= '.$ax.'.positionmax');
 	}

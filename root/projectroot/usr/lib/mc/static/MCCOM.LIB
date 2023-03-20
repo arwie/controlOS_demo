@@ -61,216 +61,206 @@ import_c MCCOM_PUT_JSON(as string, as string, as long)
 
 
 public function com_open(byval channleType as long) as long
-  dim err as long
-  com_open = MCCOM_OPEN(channleType, err)
-  if err then
-    throw com_error
-  end if
+	dim err as long
+	com_open = MCCOM_OPEN(channleType, err)
+	if err then
+		throw com_error
+	end if
 end function
 
 
 public function com_receive(byval channelId as long, byval tout as long) as long
-  dim err as long
-  com_receive = MCCOM_RECEIVE(channelId, tout, err)
-  if err then
-    throw com_error
-  end if
+	dim err as long
+	com_receive = MCCOM_RECEIVE(channelId, tout, err)
+	if err then
+		throw com_error
+	end if
 end function
 
 
 public sub com_send(byval channelId as long)
-  dim err as long
-  MCCOM_SEND(channelId, err)
-  if err then
-    throw com_error
-  end if
+	dim err as long
+	MCCOM_SEND(channelId, err)
+	if err then
+		throw com_error
+	end if
 end sub
 
-
 public sub com_sendSelf(byval channelId as long)
-  dim err as long
-  MCCOM_SEND_SELF(channelId, err)
-  if err then
-    throw com_error
-  end if
+	dim err as long
+	if channelId then
+		MCCOM_SEND_SELF(channelId, err)
+		if err then
+			throw com_error
+		end if
+	end if
 end sub
 
 
 public function com_count(byval channelId as long) as long
-  dim err as long
-  com_count = MCCOM_COUNT(channelId, err)
-  if err then
-    throw com_error
-  end if
+	dim err as long
+	com_count = MCCOM_COUNT(channelId, err)
+	if err then
+		throw com_error
+	end if
 end function
 
 
 public sub com_reset(byval channelId as long)
-  dim err as long
-  MCCOM_RESET(channelId, err)
-  if err then
-    throw com_error
-  end if
+	dim err as long
+	MCCOM_RESET(channelId, err)
+	if err then
+		throw com_error
+	end if
 end sub
 
 
-public sub com_close(byval channelId as long)
-  MCCOM_CLOSE(channelId)
+public sub com_close(channelId as long)
+	MCCOM_CLOSE(channelId)
+	channelId = false
 end sub
-
 
 public sub com_closeAll
-  MCCOM_CLOSE_ALL()
+	MCCOM_CLOSE_ALL()
 end sub
 
 
 public sub com_clear
-  dim err as long
-  MCCOM_CLEAR(err)
-  if err then
-    throw com_error
-  end if
+	dim err as long
+	MCCOM_CLEAR(err)
+	if err then
+		throw com_error
+	end if
 end sub
 
 
 public sub com_store
-  dim err as long
-  MCCOM_STORE(err)
-  if err then
-    throw com_error
-  end if
+	dim err as long
+	MCCOM_STORE(err)
+	if err then
+		throw com_error
+	end if
 end sub
 
-
 public sub com_restore
-  dim err as long
-  MCCOM_RESTORE(err)
-  if err then
-    throw com_error
-  end if
+	dim err as long
+	MCCOM_RESTORE(err)
+	if err then
+		throw com_error
+	end if
 end sub
 
 
 public sub com_with(byval path as string)
-  MCCOM_WITH(path)
+	MCCOM_WITH(path)
 end sub
 
 
 public function com_size(byval path as string) as long
-  com_size = MCCOM_SIZE(path)
+	com_size = MCCOM_SIZE(path)
 end function
 
 
 public function com_getBool(byval path as string) as long
-  dim err as long
-  com_getBool = MCCOM_GET_BOOL(path, err)
-  if err then
-    throw com_error
-  end if
+	dim err as long
+	com_getBool = MCCOM_GET_BOOL(path, err)
+	if err then
+		throw com_error
+	end if
 end function
-
 
 public function com_getLong(byval path as string) as long
-  dim err as long
-  com_getLong = MCCOM_GET_LONG(path, err)
-  if err then
-    throw com_error
-  end if
+	dim err as long
+	com_getLong = MCCOM_GET_LONG(path, err)
+	if err then
+		throw com_error
+	end if
 end function
-
 
 public function com_getDouble(byval path as string) as double
-  dim err as long
-  com_getDouble = MCCOM_GET_DOUBLE(path, err)
-  if err then
-    throw com_error
-  end if
+	dim err as long
+	com_getDouble = MCCOM_GET_DOUBLE(path, err)
+	if err then
+		throw com_error
+	end if
 end function
-
 
 public function com_getString(byval path as string) as string
-  dim err as long
-  com_getString = MCCOM_GET_STRING(path, err)
-  if err then
-    throw com_error
-  end if
+	dim err as long
+	com_getString = MCCOM_GET_STRING(path, err)
+	if err then
+		throw com_error
+	end if
 end function
 
-
 public function com_getJson(byval path as string) as string
-  dim err as long
-  com_getJson = MCCOM_GET_JSON(path, err)
-  if err then
-    throw com_error
-  end if
+	dim err as long
+	com_getJson = MCCOM_GET_JSON(path, err)
+	if err then
+		throw com_error
+	end if
 end function
 
 
 public function com_getLocationXy(byval path as string) as location of xy
-  com_getLocationXy = #{com_getDouble(path+"/x"), com_getDouble(path+"/y")} 
+	com_getLocationXy = #{com_getDouble(path+"/x"), com_getDouble(path+"/y")} 
 end function
-
 
 public function com_getLocationXyzr(byval path as string) as location of xyzr
-  com_getLocationXyzr = #{com_getDouble(path+"/x"), com_getDouble(path+"/y"), com_getDouble(path+"/z"), com_getDouble(path+"/r")} 
+	com_getLocationXyzr = #{com_getDouble(path+"/x"), com_getDouble(path+"/y"), com_getDouble(path+"/z"), com_getDouble(path+"/r")} 
 end function
 
-
 public function com_getJointXyzr(byval path as string) as joint of xyzr
-  com_getJointXyzr = {com_getDouble(path+"/0"), com_getDouble(path+"/1"), com_getDouble(path+"/2"), com_getDouble(path+"/3")} 
+	com_getJointXyzr = {com_getDouble(path+"/0"), com_getDouble(path+"/1"), com_getDouble(path+"/2"), com_getDouble(path+"/3")} 
 end function
 
 
 public sub com_putBool(byval path as string, byval boolValue as long)
-  dim err as long
-  MCCOM_PUT_BOOL(path, boolValue, err)
-  if err then
-    throw com_error
-  end if
+	dim err as long
+	MCCOM_PUT_BOOL(path, boolValue, err)
+	if err then
+		throw com_error
+	end if
 end sub
-
 
 public sub com_putLong(byval path as string, byval longValue as long)
-  dim err as long
-  MCCOM_PUT_LONG(path, longValue, err)
-  if err then
-    throw com_error
-  end if
+	dim err as long
+	MCCOM_PUT_LONG(path, longValue, err)
+	if err then
+		throw com_error
+	end if
 end sub
-
 
 public sub com_putDouble(byval path as string, byval doubleValue as double)
-  dim err as long
-  MCCOM_PUT_DOUBLE(path, doubleValue, err)
-  if err then
-    throw com_error
-  end if
+	dim err as long
+	MCCOM_PUT_DOUBLE(path, doubleValue, err)
+	if err then
+		throw com_error
+	end if
 end sub
 
-
 public sub com_putString(byval path as string, byval stringValue as string)
-  dim err as long
-  MCCOM_PUT_STRING(path, stringValue, err)
-  if err then
-    throw com_error
-  end if
+	dim err as long
+	MCCOM_PUT_STRING(path, stringValue, err)
+	if err then
+		throw com_error
+	end if
 end sub
 
 public sub com_putStringRef(byval path as string, stringValue as string)
-  dim err as long
-  MCCOM_PUT_STRING(path, stringValue, err)
-  if err then
-    throw com_error
-  end if
+	dim err as long
+	MCCOM_PUT_STRING(path, stringValue, err)
+	if err then
+		throw com_error
+	end if
 end sub
 
-
 public sub com_putJson(byval path as string, byval jsonValue as string)
-  dim err as long
-  MCCOM_PUT_JSON(path, jsonValue, err)
-  if err then
-    throw com_error
-  end if
+	dim err as long
+	MCCOM_PUT_JSON(path, jsonValue, err)
+	if err then
+		throw com_error
+	end if
 end sub
 
 
@@ -318,3 +308,18 @@ public sub com_putJointXyzrp(byval path as string, byval jnt as joint of xyzrp)
 	com_putDouble(path+"/3", jnt{4})
 	com_putDouble(path+"/4", jnt{5})
 end sub
+
+
+public sub com_sendCmd(byval channelId as long, byval cmd_ as long)
+	com_putLong("/cmd",  cmd_)
+	com_send(channelId)
+end sub
+
+public sub com_sendSelfCmd(byval channelId as long, byval cmd_ as long)
+	com_putLong("/cmd",  cmd_)
+	com_sendSelf(channelId)
+end sub
+
+public function com_getCmd as long
+	com_getCmd = com_getLong("/cmd")
+end function

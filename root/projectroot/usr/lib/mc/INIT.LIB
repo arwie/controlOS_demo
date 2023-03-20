@@ -16,13 +16,14 @@
 
 
 
-call(get('init')['begin']);
+call(get('common')['begin']);
 
 foreach(get('robot') as $rbt) {
+	$axisname = '';
 	foreach ($rbt['axes'] as $ax)
 		$axisname .= ' axisname='.$ax;
 	l('common shared '.$rbt['name'].' as group '.$axisname.($rbt['model'] ? ' model='.$rbt['model'].' of '.$rbt['type'] : ''));
 }
 
 
-call(get('init')['end']);
+call(get('common')['end']);

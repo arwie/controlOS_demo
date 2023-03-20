@@ -21,22 +21,19 @@
 
 
 {% block html %}
-<legend data-l10n-id="mc_license"></legend>
-<p>
-	<div class="form-row">
-		<div class="form-group col">
-			<label data-l10n-id="mc_sn"></label>
-			<input data-bind="value:license.sn" type="text" class="form-control">
-		</div>
-		<div class="form-group col">
-			<label data-l10n-id="mc_uac"></label>
-			<input data-bind="value:license.uac" type="text" class="form-control">
-		</div>
+<div class="row">
+	<div class="mb-3 col-md">
+		<label class="form-label" data-l10n-id="mc_sn"></label>
+		<input data-bind="value:license.sn" type="text" class="form-control">
 	</div>
-</p>
-<p>
+	<div class="mb-3 col-md">
+		<label class="form-label" data-l10n-id="mc_uac"></label>
+		<input data-bind="value:license.uac" type="text" class="form-control">
+	</div>
+</div>
+<buttonBar>
 	<button data-bind="click:save" class="btn btn-primary" data-l10n-id="mc_save"></button>
-</p>
+</buttonBar>
 {% end %}
 
 
