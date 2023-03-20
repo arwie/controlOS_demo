@@ -5,4 +5,4 @@ HOST=${1-sys}
 BASEDIR=$(dirname $(realpath $0))
 
 
-pv $BASEDIR/../images/update | ssh -i $BASEDIR/ssh/id_rsa root@$HOST "update --console --bare"
+pv $BASEDIR/../images/update | ssh -t -i $BASEDIR/ssh/id_rsa root@$HOST "update --bare"

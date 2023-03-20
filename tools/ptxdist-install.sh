@@ -7,7 +7,6 @@ RELEASE=bullseye
 
 pacman -S --needed debootstrap debian-archive-keyring
 
-cd /var/lib/machines
 debootstrap $RELEASE ptxdist/
 
 
@@ -16,6 +15,7 @@ debootstrap $RELEASE ptxdist/
 echo "deb http://debian.pengutronix.de/debian/ $RELEASE main contrib non-free" > /etc/apt/sources.list.d/pengutronix.list
 apt-get update --allow-insecure-repositories
 apt-get install pengutronix-archive-keyring
+# if fails, manually download and install (dpkg -i) from https://debian.pengutronix.de/debian/pool/main/p/pengutronix-archive-keyring/
 
 apt-get install -y bash-completion wget ccache git \
 	build-essential pkg-config libncurses-dev gawk flex bison texinfo file \
@@ -27,18 +27,12 @@ apt-get install oselas.toolchain-2018.12.0-arm-v7a-linux-gnueabihf-gcc-8.2.1-gli
 
 apt-get clean
 
+echo "alias ll='ls -lAh --color'" > /etc/profile.d/alias.sh
 
-#install ptxdist(s)
+
+#install ptxdist
 
 # within container as user
 ptxdist setup
 	#-> set src directory: ${HOME}/src
 	#-> enable ccache
-
-
-# EPS-IDF (as user)
-cd /opt
-git clone --depth=1 --shallow-submodules --recursive -b v4.4 https://github.com/espressif/esp-idf.git
-export IDF_TOOLS_PATH=/opt/esp-idf
-cd esp-idf
-./install.sh esp32

@@ -1,5 +1,5 @@
 {% comment 
-# Copyright (c) 2017 Artur Wiebe <artur@4wiebe.de>
+# Copyright (c) 2023 Artur Wiebe <artur@4wiebe.de>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 # associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -21,54 +21,47 @@
 
 
 {% block html %}
-<legend data-l10n-id="network_smtp"></legend>
-<p>
-	<div class="form-group">
-		<div class="form-check">
-			<input data-bind="checked:enabled" type="checkbox" class="form-check-input">
-			<label class="form-check-label" data-l10n-id="network_enabled"></label>
+<div class="mb-3 form-check form-switch">
+	<input data-bind="checked:enabled" type="checkbox" id="network_smtpEnabled" class="form-check-input">
+	<label class="form-check-label" for="network_smtpEnabled" data-l10n-id="network_enabled"></label>
+</div>
+<div data-bind="if:enabled">
+	<div class="mb-3">
+		<radiogroup>
+			<div class="form-check form-check-inline">
+				<input data-bind="checked:conf.smtp.ssl" type="radio" value="yes" id="network_smtpYes" class="form-check-input">
+				<label class="form-check-label" for="network_smtpYes" data-l10n-id="network_ssl"></label>
+			</div>
+			<div class="form-check form-check-inline">
+				<input data-bind="checked:conf.smtp.ssl" type="radio" value="no" id="network_smtpNo" class="form-check-input">
+				<label class="form-check-label" for="network_smtpNo" data-l10n-id="network_starttls"></label>
+			</div>
+		</radiogroup>
+	</div>
+	<div class="row">
+		<div class="mb-3 col-md">
+			<label class="form-label" data-l10n-id="network_host"></label>
+			<input data-bind="value:conf.smtp.host" type="text" class="form-control">
+		</div>
+		<div class="mb-3 col-md">
+			<label class="form-label" data-l10n-id="network_port"></label>
+			<input data-bind="value:conf.smtp.port" type="number" class="form-control">
 		</div>
 	</div>
-</p>
-<div data-bind="visible:enabled">
-	<p>
-		<div class="form-group">
-			<radiogroup>
-				<div class="form-check form-check-inline">
-					<input data-bind="checked:conf.smtp.ssl" type="radio" value="yes" class="form-check-input">
-					<label class="form-check-label" data-l10n-id="network_ssl"></label>
-				</div>
-				<div class="form-check form-check-inline">
-					<input data-bind="checked:conf.smtp.ssl" type="radio" value="no" class="form-check-input">
-					<label class="form-check-label" data-l10n-id="network_starttls"></label>
-				</div>
-			</radiogroup>
+	<div class="row">
+		<div class="mb-3 col-md">
+			<label class="form-label" data-l10n-id="network_user"></label>
+			<input data-bind="value:conf.smtp.user" type="text" class="form-control">
 		</div>
-		<div class="form-row">
-			<div class="form-group col">
-				<label data-l10n-id="network_host"></label>
-				<input data-bind="value:conf.smtp.host" type="text" class="form-control">
-			</div>
-			<div class="form-group col">
-				<label data-l10n-id="network_port"></label>
-				<input data-bind="value:conf.smtp.port" type="number" class="form-control">
-			</div>
+		<div class="mb-3 col-md">
+			<label class="form-label" data-l10n-id="network_password"></label>
+			<input data-bind="value:conf.smtp.pass" type="password" class="form-control">
 		</div>
-		<div class="form-row">
-			<div class="form-group col">
-				<label data-l10n-id="network_user"></label>
-				<input data-bind="value:conf.smtp.user" type="text" class="form-control">
-			</div>
-			<div class="form-group col">
-				<label data-l10n-id="network_password"></label>
-				<input data-bind="value:conf.smtp.pass" type="text" class="form-control">
-			</div>
-		</div>
-	</p>
+	</div>
 </div>
-<p>
+<buttonBar>
 	<button data-bind="click:save" class="btn btn-primary" data-l10n-id="network_save"></button>
-</p>
+</buttonBar>
 {% end %}
 
 
@@ -87,13 +80,13 @@ class {
 		});
 	}
 	
-	save() {
-		$.post(ajaxUrl('network/smtp'), this.enabled() ? ko.mapping.toJSON(this.conf) : '');
+	save(ctx, ev) {
+		gui.feedback(ev.target, $.post(ajaxUrl('network.smtp'), this.enabled() ? ko.mapping.toJSON(this.conf) : ''));
 	}
 	
 	start() {
-		$.getJSON(ajaxUrl('network/smtp'), (data)=>{
-			this.enabled(!$.isEmptyObject(data));
+		$.getJSON(ajaxUrl('network.smtp'), (data)=>{
+			this.enabled(data!=null);
 			if (this.enabled())
 				ko.mapping.fromJS(data, this.conf);
 		});

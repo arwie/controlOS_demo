@@ -1,4 +1,4 @@
-# Copyright (c) 2017 Artur Wiebe <artur@4wiebe.de>
+# Copyright (c) 2023 Artur Wiebe <artur@4wiebe.de>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 # associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -15,56 +15,58 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-import os, subprocess
-import smtplib
 from shared.conf import Conf
+from shared import system
+from pathlib import Path
+import smtplib
 
 
 
 def status():
-	def shell(cmd): return subprocess.run(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT).stdout.decode()
-	def format(name, content): return "##### {}\n{}\n\n".format(name, content)
+	def run(cmd):
+		return system.run(cmd, True, text=True, check=False, stderr=system.subprocess.STDOUT)
+	def format(name, content):
+		return "##### {}\n{}\n\n".format(name, content)
 	
-	status  = format('status',				shell('networkctl --no-pager status'))
+	status  = format('status',				run(['networkctl','--no-pager','status']))
 	
-	status += format('internet access',		shell('ping -c1 -W1 google.com'))
-	status += format('local connections',	shell('ping -c1 -W1 mc'))
+	status += format('internet access',		run(['ping','-c1','-W1','google.com']))
 	
 	if hasInterface('syswlan'):
-		status += format('syswlan',			shell('systemctl --no-pager status hostapd'))
+		status += format('syswlan',			run(['systemctl','--no-pager','status','hostapd']))
 	
 	if hasInterface('wlan'):
-		status += format('wlan status',		shell('wpa_cli status'))
-		status += format('wlan stations',	shell('wpa_cli scan_result'))
+		status += format('wlan status',		run(['wpa_cli','status']))
+		status += format('wlan stations',	run(['wpa_cli','scan_result']))
 	
 	if smtpEnabled():
-		result = "OK"
 		try:
-			sendEmail(False)
+			sendEmail(None)
+			result = "OK"
 		except Exception as e:
 			result = "Failed!\n" + str(e)
 		status += format('email smtp',		result)
 	
-	status += format('addresses',			shell('ip addr'))
-	status += format('links',				shell('ip link'))
-	status += format('routes',				shell('ip route'))
-	status += format('neighbours',			shell('ip neigh'))
+	status += format('addresses',			run(['ip','addr']))
+	status += format('links',				run(['ip','link']))
+	status += format('routes',				run(['ip','route']))
+	status += format('neighbours',			run(['ip','neigh']))
 	
 	return status
 
 
 
 def hasInterface(interface):
-	return os.path.exists('/sys/class/net/'+interface)
+	return Path('/sys/class/net/'+interface).exists()
 
 
 
 
-smtpConfFile = '/etc/smtp.conf'
+smtpConfFile = Path('/etc/smtp.conf')
 
 
 def smtpEnabled():
-	return os.path.isfile(smtpConfFile)
+	return smtpConfFile.is_file()
 
 
 def sendEmail(msg):

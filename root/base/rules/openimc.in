@@ -1,0 +1,10 @@
+## SECTION=scientific
+
+config OPENIMC
+	tristate
+	select PYTHON3
+	select RUCKIG
+	select ETHERLAB_ETHERCAT
+	prompt "openIMC"
+	help
+	  FIXME

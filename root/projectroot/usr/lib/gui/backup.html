@@ -20,25 +20,25 @@
 
 
 {% block html %}
-<p>
+<buttonBar>
 	<a data-bind="attr:{'href':location.protocol+'//'+location.hostname+':8100'}" target="_blank" class="btn btn-primary" data-l10n-id="backup-download"></a>
 	<uploadButton params="upload:$model.upload, l10n:'backup-restore', css:'btn-warning'"></uploadButton>
-</p>
+</buttonBar>
 {% end %}
 
 
 {% block model %}
 class {
-	upload(file) {
+	upload(file, element) {
 		let formData = new FormData();
 		formData.append('backup', file);
-		$.ajax({
+		gui.feedback(element, $.ajax({
 			url: ajaxUrl('backup'),
 			type: "put",
 			data: formData,
 			processData: false,
 			contentType: false,
-		});
+		}));
 	}
 }
 {% end %}

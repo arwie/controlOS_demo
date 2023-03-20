@@ -30,13 +30,27 @@ connect = Verbinden
 disconnect = Trennen
 
 
+log = Log
+log_follow = Neuen Meldungen folgen
+log_priority = Priorität
+log_identifier = Kennung
+log_host = Host
+log_date = Datum
+log_grep = Freitextsuche
+log_filter = Filter
+log_pinned = Festgehalten
+log_extendNewer = Neuere laden
+log_extendOlder = Ältere laden
+log_empty = Keine Einträge vorhanden
+log_extlogImport = Datei importieren
+
 update = Update
-update-version = Aktuelle Version
-update-version-name = Version
-update-version-id = ID
-update-file = Update von Datei
-update-revert = Update widerrufen
-update-revert-date = Datum des letzten Updates
+update_version = Aktuelle Version
+update_versionName = Version
+update_versionId = ID
+update_file = Update von Datei
+update_revert = Update widerrufen
+update_revertDate = Datum des letzten Updates
 
 
 remote = Fernzugriff
@@ -49,7 +63,6 @@ remote_disable = Deaktivieren
 issue = Problembericht
 issue_description = Beschreibung des Problems
 issue_contact = Kontaktperson
-issue_contactName = Name
 issue_contactEmail = Emailadresse
 issue_contactTelephone = Telefonnummer
 issue_download = Herunterladen (mittels externem Emailprogramm senden)

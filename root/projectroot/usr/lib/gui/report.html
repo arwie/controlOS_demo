@@ -22,13 +22,13 @@
 {% block html %}
 <table class="table table-hover">
 	<tbody data-bind="foreach:messages">
-		<tr data-bind="css: {'bg-danger': priority <= 2, 'table-danger': priority == 3, 'table-warning': priority == 4, 'table-info': priority == 5}">
-			<td data-bind="text:timestamp"></td>
+		<tr data-bind="class:$model.priorityCss[msg.PRIORITY]">
+			<td data-bind="text:timestamp()"></td>
 			<td width="85%">
-				<strong data-bind="l10n:report" style="white-space:pre-line"></strong>
-				<p data-bind="l10n:report+'-help', visible:help"></p>
+				<strong data-bind="l10n:msg.REPORT" style="white-space:pre-line"></strong>
+				<p data-bind="l10n:msg.REPORT+'-help', visible:details" class="mt-3"></p>
 			</td>
-			<td data-bind="click:toggleHelp"><i class="fas fa-question-circle"></i></td>
+			<td data-bind="click:()=>{details(details()?0:1)}"><i class="fas fa-question-circle"></i></td>
 		</tr>
 	</tbody>
 </table>
@@ -36,45 +36,41 @@
 
 
 {% block script %}
-function Message(msg) {
-	let self = this;
+class Message {
+	constructor(msg) {
+		msg.PRIORITY	= parseInt(msg.PRIORITY);
+		this.details	= ko.observable(0);
+		this.msg = msg;
+	}
 	
-	self.timestamp		= new Date(parseInt(msg['_SOURCE_REALTIME_TIMESTAMP'])/1000).toLocaleString();
-	self.priority		= parseInt(msg['PRIORITY']);
-	self.identifier		= msg['SYSLOG_IDENTIFIER'];
-	self.report			= msg['REPORT'] ? msg['REPORT'] : msg['MESSAGE'];
-	
-	self.help			= ko.observable(false);
-	self.toggleHelp		= function() { self.help(!self.help()); }
+	timestamp() {
+		const timestamp = parseInt(this.msg._SOURCE_REALTIME_TIMESTAMP ?? this.msg.__REALTIME_TIMESTAMP);
+		return new Date(timestamp/1000).toLocaleString(navigator.language, {hour12:false});
+	}
 }
 {% end %}
 
 
 {% block model %}
-function() {
-	let self = this;
-	
-	self.messages		= ko.observableArray();
-	self.messages.extend({ rateLimit: 500 });
-	
-	self.connection		= ko.observable();
-
-	self.start = function()	{
-		self.connection(new WebSocket(wsUrl(null, null, 'log', {args:'--since=-24hours REPORTS=1'})));
-
-		self.connection().onmessage = function(e) {
-			self.messages.unshift(new Message(JSON.parse(e.data)));
-			
-			if (self.messages().length > 50)
-				self.messages.pop();
-		}
+class {
+	constructor() {
+		this.priorityCss = ['bg-danger','bg-danger','bg-danger','table-danger','table-warning','table-info','',''];
+		
+		this.messages = ko.observableArray();
+		this.messages.extend({rateLimit:100});
 	}
 	
-	self.stop = function() {
-		try {
-			self.connection().close();
-		} catch(e) {}
-		self.messages([]);
+	start()	{
+		model.log = webSocket(wsUrl(null, null, 'log', {filter:'REPORTS=1'}), (msg)=>{
+			model.messages.unshift(new Message(msg));
+			if (model.messages().length > 50)
+				model.messages.pop();
+		});
+	}
+	
+	stop() {
+		model.log.close();
+		model.messages([]);
 	}
 }
 {% end %}

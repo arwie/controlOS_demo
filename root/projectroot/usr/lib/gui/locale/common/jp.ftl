@@ -30,13 +30,19 @@ connect = コネクト
 disconnect = ディスコネクト
 
 
+log = ログ
+log_priority							=	ログ　優先度
+log_identifier							=	ログ　フィルタ
+log_host								=	ログ　ホスト
+log_empty								=	ログがありません
+
 update = アップデート
-update-version = 現在のアップデート
-update-version-name = バージョン
-update-version-id = アップデート　バージョン ID
-update-file = ファイル選択
-update-revert = 最後の更新を元に戻す
-update-revert-date = 最終更新
+update_version = 現在のアップデート
+update_versionName = バージョン
+update_versionId = アップデート　バージョン ID
+update_file = ファイル選択
+update_revert = 最後の更新を元に戻す
+update_revertDate = 最終更新
 
 
 remote = リモートアクセス
@@ -49,7 +55,6 @@ remote_disable = Deactivate
 issue = 発行レポート
 issue_description = 問題の説明
 issue_contact = 連絡窓口
-issue_contactName = 名
 issue_contactEmail = 電子メールアドレス
 issue_contactTelephone = 電話番号
 issue_download = ダウンロード（外部の電子メールクライアント経由で送信）

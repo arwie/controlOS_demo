@@ -35,7 +35,7 @@ def dataToRow(data, prefix=''):
 	row = []
 	for k, v in data.items():
 		column = prefix+'_'+k if prefix else k
-		if isinstance(v, collections.MutableMapping):
+		if isinstance(v, collections.abc.MutableMapping):
 			row.extend(dataToRow(v, column).items())
 		else:
 			row.append((column, v))

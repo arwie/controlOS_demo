@@ -1,0 +1,3 @@
+[Unit]
+Wants=wpa_supplicant.service
+Wants=network@wlan.target

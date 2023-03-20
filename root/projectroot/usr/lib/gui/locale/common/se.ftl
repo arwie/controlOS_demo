@@ -30,13 +30,18 @@ connect = Connect
 disconnect = Koppla bort
 
 
+log = Log
+log_priority = Loggprioritet
+log_identifier = Loggfiltret
+log_host = Logg värd
+
 update = Uppdatera
-update-version = Aktuell version
-update-version-name = Version
-update-version-id = ID
-update-file = Uppdatering från fil
-update-revert = Återkalla senaste uppdatering
-update-revert-date = Datum för senaste uppdatering
+update_version = Aktuell version
+update_versionName = Version
+update_versionId = ID
+update_file = Uppdatering från fil
+update_revert = Återkalla senaste uppdatering
+update_revertDate = Datum för senaste uppdatering
 
 
 remote = Fjärranslutning
@@ -49,7 +54,6 @@ remote_disable = Inaktivera
 issue = Utfärda en rapport
 issue_description = Beskrivning av problemet
 issue_contact = Kontaktperson
-issue_contactName = Namn
 issue_contactEmail = E-postadress
 issue_contactTelephone = Telefonnummer
 issue_download = Nedladdning (skicka via extern e-postklient)

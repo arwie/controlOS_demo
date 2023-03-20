@@ -32,7 +32,6 @@
 	
 	<script src="{{static_url('pep.js')}}"></script>
 	<script src="{{static_url('jquery.js')}}"></script>
-	<script src="{{static_url('popper.js')}}"></script>
 	<script src="{{static_url('bootstrap.js')}}"></script>
 	<link rel="stylesheet" href="{{static_url('bootstrap.css')}}">
 	<link rel="stylesheet" href="{{static_url('fontawesome/css/all.min.css')}}">
@@ -201,11 +200,16 @@ window.gui = new function() {
 {% include "baseWidgets.html" %}
 {% block html %}{% end %}
 
-<body data-bind="visible:true" style="display:none">
+<body data-bind="visible:true" style="display:none; overscroll-behavior:contain;" class="vh-100">
 	
-	{% block body %}{% end %}
+	{% block body %}
+		{% block navBar %}{% end %}
+		<main class="container-fluid h-100 d-flex flex-column" style="padding-top:4.5rem">
+			{% block main %}{% end %}
+		</main>
+	{% end %}
 	
-	<div id="stateDisconnected" data-backdrop="static" data-keyboard="false" class="modal">
+	<div id="stateDisconnected" data-bs-backdrop="static" data-bs-keyboard="false" class="modal">
 		<div class="modal-dialog modal-lg">
 			<div class="alert alert-warning">
 				<p data-l10n-id="disconnected"></p>
@@ -229,7 +233,7 @@ resetWatchdog();
 
 function disconnected() {
 	resetWatchdog(false);
-	$('#stateDisconnected').modal();
+	(new bootstrap.Modal('#stateDisconnected')).show();
 	pager.navigate('#');
 	setInterval(()=>{
 		$.post(ajaxUrl('state')).done(()=>{

@@ -1,0 +1,5 @@
+*filter
+:FORWARD DROP
+-A FORWARD -i sys -j ACCEPT
+-A FORWARD -o sys -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+COMMIT

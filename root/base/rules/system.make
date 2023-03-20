@@ -37,19 +37,17 @@ $(STATEDIR)/system.targetinstall:
 	@$(call install_alternative, system, 0, 0, 0644, /usr/lib/systemd/system/etc.mount.d/etc.conf)
 	@$(call install_alternative, system, 0, 0, 0644, /etc/tmpfiles.d/system.conf)
 	@$(call install_alternative, system, 0, 0, 0755, /usr/sbin/reboot-kexec)
-	
-	# firmware blobs
-	@$(call install_alternative_tree, system, 0, 0, /usr/lib/firmware)
 
 	# networking
 	@$(call install_copy,        system, 0, 0, 0700, /etc/polkit-1/localauthority)
 	@$(call install_alternative, system, 0, 0, 0644, /etc/polkit-1/localauthority/10-vendor.d/systemd-networkd.pkla)
 	@$(call install_alternative_tree, system, 0, 0,  /etc/systemd/network)
-	@$(call install_alternative_tree, system, 0, 0,  /etc/hostapd.conf.d)
+	@$(call install_alternative, system, 0, 0, 0644, /usr/lib/systemd/system/sys-subsystem-net-devices-lan.device)
+	@$(call install_alternative, system, 0, 0, 0644, /usr/lib/systemd/system/network@.target)
 	@$(call install_alternative, system, 0, 0, 0644, /usr/lib/systemd/system/hostapd.service)
 	@$(call install_alternative, system, 0, 0, 0644, /usr/lib/systemd/system/hostapd-psk.service)
 	@$(call install_alternative, system, 0, 0, 0644, /usr/lib/systemd/system/sys-subsystem-net-devices-syswlan.device)
-	@$(call install_alternative_tree, system, 0, 0,  /etc/wpa_supplicant.conf.d)
+	@$(call install_copy,        system, 0, 0, 0755, /etc/wpa_supplicant.conf.d)
 	@$(call install_alternative, system, 0, 0, 0644, /usr/lib/systemd/system/sys-subsystem-net-devices-wlan.device)
 	
 	#gpg

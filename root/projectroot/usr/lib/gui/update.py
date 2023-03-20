@@ -16,27 +16,28 @@
 
 
 import server
-import pathlib, os, subprocess
+from pathlib import Path
+from shared import system
 
 
 class Handler(server.RequestHandler):
 	def get(self):
 		try:
-			self.write(pathlib.Path('/version').read_text())
+			self.write(Path('/version').read_text())
 		except: pass
 	
 	async def put(self):
-		await server.run_in_executor(lambda:subprocess.run(['update'], input=self.request.files['update'][0]['body']))
+		await server.run_in_executor(lambda:system.run(['update'], input=self.request.files['update'][0]['body']))
 
 
 class RevertHandler(server.RequestHandler):
 	def get(self):
 		try:
-			self.write(str(os.path.getmtime('/var/revert')))
+			self.write(str(Path('/var/revert').stat().st_mtime))
 		except: pass
 	
 	async def post(self):
-		await server.run_in_executor(lambda:subprocess.run(['update','--revert']))
+		await server.run_in_executor(lambda:system.run(['update','--revert']))
 
 
 

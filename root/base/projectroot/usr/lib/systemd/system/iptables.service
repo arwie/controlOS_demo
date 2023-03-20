@@ -1,0 +1,12 @@
+[Unit]
+DefaultDependencies=no
+After=systemd-sysctl.service
+Before=systemd-networkd.service
+PartOf=systemd-networkd.service
+RefuseManualStart=true
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStartPre=/usr/sbin/iptables-flush
+ExecStart=/usr/sbin/iptables-restore --noflush /etc/iptables/rules.v4

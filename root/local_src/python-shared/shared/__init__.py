@@ -16,9 +16,13 @@
 
 
 
-import logging
+import logging, os
 from systemd import journal
 
 
 logging.root.addHandler(journal.JournalHandler())
 logging.root.setLevel(logging.INFO)
+
+logging.term = 'TERM' in os.environ
+if logging.term:
+	logging.root.addHandler(logging.StreamHandler())

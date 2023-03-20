@@ -20,10 +20,12 @@ import subprocess
 
 
 def run(cmd, capture=False, **kwargs):
+	kwargs.setdefault('check', True)
+	kwargs.setdefault('stderr', subprocess.PIPE)
 	if capture:
 		kwargs['stdout'] = subprocess.PIPE
 	try:
-		proc = subprocess.run(cmd, shell=isinstance(cmd, str), check=True, stderr=subprocess.PIPE, **kwargs)
+		proc = subprocess.run(cmd, shell=isinstance(cmd, str), **kwargs)
 		return proc.stdout if capture else proc
 	except subprocess.CalledProcessError as e:
 		errorText = e.stderr if (e.stderr or capture or not e.stdout) else e.stdout
@@ -33,7 +35,7 @@ def run(cmd, capture=False, **kwargs):
 
 
 def statusText(unit):
-	return run(['systemctl', '--no-pager', '--full', 'status', unit], True, text=True)
+	return run(['systemctl', '--no-pager', '--full', 'status', unit], True, text=True, check=False)
 
 def restart(unit):
 	run(['systemctl', '--no-block', 'restart', unit])

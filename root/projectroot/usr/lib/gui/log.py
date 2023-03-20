@@ -1,4 +1,4 @@
-# Copyright (c) 2016 Artur Wiebe <artur@4wiebe.de>
+# Copyright (c) 2023 Artur Wiebe <artur@4wiebe.de>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 # associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -15,35 +15,31 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-import server, asyncio
-import shlex, json
+import server, asyncio, json
 from tornado import process, iostream
 
 
 
-def setArgs(journalFile, *args):
-	global journalArgs
-	journalArgs = ['/usr/bin/journalctl', '--file='+journalFile, *args]
+cmd = ['journalctl', '--file=/var/log/journal/*/*', '--merge']
 
-setArgs('/var/log/journal/*/*', '--merge')
 
+async def journalctl(args, lines='all', output='cat', wait=True):
+	proc = process.Subprocess([*cmd, '--lines='+str(lines), '--output='+output, *args], stdout=process.Subprocess.STREAM)
+	if wait:
+		stdout = await proc.stdout.read_until_close()
+		await proc.wait_for_exit(raise_error=False)
+		return stdout
+	else:
+		return proc
 
 
 class Handler(server.WebSocketHandler):
 	
-	async def readJournal(self, args):
-		journalProc = process.Subprocess(args, stdout=process.Subprocess.STREAM)
+	async def readJournal(self, args, lines):
+		journalProc = await journalctl(args, lines, 'json', False)
 		try:
 			while not self.task.cancelled():
-				msg = await journalProc.stdout.read_until(b'\n')
-				msg = json.loads(msg.decode())
-				
-				if not '_SOURCE_REALTIME_TIMESTAMP' in msg:
-					msg['_SOURCE_REALTIME_TIMESTAMP'] = msg['__REALTIME_TIMESTAMP']
-				msg = {k: v for k,v in msg.items() if not k.startswith('__')}
-				
-				self.write_messageJson(msg)
-				
+				self.write_message(await journalProc.stdout.read_until(b'\n'))
 		except (iostream.StreamClosedError, asyncio.CancelledError):
 			pass
 		finally:
@@ -51,36 +47,58 @@ class Handler(server.WebSocketHandler):
 			journalProc.proc.terminate()
 			await journalProc.wait_for_exit(raise_error=False)
 	
-	
 	def open(self):
-		args = journalArgs.copy()
-		args.extend(shlex.split(self.get_argument('args')))
-		args.append('--lines=300')
-		args.append('--output=json')
-		args.append('--all')
-		args.append('--follow')
+		args = ['--priority='+self.get_query_argument('priority', 'notice')]
 		
-		self.task = asyncio.create_task(self.readJournal(args))
+		lines = int(self.get_query_argument('lines', 50))
+		if lines < 0:
+			args.append('--reverse')
+		
+		cursor = self.get_query_argument('cursor', None)
+		if cursor:
+			args.append('--after-cursor='+cursor)
+		else:
+			date = self.get_query_argument('date', None)
+			if date:
+				args.append('--since='+date)
+				args.append('--until={} 23:59:59'.format(date))
+			else:
+				if lines > 0:
+					args.append('--follow')
+		
+		identifier = self.get_query_argument('identifier', None)
+		if identifier:
+			args.append('--identifier='+identifier)
+		
+		grep = self.get_query_argument('grep', None)
+		if grep:
+			args.append('--grep='+grep)
+		
+		filter = self.get_query_argument('filter', '')
+		for arg in filter.split():
+			args.append(arg.lstrip('-'))
+		
+		self.task = asyncio.create_task(self.readJournal(args, abs(lines)))
 
 	def on_close(self):
 		self.task.cancel()
 
 
 
-
-class LogFieldHandler(server.RequestHandler):
-	
+class FieldHandler(server.RequestHandler):
 	async def get(self, field):
-		args = journalArgs.copy()
-		args.append('--field={}'.format(field))
-		journalProc = process.Subprocess(args, stdout=process.Subprocess.STREAM)
-		
-		values = await journalProc.stdout.read_until_close()
+		values = await journalctl(['--field={}'.format(field)])
 		self.writeJson(values.decode().splitlines())
 
-		await journalProc.wait_for_exit(raise_error=False)
+
+class CatHandler(server.RequestHandler):
+	async def get(self, field, cursor):
+		self.set_header('Content-Type', 'application/octet-stream')
+		self.set_header('Content-Disposition', 'attachment; filename='+field.replace('_','.'))
+		self.write(await journalctl(['--output-fields='+field, '--cursor='+cursor], 1))
 
 
 
-server.addAjax(__name__,			Handler)
-server.addAjax(__name__+'/(.*)',	LogFieldHandler)
+server.addAjax(__name__,					Handler)
+server.addAjax(__name__+'/field/(.*)',		FieldHandler)
+server.addAjax(__name__+'/cat/(.*)/(.*)',	CatHandler)

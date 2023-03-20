@@ -30,13 +30,19 @@ connect = Připojení
 disconnect = Odpojit
 
 
+log = Log
+log_priority = Log priorita
+log_identifier = Log filtr
+log_host = Log host
+log_empty = Log prázdný
+
 update = Aktualizace
-update-version = Aktuální verze
-update-version-name = Verze
-update-version-id = ID
-update-file = Aktualizace ze souboru
-update-revert = Vrátit poslední aktualizaci
-update-revert-date = Datum poslední aktualizace
+update_version = Aktuální verze
+update_versionName = Verze
+update_versionId = ID
+update_file = Aktualizace ze souboru
+update_revert = Vrátit poslední aktualizaci
+update_revertDate = Datum poslední aktualizace
 
 
 remote = Vzdálený přístup
@@ -49,7 +55,6 @@ remote_disable = Deaktivovat
 issue = Hlášení o problému
 issue_description = Popis problému
 issue_contact = Kontaktní osoba
-issue_contactName = Název
 issue_contactEmail = E-mail
 issue_contactTelephone = Telefonní číslo
 issue_download = Stáhnout (odeslat prostřednictvím externího e-mailového programu)

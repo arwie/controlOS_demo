@@ -20,45 +20,34 @@
 
 
 {% block html %}
-<p>
-	<div class="card">
-		<div class="card-header" data-l10n-id="update-version"></div>
-		<div class="card-body">
-			<dl data-bind="with:version">
-				<dt data-l10n-id="update-version-name"></dt>
-				<dd data-bind="text:name"></dd>
-				<dt data-l10n-id="update-version-id"></dt>
-				<dd data-bind="text:id"></dd>
-			</dl>
-		</div>
-	</div>
-</p>
-
-<ul data-bind="foreach:$page.children" class="nav nav-tabs nav-justified mb-3">
-	<li class="nav-item">
-		<a data-bind="page-href:$data, attr:{'data-l10n-id':'update-'+getId()}, css:{active:isVisible}" class="nav-link"></a>
-	</li>
-</ul>
+<navChildrenTabs params="l10n:'update'"></navChildrenTabs>
 
 <div data-bind="page:{id:'file', role:'start'}">
-	<p>
-		<uploadButton params="upload:$model.upload, l10n:'update-file', css:'btn-primary'"></uploadButton>
-	</p>
+	<div class="mb-3">
+		<label class="form-label" data-l10n-id="update_version"></label>
+		<dl data-bind="with:version" class="form-control">
+			<dt data-l10n-id="update_versionName"></dt>
+			<dd data-bind="text:name"></dd>
+			<dt data-l10n-id="update_versionId"></dt>
+			<dd data-bind="text:id"></dd>
+		</dl>
+	</div>
+	<buttonBar>
+		<uploadButton params="upload:$model.upload, l10n:'update_file', css:'btn-primary'"></uploadButton>
+	</buttonBar>
 </div>
 
-<!-- ko if:revertDate -->
 <div data-bind="page:{id:'revert'}">
-	<p>
-		<dl>
-			<dt data-l10n-id="update-revert-date"></dt>
-			<dd data-bind="text:revertDate"></dd>
-		</dl>
-	</p>
-	<p>
-		<button data-bind="click:revert" class="btn btn-danger" data-l10n-id="update-revert"></button>
-	</p>
-</div>
+<!-- ko if:revertDate -->
+	<dl class="form-control">
+		<dt data-l10n-id="update_revertDate"></dt>
+		<dd data-bind="text:revertDate"></dd>
+	</dl>
+	<buttonBar>
+		<button data-bind="clickConfirm:revert" class="btn btn-danger" data-l10n-id="update_revert"></button>
+	</buttonBar>
 <!-- /ko -->
+</div>
 {% end %}
 
 
@@ -69,20 +58,20 @@ class {
 		this.revertDate = ko.observable();
 	}
 	
-	upload(file) {
+	upload(file, element) {
 		let formData = new FormData();
 		formData.append('update', file);
-		$.ajax({
+		gui.feedback(element, $.ajax({
 			url: ajaxUrl('update'),
 			type: "put",
 			data: formData,
 			processData: false,
 			contentType: false,
-		});
+		}));
 	}
 	
-	revert() {
-		$.post(ajaxUrl('update/revert'));
+	revert(ctx, ev) {
+		gui.feedback(ev.target, $.post(ajaxUrl('update/revert')));
 	}
 	
 	start(started) {

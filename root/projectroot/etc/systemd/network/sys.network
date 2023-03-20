@@ -1,6 +1,9 @@
 [Match]
 Name=sys
 
+[Link]
+RequiredForOnline=degraded-carrier
+
 [Network]
 DHCPServer=yes
 IPMasquerade=ipv4

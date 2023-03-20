@@ -20,38 +20,29 @@
 
 
 {% block html %}
-<div data-bind="visible:sendResult()==1" class="alert alert-success" data-l10n-id="issue_sendSuccess"></div>
-<div data-bind="visible:sendResult()==2" class="alert alert-warning" data-l10n-id="issue_sendFail"></div>
-
 <form action="{{ajax_url('issue')}}" method="post" target="_blank">
-	<p>
-		<legend data-l10n-id="issue_description"></legend>
+	<div class="mb-3">
+		<label class="form-label" data-l10n-id="issue_description"></label>
 		<textarea name="description" class="form-control" rows="10"></textarea>
-	</p>
-	<p>
-		<legend data-l10n-id="issue_contact"></legend>
-		<div class="form-group">
-			<label data-l10n-id="issue_contactName"></label>
-			<input type="text" name="name" class="form-control">
+	</div>
+	<div class="mb-3">
+		<label class="form-label" data-l10n-id="issue_contact"></label>
+		<input type="text" name="name" class="form-control">
+	</div>
+	<div class="row mb-3">
+		<div class="col">
+			<label class="form-label" data-l10n-id="issue_contactEmail"></label>
+			<input type="email" name="email" class="form-control">
 		</div>
-		<div class="form-row">
-			<div class="form-group col">
-				<label data-l10n-id="issue_contactEmail"></label>
-				<input type="email" name="email" class="form-control">
-			</div>
-			<div class="form-group col">
-				<label data-l10n-id="issue_contactTelephone"></label>
-				<input type="tel" name="telephone" class="form-control">
-			</div>
+		<div class="col">
+			<label class="form-label" data-l10n-id="issue_contactTelephone"></label>
+			<input type="tel" name="telephone" class="form-control">
 		</div>
-	</p>
-	<p>
-		<button data-bind="click:send, visible:smtpEnabled" class="btn btn-primary">
-			<i data-bind="visible:sendResult()==0" class="fas fa-spinner fa-spin"></i>
-			<span data-l10n-id="issue_send"></span>
-		</button>
+	</div>
+	<buttonBar>
+		<button data-bind="click:send, visible:smtpEnabled" class="btn btn-primary" data-l10n-id="issue_send"></button>
 		<button type="submit" class="btn btn-secondary" data-l10n-id="issue_download"></button>
-	</p>
+	</buttonBar>
 </form>
 {% end %}
 
@@ -60,31 +51,17 @@
 class {
 	constructor() {
 		this.smtpEnabled	= ko.observable(false);
-		this.sendResult		= ko.observable(null);
 	}
 	
-	send(data, event) {
-		this.sendResult(0);
-		let form = $(event.target).closest('form');
-		$.post(ajaxUrl('issue', {action:'send'}), form.serialize())
-			.done(()=>{
-				this.sendResult(1);
-				form[0].reset();
-			})
-			.fail(()=>{
-				this.sendResult(2);
-			});
+	send(ctx, ev) {
+		const formData = $(ev.target).closest('form').serialize();
+		gui.feedback(ev.target, $.post(ajaxUrl('issue', {action:'send'}), formData));
 	}
 	
 	start() {
-		$.getJSON(ajaxUrl('issue'))
-			.done((data)=>{
-				this.smtpEnabled(data.smtpEnabled);
-			})
-	}
-	
-	stop() {
-		this.sendResult(null);
+		return $.getJSON(ajaxUrl('issue'), (data)=>{
+			model.smtpEnabled(data.smtpEnabled);
+		});
 	}
 }
 {% end %}

@@ -1,6 +1,5 @@
-from distutils.core import setup
+from setuptools import setup
 
 setup(
 	name='shared',
-	packages=['shared', 'shared.setup'],
 )

@@ -16,13 +16,13 @@
 
 
 import server
-import subprocess
+from shared import system
 
 
 
 class Handler(server.RequestHandler):
 	async def put(self):
-		await server.run_in_executor(lambda:subprocess.run(['backup','--restore'], input=self.request.files['backup'][0]['body']))
+		await server.run_in_executor(lambda:system.run(['backup','--restore'], input=self.request.files['backup'][0]['body']))
 
 
 

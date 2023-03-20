@@ -1,6 +1,6 @@
 #
 # Automatically generated file; DO NOT EDIT.
-# PTXdist 2018.08.0
+# PTXdist 2023.02.0
 #
 PTXCONF__collectionconfig_MAGIC__=y
 # PTXCONF_COLLECTION_NONE is not set
@@ -8,6 +8,7 @@ PTXCONF__collectionconfig_MAGIC__=y
 PTXCONF_COLLECTION_ALL=y
 PTXCONF_EFIBOOTMGR=y
 PTXCONF_EFIVAR=y
+PTXCONF_HWDATA=y
 PTXCONF_INSTALL=y
 PTXCONF_LIBPOPT=y
 PTXCONF_LSHW=y

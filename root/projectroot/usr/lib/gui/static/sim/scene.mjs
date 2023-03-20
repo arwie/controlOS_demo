@@ -83,6 +83,7 @@ export default class Scene extends THREE.Scene {
 		this.camera.add(this.cameraLight);
 		this.camera.controls.enabled = true;
 		this.add(this.camera);
+		this.camera.elementResize();
 		this.render();
 	}
 	

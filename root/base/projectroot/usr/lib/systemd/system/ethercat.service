@@ -1,0 +1,28 @@
+#
+# EtherCAT master kernel modules
+#
+
+[Unit]
+Description=EtherCAT Master Kernel Modules
+
+#
+# Uncomment this, if the generic Ethernet driver is used. It assures, that the
+# network interfaces are configured, before the master starts.
+#
+After=sys-subsystem-net-devices-ethercat.device
+
+#
+# Uncomment this, if a native Ethernet driver is used. It assures, that the
+# network interfaces are configured, after the Ethernet drivers have been
+# replaced. Otherwise, the networking configuration tools could be confused.
+#
+#Before=network-pre.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/sbin/ethercatctl start
+ExecStop=/usr/sbin/ethercatctl stop
+
+[Install]
+WantedBy=network.target

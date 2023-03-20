@@ -20,15 +20,15 @@
 
 
 {% block html %}
-<div class="form-group">
-	<label data-l10n-id="remote_port"></label>
+<div class="mb-3">
+	<label class="form-label" data-l10n-id="remote_port"></label>
 	<input data-bind="textInput:port" type="number" step="1" min="60000" max="65500" class="form-control">
 </div>
-<p>
+<buttonBar>
 	<button data-bind="click:enable, enable:port" class="btn btn-primary" data-l10n-id="remote_enable"></button>
 	<button data-bind="click:disable" class="btn btn-secondary" data-l10n-id="remote_disable"></button>
-</p>
-<div data-bind="visible:status" class="alert alert-success">
+</buttonBar>
+<div data-bind="visible:status" class="alert alert-success mt-4">
 	<p data-l10n-id="remote_active"></p>
 	<pre data-bind="text:status"></pre>
 </div>

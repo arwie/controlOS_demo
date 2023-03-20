@@ -18,18 +18,17 @@
 
 {% extends "../base.html" %}
 
-{% block head %}
+{% block head %} {% import studio %}
 	<script src="{{static_url('ace.js')}}"></script>
 {% end %}
 
-{% block body %}
-{% import studio %}
+{% block navBar %}
 <navBar>
 	<div class="navbar-nav">
 		<pageLink params="path:'log'"></pageLink>
 		{% raw ' '.join(studio.navs) %}
 	</div>
-	<div class="navbar-nav ml-auto">
+	<div class="navbar-nav ms-auto">
 		<navDropdown params="icon:'cog', l10n:'admin', right:true">
 			<pageLink params="path:'backup'"></pageLink>
 			<pageLink params="path:'update'"></pageLink>
@@ -41,7 +40,9 @@
 		<navPoweroff></navPoweroff>
 	</div>
 </navBar>
-<main class="container-fluid">
+{% end %}
+
+{% block main %}
 	{% module page("log.html") %}
 	{% module page("issue.html") %}
 	{% module page("update.html") %}
@@ -52,5 +53,4 @@
 	{% for p in studio.pages %}
 		{% module page(p) %}
 	{% end %}
-</main>
 {% end %}

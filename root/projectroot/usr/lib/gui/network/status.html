@@ -21,10 +21,7 @@
 
 
 {% block html %}
-<legend data-l10n-id="network_status"></legend>
-<p>
-	<pre data-bind="text:status"></pre>
-</p>
+<textarea data-bind="value:status" type="text" class="form-control h-100 mb-3" style="font-family:monospace" readonly></textarea>
 {% end %}
 
 

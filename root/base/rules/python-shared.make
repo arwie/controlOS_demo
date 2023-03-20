@@ -30,7 +30,7 @@ PYTHON_SHARED_DIR		:= $(BUILDDIR)/$(PYTHON_SHARED)
 # Prepare
 # ----------------------------------------------------------------------------
 
-PYTHON_SHARED_CONF_TOOL    := python3
+PYTHON_SHARED_CONF_TOOL	:= python3
 
 # ----------------------------------------------------------------------------
 # Target-Install
@@ -41,7 +41,7 @@ $(STATEDIR)/python-shared.targetinstall:
 	@$(call install_init, python-shared)
 
 	@$(call install_glob, python-shared, 0, 0, -, \
-		/usr/lib/python$(PYTHON3_MAJORMINOR)/site-packages/shared,, *.py)
+		$(PYTHON3_SITEPACKAGES)/shared,, *.py)
 
 	@$(call install_finish,python-shared)
 	@$(call touch)

@@ -8,6 +8,8 @@ CONFIG_EXTRA_FIRMWARE="am335x-pm-firmware.elf am335x-bone-scale-data.bin am335x-
 # CONFIG_SMP is not set
 # CONFIG_EFI is not set
 # CONFIG_VT is not set
+# CONFIG_ANDROID is not set
+# CONFIG_DMA_BUF_PHYS is not set
 
 CONFIG_NEW_LEDS=y
 # CONFIG_LEDS_LP55XX_COMMON is not set
