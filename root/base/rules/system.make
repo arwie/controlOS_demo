@@ -37,6 +37,7 @@ $(STATEDIR)/system.targetinstall:
 	@$(call install_alternative, system, 0, 0, 0644, /usr/lib/systemd/system/etc.mount.d/etc.conf)
 	@$(call install_alternative, system, 0, 0, 0644, /etc/tmpfiles.d/system.conf)
 	@$(call install_alternative, system, 0, 0, 0755, /usr/sbin/reboot-kexec)
+	@$(call install_link, system, /usr/lib, /lib64)
 
 	# networking
 	@$(call install_copy,        system, 0, 0, 0700, /etc/polkit-1/localauthority)

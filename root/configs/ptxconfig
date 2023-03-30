@@ -2257,6 +2257,7 @@ PTXCONF_BERLIOS_CAN_UTILS_CANDUMP=y
 # Applications                  
 #
 # PTXCONF_CASYNC is not set
+PTXCONF_CODESYS=y
 # PTXCONF_COG is not set
 # PTXCONF_CUPS_FILTERS is not set
 # PTXCONF_CUPS is not set

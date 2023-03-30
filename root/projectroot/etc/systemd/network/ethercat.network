@@ -1,5 +1,0 @@
-[Match]
-Name=ethercat
-
-[Link]
-ActivationPolicy=up

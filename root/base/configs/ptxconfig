@@ -2162,6 +2162,7 @@ PTXCONF_XZ_TOOLS=y
 # Applications                  
 #
 # PTXCONF_CASYNC is not set
+# PTXCONF_CODESYS is not set
 # PTXCONF_COG is not set
 # PTXCONF_CUPS_FILTERS is not set
 # PTXCONF_CUPS is not set

@@ -1,0 +1,8 @@
+## SECTION=applications
+
+config CODESYS
+	tristate
+	prompt "codesys"
+	help
+	  CODESYS Control Linux SL is an IEC 61131-3-compliant SoftPLC
+	  for PC-based industrial controllers running on Linux
