@@ -1,9 +1,0 @@
-#!/bin/sh
-
-
-SCRIPT=$(realpath $0)
-BASEDIR=$(dirname $SCRIPT)
-
-
-
-arduino-cli compile --libraries=$BASEDIR --output-dir=$2 --fqbn=$(cat $BASEDIR/$1/fqbn) $BASEDIR/$1
