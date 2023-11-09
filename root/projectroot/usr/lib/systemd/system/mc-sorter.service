@@ -1,5 +1,0 @@
-[Unit]
-StopWhenUnneeded=true
-
-[Service]
-ExecStart=/usr/sbin/mc-sorter

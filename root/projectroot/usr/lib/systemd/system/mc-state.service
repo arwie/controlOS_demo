@@ -1,6 +1,0 @@
-[Unit]
-Conflicts=mc-state.socket
-
-[Service]
-ExecStart=/usr/sbin/mc-state mc 33000
-ExecStopPost=-systemctl start --no-block mc-state.socket

@@ -1,9 +1,0 @@
-## SECTION=project_specific
-
-config STX_MC
-	bool
-	select PHP8				if RUNTIME
-	select PYTHON3_PEXPECT	if RUNTIME
-	prompt "stx-mc"
-	help
-	  FIXME

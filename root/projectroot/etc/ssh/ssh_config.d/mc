@@ -1,6 +1,0 @@
-Host mc
-  User mc
-  PasswordAuthentication no
-  PubkeyAcceptedKeyTypes +ssh-rsa
-  HostKeyAlgorithms +ssh-rsa
-  ConnectTimeout 1

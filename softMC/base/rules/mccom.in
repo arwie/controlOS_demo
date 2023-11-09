@@ -1,9 +1,0 @@
-## SECTION=project_specific
-
-config MCCOM
-	bool
-	prompt "mccom"
-	select BOOST
-	select BOOST_SYSTEM
-	help
-	  FIXME
