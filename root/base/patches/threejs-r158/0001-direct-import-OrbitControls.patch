@@ -1,0 +1,25 @@
+From 34c9fa806adbc44127e4dd6ab7e4d3fcf9d56e72 Mon Sep 17 00:00:00 2001
+From: Artur Wiebe <artur@4wiebe.de>
+Date: Tue, 7 Nov 2023 15:01:35 +0100
+Subject: [PATCH 1/2] direct import: OrbitControls.js
+
+---
+ examples/jsm/controls/OrbitControls.js | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/examples/jsm/controls/OrbitControls.js b/examples/jsm/controls/OrbitControls.js
+index de27a30..b4168e3 100644
+--- a/examples/jsm/controls/OrbitControls.js
++++ b/examples/jsm/controls/OrbitControls.js
+@@ -9,7 +9,7 @@ import {
+ 	Plane,
+ 	Ray,
+ 	MathUtils
+-} from 'three';
++} from './three.module.js';
+ 
+ // OrbitControls performs orbiting, dollying (zooming), and panning.
+ // Unlike TrackballControls, it maintains the "up" direction object.up (+Y by default).
+-- 
+2.42.0
+

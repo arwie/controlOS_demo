@@ -16,7 +16,10 @@
 
 
 
-import logging, os
+import logging
+import os
+import sys
+
 from systemd import journal
 
 
@@ -26,3 +29,5 @@ logging.root.setLevel(logging.INFO)
 logging.term = 'TERM' in os.environ
 if logging.term:
 	logging.root.addHandler(logging.StreamHandler())
+
+sys.excepthook = lambda type, value, tb: logging.error(value, exc_info=(type, value, tb))

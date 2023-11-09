@@ -1,0 +1,103 @@
+#!/usr/bin/python -Bu
+
+# Copyright (c) 2023 Artur Wiebe <artur@4wiebe.de>
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+# associated documentation files (the "Software"), to deal in the Software without restriction,
+# including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so,
+# subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+# INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+# WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+
+import logging, argparse
+from pathlib import Path
+from shared import system
+
+
+parser = argparse.ArgumentParser()
+parser.add_argument(
+	"--ksoftirqd-priority",
+	help="ksoftirqd priority (80)",
+	default='80'
+)
+parser.add_argument(
+	"--cpuidle-latency",
+	help="max cpuidle latency (50)",
+	default='50'
+)
+parser.add_argument(
+	"--scaling-governor",
+	help="max cpuidle latency (performance)",
+	default='performance'
+)
+args = parser.parse_args()
+
+
+
+def cpu_path(cpu, query):
+	return Path('/sys/devices/system/cpu', 'cpu'+cpu if cpu else '', query)
+
+def cpu_list(query):
+	result = []
+	for c in cpu_path(None, query).read_text().rstrip().split(','):
+		if '-' in c:
+			c = c.split('-')
+			for c in range(int(c[0]), int(c[1])+1):
+				result.append(str(c))
+		else:
+			result.append(c)
+	return result
+
+
+isolated = cpu_list('isolated')
+print('isolated CPUs: ', isolated)
+
+
+def cpu_set_online(online):
+	for cpu in isolated:
+		cpu_path(cpu, 'online').write_bytes(b'1' if online else b'0')
+
+
+# Detach isolated CPUs
+cpu_set_online(False)
+
+# Move away all IRQ threads
+online_csv = ','.join(cpu_list('online'))
+for irq in Path('/proc/irq').glob('[0-9]*'):
+	try:
+		Path(irq, 'smp_affinity_list').write_text(online_csv)
+	except:
+		pass
+
+# Reattach isolated CPUs
+cpu_set_online(True)
+
+
+# Set the priority of the ksoftirqd on the specific core
+if args.ksoftirqd_priority:
+	for cpu in isolated:
+		pid = system.run(['pgrep', 'ksoftirqd/'+cpu], True, text=True).rstrip()
+		system.run(['chrt','-fp', args.ksoftirqd_priority, pid])
+
+
+# Disable sleep states that can interfere with real-time requirements
+for cpu in isolated:
+	cpuidle = cpu_path(cpu, 'cpuidle')
+	for state in cpuidle.glob('state[0-9]*'):
+		if int(Path(state, 'latency').read_text()) > int(args.cpuidle_latency):
+			Path(state, 'disable').write_bytes(b'1')
+			print('cpuidle disabled: ', state)
+
+
+# Set the scaling governor
+if args.scaling_governor:
+	for cpu in isolated:
+		cpu_path(cpu, 'cpufreq/scaling_governor').write_text(args.scaling_governor)

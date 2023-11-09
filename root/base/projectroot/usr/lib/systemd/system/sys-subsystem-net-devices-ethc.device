@@ -1,0 +1,2 @@
+[Unit]
+Wants=rt-setup-irq@ethc.service

@@ -21,7 +21,7 @@ rsyncsys() {
 
 sshsys "mount -o remount,rw LABEL=ROOT && rm -f /version"
 
-rsyncsys root/local_src/python-shared/shared	/usr/lib/python3.10/site-packages
+rsyncsys root/local_src/python-shared/shared	/usr/lib/python3.11/site-packages
 rsyncsys root/projectroot/usr					/
 
-sshsys "systemctl daemon-reload && systemctl --quiet stop gui.service studio.service && mc-update"
+sshsys "systemctl daemon-reload && systemctl --quiet stop gui.service studio.service"

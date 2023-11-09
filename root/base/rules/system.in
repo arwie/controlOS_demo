@@ -1,6 +1,6 @@
 ## SECTION=project_specific
 
-config SYSTEM
+menuconfig SYSTEM
 	bool
 	select BUSYBOX				if RUNTIME
 	select GNUPG				if RUNTIME
@@ -15,3 +15,12 @@ config SYSTEM
 	prompt "system"
 	help
 	  FIXME
+
+
+if SYSTEM
+
+config SYSTEM_RT
+	bool
+	prompt "real-time system"
+
+endif

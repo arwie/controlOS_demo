@@ -26,6 +26,7 @@
 <navBar>
 	<div class="navbar-nav">
 		<pageLink params="path:'log'"></pageLink>
+		<pageLink params="path:'simio', visibleState:'app@simio'"></pageLink>
 		{% raw ' '.join(studio.navs) %}
 	</div>
 	<div class="navbar-nav ms-auto">
@@ -49,6 +50,8 @@
 	{% module page("remote.html") %}
 	{% module page("network/network.html") %}
 	{% module page("backup.html") %}
+
+	{% module page("studio/simio.html") %}
 	
 	{% for p in studio.pages %}
 		{% module page(p) %}

@@ -22,7 +22,6 @@ GUI_BOOTSTRAP_URL		:= https://github.com/twbs/bootstrap/releases/download/v$(GUI
 GUI_BOOTSTRAP_SOURCE		:= $(SRCDIR)/$(GUI_BOOTSTRAP).$(GUI_BOOTSTRAP_SUFFIX)
 GUI_BOOTSTRAP_DIR		:= $(BUILDDIR)/$(GUI_BOOTSTRAP)
 GUI_BOOTSTRAP_LICENSE		:= MIT
-GUI_BOOTSTRAP_LICENSE_FILES	:=
 
 # ----------------------------------------------------------------------------
 # Compile

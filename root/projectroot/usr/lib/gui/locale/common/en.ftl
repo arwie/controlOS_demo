@@ -100,9 +100,7 @@ simio = SimIO
 simio_list-in = Inputs
 simio_list-out = Outputs
 simio_type = Type
-simio_app = Application
-simio_io-in = Input
-simio_io-out = Output
+simio_value = Value
 simio_override = Override
 
 

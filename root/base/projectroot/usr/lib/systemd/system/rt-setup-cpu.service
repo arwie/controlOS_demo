@@ -1,0 +1,13 @@
+[Unit]
+DefaultDependencies=no
+After=sysinit.target
+Before=basic.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/sbin/rt-setup-cpu
+StandardOutput=null
+
+[Install]
+WantedBy=basic.target

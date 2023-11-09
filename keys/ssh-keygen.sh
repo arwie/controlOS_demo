@@ -34,10 +34,10 @@ ssh-keygen  -f $SSHHOME_HOST/$KEYNAME  -N ""
 
 
 rm -rf $SSHHOME_TRGT
-mkdir  $SSHHOME_TRGT
-
+mkdir -p $SSHHOME_TRGT
 ssh-keygen  -f $SSHHOME_TRGT/$KEYNAME  -N ""
 
+mkdir -p $SSHDHOME_TRGT
 ssh-keygen  -f $SSHDHOME_TRGT/ssh_host_rsa_key  -N ""
 
 

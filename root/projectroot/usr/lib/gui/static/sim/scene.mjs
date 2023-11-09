@@ -30,11 +30,11 @@ export default class Scene extends THREE.Scene {
 		this.renderer.domElement.style.height = '100%';
 		this.renderer.setClearColor(0xffffff);
 		
-		let hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444);
+		let hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444, 3);
 		hemiLight.position.set(0, 0, 1);
 		this.add(hemiLight);
 		
-		this.cameraLight = new THREE.PointLight(0xffffff, 0.5);
+		this.cameraLight = new THREE.PointLight(0xffffff, 20, 0, 0.2);
 		this.setCamera();
 		
 		new ResizeObserver(()=>{

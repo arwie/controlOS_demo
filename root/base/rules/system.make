@@ -94,6 +94,18 @@ $(STATEDIR)/system.targetinstall:
 	@$(call install_alternative, system, 0, 0, 0644, /etc/issue.conf)
 	@$(call install_copy,        system, 0, 0, 0755, /etc/app)
 
+ifdef PTXCONF_SYSTEM_RT
+	@$(call install_alternative, system, 0, 0, 0755, /usr/sbin/rt-setup-cpu)
+	@$(call install_alternative, system, 0, 0, 0644, /usr/lib/systemd/system/rt-setup-cpu.service)
+	@$(call install_link,        system, ../rt-setup-cpu.service, /usr/lib/systemd/system/basic.target.wants/rt-setup-cpu.service)
+	
+	@$(call install_alternative, system, 0, 0, 0755, /usr/sbin/rt-setup-irq)
+	@$(call install_alternative, system, 0, 0, 0644, /usr/lib/systemd/system/rt-setup-irq@.service)
+	
+	@$(call install_alternative, system, 0, 0, 0644, /usr/lib/systemd/system/sys-subsystem-net-devices-ethc.device)
+	@$(call install_alternative, system, 0, 0, 0644, /etc/systemd/network/ethercat.network)
+endif
+
 	@$(call install_finish,system)
 	@$(call touch)
 

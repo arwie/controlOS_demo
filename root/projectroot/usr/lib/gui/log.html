@@ -50,10 +50,12 @@
 				</div>
 			</div>
 			<div class="col col-xl-12">
+				<!-- ko if:hosts().length>1 -->
 				<div class="mb-3">
 					<label class="form-label" data-l10n-id="log_host"></label>
 					<select data-bind="options:hosts, value:host, optionsCaption: ''" class="form-select"></select>
 				</div>
+				<!-- /ko -->
 				<div class="mb-3">
 					<label class="form-label" data-l10n-id="log_date"></label>
 					<div class="input-group">
@@ -297,7 +299,7 @@ class {
 			args.filter = filter;
 		
 		function logWs(args, onMsg) {
-			const log = webSocket(wsUrl(null, null, 'log', args), onMsg);
+			const log = webSocket(wsUrl('log', null, null, args), onMsg);
 			if (!extend)
 				log.onopen = ()=>{
 					model.messages([]);

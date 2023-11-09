@@ -4,6 +4,8 @@ config GUI
 	bool
 	select PYTHON3_TORNADO	if RUNTIME
 	select GUI_BOOTSTRAP	if RUNTIME
+	select GUI_JQUERY		if RUNTIME
+	select GUI_FONTAWESOME	if RUNTIME
 	prompt "gui"
 	help
 	  FIXME

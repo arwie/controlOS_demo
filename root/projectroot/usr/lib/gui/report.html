@@ -61,7 +61,7 @@ class {
 	}
 	
 	start()	{
-		model.log = webSocket(wsUrl(null, null, 'log', {filter:'REPORTS=1'}), (msg)=>{
+		model.log = webSocket(wsUrl('log', null, null, {filter:'REPORTS=1'}), (msg)=>{
 			model.messages.unshift(new Message(msg));
 			if (model.messages().length > 50)
 				model.messages.pop();

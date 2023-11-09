@@ -16,7 +16,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 %}
 
-{% import os,glob %}
+{% from pathlib import Path %}
 {% from shared.setup import setup %}
 
 
@@ -34,7 +34,7 @@
 	<script src="{{static_url('jquery.js')}}"></script>
 	<script src="{{static_url('bootstrap.js')}}"></script>
 	<link rel="stylesheet" href="{{static_url('bootstrap.css')}}">
-	<link rel="stylesheet" href="{{static_url('fontawesome/css/all.min.css')}}">
+	<link rel="stylesheet" href="{{static_url('fontawesome/css/all.css')}}">
 	
 	<script src="{{static_url('knockout.js') }}"></script>
 	<script src="{{static_url('knockout.mapping.js') }}"></script>
@@ -45,18 +45,24 @@
 	<script defer src="{{static_url('l20n.js')}}"></script>
 	<link rel="localization" href="{{ajax_url('locale/{locale}.ftl')}}">
 	<meta name="defaultLanguage" content="en">
-	<meta name="availableLanguages" content="{{','.join(sorted(os.path.splitext(os.path.basename(f))[0] for f in glob.glob('locale/*.ftl')))}}">
+	<meta name="availableLanguages" content="{{','.join(sorted(f.stem for f in Path('locale').glob('*.ftl')))}}">
 </head>
 
 
 <script>
 var hosts = {% raw etc_hosts() %}
+var ports = {
+	app: 	33000,
+}
 
 function ajaxUrl(url, params=null) {
-	return '{{ajax_url()}}'+url + (params ? '?'+$.param(params) : '');
+	return `{{ajax_url()}}${url}?${$.param(params)}`;
 }
-function wsUrl(host, port, url=null, params=null) {
-	return 'ws://' + (host ? (host in hosts ? hosts[host] : host)+':'+port : (port ? location.hostname+':'+port : location.host)) + (url ? ajaxUrl(url, params) : '/');
+function wsUrl(url, port=null, host=null, params=null) {
+	const prefix = port ? '/' : '{{ajax_url()}}';
+	host ??= location.hostname;
+	port ??= location.port;
+	return `ws://${host}:${port}${prefix}${url}?${$.param(params)}`;
 }
 function pageUrl(url, params=null, subpage=null, breadcrumb=[]) {
 	breadcrumb = [].concat(breadcrumb);
@@ -247,7 +253,7 @@ function updateState(msg) {
 	pager.goTo(pager.activePage$().path());
 }
 
-let stateWs = webSocket(wsUrl(null, null, 'state'), (msg)=>{
+let stateWs = webSocket(wsUrl('state'), (msg)=>{
 	resetWatchdog();
 	if (Array.isArray(msg))
 		updateState(msg);

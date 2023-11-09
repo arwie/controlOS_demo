@@ -1,0 +1,5 @@
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/sbin/rt-setup-irq %i
+StandardOutput=null

@@ -3,6 +3,13 @@
 HOST=${1-sys}
 
 BASEDIR=$(dirname $(realpath $0))
+cd $BASEDIR/..
 
+SSHCMD="ssh -t -i keys/ssh/id_rsa root@$HOST"
 
-pv $BASEDIR/../images/update | ssh -t -i $BASEDIR/ssh/id_rsa root@$HOST "update --bare"
+PLATFORM=$($SSHCMD "grep PTXDIST_PLATFORM_NAME /etc/os-release")
+PLATFORM=${PLATFORM#*\"}
+PLATFORM=${PLATFORM%\"*}
+echo "Platform: $PLATFORM"
+
+pv root/platform-$PLATFORM/images/update | $SSHCMD "update --bare"

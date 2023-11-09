@@ -1,0 +1,12 @@
+[Unit]
+Wants=systemd-networkd-wait-online@sys.service
+After=systemd-networkd-wait-online@sys.service
+
+
+[Service]
+SyslogIdentifier=app
+ExecStart=/usr/bin/python -Bu /usr/lib/app
+
+# real-time scheduling
+CPUSchedulingPolicy=fifo
+CPUSchedulingPriority=10

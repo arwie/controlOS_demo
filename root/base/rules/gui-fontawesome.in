@@ -1,0 +1,8 @@
+## SECTION=web
+
+config GUI_FONTAWESOME
+	tristate
+	prompt "gui-fontawesome"
+	help
+	  Font Awesome is the Internet's icon library and toolkit,
+	  used by millions of designers, developers, and content creators.

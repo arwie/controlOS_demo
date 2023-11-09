@@ -13,6 +13,7 @@ CONFIG_INITRAMFS_ROOT_GID=0
 # CONFIG_RD_LZ4 is not set
 # CONFIG_RD_ZSTD is not set
 
+CONFIG_PREEMPT_NONE=y
 
 ## unused features
 # CONFIG_MODULES is not set
@@ -26,6 +27,8 @@ CONFIG_INITRAMFS_ROOT_GID=0
 # CONFIG_IKHEADERS is not set
 # CONFIG_CPU_ISOLATION is not set
 # CONFIG_PROFILING is not set
+# CONFIG_CRASH_DUMP is not set
+# CONFIG_RANDOMIZE_BASE is not set
 
 # CONFIG_FS_VERITY is not set
 # CONFIG_SECURITY is not set

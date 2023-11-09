@@ -1,0 +1,8 @@
+## SECTION=web
+
+config GUI_THREEJS
+	tristate
+	prompt "gui-three.js"
+	help
+	  The aim of the project is to create an easy-to-use,
+	  lightweight, cross-browser, general-purpose 3D library.

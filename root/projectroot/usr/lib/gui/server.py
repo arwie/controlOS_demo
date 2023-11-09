@@ -19,7 +19,6 @@ import shared
 import asyncio, os, socket, json, logging, base64
 from tornado import web, httpserver, ioloop, websocket
 from collections import OrderedDict
-from concurrent.futures import ThreadPoolExecutor
 
 
 
@@ -139,9 +138,8 @@ def etc_hosts(handler):
 	return json.dumps(hosts)
 
 
-ioloop.IOLoop.current().set_default_executor(ThreadPoolExecutor())
 def run_in_executor(func, *args):
-	return ioloop.IOLoop.current().run_in_executor(None, func, *args)
+	return asyncio.get_running_loop().run_in_executor(None, func, *args)
 
 
 def run(port=None):
