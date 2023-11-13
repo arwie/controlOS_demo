@@ -1,8 +1,2 @@
 /.git-*
-/src
-/*/configs/**/*.old
-/*/base/configs/**/*.old
-/*/platform-*/
-/*/base/platform-*/
 __pycache__
-/virtualbox/vm

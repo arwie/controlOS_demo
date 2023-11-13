@@ -1,22 +1,16 @@
 {
+	"editor.insertSpaces": false,
+	"explorer.excludeGitIgnore": true,
 	"python.analysis.autoSearchPaths": false,
 	"python.analysis.typeCheckingMode": "basic",
 	"python.analysis.include": [
 		"root",
 	],
 	"python.analysis.exclude": [
-		"**/platform-*",
+		"root/platform-*",
 	],
 	"python.analysis.extraPaths": [
 		"root/local_src/python-shared",
 		"root/platform-x86/root/usr/lib/python3.11/site-packages"
 	],
-	"files.exclude": {
-		"_ptxdist": true,
-		".git-*": true,
-		"boot/platform-*": true,
-		"initramfs/platform-*": true,
-		"root/platform-*": true
-	},
-	"editor.insertSpaces": false,
 }
