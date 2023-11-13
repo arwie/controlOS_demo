@@ -1,0 +1,32 @@
+## GAMEPORT_L4 causes kernel panic
+# CONFIG_GAMEPORT is not set
+
+## enable kexec system call
+CONFIG_SUSPEND=y
+CONFIG_PROC_KCORE=y
+CONFIG_KEXEC=y
+CONFIG_KEXEC_FILE=y
+
+# CONFIG_EFI is not set
+# CONFIG_USB_SUPPORT is not set
+# CONFIG_ATA is not set
+# CONFIG_VIRT_DRIVERS is not set
+# CONFIG_VIRTIO_MENU is not set
+# CONFIG_GREYBUS is not set
+# CONFIG_RC_CORE is not set
+# CONFIG_MTD is not set
+# CONFIG_AUXDISPLAY is not set
+# CONFIG_UIO is not set
+# CONFIG_PPS is not set
+# CONFIG_W1 is not set
+# CONFIG_RTC_CLASS is not set
+# CONFIG_VHOST_MENU is not set
+# CONFIG_STAGING is not set
+# CONFIG_IIO is not set
+# CONFIG_FPGA is not set
+# CONFIG_COUNTER is not set
+# CONFIG_VT is not set
+# CONFIG_INPUT is not set
+# CONFIG_TI_PRUSS is not set
+# CONFIG_ANDROID is not set
+# CONFIG_DMA_BUF_PHYS is not set

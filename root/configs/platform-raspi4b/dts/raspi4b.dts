@@ -1,0 +1,3 @@
+/dts-v1/;
+
+#include "broadcom/bcm2711-rpi-4-b.dts"

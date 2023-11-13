@@ -1,0 +1,1 @@
+§§§ nr_cpus=1 mitigations=off earlycon=uart8250,mmio32,0xfe215040 console=tty1 console=ttyS0,115200

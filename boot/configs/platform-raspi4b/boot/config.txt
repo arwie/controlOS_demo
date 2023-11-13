@@ -1,0 +1,2 @@
+arm_boost=1
+enable_uart=1

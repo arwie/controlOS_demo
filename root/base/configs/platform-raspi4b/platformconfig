@@ -1,0 +1,241 @@
+#
+# Automatically generated file; DO NOT EDIT.
+# PTXdist 2023.06.0
+#
+PTXCONF__platformconfig_MAGIC__=y
+
+#
+# ------------------------------------
+#
+
+#
+# Target Platform Configuration 
+#
+
+#
+# ------------------------------------
+#
+PTXCONF_PLATFORM="raspi4b"
+PTXCONF_PLATFORM_VERSION="-${PTXDIST_BSP_AUTOVERSION}"
+PTXCONF_RUNTIME=y
+PTXCONF_BUILDTIME=y
+PTXCONF_PLATFORMCONFIG_VERSION="2023.06.0"
+
+#
+# architecture                  
+#
+# PTXCONF_ARCH_ALPHA is not set
+# PTXCONF_ARCH_AVR32 is not set
+# PTXCONF_ARCH_AVR is not set
+# PTXCONF_ARCH_ARM is not set
+PTXCONF_ARCH_ARM64=y
+# PTXCONF_ARCH_BLACKFIN is not set
+# PTXCONF_ARCH_X86 is not set
+# PTXCONF_ARCH_MINGW is not set
+# PTXCONF_ARCH_PPC is not set
+# PTXCONF_ARCH_M68K is not set
+# PTXCONF_ARCH_SPARC is not set
+# PTXCONF_ARCH_MICROBLAZE is not set
+# PTXCONF_ARCH_MIPS is not set
+# PTXCONF_ARCH_CRIS is not set
+# PTXCONF_ARCH_PARISC is not set
+# PTXCONF_ARCH_SH is not set
+# PTXCONF_ARCH_RISCV is not set
+PTXCONF_ARCH_LP64=y
+PTXCONF_ARCH_SUPPORTS_ENDIAN_BIG=y
+PTXCONF_ARCH_SUPPORTS_ENDIAN_LITTLE=y
+# PTXCONF_ENDIAN_BIG is not set
+PTXCONF_ENDIAN_LITTLE=y
+PTXCONF_ARCH_ARM_NEON=y
+PTXCONF_HAS_HARDFLOAT=y
+PTXCONF_HAS_MMU=y
+PTXCONF_SIZEOF_LONG_DOUBLE="16"
+PTXCONF_ARCH_STRING="arm64"
+
+#
+# paths & directories           
+#
+PTXCONF_SYSROOT_TARGET="${PTXDIST_PLATFORMDIR}/sysroot-target"
+PTXCONF_SYSROOT_HOST="${PTXDIST_PLATFORMDIR}/sysroot-host"
+PTXCONF_SYSROOT_CROSS="${PTXDIST_PLATFORMDIR}/sysroot-cross"
+# end of paths & directories           
+
+#
+# toolchain                     
+#
+PTXCONF_CROSSCHAIN_VENDOR="OSELAS.Toolchain-2022.10.1"
+PTXCONF_CROSSCHAIN_CHECK="12.3.1"
+PTXCONF_LIBC_GLIBC=y
+# PTXCONF_LIBC_UCLIBC is not set
+PTXCONF_GLIBC_VERSION="2.36"
+PTXCONF_GNU_TARGET="aarch64-v8a-linux-gnu"
+PTXCONF_COMPILER_PREFIX="${PTXCONF_GNU_TARGET}-"
+PTXCONF_COMPILER_PREFIX_KERNEL="${PTXCONF_COMPILER_PREFIX}"
+PTXCONF_COMPILER_PREFIX_BOOTLOADER="${PTXCONF_COMPILER_PREFIX}"
+PTXCONF_RUST_TARGET="${PTXCONF_GNU_TARGET}"
+# end of toolchain                     
+
+#
+# hardening options             
+#
+PTXCONF_TARGET_HARDEN_STACK_NONE=y
+# PTXCONF_TARGET_HARDEN_STACK is not set
+# PTXCONF_TARGET_HARDEN_STACK_STRONG is not set
+# PTXCONF_TARGET_HARDEN_STACK_ALL is not set
+# PTXCONF_TARGET_HARDEN_STACKCLASH is not set
+# PTXCONF_TARGET_HARDEN_FORTIFY is not set
+# PTXCONF_TARGET_HARDEN_RELRO is not set
+# PTXCONF_TARGET_HARDEN_BINDNOW is not set
+# PTXCONF_TARGET_HARDEN_PIE is not set
+# PTXCONF_TARGET_HARDEN_GLIBCXX_ASSERTIONS is not set
+# end of hardening options             
+
+#
+# extra toolchain options       
+#
+PTXCONF_TARGET_LINKER_HASH_DEFAULT=y
+# PTXCONF_TARGET_LINKER_HASH_SYSV is not set
+# PTXCONF_TARGET_LINKER_HASH_GNU is not set
+# PTXCONF_TARGET_LINKER_HASH_BOTH is not set
+PTXCONF_TARGET_LINKER_AS_NEEDED=y
+PTXCONF_TARGET_DEBUG_OFF=y
+# PTXCONF_TARGET_DEBUG_KEEP is not set
+# PTXCONF_TARGET_DEBUG_ENABLE is not set
+# PTXCONF_TARGET_DEBUG_FULL is not set
+# PTXCONF_TARGET_MINI_DEBUGINFO is not set
+# PTXCONF_TARGET_COMPILER_RECORD_SWITCHES is not set
+# PTXCONF_TARGET_NO_SEMANTIC_INTERPOSITION is not set
+PTXCONF_TARGET_BUILD_ID=y
+PTXCONF_TARGET_EXTRA_CPPFLAGS=""
+PTXCONF_TARGET_EXTRA_CFLAGS=""
+PTXCONF_TARGET_EXTRA_CXXFLAGS=""
+PTXCONF_TARGET_EXTRA_LDFLAGS=""
+# end of extra toolchain options       
+# end of architecture                  
+
+PTXCONF_KERNEL=y
+PTXCONF_KERNEL_XPKG=y
+PTXCONF_KERNEL_INSTALL=y
+PTXCONF_KERNEL_MODULES=y
+PTXCONF_KERNEL_MODULES_INSTALL=y
+# PTXCONF_KERNEL_MODULES_SIGN is not set
+PTXCONF_KERNEL_VERSION="020ee5029ab0b11e47696f538418105ccfdb44de"
+PTXCONF_KERNEL_MD5="a228be9380e08f0368f839821d26bed2"
+# PTXCONF_KERNEL_IMAGE_BZ is not set
+# PTXCONF_KERNEL_IMAGE_Z is not set
+# PTXCONF_KERNEL_IMAGE_XIP is not set
+# PTXCONF_KERNEL_IMAGE_U is not set
+# PTXCONF_KERNEL_IMAGE_VM is not set
+# PTXCONF_KERNEL_IMAGE_VMLINUX is not set
+# PTXCONF_KERNEL_IMAGE_VMLINUZ is not set
+PTXCONF_KERNEL_IMAGE_RAW=y
+# PTXCONF_KERNEL_IMAGE_SIMPLE is not set
+PTXCONF_KERNEL_IMAGE="Image"
+PTXCONF_KERNEL_DTB=y
+PTXCONF_KERNEL_DTS_PATH="${PTXDIST_PLATFORMCONFIG_SUBDIR}/dts:${KERNEL_DIR}/arch/${GENERIC_KERNEL_ARCH}/boot/dts"
+PTXCONF_KERNEL_DTS="raspi4b.dts"
+# PTXCONF_KERNEL_DTBO is not set
+# PTXCONF_KERNEL_CODE_SIGNING is not set
+# PTXCONF_KERNEL_ZSTD is not set
+# PTXCONF_KERNEL_XZ is not set
+# PTXCONF_KERNEL_LZOP is not set
+# PTXCONF_KERNEL_LZ4 is not set
+# PTXCONF_KERNEL_OPENSSL is not set
+# PTXCONF_KERNEL_LIBELF is not set
+# PTXCONF_KERNEL_GCC_PLUGINS is not set
+# PTXCONF_KERNEL_CONFIG_BASE_VERSION is not set
+
+#
+# patching & configuration      
+#
+PTXCONF_KERNEL_SERIES="series"
+PTXCONF_KERNEL_CONFIG="kernelconfig"
+# end of patching & configuration      
+
+#
+# Development features
+#
+PTXCONF_KERNEL_EXTRA_MAKEVARS=""
+# PTXCONF_HOST_DTC is not set
+
+#
+# console options               
+#
+PTXCONF_CONSOLE_NAME="ttyS0"
+PTXCONF_CONSOLE_SPEED="115200"
+# end of console options               
+
+#
+# extra kernel                  
+#
+
+#
+# bootloaders                   
+#
+# PTXCONF_AT91BOOTSTRAP2 is not set
+PTXCONF_BAREBOX_ARCH_STRING="arm"
+# PTXCONF_BAREBOX is not set
+# PTXCONF_BAREBOX_MLO is not set
+# PTXCONF_GRUB is not set
+# PTXCONF_HOST_MXS_UTILS is not set
+# PTXCONF_TF_A is not set
+# PTXCONF_U_BOOT is not set
+# end of bootloaders                   
+
+#
+# bootloader spec entries       
+#
+# PTXCONF_BLSPEC_ENTRY is not set
+# end of bootloader spec entries       
+
+#
+# image creation options        
+#
+# PTXCONF_IMAGE_BOOT_MLO is not set
+# PTXCONF_IMAGE_BOOT_VFAT is not set
+# PTXCONF_IMAGE_HD_VDI is not set
+# PTXCONF_IMAGE_HDIMG is not set
+PTXCONF_IMAGE_KERNEL=y
+
+#
+# Generate images/linuximage    
+#
+
+#
+# 'rootfs in kernel image' is incompatible with 'install kernel into /boot'
+#
+PTXCONF_IMAGE_KERNEL_INSTALL_EARLY=y
+# PTXCONF_IMAGE_KERNEL_LZOP is not set
+# end of Generate images/linuximage    
+
+# PTXCONF_IMAGE_RAUC is not set
+# PTXCONF_IMAGE_ROOT_CPIO is not set
+# PTXCONF_IMAGE_ROOT_EXT is not set
+# PTXCONF_IMAGE_ROOT_SQUASHFS is not set
+PTXCONF_IMAGE_ROOT_TGZ=y
+PTXCONF_IMAGE_ROOT_TGZ_LABEL=""
+# PTXCONF_IMAGE_ROOT_UBI is not set
+# PTXCONF_IMAGE_ROOT_UBIFS is not set
+
+#
+# ipkg options                  
+#
+# PTXCONF_IMAGE_IPKG_PUSH_TO_REPOSITORY is not set
+# PTXCONF_IMAGE_INSTALL_FROM_IPKG_REPOSITORY is not set
+# PTXCONF_IMAGE_IPKG_INDEX is not set
+PTXCONF_IMAGE_XPKG_EXTRA_ARGS=""
+# end of ipkg options                  
+
+# PTXCONF_KERNEL_FIT is not set
+PTXCONF_IMAGE_UPDATE=y
+# end of image creation options        
+
+# PTXCONF_CODE_SIGNING is not set
+PTXCONF_HOST_LIBKMOD=y
+PTXCONF_HOST_SYSTEM_BC=y
+
+#
+# non-free firmware blobs       
+#
+PTXCONF_RASPI4B_FIRMWARE=y
+# end of non-free firmware blobs       

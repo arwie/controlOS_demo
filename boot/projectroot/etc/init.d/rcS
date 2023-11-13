@@ -158,7 +158,7 @@ mount -r /mnt/root
 
 . /mnt/root/boot/boot.conf
 kexec --load /mnt/root/boot/$IMAGE  ${DTB:+--dtb=/mnt/root/boot/$DTB}  ${BOOTARGS:+--command-line="$BOOTARGS"}
-kexec --exec
+kexec --no-ifdown --exec
 }
 
 
