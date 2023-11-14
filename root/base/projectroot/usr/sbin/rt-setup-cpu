@@ -17,87 +17,93 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-import logging, argparse
+import logging
+import time
+from argparse import ArgumentParser
+from contextlib import suppress
 from pathlib import Path
 from shared import system
 
 
-parser = argparse.ArgumentParser()
+parser = ArgumentParser()
 parser.add_argument(
 	"--ksoftirqd-priority",
 	help="ksoftirqd priority (80)",
 	default='80'
 )
 parser.add_argument(
-	"--cpuidle-latency",
-	help="max cpuidle latency (50)",
-	default='50'
-)
-parser.add_argument(
 	"--scaling-governor",
 	help="max cpuidle latency (performance)",
 	default='performance'
+)
+parser.add_argument(
+	"--cpuidle-latency",
+	help="max cpuidle latency (50)",
+	default='50'
 )
 args = parser.parse_args()
 
 
 
-def cpu_path(cpu, query):
-	return Path('/sys/devices/system/cpu', 'cpu'+cpu if cpu else '', query)
+def cpu_path(cpu:str|None, query:str):
+	return Path('/sys/devices/system/cpu', f'cpu{cpu}' if cpu else '', query)
 
-def cpu_list(query):
-	result = []
+def cpu_set(query:str):
+	result:set[str] = set()
 	for c in cpu_path(None, query).read_text().rstrip().split(','):
 		if '-' in c:
 			c = c.split('-')
 			for c in range(int(c[0]), int(c[1])+1):
-				result.append(str(c))
+				result.add(str(c))
 		else:
-			result.append(c)
+			result.add(c)
 	return result
 
 
-isolated = cpu_list('isolated')
-print('isolated CPUs: ', isolated)
+isolated = cpu_set('isolated')
+regular  = cpu_set('present') - isolated
+logging.info(f'CPUs: isolated={isolated}, regular={regular}')
 
 
-def cpu_set_online(online):
-	for cpu in isolated:
-		cpu_path(cpu, 'online').write_bytes(b'1' if online else b'0')
-
-
-# Detach isolated CPUs
-cpu_set_online(False)
-
-# Move away all IRQ threads
-online_csv = ','.join(cpu_list('online'))
+# Set IRQ threads affinity
 for irq in Path('/proc/irq').glob('[0-9]*'):
-	try:
-		Path(irq, 'smp_affinity_list').write_text(online_csv)
-	except:
-		pass
-
-# Reattach isolated CPUs
-cpu_set_online(True)
+	affinity = Path(irq, 'smp_affinity_list')
+	with suppress(Exception):
+		if affinity.read_text().startswith('0-'):
+			logging.info(f'Setting IRQ affinity for irq {irq.stem}')
+			affinity.write_text(','.join(regular))
 
 
-# Set the priority of the ksoftirqd on the specific core
+# Set the priority of the ksoftirqd on the isolated cores
 if args.ksoftirqd_priority:
 	for cpu in isolated:
-		pid = system.run(['pgrep', 'ksoftirqd/'+cpu], True, text=True).rstrip()
+		logging.info(f'Setting ksoftirqd priority {args.ksoftirqd_priority} for cpu {cpu}')
+		pid = system.run(['pgrep', f'ksoftirqd/{cpu}'], True, text=True).rstrip()
 		system.run(['chrt','-fp', args.ksoftirqd_priority, pid])
+
+
+# Set the scaling governor for isolated cores
+if args.scaling_governor:
+	for cpu in isolated:
+		logging.info(f'Setting scaling governor {args.scaling_governor} for cpu {cpu}')
+		cpu_path(cpu, 'cpufreq/scaling_governor').write_text(args.scaling_governor)
 
 
 # Disable sleep states that can interfere with real-time requirements
 for cpu in isolated:
 	cpuidle = cpu_path(cpu, 'cpuidle')
-	for state in cpuidle.glob('state[0-9]*'):
-		if int(Path(state, 'latency').read_text()) > int(args.cpuidle_latency):
-			Path(state, 'disable').write_bytes(b'1')
-			print('cpuidle disabled: ', state)
+	if cpuidle.exists():
+		for state in cpuidle.glob('state[0-9]*'):
+			if latency := int(Path(state, 'latency').read_text()) > int(args.cpuidle_latency):
+				logging.info(f'Disabling cpuidle {state.stem} (latency: {latency}) for cpu {cpu}')
+				Path(state, 'disable').write_bytes(b'1')
 
 
-# Set the scaling governor
-if args.scaling_governor:
-	for cpu in isolated:
-		cpu_path(cpu, 'cpufreq/scaling_governor').write_text(args.scaling_governor)
+# Toggle cpu offline state to move away IRQ threads
+for cpu in isolated:
+	online = cpu_path(cpu, 'online')
+	if online.exists():
+		logging.info(f'Toggling offline state for cpu {cpu}')
+		online.write_bytes(b'0')
+		time.sleep(0.1)
+		online.write_bytes(b'1')

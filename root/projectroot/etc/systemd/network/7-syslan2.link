@@ -1,6 +1,0 @@
-[Match]
-#     >BBE usb gadget
-Path= platform-musb-hdrc.0  pci-0000:02:00.0
-
-[Link]
-Name=syslan2

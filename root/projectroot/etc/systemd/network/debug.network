@@ -1,5 +1,0 @@
-[Match]
-Name=debug
-
-[Network]
-Bridge=sys

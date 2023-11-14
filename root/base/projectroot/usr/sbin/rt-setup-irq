@@ -17,12 +17,13 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-import logging, argparse
+import logging
+from argparse import ArgumentParser
 from pathlib import Path
 from shared import system
 
 
-parser = argparse.ArgumentParser()
+parser = ArgumentParser()
 parser.add_argument(
 	"name",
 	help="irq device name"
@@ -40,12 +41,14 @@ parser.add_argument(
 args = parser.parse_args()
 
 
-procs = system.run(['pgrep','-l', 'irq/[0-9]*-'+args.name], True, text=True).rstrip().split('\n')
-print(procs)
+procs = system.run(['pgrep','-l', f'irq/[0-9]*-{args.name}'], True, text=True).rstrip().split('\n')
+#print(procs)
 
 for proc in procs:
 	proc = proc.split()
 	
+	logging.info(f'Setting rt-priority {args.priority} and cpu affinity {args.affinity} for {proc[1]}')
+
 	#set priority
 	pid = proc[0]
 	system.run(['chrt','-fp', args.priority, pid])

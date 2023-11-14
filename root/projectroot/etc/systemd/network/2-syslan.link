@@ -1,6 +1,6 @@
 [Match]
-#     >BBE                        >PokiniF2         >iEi
-#Path= platform-4a100000.ethernet  pci-0000:03:00.0  pci-0000:01:00.0
+#     >PokiniF2         >raspi4b
+Path= pci-0000:03:00.0  platform-fd500000.pcie-pci-0000:01:00.0-usb-0:1:1.0
 OriginalName=eth*
 
 [Link]
