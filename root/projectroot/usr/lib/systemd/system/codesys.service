@@ -1,0 +1,14 @@
+[Unit]
+Before=app.service
+
+
+[Service]
+SyslogIdentifier=codesys
+
+RuntimeDirectory=codesys
+WorkingDirectory=/var/codesys
+
+ExecStartPre=/opt/codesys/scripts/service-setup.py
+ExecStart=/opt/codesys/bin/codesyscontrol.bin --debug --printlostcycles /etc/CODESYSControl.cfg
+
+CPUAffinity=1
