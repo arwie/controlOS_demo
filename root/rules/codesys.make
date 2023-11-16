@@ -46,14 +46,6 @@ $(STATEDIR)/codesys.extract:
 	@$(call touch)
 
 # ----------------------------------------------------------------------------
-# Prepare
-# ----------------------------------------------------------------------------
-
-#$(STATEDIR)/codesys.prepare:
-#	@$(call targetinfo)
-#	@$(call touch)
-
-# ----------------------------------------------------------------------------
 # Compile
 # ----------------------------------------------------------------------------
 
@@ -85,7 +77,7 @@ $(STATEDIR)/codesys.targetinstall:
 	@$(call install_alternative, codesys, 0, 0, 0755, /opt/codesys/scripts/service-setup.py)
 
 	@$(call install_alternative, codesys, 0, 0, 0644, /etc/CODESYSControl.cfg)
-	@$(call install_alternative, codesys, 0, 0, 0644, /etc/tmpfiles.d/codesys.conf)
+	@$(call install_alternative, codesys, 0, 0, 0644, /usr/lib/tmpfiles.d/codesys.conf)
 
 	@$(call install_alternative_tree, codesys, 0, 0,  /usr/share/codesys)
 
@@ -95,12 +87,5 @@ $(STATEDIR)/codesys.targetinstall:
 	@$(call install_finish,codesys)
 	@$(call touch)
 
-# ----------------------------------------------------------------------------
-# Clean
-# ----------------------------------------------------------------------------
-
-#$(STATEDIR)/codesys.clean:
-#	@$(call targetinfo)
-#	@$(call clean_pkg, CODESYS)
 
 # vim: syntax=make

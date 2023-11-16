@@ -1,4 +1,6 @@
 [Unit]
+Wants=codemeter.service
+After=codemeter.service
 Before=app.service
 
 

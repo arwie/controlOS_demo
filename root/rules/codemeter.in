@@ -1,0 +1,14 @@
+## SECTION=applications
+
+config CODEMETER
+	tristate
+	select LIBC_DL
+	select LIBC_PTHREAD
+	select LIBC_RT
+	select LIBC_M
+	select GCCLIBS_GCC_S
+	select LIBUSB		if RUNTIME
+	select ZLIB		if RUNTIME
+	prompt "CodeMeter"
+	help
+	  Wibu CodeMeter license manager.
