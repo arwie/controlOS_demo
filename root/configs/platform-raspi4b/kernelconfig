@@ -511,7 +511,7 @@ CONFIG_ARCH_NR_GPIO=0
 #
 # Boot options
 #
-CONFIG_CMDLINE="mitigations=off console=tty0"
+CONFIG_CMDLINE="console=ttyAMA0,115200 kgdboc=ttyAMA0,115200 root=/dev/mmcblk0p2 rootfstype=ext4 rootwait"
 CONFIG_CMDLINE_FROM_BOOTLOADER=y
 # CONFIG_CMDLINE_FORCE is not set
 # CONFIG_EFI is not set

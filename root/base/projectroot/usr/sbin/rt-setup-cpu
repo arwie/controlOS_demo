@@ -94,7 +94,8 @@ for cpu in isolated:
 	cpuidle = cpu_path(cpu, 'cpuidle')
 	if cpuidle.exists():
 		for state in cpuidle.glob('state[0-9]*'):
-			if latency := int(Path(state, 'latency').read_text()) > int(args.cpuidle_latency):
+			latency = int(Path(state, 'latency').read_text())
+			if latency > int(args.cpuidle_latency):
 				logging.info(f'Disabling cpuidle {state.stem} (latency: {latency}) for cpu {cpu}')
 				Path(state, 'disable').write_bytes(b'1')
 

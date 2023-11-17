@@ -25,36 +25,65 @@ if TYPE_CHECKING:
 import asyncio
 import inspect
 from functools import partial
-from contextlib import asynccontextmanager
+from contextlib import AbstractContextManager, asynccontextmanager
 from shared import system
+from shared.util import singleinstance
+
 
 import logging as log
-from asyncio import sleep
+from time import monotonic as clock
 
 
 
+poll_period = 1 / 50
 
-class Event(asyncio.Event):
-	def trigger(self):
-		if not self.is_set():
-			self.set()
-			self.clear()
+
+def sleep(delay:float = poll_period):
+	return asyncio.sleep(delay)
 
 
 async def poll(
 	condition: Callable[[], Any],
 	*,
-	period: float | int | Callable[[], Coroutine] = 0.1,
-	abort: Callable[[], Any] | None = None
+	timeout: float | None = None,
+	abort: Callable[[], Any] | None = None,
+	period: float | int | Callable[[], Coroutine] = poll_period,
 ) -> bool:
-
+	timeout_ = Timeout(timeout) if timeout else False
 	if isinstance(period, (float, int)):
-		period = partial(sleep, period)
+		period = partial(asyncio.sleep, period)
 	while not condition():
-		if abort and abort():
+		if timeout_ or (abort and abort()):
 			return False
 		await period()
 	return True
+
+
+
+class Timeout:
+	def __init__(self, timeout:float):
+		self._timeout = timeout
+		self.reset()
+
+	def reset(self):
+		self._expire = clock() + self._timeout
+
+	def __call__(self):
+		return clock() > self._expire
+
+	__bool__ = __call__
+
+
+class Event(asyncio.Event):
+	def __init__(self, set_=False):
+		super().__init__()
+		if set_:
+			self.set()
+
+	def trigger(self):
+		if not self.is_set():
+			self.set()
+			self.clear()
 
 
 def run_in_executor(func:Callable, *args):
@@ -116,3 +145,19 @@ async def target(target:str):
 		yield
 	finally:
 		await systemctl('stop')
+
+
+
+@singleinstance
+class raise_cancelling(AbstractContextManager):
+	def __exit__(self, exc_type, exc_value, traceback):
+		if exc_type and exc_type is not asyncio.CancelledError:
+			if task := asyncio.current_task():
+				if task.cancelling():
+					log.error('error in cleanup logic of cancelling asyncio task', exc_info=(exc_type, exc_value, traceback))
+					raise asyncio.CancelledError
+
+	def __call__(self):
+		if task := asyncio.current_task():
+			if task.cancelling():
+				raise asyncio.CancelledError
