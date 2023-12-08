@@ -1,4 +1,5 @@
 [Unit]
+ConditionVirtualization=no
 DefaultDependencies=no
 After=sysinit.target
 Before=basic.target

@@ -11,17 +11,17 @@ SSHCMD="ssh -t -i keys/ssh/id_rsa"
 SSHUSER="root@$HOST"
 
 sshsys() {
-	$SSHCMD $SSHUSER $@							|| exit 1
+	$SSHCMD $SSHUSER $@  || exit 1
 }
 
 rsyncsys() {
-	rsync -rl -tp -v -e "$SSHCMD" $1 $SSHUSER:$2		|| exit 1
+	rsync -rl -tp -v -e "$SSHCMD" $1 $SSHUSER:$2  || exit 1
 }
 
 
-sshsys "mount -o remount,rw LABEL=ROOT && rm -f /version"
+sshsys "mount --options=remount,rw --target=/ && rm -f /version"
 
-rsyncsys root/local_src/python-shared/shared	/usr/lib/python3.11/site-packages
-rsyncsys root/projectroot/usr					/
+rsyncsys root/projectroot/usr /
+rsyncsys root/local_src/python-shared/shared /usr/lib/python3.11/site-packages
 
-sshsys "systemctl daemon-reload && systemctl --quiet stop gui.service studio.service"
+sshsys "systemctl --quiet restart app.service"

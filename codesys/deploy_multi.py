@@ -16,7 +16,7 @@
 
 
 from __future__ import print_function
-
+from scriptengine import projects
 from os import path, mkdir
 from shutil import rmtree
 
@@ -30,10 +30,10 @@ deploy_path = path.join(path.dirname(project.path), 'PlcLogic')
 print('PlcLogic path', deploy_path)
 
 
-def deploy_application(dev, app):
-	print('Deploying:', dev.get_name(), app.get_name())
+def deploy_application(name, app):
+	print('Deploying:', name, app.get_name())
 
-	app_path = path.join(deploy_path, dev.get_name())
+	app_path = path.join(deploy_path, name)
 
 	rmtree(app_path, True)
 	mkdir(app_path)
@@ -50,11 +50,18 @@ def deploy_application(dev, app):
 				f.write(struct.textual_declaration.text)
 
 
-for dev in project.get_children():
-	if dev.is_device:
-		for app in dev.get_children(True):
-			if app.is_application:
-				deploy_application(dev, app)
+def deploy(multi):
+	for dev in project.get_children():
+		if dev.is_device:
+			for app in dev.get_children(True):
+				if app.is_application:
+					if multi:
+						deploy_application(dev.get_name(), app)
+					else:
+						if app.is_active_application:
+							deploy_application('Application', app)
+	print('All done!')
 
 
-print('All done!')
+if __name__ == '__main__':
+	deploy(True)
