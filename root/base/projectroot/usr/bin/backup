@@ -17,10 +17,11 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-import logging, argparse, subprocess, tempfile, socket, os, shutil
-from http.server import BaseHTTPRequestHandler, HTTPStatus
+import argparse, subprocess, tempfile, socket, os, shutil
+from http import HTTPStatus
+from http.server import BaseHTTPRequestHandler
 from systemd import daemon
-from shared import system
+from shared import log, system
 
 
 parser = argparse.ArgumentParser()
@@ -47,13 +48,13 @@ def store(capture):
 
 class storeHttpHandler(BaseHTTPRequestHandler):
 	def log_error(self, format, *args):
-		logging.error(format%args)
+		log.error(format%args)
 	
 	def do_GET(self):
 		try:
 			binary = store(True)
 		except Exception as e:
-			logging.exception('ERROR in backup')
+			log.exception('ERROR in backup')
 			self.send_error(HTTPStatus.INTERNAL_SERVER_ERROR, str(e))
 			return
 		
@@ -67,14 +68,11 @@ class storeHttpHandler(BaseHTTPRequestHandler):
 
 if daemon.listen_fds():
 	systemdSocket = socket.fromfd(daemon.LISTEN_FDS_START, socket.AF_INET6, socket.SOCK_STREAM)
-	storeHttpHandler(systemdSocket, systemdSocket.getpeername(), None)
+	storeHttpHandler(systemdSocket, systemdSocket.getpeername(), None) #type:ignore
 	exit()
 
-try:
-	if args.restore:
-		restore()
-	else:
-		store(False)
-except:
-	logging.exception('ERROR in backup')
-	exit(1)
+
+if args.restore:
+	restore()
+else:
+	store(False)

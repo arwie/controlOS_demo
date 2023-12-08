@@ -40,6 +40,7 @@ $(STATEDIR)/system.targetinstall:
 	@$(call install_link, system, /usr/lib, /lib64)
 
 	# networking
+	@$(call install_copy,        system, 0, 0, 0755, /etc/iptables/rules.v4.d)
 	@$(call install_copy,        system, 0, 0, 0700, /etc/polkit-1/localauthority)
 	@$(call install_alternative, system, 0, 0, 0644, /etc/polkit-1/localauthority/10-vendor.d/systemd-networkd.pkla)
 	@$(call install_alternative_tree, system, 0, 0,  /etc/systemd/network)

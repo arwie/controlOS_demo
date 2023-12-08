@@ -17,12 +17,11 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-import logging
 import time
 from argparse import ArgumentParser
 from contextlib import suppress
 from pathlib import Path
-from shared import system
+from shared import log, system
 
 
 parser = ArgumentParser()
@@ -62,7 +61,7 @@ def cpu_set(query:str):
 
 isolated = cpu_set('isolated')
 regular  = cpu_set('present') - isolated
-logging.info(f'CPUs: isolated={isolated}, regular={regular}')
+log.info(f'CPUs: isolated={isolated}, regular={regular}')
 
 
 # Set IRQ threads affinity
@@ -70,14 +69,14 @@ for irq in Path('/proc/irq').glob('[0-9]*'):
 	affinity = Path(irq, 'smp_affinity_list')
 	with suppress(Exception):
 		if affinity.read_text().startswith('0-'):
-			logging.info(f'Setting IRQ affinity for irq {irq.stem}')
+			log.info(f'Setting IRQ affinity for irq {irq.stem}')
 			affinity.write_text(','.join(regular))
 
 
 # Set the priority of the ksoftirqd on the isolated cores
 if args.ksoftirqd_priority:
 	for cpu in isolated:
-		logging.info(f'Setting ksoftirqd priority {args.ksoftirqd_priority} for cpu {cpu}')
+		log.info(f'Setting ksoftirqd priority {args.ksoftirqd_priority} for cpu {cpu}')
 		pid = system.run(['pgrep', f'ksoftirqd/{cpu}'], True, text=True).rstrip()
 		system.run(['chrt','-fp', args.ksoftirqd_priority, pid])
 
@@ -85,7 +84,7 @@ if args.ksoftirqd_priority:
 # Set the scaling governor for isolated cores
 if args.scaling_governor:
 	for cpu in isolated:
-		logging.info(f'Setting scaling governor {args.scaling_governor} for cpu {cpu}')
+		log.info(f'Setting scaling governor {args.scaling_governor} for cpu {cpu}')
 		cpu_path(cpu, 'cpufreq/scaling_governor').write_text(args.scaling_governor)
 
 
@@ -96,7 +95,7 @@ for cpu in isolated:
 		for state in cpuidle.glob('state[0-9]*'):
 			latency = int(Path(state, 'latency').read_text())
 			if latency > int(args.cpuidle_latency):
-				logging.info(f'Disabling cpuidle {state.stem} (latency: {latency}) for cpu {cpu}')
+				log.info(f'Disabling cpuidle {state.stem} (latency: {latency}) for cpu {cpu}')
 				Path(state, 'disable').write_bytes(b'1')
 
 
@@ -104,7 +103,7 @@ for cpu in isolated:
 for cpu in isolated:
 	online = cpu_path(cpu, 'online')
 	if online.exists():
-		logging.info(f'Toggling offline state for cpu {cpu}')
+		log.info(f'Toggling offline state for cpu {cpu}')
 		online.write_bytes(b'0')
 		time.sleep(0.1)
 		online.write_bytes(b'1')

@@ -18,6 +18,18 @@
 import ctypes
 import re
 from pathlib import Path
+from configparser import ConfigParser
+from functools import cache
+
+
+PLC_LOGIC_PATH = '/opt/codesys/PlcLogic'
+
+
+@cache
+def application():
+	cmp_app = ConfigParser()
+	cmp_app.read(Path(PLC_LOGIC_PATH, 'CmpApp.cfg'))
+	return cmp_app['CmpApp']['Application.1']
 
 
 types = {
@@ -39,16 +51,8 @@ types = {
 }
 
 
-class Field(tuple):
-	def __new__(cls, name, ctype, comment):
-		return tuple.__new__(cls, (name, ctype))
-
-	def __init__(self, name, ctype, comment):
-		self.name, self.ctype, self.comment = name, ctype, comment
-
-
 def parse_struct(name:str) -> type[ctypes.Structure]:
-	file_text = Path('/usr/share/codesys', f'{name}.struct').read_text()
+	struct = Path(PLC_LOGIC_PATH, application(), f'{name}.struct').read_text()
 	
 	def ctype(codesys_type):
 		array_length = None
@@ -62,5 +66,9 @@ def parse_struct(name:str) -> type[ctypes.Structure]:
 	return type(
 		name,
 		(ctypes.Structure, ),
-		{'_fields_': [Field(f[0], ctype(f[1]), f[2]) for f in re.findall(r'^\s*(\w+)\s*:\s*(.+)\s*;\s*(?://\s*(.*)\s*)?$', file_text, re.MULTILINE)]},
+		{'_fields_': [(f[0], ctype(f[1])) for f in re.findall(r'^\s*(\w+)\s*:\s*(.+)\s*;', struct, re.MULTILINE)]},
 	)
+
+
+def runstop_switch(run:bool):
+	Path('/var/opt/codesysextension/runstop.switch').write_bytes(b'RUN' if run else b'STOP')

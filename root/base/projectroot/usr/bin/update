@@ -17,8 +17,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-import logging, argparse, subprocess, os, shutil, tempfile
-from shared import system
+import argparse, os, shutil, tempfile
+from shared import log, system
 
 
 parser = argparse.ArgumentParser()
@@ -59,13 +59,9 @@ def revert():
 	system.reboot(False)
 
 
-try:
-	if args.revert:
-		revert()
-	elif args.bare:
-		bare()
-	else:
-		install()
-except:
-	logging.exception('ERROR in update')
-	exit(1)
+if args.revert:
+	revert()
+elif args.bare:
+	bare()
+else:
+	install()

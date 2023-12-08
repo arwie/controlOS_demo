@@ -30,7 +30,7 @@ from shared import system
 from shared.util import singleinstance
 
 
-import logging as log
+from shared import log
 from time import monotonic as clock
 
 

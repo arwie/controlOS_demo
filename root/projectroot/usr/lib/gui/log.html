@@ -111,7 +111,9 @@
 						<!-- /ko -->
 					</td>
 					<td data-bind="text:$model.priorityNames[msg.PRIORITY]"></td>
+					<!-- ko if:$model.hosts().length>1 -->
 					<td data-bind="text:msg._HOSTNAME"></td>
+					<!-- /ko -->
 					<td data-bind="text:msg.SYSLOG_IDENTIFIER"></td>
 					<td width="70%">
 						<strong data-bind="text:message" style="white-space:pre-wrap"></strong>
@@ -183,7 +185,7 @@ class Message {
 	}
 	
 	isBlob(value) {
-		return value===null || Array.isArray(value) || value.length>2048;
+		return value===null || Array.isArray(value) || value.length>4096;
 	}
 	
 	show(block='center', open=true) {

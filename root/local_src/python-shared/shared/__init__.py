@@ -1,4 +1,4 @@
-# Copyright (c) 2018 Artur Wiebe <artur@4wiebe.de>
+# Copyright (c) 2023 Artur Wiebe <artur@4wiebe.de>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 # associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -15,19 +15,4 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-
-import logging
-import os
-import sys
-
-from systemd import journal
-
-
-logging.root.addHandler(journal.JournalHandler())
-logging.root.setLevel(logging.INFO)
-
-logging.term = 'TERM' in os.environ
-if logging.term:
-	logging.root.addHandler(logging.StreamHandler())
-
-sys.excepthook = lambda type, value, tb: logging.error(value, exc_info=(type, value, tb))
+from . import log

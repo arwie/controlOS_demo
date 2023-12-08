@@ -1,0 +1,9 @@
+#!/usr/bin/python -Bu
+
+from os import symlink
+from shared.setup import setup
+
+
+if application := setup['codesys']['application']:
+	print('Selected application:', application)
+	symlink(f'/opt/codesys/PlcLogic/{application}', '/run/codesys/Application')

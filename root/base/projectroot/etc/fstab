@@ -1,2 +1,2 @@
+/                 /mnt/root      none     bind,ro
 LABEL=INIT        /mnt/init      vfat     noauto,x-systemd.automount,defaults
-/                 /mnt/root      none     noauto,bind,ro

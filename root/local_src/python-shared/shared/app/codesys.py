@@ -17,14 +17,15 @@
 
 import asyncio
 import mmap
-import os
 from ctypes import addressof, sizeof, memmove, c_char
 import posix_ipc
+from pathlib import Path
 from functools import wraps
-from shared.codesys import parse_struct
+from shared.codesys import parse_struct, runstop_switch
 from . import app
 
 
+cfg = parse_struct('AppCfg')()
 cmd = parse_struct('AppCmd')()
 fbk = parse_struct('AppFbk')()
 
@@ -40,30 +41,45 @@ async def poll(condition, **kwargs):
 	return await app.poll(condition, period=sync, **kwargs)
 
 
+
+runstop_switch(False)
+
 @app.context
 async def exec(period:float):
-	sem = posix_ipc.Semaphore('/codesys')
-	shm = posix_ipc.SharedMemory('/codesys')
-	with mmap.mmap(shm.fd, shm.size) as mapfile:
-		cmd_addr, cmd_size = addressof(cmd), sizeof(cmd)
-		fbk_addr, fbk_size = addressof(fbk), sizeof(fbk)
-		shm_cmd_addr = addressof((c_char*shm.size).from_buffer(mapfile))
-		shm_fbk_addr = shm_cmd_addr + cmd_size
-		os.close(shm.fd)
+	cfg_path = Path('/run/codesys/cfg')
+	cfg_path.write_bytes(bytes(cfg))
+	runstop_switch(True)
+	try:
+		if not await app.poll(lambda: Path('/dev/shm/codesys').exists(), timeout=30):
+			raise Exception('codesys application not started')
+		sem = posix_ipc.Semaphore('/codesys')
+		shm = posix_ipc.SharedMemory('/codesys')
+		try:
+			with mmap.mmap(shm.fd, shm.size) as mapfile:
+				cmd_addr, cmd_size = addressof(cmd), sizeof(cmd)
+				fbk_addr, fbk_size = addressof(fbk), sizeof(fbk)
+				shm_cmd_addr = addressof((c_char*shm.size).from_buffer(mapfile))
+				shm_fbk_addr = shm_cmd_addr + cmd_size
 
-		async def link_loop():
-			while True:
-				with sem:
-					memmove(shm_cmd_addr, cmd_addr, cmd_size)
-					memmove(fbk_addr, shm_fbk_addr, fbk_size)
-				sync_event.trigger()
-				await asyncio.sleep(period)
+				async def link_loop():
+					while True:
+						with sem:
+							memmove(shm_cmd_addr, cmd_addr, cmd_size)
+							memmove(fbk_addr, shm_fbk_addr, fbk_size)
+						sync_event.trigger()
+						await asyncio.sleep(period)
 
-		async with app.task_group(link_loop()):
-			try:
-				yield
-			finally:
-				await sync()
+				async with app.task_group(link_loop()):
+					try:
+						yield
+					finally:
+						await sync()
+		finally:
+			shm.close_fd()
+			sem.close()
+	finally:
+		runstop_switch(False)
+		await app.poll(lambda: not cfg_path.exists(), timeout=10)
 
 
 

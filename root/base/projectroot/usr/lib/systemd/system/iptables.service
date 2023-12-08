@@ -8,5 +8,7 @@ RefuseManualStart=true
 [Service]
 Type=oneshot
 RemainAfterExit=yes
+SyslogIdentifier=iptables
 ExecStartPre=/usr/sbin/iptables-flush
-ExecStart=/usr/sbin/iptables-restore --noflush /etc/iptables/rules.v4
+ExecStart=iptables-restore --noflush /etc/iptables/rules.v4
+ExecStart=find /etc/iptables/rules.v4.d -type f -exec iptables-restore --noflush "{}" \;

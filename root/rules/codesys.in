@@ -1,6 +1,6 @@
 ## SECTION=applications
 
-config CODESYS
+menuconfig CODESYS
 	tristate
 	select LIBC_DL
 	select LIBC_PTHREAD
@@ -11,3 +11,12 @@ config CODESYS
 	help
 	  CODESYS Control Linux SL is an IEC 61131-3-compliant SoftPLC
 	  for PC-based industrial controllers running on Linux
+
+
+if CODESYS
+
+config CODESYS_DEPLOY
+	bool
+	prompt "Bundle codesys applications in /opt/codesys/PlcLogic"
+
+endif

@@ -1,16 +1,23 @@
 [Unit]
+Wants=codesys-log.service
+After=codesys-log.service
+
 Wants=codemeter.service
 After=codemeter.service
+
 Before=app.service
 
 
 [Service]
-SyslogIdentifier=codesys
-
+WorkingDirectory=/var/opt/codesys
 RuntimeDirectory=codesys
-WorkingDirectory=/var/codesys
 
-ExecStartPre=/opt/codesys/scripts/service-setup.py
-ExecStart=/opt/codesys/bin/codesyscontrol.bin --debug --printlostcycles /etc/CODESYSControl.cfg
+StandardOutput=tty
+TTYPath=/run/codesys-log/tty
 
 CPUAffinity=1
+
+ExecStartPre=-/opt/codesys/scripts/select-application
+
+Type=exec
+ExecStart=/opt/codesys/bin/codesyscontrol.bin /etc/CODESYSControl.cfg

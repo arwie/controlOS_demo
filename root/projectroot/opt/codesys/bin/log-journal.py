@@ -16,42 +16,50 @@
 # WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-
-from argparse import ArgumentParser
-from pathlib import Path
-from shared import log, system
-
-
-parser = ArgumentParser()
-parser.add_argument(
-	"name",
-	help="irq device name"
-)
-parser.add_argument(
-	"--priority",
-	help="priority (80)",
-	default='80'
-)
-parser.add_argument(
-	"--affinity",
-	help="affinity (1)",
-	default='1'
-)
-args = parser.parse_args()
+import os
+import re
+from systemd import daemon
+from shared import log
 
 
-procs = system.run(['pgrep','-l', f'irq/[0-9]*-{args.name}'], True, text=True).rstrip().split('\n')
-#print(procs)
+master, slave = os.openpty()
+os.symlink(os.ttyname(slave), '/run/codesys-log/tty')
+daemon.notify('READY=1')
 
-for proc in procs:
-	proc = proc.split()
-	
-	log.info(f'Setting rt-priority {args.priority} and cpu affinity {args.affinity} for {proc[1]}')
 
-	#set priority
-	pid = proc[0]
-	system.run(['chrt','-fp', args.priority, pid])
+def send(priority:int, message:str, *args):
+	log.journal.sendv(
+		'SYSLOG_IDENTIFIER=codesys',
+		f'PRIORITY={priority}',
+		f'MESSAGE={message}',
+		*args
+	)
 
-	#set affinity
-	irq = proc[1].lstrip('irq/').partition('-')[0]
-	Path('/proc/irq', irq, 'smp_affinity_list').write_text(args.affinity)
+def prio(prio_class):
+	match prio_class:
+		case '1': return 6 #Info
+		case '2': return 4 #Warning
+		case '4': return 3 #Error
+		case '8': return 2 #Critical
+		case _:   return 7 #Debug
+
+
+pattern = re.compile(r'Cmp=(.*), Class=(.*), Error=(.*), Info=(.*), pszInfo=(.*)')
+
+with os.fdopen(master, 'rb') as input:
+	for line in input:
+		try:
+			line = line.decode().strip()
+			if match := pattern.search(line):
+				send(
+					prio(match.group(2)),
+					match.group(5).strip(),
+					f'CMP={match.group(1)}',
+					f'ERROR={match.group(3)}',
+					f'INFO={match.group(4)}',
+				)
+			else:
+				if line and not line.startswith('_/'):
+					send(6, line)
+		except Exception:
+			log.exception(line)

@@ -1,0 +1,4 @@
+[Service]
+Type=notify
+RuntimeDirectory=codesys-log
+ExecStart=/opt/codesys/bin/log-journal.py

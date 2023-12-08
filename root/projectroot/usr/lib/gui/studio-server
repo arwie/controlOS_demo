@@ -18,10 +18,11 @@
 
 
 import server
+from shared import log
 
 import system
 import state
-import log
+import log as log_handler
 import issue
 import network
 import update
@@ -39,7 +40,7 @@ try:
 except ModuleNotFoundError:
 	server.addRedirect('', 'studio')
 except:
-	logging.exception('failed to include startup page')
+	log.exception('failed to include startup page')
 
 
 server.run()

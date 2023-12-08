@@ -3,4 +3,4 @@
 
 systemctl --no-block start debug.target
 
-mount -o remount,rw LABEL=ROOT
+mount --options=remount,rw --target=/
