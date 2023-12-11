@@ -1,0 +1,22 @@
+<project xmlns="http://www.plcopen.org/xml/tc6_0200">
+  <types>
+    <dataTypes />
+    <pous />
+  </types>
+  <instances>
+    <configurations />
+  </instances>
+  <addData>
+    <data name="http://www.3s-software.com/plcopenxml/libraries" handleUnknown="implementation">
+      <Libraries>
+        <Library Name="#SysFile" Namespace="SysFile" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="false" LinkAllContent="false" DefaultResolution="SysFile, * (System)" />
+        <Library Name="#SysShm" Namespace="SysShm" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="false" LinkAllContent="false" DefaultResolution="SysShm, * (System)" />
+        <Library Name="#SysSemProcess" Namespace="SysSemProcess" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="false" LinkAllContent="false" DefaultResolution="SysSemProcess, * (System)" />
+        <Library Name="SysTypes Interfaces, * (System)" Namespace="SysTypes" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="false" LinkAllContent="false" />
+        <Library Name="#CmpApp" Namespace="CmpApp" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="false" LinkAllContent="false" DefaultResolution="CmpApp, * (System)" />
+        <Library Name="IoDrvEtherCAT, 4.1.0.0 (3S - Smart Software Solutions GmbH)" Namespace="IoDrvEthercatLib" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="false" LinkAllContent="false" />
+        <addData />
+      </Libraries>
+    </data>
+  </addData>
+</project>

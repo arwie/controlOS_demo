@@ -1,0 +1,30 @@
+<project xmlns="http://www.plcopen.org/xml/tc6_0200">
+  <types>
+    <dataTypes />
+    <pous />
+  </types>
+  <instances>
+    <configurations />
+  </instances>
+  <addData>
+    <data name="http://www.3s-software.com/plcopenxml/application" handleUnknown="implementation">
+      <resource name="Application">
+        <task name="EtherCAT_Task" interval="PT0.004S" priority="1">
+          <pouInstance name="Main" typeName="">
+            <documentation>
+              <xhtml xmlns="http://www.w3.org/1999/xhtml" />
+            </documentation>
+          </pouInstance>
+          <addData>
+            <data name="http://www.3s-software.com/plcopenxml/tasksettings" handleUnknown="implementation">
+              <TaskSettings KindOfTask="Cyclic" Interval="t#4ms" IntervalUnit="ms" WithinSPSTimeSlicing="true">
+                <Watchdog Enabled="false" TimeUnit="ms" />
+              </TaskSettings>
+            </data>
+          </addData>
+        </task>
+        <addData />
+      </resource>
+    </data>
+  </addData>
+</project>

@@ -1,0 +1,13 @@
+PROGRAM Main
+VAR
+END_VAR
+
+////////////////////////////////
+
+app();
+
+
+//Application code
+
+co_etc();
+app();

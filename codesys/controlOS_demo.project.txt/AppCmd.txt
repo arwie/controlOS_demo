@@ -1,0 +1,6 @@
+TYPE AppCmd:
+STRUCT
+	co:		CoCmd;
+	io:		ARRAY [0..15] OF BOOL;
+END_STRUCT
+END_TYPE

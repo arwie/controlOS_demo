@@ -1,0 +1,7 @@
+METHOD StopDone
+
+////////////////////////////////
+
+SysSharedMemoryClose(shm);
+
+AppReset(AppGetCurrent(ADR(iec_result)), CmpApp.RESET_OPTION.RTS_RESET_COLD);

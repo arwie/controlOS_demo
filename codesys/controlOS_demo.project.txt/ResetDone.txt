@@ -1,0 +1,8 @@
+FUNCTION ResetDone : DWORD
+VAR_IN_OUT
+	EventPrm: CmpApp.EVTPARAM_CmpAppReset;
+END_VAR
+
+////////////////////////////////
+
+app.ResetDone();

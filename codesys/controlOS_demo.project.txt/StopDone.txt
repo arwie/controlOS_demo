@@ -1,0 +1,8 @@
+FUNCTION StopDone : DWORD
+VAR_IN_OUT
+	EventPrm: CmpApp.EVTPARAM_CmpAppStop;
+END_VAR
+
+////////////////////////////////
+
+app.StopDone();

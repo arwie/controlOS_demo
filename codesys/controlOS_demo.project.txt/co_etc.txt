@@ -1,0 +1,20 @@
+PROGRAM co_etc
+VAR
+	SdoWriteDWord:		ETC_CO_SdoWriteDWord;
+END_VAR
+
+////////////////////////////////
+
+CASE app.cmd.co.func OF
+	1: 	SdoWriteDWord(
+			xExecute := app.cmd.co.exec,
+			uiDevice := app.cmd.co.device,
+			wIndex := app.cmd.co.index,
+			bySubindex := app.cmd.co.subIndex,
+			usiDataLength := app.cmd.co.dataLength,
+			dwData := app.cmd.co.data,
+			udiTimeOut := 250,
+		);
+		app.fbk.co.done := SdoWriteDWord.xDone;
+END_CASE
+

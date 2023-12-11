@@ -1,0 +1,9 @@
+FUNCTION PrepareStart : DWORD
+VAR_IN_OUT
+	EventPrm: CmpApp.EVTPARAM_CmpApp;
+END_VAR
+
+////////////////////////////////
+
+app.PrepareStart();
+
