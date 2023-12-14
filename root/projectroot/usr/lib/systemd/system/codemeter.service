@@ -1,0 +1,12 @@
+[Service]
+SyslogIdentifier=codemeter
+
+User=daemon
+Group=daemon
+
+RuntimeDirectory=codemeter
+
+ExecStartPre=cp -p /etc/wibu/CodeMeter/Server.ini.src /run/codemeter/Server.ini
+
+ExecStart=CodeMeterLin -f
+#ExecStart=CodeMeterLin -f -v

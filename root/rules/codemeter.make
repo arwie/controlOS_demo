@@ -44,7 +44,10 @@ CODEMETER_LICENSE		:= unknown
 
 $(STATEDIR)/codemeter.install:
 	@$(call targetinfo)
+
 	-fakeroot dpkg --force-all --root=$(CODEMETER_PKGDIR) --install $(CODEMETER_SOURCE)
+	mv $(CODEMETER_PKGDIR)/lib/* $(CODEMETER_PKGDIR)/usr/lib
+
 	@$(call touch)
 
 # ----------------------------------------------------------------------------
@@ -59,7 +62,7 @@ $(STATEDIR)/codemeter.targetinstall:
 	@$(call install_fixup,codemeter,AUTHOR,"Artur Wiebe <artur@4wiebe.de>")
 	@$(call install_fixup,codemeter,DESCRIPTION,missing)
 
-	@$(call install_copy, codemeter, 0, 0, 755, -, /usr/sbin/CodeMeterLin)
+	@$(call install_copy, codemeter, 0, 0, 0755, -, /usr/sbin/CodeMeterLin)
 
 	@$(call install_tree, codemeter, 0, 0, -, /usr/bin)
 
@@ -68,17 +71,14 @@ $(STATEDIR)/codemeter.targetinstall:
 		/usr/lib, \
 		*.so, */jni/*)
 
-	@$(call install_copy, codemeter, 0, 0, 644, \
-		$(CODEMETER_PKGDIR)/lib/udev/rules.d/60-codemeter-lite.rules, \
-		/usr/lib/udev/rules.d/60-codemeter-lite.rules)
+	@$(call install_copy, codemeter, 0, 0, 0644, -, /usr/lib/udev/rules.d/60-codemeter-lite.rules)
 
-	@$(call install_copy, codemeter, 0, 0, 644, \
-		$(CODEMETER_PKGDIR)/lib/systemd/system/codemeter.service, \
-		/usr/lib/systemd/system/codemeter.service)
+	@$(call install_alternative, codemeter, 0, 0, 0644, /usr/lib/systemd/system/codemeter.service)
 
-	@$(call install_alternative, codemeter, 0, 0, 0644, /usr/lib/tmpfiles.d/codemeter.conf)
-
-	@$(call install_alternative, codemeter, 1, 1, 0644, /etc/wibu/CodeMeter/Server.ini)	#daemon:daemon
+	# CodeMeter overwrites Server.ini on startup (not very polite!)
+	# -> link it to /run/codemeter and copy Sever.ini.src on startup
+	@$(call install_alternative, codemeter, 1, 1, 0644, /etc/wibu/CodeMeter/Server.ini.src)	#daemon:daemon
+	@$(call install_link, codemeter, /run/codemeter/Server.ini, /etc/wibu/CodeMeter/Server.ini)
 
 	@$(call install_finish,codemeter)
 	@$(call touch)

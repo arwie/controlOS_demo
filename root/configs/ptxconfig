@@ -1556,7 +1556,7 @@ PTXCONF_NUMACTL=m
 # PTXCONF_PICOCOM is not set
 # PTXCONF_PNPUTILS is not set
 # PTXCONF_PPS_TOOLS is not set
-PTXCONF_PROCPS=m
+PTXCONF_PROCPS=y
 PTXCONF_PROCPS_WITH_SYSTEMD=y
 
 #
@@ -1584,7 +1584,7 @@ PTXCONF_PROCPS_PS=y
 # busybox' pwdx is selected!
 #
 # PTXCONF_PROCPS_SLABTOP is not set
-PTXCONF_PROCPS_SYSCTL=y
+# PTXCONF_PROCPS_SYSCTL is not set
 
 #
 # busybox' top is selected!
@@ -1593,7 +1593,7 @@ PTXCONF_PROCPS_SYSCTL=y
 #
 # busybox' uptime is selected!
 #
-PTXCONF_PROCPS_VMSTAT=y
+# PTXCONF_PROCPS_VMSTAT is not set
 
 #
 # busybox' w is selected!

@@ -1,0 +1,5 @@
+[General]
+CmActPath=/run/codemeter
+
+[Backup]
+Interval=0
