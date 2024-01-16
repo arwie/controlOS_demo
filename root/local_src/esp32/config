@@ -1,0 +1,14 @@
+#!/bin/bash
+
+BASEDIR=$(dirname $(realpath $0))
+
+PROJECTDIR=$BASEDIR/$1
+
+
+export IDF_TOOLS_PATH=/opt/esp-idf
+export IDF_PATH=$IDF_TOOLS_PATH
+
+. $IDF_TOOLS_PATH/export.sh
+
+
+idf.py --project-dir=$PROJECTDIR menuconfig

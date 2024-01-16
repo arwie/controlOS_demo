@@ -1,0 +1,26 @@
+#!/bin/bash
+
+BASEDIR=$(dirname $(realpath $0))
+
+PROJECTDIR=$BASEDIR/$1
+BUILDDIR=${2-$PROJECTDIR/build}
+
+
+export IDF_TOOLS_PATH=/opt/esp-idf
+export IDF_PATH=$IDF_TOOLS_PATH
+
+. $IDF_TOOLS_PATH/export.sh
+
+
+idf.py --ccache --project-dir=$PROJECTDIR --build-dir=$BUILDDIR build
+
+
+cd $BUILDDIR
+
+sha256sum app.elf  | cut -f 1 -d " " >		app.hash
+
+ln -f bootloader/bootloader.bin				boot.bin
+ln -f partition_table/partition-table.bin	part.bin
+ln -f ota_data_initial.bin					ota.bin
+
+cp $PROJECTDIR/flash.conf .

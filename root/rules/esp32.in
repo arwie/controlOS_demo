@@ -1,0 +1,18 @@
+## SECTION=project_specific
+
+menuconfig ESP32
+	tristate
+	select ESPTOOL		if RUNTIME
+	prompt "esp32"
+	help
+	  FIXME
+
+if ESP32
+
+config ESP32_PROJECTS
+	string
+	prompt "projects"
+	help
+	  Space separated list of built projects.
+
+endif

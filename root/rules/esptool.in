@@ -1,0 +1,14 @@
+## SECTION=shell_and_console
+
+config ESPTOOL
+	tristate
+	select PYTHON3
+	select PYSERIAL3	if RUNTIME
+	prompt "esptool"
+	help
+	  A command line utility to communicate with the 
+	  ROM bootloader in Espressif ESP8266 & ESP32 microcontrollers.
+	  Allows flashing firmware, reading back firmware, 
+	  querying chip parameters, etc.
+
+
