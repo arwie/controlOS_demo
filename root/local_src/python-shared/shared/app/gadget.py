@@ -32,6 +32,9 @@ class UdpMaster(asyncio.DatagramProtocol):
 		self.cmd = {}
 		self.fbk = {}
 
+		self.sync_event = app.Event()
+		self.sync = self.sync_event.wait
+
 	def connection_made(self, transport):
 		pass
 
@@ -41,6 +44,7 @@ class UdpMaster(asyncio.DatagramProtocol):
 	def datagram_received(self, data, addr):
 		self.fbk.update(json.loads(data.decode()))
 		self.connected = True
+		self.sync_event.trigger()
 		self.timeout.reset()
 
 	@asynccontextmanager
