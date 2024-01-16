@@ -45,6 +45,7 @@ CODEMETER_LICENSE		:= unknown
 $(STATEDIR)/codemeter.install:
 	@$(call targetinfo)
 
+	rm -rf $(CODEMETER_PKGDIR)/*
 	-fakeroot dpkg --force-all --root=$(CODEMETER_PKGDIR) --install $(CODEMETER_SOURCE)
 	mv $(CODEMETER_PKGDIR)/lib/* $(CODEMETER_PKGDIR)/usr/lib
 

@@ -1,0 +1,43 @@
+&spi0 {
+    status = "okay";
+};
+
+/* disable spi-dev for spi0.0 */
+&spidev0 {
+    status = "disabled";
+};
+
+/* the interrupt pin of the can-controller */
+&gpio {
+    can0_pins: can0_pins {
+        brcm,pins = <25>;
+        brcm,function = <0>; /* input */
+    };
+};
+
+/* the clock/oscillator of the can-controller */
+/ {
+    /* external oscillator of mcp2515 on SPI0.0 */
+    can0_osc: can0_osc {
+        compatible = "fixed-clock";
+        #clock-cells = <0>;
+        clock-frequency  = <16000000>;
+    };
+};
+
+/* the spi config of the can-controller itself binding everything together */
+&spi0 {
+    /* needed to avoid dtc warning */
+    #address-cells = <1>;
+    #size-cells = <0>;
+    can0: mcp2515@0 {
+        reg = <0>;
+        compatible = "microchip,mcp2515";
+        pinctrl-names = "default";
+        pinctrl-0 = <&can0_pins>;
+        spi-max-frequency = <10000000>;
+        interrupt-parent = <&gpio>;
+        interrupts = <25 8>; /* IRQ_TYPE_LEVEL_LOW */
+        clocks = <&can0_osc>;
+    };
+};
