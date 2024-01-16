@@ -1,0 +1,26 @@
+#!/bin/sh
+
+HOST=${1-sys}
+
+BASEDIR=$(dirname $(realpath $0))
+
+cd $BASEDIR/..
+
+
+SSHCMD="ssh -t -i keys/ssh/id_rsa"
+SSHUSER="root@$HOST"
+
+sshsys() {
+	$SSHCMD $SSHUSER $@							|| exit 1
+}
+
+rsyncsys() {
+	rsync -rl -tp -v -e "$SSHCMD" $1 $SSHUSER:$2		|| exit 1
+}
+
+
+sshsys "mount --options=remount,rw --target=/ && rm -f /version"
+
+rsyncsys root/projectroot/usr/lib/gui /usr/lib
+
+sshsys "systemctl --quiet stop gui.service studio.service"

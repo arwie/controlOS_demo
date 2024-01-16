@@ -15,16 +15,18 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-import logging
+from contextlib import asynccontextmanager
 import asyncio
 import json
+from . import app
+
 
 
 class UdpMaster(asyncio.DatagramProtocol):
-	def __init__(self, host, port, cycle_time, timeout=3):
+	def __init__(self, host:str, port:int, cycle_time:float, timeout:float=3):
 		self.address = (host, port)
 		self.cycle_time = cycle_time
-		self.timeout = timeout
+		self.timeout = app.Timeout(timeout)
 
 		self.connected = False
 		self.cmd = {}
@@ -33,30 +35,25 @@ class UdpMaster(asyncio.DatagramProtocol):
 	def connection_made(self, transport):
 		pass
 
+	def on_timeout(self):
+		app.log.warning('gadget disconnected')
+
 	def datagram_received(self, data, addr):
 		self.fbk.update(json.loads(data.decode()))
 		self.connected = True
-		self.on_receive()
-		self._on_timeout = asyncio.get_running_loop().time() + self.timeout
+		self.timeout.reset()
 
-	def start(self):
-		self._task = asyncio.create_task(self._run())
-
-	def on_send(self):
-		pass
-
-	def on_receive(self):
-		pass
-
-	def on_timeout(self):
-		logging.warning('gadget disconnected')
-
-	async def _run(self):
+	@asynccontextmanager
+	async def exec(self):
 		transport,_ = await asyncio.get_running_loop().create_datagram_endpoint(lambda:self, remote_addr=self.address)
-		while True:
-			await asyncio.sleep(self.cycle_time)
-			self.on_send()
-			transport.sendto(json.dumps(self.cmd).encode())
-			if self.connected and asyncio.get_running_loop().time() > self._on_timeout:
-				self.connected = False
-				self.on_timeout()
+
+		async def loop():
+			while True:
+				await asyncio.sleep(self.cycle_time)
+				transport.sendto(json.dumps(self.cmd).encode())
+				if self.connected and self.timeout():
+					self.connected = False
+					self.on_timeout()
+
+		async with app.task_group(loop()):
+			yield

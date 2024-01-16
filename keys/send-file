@@ -6,5 +6,5 @@ BASEDIR=$(dirname $(realpath $0))
 
 cd $BASEDIR
 
-ssh -i ssh/id_rsa root@$HOST mount -o remount,rw /
+ssh -i ssh/id_rsa root@$HOST mount --options=remount,rw --target=/
 scp -i ssh/id_rsa -r $1 root@$HOST:$2
