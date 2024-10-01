@@ -1,5 +1,5 @@
 [Match]
-Name=syslan
+Name=syslan syslan*
 
 [Network]
 Bridge=sys

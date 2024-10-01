@@ -32,7 +32,7 @@ class {
 	}
 	
 	start() {
-		this.statusConnection = new WebSocket(wsUrl('network/status'));
+		this.statusConnection = new WebSocket(wsUrl('network.status'));
 		this.statusConnection.onmessage = (e)=>{
 			this.status(e.data);
 		}

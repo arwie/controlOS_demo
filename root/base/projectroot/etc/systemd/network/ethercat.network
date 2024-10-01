@@ -1,5 +1,5 @@
 [Match]
-Name=ethc
+Name=ethc ethc*
 
 [Link]
 ActivationPolicy=up

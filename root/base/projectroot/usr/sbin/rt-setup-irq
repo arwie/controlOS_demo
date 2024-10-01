@@ -25,7 +25,7 @@ from shared import log, system
 parser = ArgumentParser()
 parser.add_argument(
 	"name",
-	help="irq device name"
+	help="IRQ device name"
 )
 parser.add_argument(
 	"--priority",
@@ -40,8 +40,13 @@ parser.add_argument(
 args = parser.parse_args()
 
 
-procs = system.run(['pgrep','-l', f'irq/[0-9]*-{args.name}'], True, text=True).rstrip().split('\n')
-#print(procs)
+try:
+	procs = system.run(['pgrep','-l', f'irq/[0-9]*-{args.name}'], True, text=True).rstrip().split('\n')
+	#print(procs)
+except Exception:
+	log.info(f'No IRQs found for "{args.name}"')
+	exit()
+
 
 for proc in procs:
 	proc = proc.split()

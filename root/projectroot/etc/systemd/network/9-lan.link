@@ -1,5 +1,6 @@
 [Match]
-OriginalName=eth*
+Type=ether
+Kind=!*
 
 [Link]
 Name=lan

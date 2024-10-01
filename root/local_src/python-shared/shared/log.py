@@ -20,6 +20,8 @@ import os
 import sys
 import re
 from pathlib import Path
+from io import StringIO
+from traceback import TracebackException
 from systemd import journal
 
 from logging import DEBUG, INFO, WARNING, ERROR, CRITICAL
@@ -40,9 +42,27 @@ if term:
 	logging.root.addHandler(logging.StreamHandler())
 
 
+#use custom formatter to increase max_group_depth
+class JournalFormatter(logging.Formatter):
+	def formatException(self, ei):
+		assert ei[0] and ei[1]
+		te = TracebackException(ei[0], ei[1], ei[2], compact=True, max_group_depth=100)
+		sio = StringIO()
+		te.print(file=sio, chain=True)
+		s = sio.getvalue()
+		sio.close()
+		if s[-1:] == "\n":
+			s = s[:-1]
+		return s
+
+
 class JournalHandler(logging.Handler):
 	ident_pattern = re.compile(r'[A-Z_0-9]*')
 	syslog_identifier = Path(sys.argv[0]).stem
+
+	def __init__(self):
+		super().__init__()
+		self.setFormatter(JournalFormatter())
 
 	@staticmethod
 	def map_priority(levelno):
@@ -79,6 +99,7 @@ class JournalHandler(logging.Handler):
 				f'THREAD={record.threadName}',
 				f'PROCESS={record.processName}',
 				f'MODULE={record.module}',
+				f'LOGGER={record.name}',
 				f'CODE_FILE={record.pathname}',
 				f'CODE_LINE={record.lineno}',
 				f'CODE_FUNC={record.funcName}',

@@ -20,11 +20,13 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
 	from typing import Any
 
-from contextlib import contextmanager
+from contextlib import asynccontextmanager
 import asyncio
 import json
+import socket
 import tornado.web
 import tornado.websocket
+import tornado.httpserver
 from . import app
 
 from tornado.websocket import WebSocketClosedError
@@ -32,6 +34,11 @@ from tornado.websocket import WebSocketClosedError
 
 
 class RequestHandler(tornado.web.RequestHandler):
+
+	@classmethod
+	@asynccontextmanager
+	async def exec(cls):
+		yield
 
 	def prepare(self):
 		self.set_header('Access-Control-Allow-Origin', self.request.headers['Origin'])
@@ -73,10 +80,10 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
 		def write_update(self):
 			self.write_message(self.Handler.update())
 
-		async def update_loop(self, sleep=0.25):
+		async def update_loop(self, period:float=0.25):
 			while True:
 				await self.connected.wait()
-				await asyncio.sleep(sleep)
+				await asyncio.sleep(period)
 				self.write_update()
 
 	@classmethod
@@ -85,10 +92,15 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
 		cls.all = WebSocketHandler.Connections(cls)
 
 	@classmethod
-	def cancel(cls):
-		cls.canceled = True
-		for conn in cls.all:
-			conn.close()
+	@asynccontextmanager
+	async def exec(cls):
+		cls.canceled = False
+		try:
+			yield
+		finally:
+			cls.canceled = True
+			for conn in cls.all:
+				conn.close()
 
 	@classmethod
 	def update(cls):
@@ -128,27 +140,28 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
 
 class Placeholder(RequestHandler):
 	Handler = None
+	target: str
 
 	def __new__(cls, *args, **kwargs):
 		return super().__new__(cls) if cls.Handler is None else cls.Handler(*args, **kwargs)
 
 	@classmethod
-	@contextmanager
-	def handle(cls, Handler: type[RequestHandler] | type[WebSocketHandler]):
-		cls.Handler = Handler
-		try:
-			yield
-		finally:
-			cls.Handler = None
-			if issubclass(Handler, WebSocketHandler):
-				Handler.cancel()
+	@asynccontextmanager
+	async def handle(cls, Handler: type[RequestHandler] | type[WebSocketHandler]):
+		async with Handler.exec(), app.target(cls.target):
+			cls.Handler = Handler
+			try:
+				yield
+			finally:
+				cls.Handler = None
 
 
 
 handlers = []
 
 def placeholder(name, params={}):
-	class NewPlaceholder(Placeholder): pass
+	class NewPlaceholder(Placeholder):
+		target = name
 	handlers.append((f'/{name}', NewPlaceholder, params))
 	return NewPlaceholder
 
@@ -162,7 +175,10 @@ def handler(name, params={}):
 
 @app.context
 async def server():
-	srv = tornado.web.Application(handlers).listen(33000, 'sys')
+	srv = tornado.httpserver.HTTPServer(tornado.web.Application(handlers))
+	systemdSocket = socket.fromfd(3, socket.AF_INET6, socket.SOCK_STREAM)
+	systemdSocket.setblocking(False)
+	srv.add_socket(systemdSocket)
 	try:
 		yield
 	finally:

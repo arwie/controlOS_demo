@@ -15,15 +15,21 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-import configparser, os, pathlib
+from __future__ import annotations
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+	from typing import Any
+
+from configparser import ConfigParser, MissingSectionHeaderError
+from pathlib import Path
+import os
 
 
 
-class Conf(configparser.ConfigParser):
+class Conf(ConfigParser):
 	
 	def __init__(self, confFile=None, data=None, section=None):
 		super().__init__(strict=False)
-		self.optionxform = str
 		
 		self.confFile = confFile
 		
@@ -31,18 +37,29 @@ class Conf(configparser.ConfigParser):
 			self.read_dict({section:data} if section else data)
 		else:
 			if data is None:
-				data = pathlib.Path(confFile).read_text()
+				assert confFile
+				data = Path(confFile).read_text()
 			if not section:
 				try:
 					self.read_string(data)
-				except configparser.MissingSectionHeaderError:
+				except MissingSectionHeaderError:
+					assert confFile
 					section = os.path.splitext(os.path.basename(confFile))[0]
 			if section:
 				self.read_string("[{}]\n{}".format(section, data))
-	
+
+
+	def update(self, data:dict[str, dict[str, Any]]):
+		for section, options in data.items():
+			if not self.has_section(section):
+				self.add_section(section)
+			for option, value in options.items():
+				self[section][option] = str(value)
+
 	
 	def save(self, section=None):
-		with open(self.confFile, 'w', encoding='utf8') as f:
+		assert self.confFile
+		with open(self.confFile, 'w') as f:
 			if section:
 				for k,v in self.items(section):
 					f.write("{}={}\n".format(k,v))

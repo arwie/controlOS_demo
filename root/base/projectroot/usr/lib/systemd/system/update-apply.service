@@ -12,4 +12,4 @@ Type=oneshot
 RemainAfterExit=yes
 ExecStart=/bin/systemctl --no-block reboot
 ExecStop=/usr/sbin/update-apply
-TimeoutStopSec=600
+TimeoutStopSec=1800

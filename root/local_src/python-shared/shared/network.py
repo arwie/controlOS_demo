@@ -74,7 +74,7 @@ def sendEmail(msg):
 	
 	SMTP = smtplib.SMTP_SSL if conf.getboolean('smtp', 'ssl', fallback=False) else smtplib.SMTP
 	
-	with SMTP(conf.get('smtp', 'host'), conf.get('smtp', 'port', fallback=0), timeout=5) as smtp:
+	with SMTP(conf.get('smtp','host'), conf.getint('smtp','port', fallback=0), timeout=5) as smtp:
 		try:
 			smtp.starttls()
 		except:pass

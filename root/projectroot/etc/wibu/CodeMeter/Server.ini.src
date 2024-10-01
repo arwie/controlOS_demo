@@ -1,5 +1,11 @@
 [General]
 CmActPath=/run/codemeter
+LogPath=/run/codemeter/log
+LogCmActDiag=0
+EnabledContainerTypes=7
 
 [Backup]
 Interval=0
+
+[ServerSearchList]
+UseBroadcast=0

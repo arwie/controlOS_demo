@@ -18,7 +18,7 @@
 
 
 <script type="text/html" id="navBar">
-	<nav class="navbar navbar-expand-lg fixed-top bg-light">
+	<nav class="navbar navbar-expand-lg fixed-top bg-light" data-bind="class:$component.class, attr:{style:$component.style}">
 		<div class="container-fluid">
 			<a href="#" class="navbar-brand">
 				<!-- ko if:$component.image -->

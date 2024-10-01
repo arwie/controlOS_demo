@@ -15,12 +15,17 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
+from __future__ import annotations
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+	from shared.sqlite import Table
+
 import server, inspect
 
 
 
 class TableHandler(server.RequestHandler):
-	def initialize(self, table, doGet={}, doPost={}):
+	def initialize(self, table:Table, doGet={}, doPost={}):
 		self.table = table
 		self.db    = table.db
 		self.dbr   = table.dbr
@@ -37,7 +42,7 @@ class TableHandler(server.RequestHandler):
 		}, **doPost}
 	
 	async def get(self):
-		result = self.doGet[self.get_query_argument('do', 'list')]()
+		result = self.doGet[self.get_query_argument('do', 'list')]() #type:ignore
 		if inspect.isawaitable(result):
 			result = await result
 		if result is not None:
@@ -45,7 +50,7 @@ class TableHandler(server.RequestHandler):
 	
 	async def post(self):
 		with self.table.db:
-			result = self.doPost[self.get_query_argument('do')]()
+			result = self.doPost[self.get_query_argument('do')]() #type:ignore
 			if inspect.isawaitable(result):
 				result = await result
 			if result is not None:

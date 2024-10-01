@@ -16,7 +16,7 @@
 
 
 from __future__ import print_function
-from scriptengine import projects
+from scriptengine import projects	#type:ignore
 from os import path, mkdir
 from shutil import rmtree
 import re

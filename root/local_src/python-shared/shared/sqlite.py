@@ -15,7 +15,11 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-import sqlite3, pathlib, json, collections, logging
+from collections import OrderedDict
+from collections.abc import MutableMapping
+import sqlite3
+from pathlib import Path
+import logging
 
 
 
@@ -35,7 +39,7 @@ def dataToRow(data, prefix=''):
 	row = []
 	for k, v in data.items():
 		column = prefix+'_'+k if prefix else k
-		if isinstance(v, collections.abc.MutableMapping):
+		if isinstance(v, MutableMapping):
 			row.extend(dataToRow(v, column).items())
 		else:
 			row.append((column, v))
@@ -104,9 +108,10 @@ class Table:
 class Sqlite:
 	
 	def __init__(self, path, schemaVersion, definition):
-		self.schema = collections.OrderedDict([(t[0],t[1]) for t in definition])
+		self.schema = OrderedDict([(t[0],t[1]) for t in definition])
 		
-		def dbFile(version): return pathlib.Path('{}.{}.sqlite'.format(path, version))
+		def dbFile(version):
+			return Path(f'{path}.{version}.sqlite')
 		
 		self.file = dbFile(schemaVersion)
 		self.db = sqlite3.connect(self.file)

@@ -25,7 +25,6 @@ import asyncio
 import signal
 
 from .app import *
-
 from . import web
 from . import simio
 from .simio import input, output
@@ -33,22 +32,19 @@ from .simio import input, output
 
 
 def run(main:Callable[[], AbstractAsyncContextManager]):
-	exit_event = asyncio.Event()
-
-	def signal_handler(signum, frame):
-		log.warning(f'Received signal {signum} -> app is going to exit...')
-		exit_event.set()
-
-	signal.signal(signal.SIGINT,  signal_handler)
-	signal.signal(signal.SIGTERM, signal_handler)
-
 	async def app_main():
+		exit_event = asyncio.Event()
+
+		for sig in (signal.SIGINT, signal.SIGTERM):
+			asyncio.get_running_loop().add_signal_handler(sig, exit_event.set)
+
 		async with (
 			web.server(),
 			simio.exec(),
 		):
 			async with main():
 				await exit_event.wait()
+				log.warning('Received INT/TERM signal -> app is going to exit...')
 
 	asyncio.run(app_main())
 	exit(0)

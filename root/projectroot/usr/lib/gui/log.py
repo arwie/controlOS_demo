@@ -15,87 +15,83 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-import server, asyncio, json
-from tornado import process, iostream
+import asyncio
+import server
 
 
 
 cmd = ['journalctl', '--file=/var/log/journal/*/*', '--merge']
 
+def journalctl_subprocess(*args, lines, output):
+	return asyncio.create_subprocess_exec(*cmd, *args, f'--lines={lines}', f'--output={output}', stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE)
 
-async def journalctl(args, lines='all', output='cat', wait=True):
-	proc = process.Subprocess([*cmd, '--lines='+str(lines), '--output='+output, *args], stdout=process.Subprocess.STREAM)
-	if wait:
-		stdout = await proc.stdout.read_until_close()
-		await proc.wait_for_exit(raise_error=False)
-		return stdout
-	else:
-		return proc
 
 
 class Handler(server.WebSocketHandler):
 	
 	async def readJournal(self, args, lines):
-		journalProc = await journalctl(args, lines, 'json', False)
+		proc = await journalctl_subprocess(*args, lines=lines, output='json')
 		try:
-			while not self.task.cancelled():
-				self.write_message(await journalProc.stdout.read_until(b'\n'))
-		except (iostream.StreamClosedError, asyncio.CancelledError):
-			pass
+			while proc.stdout and (msg := await proc.stdout.readline()):
+				self.write_message(msg)
+			await proc.wait()
 		finally:
 			self.close()
-			journalProc.proc.terminate()
-			await journalProc.wait_for_exit(raise_error=False)
-	
+			proc.terminate()
+
+
 	def open(self):
-		args = ['--priority='+self.get_query_argument('priority', 'notice')]
+		args = [f"--priority={self.get_query_argument('priority', 'notice')}"]
 		
-		lines = int(self.get_query_argument('lines', 50))
+		lines = int(self.get_query_argument('lines', '50'))
 		if lines < 0:
 			args.append('--reverse')
 		
-		cursor = self.get_query_argument('cursor', None)
-		if cursor:
+		if cursor := self.get_query_argument('cursor', None):
 			args.append('--after-cursor='+cursor)
 		else:
-			date = self.get_query_argument('date', None)
-			if date:
+			if date := self.get_query_argument('date', None):
 				args.append('--since='+date)
-				args.append('--until={} 23:59:59'.format(date))
+				args.append(f'--until={date} 23:59:59')
 			else:
 				if lines > 0:
 					args.append('--follow')
 		
-		identifier = self.get_query_argument('identifier', None)
-		if identifier:
+		if identifier := self.get_query_argument('identifier', None):
 			args.append('--identifier='+identifier)
 		
-		grep = self.get_query_argument('grep', None)
-		if grep:
+		if grep := self.get_query_argument('grep', None):
 			args.append('--grep='+grep)
 		
-		filter = self.get_query_argument('filter', '')
-		for arg in filter.split():
-			args.append(arg.lstrip('-'))
+		if filter := self.get_query_argument('filter', None):
+			for arg in filter.split():
+				args.append(arg.lstrip('-'))
 		
 		self.task = asyncio.create_task(self.readJournal(args, abs(lines)))
+
 
 	def on_close(self):
 		self.task.cancel()
 
 
 
+async def journalctl(args, lines:int|str='all'):
+	proc = await journalctl_subprocess(*args, lines=lines, output='cat')
+	stdout, stderr = await proc.communicate()
+	return stdout
+
+
 class FieldHandler(server.RequestHandler):
-	async def get(self, field):
-		values = await journalctl(['--field={}'.format(field)])
+	async def get(self, field:str):
+		values = await journalctl(['--field='+field])
 		self.writeJson(values.decode().splitlines())
 
 
 class CatHandler(server.RequestHandler):
-	async def get(self, field, cursor):
+	async def get(self, field:str, cursor:str):
 		self.set_header('Content-Type', 'application/octet-stream')
 		self.set_header('Content-Disposition', 'attachment; filename='+field.replace('_','.'))
-		self.write(await journalctl(['--output-fields='+field, '--cursor='+cursor], 1))
+		self.write(await journalctl(['--output-fields='+field, '--cursor='+cursor], lines=1))
 
 
 

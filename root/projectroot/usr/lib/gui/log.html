@@ -21,6 +21,10 @@
 
 {% block html %}
 <div class="row h-100">
+
+	<style>
+		.table-critical > td { background: salmon; }
+	</style>
 	
 	<div class="col-xl-2 d-flex flex-column">
 		<!-- ko if:desktop -->
@@ -237,7 +241,7 @@ class {
 		
 		this.priorities		= [0,1,2,3,4,5,6,7]
 		this.priorityNames	= ["Emergency","Alert","Critical","Error","Warning","Notice","Info","Debug"];
-		this.priorityCss	= ['bg-danger','bg-danger','bg-danger','table-danger','table-warning','table-info','',''];
+		this.priorityCss	= ['table-critical','table-critical','table-critical','table-danger','table-warning','table-info','',''];
 		this.priority		= ko.observable(5);
 		
 		this.identifiers	= ko.observableArray();

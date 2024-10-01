@@ -97,8 +97,8 @@ network_user = Benutzer
 
 
 simio = SimIO
-simio_list-in = Eingänge
-simio_list-out = Ausgänge
+simio_cls-Input = Eingänge
+simio_cls-Output = Ausgänge
 simio_type = Typ
 simio_value = Wert
 simio_override = Override

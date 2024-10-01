@@ -1,4 +1,4 @@
-*.*.~u
+*.~u
 *.*.bootinfo
 *.*.bootinfo_*
 *.compileinfo

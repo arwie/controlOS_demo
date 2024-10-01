@@ -48,3 +48,10 @@ def norm(deg:float) -> float:
 	elif deg > 180:
 		deg -= 360
 	return deg
+
+def norm360(deg:float) -> float:
+	"""Normalize angle to [0:360]"""
+	deg %= 360
+	if deg < 0:
+		deg += 360
+	return deg

@@ -1,0 +1,23 @@
+#!/bin/sh
+
+BASEDIR=$(dirname $(realpath $0))
+cd $BASEDIR
+
+
+PLATFORM=${1-x86}
+
+
+# select platform and toolchain
+for DIR in boot initramfs root/base
+do
+	(cd $DIR; ptxdist platform configs/platform-$PLATFORM/platformconfig)
+done
+
+
+# generate ssh and gpg keys for the project
+if [ ! -d keys/gpg ]; then
+	keys/gpg-keygen
+fi
+if [ ! -d keys/ssh ]; then
+	keys/ssh-keygen
+fi

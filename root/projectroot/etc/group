@@ -37,5 +37,5 @@ redis:x:213:
 sgx:x:214:
 seat:x:215:
 pipewire:x:216:
-codesysuser:x:217:
+codesysuser:x:8000:
 nogroup:x:65534:

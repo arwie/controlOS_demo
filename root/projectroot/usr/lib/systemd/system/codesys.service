@@ -17,7 +17,10 @@ TTYPath=/run/codesys-log/tty
 
 CPUAffinity=1
 
+#Ethernet over EtherCAT
+Environment="RTS_EOE_DEV=tap3"
+
 ExecStartPre=-/opt/codesys/scripts/select-application
 
 Type=exec
-ExecStart=/opt/codesys/bin/codesyscontrol.bin /etc/CODESYSControl.cfg
+ExecStart=/opt/codesys/bin/codesyscontrol.bin /etc/codesyscontrol/CODESYSControl.cfg

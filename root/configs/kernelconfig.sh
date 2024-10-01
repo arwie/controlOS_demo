@@ -4,8 +4,11 @@ BASEDIR=$(dirname $(realpath $0))
 
 cd $BASEDIR/..
 
-KERNELCONFIG=$(ptxdist print KERNEL_CONFIG)
 
-cat $KERNELCONFIG.d/* > $KERNELCONFIG
+PLATFORM=configs/platform-$(ptxdist print PTXCONF_PLATFORM)
+
+cat base/$PLATFORM/kernelconfig.d/* > $PLATFORM/kernelconfig
+cat $PLATFORM/kernelconfig.d/* >> $PLATFORM/kernelconfig
+rm $PLATFORM/kernelconfig.diff
 
 ptxdist kernelconfig

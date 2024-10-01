@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Artur Wiebe <artur@4wiebe.de>
+# Copyright (c) 2024 Artur Wiebe <artur@4wiebe.de>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 # associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -15,59 +15,76 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
+from collections.abc import Callable
 from email.mime.multipart	import MIMEMultipart
 from email.mime.text		import MIMEText
 from email.mime.application	import MIMEApplication
+from shared.utils import import_all_in_package
+import json
+from textwrap import indent
 from shared.conf import Conf
 from shared import system
-import logging, pathlib
+from shared import network
+import logging
 
 
 
-def getVersion():
-	return pathlib.Path('/version').read_text()
+def get_version():
+	with open('/version') as f:
+		version = json.load(f)
+	return f"{version['name'] or '-'} ({version['id']})"
 
-def getBackup():
+def get_backup():
 	return system.run(['backup'], True)
 
-def getNetwork():
-	from shared import network
-	return network.status()
+def get_network():
+	return network.status().encode()
 
-def getJournal():
+def get_journal():
 	return system.run('set -o pipefail; journalctl --merge --no-pager --output=export --since=-28days | xz -T0', True)
 
-def getShortLog():
-	return system.run(['journalctl','--merge','--no-pager','--quiet','--output=short','--priority=notice','--reverse','--lines=100'], True)
+def get_short_log():
+	return system.run(['journalctl','--merge','--no-pager','--quiet','--output=short','--priority=warning','--reverse','--lines=50'], True, text=True)
 
 
-attachments = {
-	'version':		getVersion,
-	'backup.gpg':	getBackup,
-	'network':		getNetwork,
-	'journal.xz':	getJournal,
-	'shortLog':		getShortLog,
+_attachments: dict[str, Callable[[], str | bytes]] = {
+	'Backup.gpg':	get_backup,
+	'Network':		get_network,
+	'Journal.xz':	get_journal,
 }
 
-try:
-	from shared import issue_app
-except ImportError: pass
+def add_attachment(name:str, contents:Callable[[], str | bytes]):
+	_attachments[name] = contents
+
+
+
+import_all_in_package(__file__, __name__)
+
+
+add_attachment('Version',	get_version)
+add_attachment('Short Log',	get_short_log)
+
 
 
 class Issue(MIMEMultipart):
 	def __init__(self, text):
 		super().__init__()
+
 		conf = Conf('/etc/issue.conf')
-		
-		self.attach(MIMEText(text))
 		self['To']		= conf.get('issue', 'to')
 		self['Subject']	= conf.get('issue', 'subject', fallback='issue report')
 		
-		for name,contents in attachments.items():
-			if callable(contents):
-				try:
-					contents = contents()
-				except Exception as e:
-					logging.exception(e)
-					contents = str(e)
-			self.attach(MIMEApplication(contents, name=name))
+		self.attach(MIMEText(text))
+
+		for name, contents in _attachments.items():
+			try:
+				contents = contents()
+			except Exception as e:
+				logging.exception(e)
+				contents = str(e)
+
+			self.attach(
+				MIMEText(name + ':\n' + indent(contents, '\t'))
+				if isinstance(contents, str) else
+				MIMEApplication(contents, name=name)
+			)

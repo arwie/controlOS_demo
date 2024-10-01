@@ -28,6 +28,7 @@ class State:
 	
 	async def run(self):
 		journalctl = await asyncio.create_subprocess_exec('journalctl','--follow','--output=cat','--lines=0','_PID=1', stdout=asyncio.subprocess.PIPE)
+		assert journalctl.stdout is not None
 		
 		timeout = 0
 		while True:

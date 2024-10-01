@@ -2,8 +2,15 @@
 
 from os import symlink
 from shared.setup import setup
+from shared import system
 
 
-if application := setup['codesys']['application']:
+
+application = setup['codesys']['application']
+
+if system.virtual():
+	application = setup['codesys']['sim']['application'] or application
+
+if application:
 	print('Selected application:', application)
 	symlink(f'/opt/codesys/PlcLogic/{application}', '/run/codesys/Application')

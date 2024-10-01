@@ -1,0 +1,15 @@
+## SECTION=python3
+
+config PYTHON3_ASYNCUA
+	tristate
+	select PYTHON3
+	select PYTHON3_AIOFILES			if RUNTIME
+	select PYTHON3_AIOSQLITE		if RUNTIME
+	select PYTHON3_DATEUTIL			if RUNTIME
+	select PYTHON3_PYTZ			if RUNTIME
+	select PYTHON3_CRYPTOGRAPHY		if RUNTIME
+	select PYTHON3_SORTEDCONTAINERS		if RUNTIME
+	select PYTHON3_PYOPENSSL		if RUNTIME
+	prompt "asyncua"
+	help
+	  OPC UA / IEC 62541 Client and Server for Python

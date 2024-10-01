@@ -15,13 +15,13 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-from network import pages
-pages.append('smtp')
-
-
 import server
 from shared.conf import Conf
 from shared import network
+from . import add_page
+
+
+add_page('smtp')
 
 
 
@@ -29,7 +29,7 @@ class SmtpHandler(server.RequestHandler):
 	def get(self):
 		if network.smtpEnabled():
 			data = Conf(network.smtpConfFile).dict()
-			del data['smtp']['pass']
+			del data['smtp']['pass'] #type:ignore
 			self.writeJson(data)
 		else:
 			self.writeJson(None)
@@ -38,7 +38,7 @@ class SmtpHandler(server.RequestHandler):
 		if self.request.body:
 			Conf(network.smtpConfFile, self.readJson()).save()
 		else:
-			network.smtpConfFile.unlink(missing_ok=True)
+			network.smtpConfFile.unlink(True)
 
 
 

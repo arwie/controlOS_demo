@@ -1,4 +1,4 @@
-# Copyright (c) 2023 Artur Wiebe <artur@4wiebe.de>
+# Copyright (c) 2024 Artur Wiebe <artur@4wiebe.de>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 # associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -15,34 +15,21 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-import server, asyncio, re
-from shared.conf import Conf
-from shared import network, system
-from tornado import websocket
+import re
 from pathlib import Path
-
-
-pages = []
-
-__all__ = [m.stem for m in Path(__file__).parent.glob('*.py') if not m.match('__*__.py')]
-from . import *
+import server
+from shared import system
+from shared.conf import Conf
+from shared.utils import import_all_in_package
 
 
 
-class StatusHandler(server.WebSocketHandler):
-	async def sendStatus(self):
-		try:
-			while not self.task.cancelled():
-				self.write_message(await server.run_in_executor(network.status))
-				await asyncio.sleep(3)
-		except asyncio.CancelledError:
-			pass
+pages = list[str]()
 
-	def open(self):
-		self.task = asyncio.create_task(self.sendStatus())
+def add_page(page:str):
+	pages.append(page)
 
-	def on_close(self):
-		self.task.cancel()
+import_all_in_package(__file__, __name__)
 
 
 
@@ -59,7 +46,7 @@ class SyswlanHandler(server.RequestHandler):
 				del data['wpa_passphrase']
 			Conf(self.confFile, data, section='x').save('x')
 		else:
-			self.confFile.unlink(missing_ok=True)
+			self.confFile.unlink(True)
 		system.restart('hostapd.service')
 
 
@@ -82,11 +69,8 @@ class WlanHandler(server.RequestHandler):
 	
 	def get(self):
 		if self.confFile.is_file():
-			try:
-				ssid = self.re_ssid.search(self.confFile.read_text()).group(1)
-			except:
-				ssid = ''
-			self.write({'ssid':ssid})
+			match = self.re_ssid.search(self.confFile.read_text())
+			self.write({'ssid': match.group(1) if match else ''})
 		else:
 			self.writeJson(None)
 	
@@ -96,8 +80,9 @@ class WlanHandler(server.RequestHandler):
 			with open(self.confFile, 'wb') as f:
 				system.run(['wpa_passphrase', data['ssid'].encode(), data['psk'].encode()], stdout=f)
 		else:
-			self.confFile.unlink(missing_ok=True)
+			self.confFile.unlink(True)
 		system.restart('wpa_supplicant.service')
+
 
 
 class WlanLanHandler(LanHandler):
@@ -105,7 +90,6 @@ class WlanLanHandler(LanHandler):
 
 
 
-server.addAjax(__name__+'/status',		StatusHandler)
 server.addAjax(__name__+'/syswlan',		SyswlanHandler)
 server.addAjax(__name__+'/lan',			LanHandler)
 server.addAjax(__name__+'/wlan',		WlanHandler)

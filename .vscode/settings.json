@@ -4,13 +4,18 @@
 	"python.analysis.autoSearchPaths": false,
 	"python.analysis.typeCheckingMode": "basic",
 	"python.analysis.include": [
-		"root",
-	],
-	"python.analysis.exclude": [
-		"root/platform-*",
+		"root/local_src",
+		"root/projectroot",
+		"root/base/projectroot",
+		"office"
 	],
 	"python.analysis.extraPaths": [
 		"root/local_src/python-shared",
-		"root/platform-x86/root/usr/lib/python3.11/site-packages"
+		"root/platform-x86/sysroot-target/usr/lib/python3.11/site-packages",
+		"root/platform-x86/sysroot-host/usr/lib/python3.11/site-packages"
 	],
+	"python.analysis.diagnosticMode": "workspace",
+	"workbench.editor.customLabels.patterns": {
+		"**/__init__.py": "${dirname}.${extname}"
+	},
 }

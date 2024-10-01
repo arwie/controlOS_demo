@@ -18,46 +18,53 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
+	from collections.abc import Callable
 	from typing import TypeVar
 	T = TypeVar('T')
 
 from pathlib import Path
-import time
-from dataclasses import dataclass
+from importlib import import_module
+from time import monotonic
 
 
 
-def all_in_package(__file__):
-	return [m.stem for m in Path(__file__).parent.glob('*.py') if not m.match('__*__.py')]
+def import_all_in_package(init_file:str, init_module:str):
+	"""
+	Dynamically imports all python files from a package which names do not start with '_'.
+	
+	Call from __init__.py of the package:
+	import_all_in_package(__file__, __name__)
+	"""
+	return set(
+		import_module('.'.join((init_module, module_file.stem)))
+			for module_file in Path(init_file).parent.glob('*.py*') if not module_file.match('_*')
+	)
 
 
-def singleinstance(cls:type[T]) -> T:
+def instantiate(cls:type[T]) -> T:
 	return cls()
 
 
-class CycleDiff:
-
-	@dataclass
-	class Diff:
-		value: float
-		time: float
-
-		def velocity(self):
-			return self.value / self.time
-
-		def rising_edge(self):
-			return self.value > 0
-
-
-	def __init__(self, value_update) -> None:
-		self.value_update = value_update
-		self.last_value = self.value_update()
-		self.last_time = time.monotonic()
+class SignalDiff:
+	def __init__(self, signal:Callable[[]]):
+		self.signal = signal
+		self.value = self.signal()
+		self.time = monotonic()
 
 	def __call__(self):
-		value = self.value_update()
-		time_ = time.monotonic()
-		diff = self.Diff(value - self.last_value, time_ - self.last_time)
-		self.last_value = value
-		self.last_time = time_
-		return diff
+		self.past_value, self.past_time = self.value, self.time
+		self.value = self.signal()
+		self.time = monotonic()
+		return self
+
+	def diff(self):
+		return self.value - self.past_value
+
+	def rising_edge(self):
+		return (self.value - self.past_value) > 0
+
+	def falling_edge(self):
+		return (self.value - self.past_value) < 0
+
+	def velocity(self):
+		return (self.value - self.past_value) / (self.time - self.past_time)

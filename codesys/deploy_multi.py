@@ -16,12 +16,8 @@
 
 
 from __future__ import print_function
-from scriptengine import projects
+from scriptengine import projects	#type:ignore
 from os import path, mkdir
-from shutil import rmtree
-
-
-GUID_TYPE_STRUCT = '2db5746d-d284-4425-9f7f-2663a34b0ebc'
 
 
 project = projects.primary
@@ -35,19 +31,14 @@ def deploy_application(name, app):
 
 	app_path = path.join(deploy_path, name)
 
-	rmtree(app_path, True)
-	mkdir(app_path)
+	if not path.exists(app_path):
+		mkdir(app_path)
 
 	app.create_boot_application(path.join(app_path, 'Application.app'))
 
 	#fix Application.crc (codesys truncates it to 20 bytes at first load for whatever reason)
 	with open(path.join(app_path, 'Application.crc'), 'r+b') as f:
 		f.truncate(20)
-
-	for struct in project.get_children():
-		if str(struct.type) == GUID_TYPE_STRUCT:
-			with open(path.join(app_path, struct.get_name()+'.struct'), 'w') as f:
-				f.write(struct.textual_declaration.text)
 
 
 def deploy(multi):

@@ -1,4 +1,10 @@
+[Unit]
+Description=CodeMeter RunTime Server
+After=network.target
+
+
 [Service]
+Type=notify
 SyslogIdentifier=codemeter
 
 User=daemon
@@ -8,5 +14,4 @@ RuntimeDirectory=codemeter
 
 ExecStartPre=cp -p /etc/wibu/CodeMeter/Server.ini.src /run/codemeter/Server.ini
 
-ExecStart=CodeMeterLin -f
-#ExecStart=CodeMeterLin -f -v
+ExecStart=CodeMeterLin -f -n-  #-v

@@ -1,5 +1,6 @@
 [Match]
 Path=pci-0000:00:03.0
+Type=ether
 
 [Link]
 Name=syslan

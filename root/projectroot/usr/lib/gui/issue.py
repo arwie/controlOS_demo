@@ -1,4 +1,4 @@
-# Copyright (c) 2017 Artur Wiebe <artur@4wiebe.de>
+# Copyright (c) 2024 Artur Wiebe <artur@4wiebe.de>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 # associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -16,7 +16,6 @@
 
 
 import server
-from shared.issue import Issue
 from shared import network
 
 
@@ -26,7 +25,7 @@ text = """\
 Contact:
 	{name}
 	Email: {email}
-	Telephone: {telephone}
+	Phone: {phone}
 """
 
 
@@ -36,25 +35,29 @@ class Handler(server.RequestHandler):
 		self.write({
 			'smtpEnabled': network.smtpEnabled()
 		})
-	
-	
+
+
 	async def post(self):
-		issueText = text.format(
-			description	= self.get_body_argument("description"),
-			name		= self.get_body_argument("name"),
-			email		= self.get_body_argument("email"),
-			telephone	= self.get_body_argument("telephone"),
-		)
-		issue = await server.run_in_executor(Issue, issueText)
+
+		def get_issue():
+			from shared.issue import Issue
+			return Issue(text.format(
+				description	= self.get_body_argument("description"),
+				name		= self.get_body_argument("name"),
+				email		= self.get_body_argument("email"),
+				phone		= self.get_body_argument("phone"),
+			))
+
+		issue = await server.run_in_executor(get_issue)
 		issue['Reply-To'] = self.get_body_argument("email")
 		
-		action = self.get_query_argument('action', 'download')
-		if action.startswith('send'):
-			await server.run_in_executor(network.sendEmail, issue)
-		else:
-			self.set_header('Content-Type',			'message/rfc822')
-			self.set_header('Content-Disposition',	'attachment; filename=issue.eml')
-			self.write(bytes(issue))
+		match self.get_query_argument('action', 'download'):
+			case 'download':
+				self.set_header('Content-Type',			'message/rfc822')
+				self.set_header('Content-Disposition',	'attachment; filename=issue.eml')
+				self.write(bytes(issue))
+			case 'send':
+				await server.run_in_executor(network.sendEmail, issue)
 
 
 

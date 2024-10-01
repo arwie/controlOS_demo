@@ -1,0 +1,8 @@
+[Unit]
+PartOf=app.service
+RefuseManualStart=true
+RefuseManualStop=true
+
+[Socket]
+ListenStream=33000
+BindToDevice=sys

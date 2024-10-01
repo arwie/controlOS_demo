@@ -16,6 +16,7 @@
 
 
 import subprocess
+from pathlib import Path
 
 
 
@@ -49,3 +50,10 @@ def reboot(kexec=True):
 
 def poweroff():
 	run(['poweroff'])
+
+
+def virtual():
+	"""
+	Returns True if the system is running inside a virtual environment
+	"""
+	return 'hypervisor' in Path('/proc/cpuinfo').read_text()

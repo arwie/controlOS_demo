@@ -21,13 +21,15 @@ if TYPE_CHECKING:
 	from typing import overload, Any, TypeVar, ParamSpec
 	from collections.abc import Callable, Coroutine, AsyncGenerator
 	from contextlib import AbstractAsyncContextManager
+	P, T = ParamSpec('P'), TypeVar('T')
 
 import asyncio
 import inspect
 from functools import partial
 from contextlib import AbstractContextManager, asynccontextmanager
 from shared import system
-from shared.util import singleinstance
+from shared.utils import instantiate
+from shared.condition import Timeout, Condition
 
 
 from shared import log
@@ -42,48 +44,57 @@ def sleep(delay:float = poll_period):
 	return asyncio.sleep(delay)
 
 
+
+class Trigger:
+	def __init__(self):
+		self._event = asyncio.Event()
+
+	def __call__(self):
+		self._event.set()
+		self._event.clear()
+
+	def wait(self):
+		return self._event.wait()
+
+
+
 async def poll(
 	condition: Callable[[], Any],
 	*,
-	timeout: float | None = None,
+	timeout: float | Timeout | None = None,
 	abort: Callable[[], Any] | None = None,
-	period: float | int | Callable[[], Coroutine] = poll_period,
-) -> bool:
-	timeout_ = Timeout(timeout) if timeout else False
+	period: float | Trigger | Callable[[], Coroutine] = poll_period,
+	settle: float | Timeout = 0
+):
+
+	if callable(abort):
+		abort = Condition(abort)
+
+	if isinstance(timeout, (float, int)):
+		timeout = Timeout(timeout)
+
 	if isinstance(period, (float, int)):
 		period = partial(asyncio.sleep, period)
-	while not condition():
-		if timeout_ or (abort and abort()):
+	elif isinstance(period, Trigger):
+		period = period.wait
+
+	if isinstance(settle, (float, int)):
+		settle = Timeout(settle)
+
+	while True:
+		if abort: #check abort before condition
+			return False
+
+		if result := condition():
+			if settle:
+				return result
+		else:
+			settle.reset()
+
+		if timeout:
 			return False
 		await period()
-	return True
 
-
-
-class Timeout:
-	def __init__(self, timeout:float):
-		self._timeout = timeout
-		self.reset()
-
-	def reset(self):
-		self._expire = clock() + self._timeout
-
-	def __call__(self):
-		return clock() > self._expire
-
-	__bool__ = __call__
-
-
-class Event(asyncio.Event):
-	def __init__(self, set_=False):
-		super().__init__()
-		if set_:
-			self.set()
-
-	def trigger(self):
-		if not self.is_set():
-			self.set()
-			self.clear()
 
 
 def run_in_executor(func:Callable, *args):
@@ -102,7 +113,6 @@ async def _context(func):
 
 
 if TYPE_CHECKING:
-	P, T = ParamSpec('P'), TypeVar('T')
 	@overload
 	def context(func:Callable[P, AsyncGenerator[T, Any]]) -> Callable[P, AbstractAsyncContextManager[T]]: pass
 	@overload
@@ -124,21 +134,39 @@ def context(func): #type:ignore
 
 
 
-@asynccontextmanager
-async def task_group(*coros:Coroutine[Any, Any, None]):
-	async with asyncio.TaskGroup() as tg:
-		for coro in coros:
-			tg.create_task(coro)
+class task_group(asyncio.TaskGroup):
+
+	def __init__(self, *coros: Coroutine[Any, Any, None] | Callable[[], Coroutine[Any, Any, None]]):
+		super().__init__()
+		self._coros = coros
+
+	async def __aenter__(self):
+		await super().__aenter__()
+		for coro in self._coros:
+			self(coro)
+		del self._coros
+		return self
+
+	def __call__(self, coro: Coroutine[Any, Any, None] | Callable[[], Coroutine[Any, Any, None]], **kwargs):
+		return self.create_task(coro() if callable(coro) else coro, **kwargs)
+
+	async def __aexit__(self, et, exc, tb):
+		if not self._aborting:	#type:ignore
+			self._abort()		#type:ignore
 		try:
-			yield tg
-		finally:
-			tg._abort() #type:ignore
+			return await super().__aexit__(et, exc, tb)
+		except BaseExceptionGroup as eg:
+			if len(eg.exceptions) == 1 and eg.exceptions[0] is exc:
+				raise eg.exceptions[0] from None
+			else:
+				raise
+
 
 
 @asynccontextmanager
 async def target(target:str):
 	def systemctl(cmd):
-		return run_in_executor(system.run, ['systemctl', '--no-block', cmd, f'app@{target}.target'])
+		return run_in_executor(system.run, ['systemctl', cmd, f'app@{target}.target'])
 
 	await systemctl('start')
 	try:
@@ -148,16 +176,54 @@ async def target(target:str):
 
 
 
-@singleinstance
+
+def task_cancelling():
+	return (task := asyncio.current_task()) and task.cancelling()
+
+
+@instantiate
 class raise_cancelling(AbstractContextManager):
 	def __exit__(self, exc_type, exc_value, traceback):
 		if exc_type and exc_type is not asyncio.CancelledError:
-			if task := asyncio.current_task():
-				if task.cancelling():
-					log.error('error in cleanup logic of cancelling asyncio task', exc_info=(exc_type, exc_value, traceback))
-					raise asyncio.CancelledError
+			if task_cancelling():
+				log.error('error in cleanup logic of cancelling asyncio task', exc_info=(exc_type, exc_value, traceback))
+				raise asyncio.CancelledError
 
 	def __call__(self):
-		if task := asyncio.current_task():
-			if task.cancelling():
-				raise asyncio.CancelledError
+		if task_cancelling():
+			raise asyncio.CancelledError
+
+
+
+def context_select_loop(switch: Callable[[], Any], **kwargs) -> Callable[[Callable[[Any], AsyncGenerator]], Callable[[], Coroutine]]:
+	def decorator(select_gen):
+		select = asynccontextmanager(select_gen)
+		async def select_loop():
+			while True:
+				value = switch()
+				async with select(value):
+					await poll(lambda: switch() != value, **kwargs)
+		return select_loop
+	return decorator
+
+
+
+class disableable:
+	def __init__(self, func: Callable[..., Coroutine]):
+		self._func = func
+		self.lock = asyncio.Lock()
+		self.disabled = 0
+
+	@asynccontextmanager
+	async def disable(self):
+		async with self.lock:
+			self.disabled += 1
+		try:
+			yield
+		finally:
+			self.disabled -= 1
+
+	async def __call__(self, *args, **kwargs):
+		async with self.lock:
+			if not self.disabled:
+				return await self._func(*args, **kwargs)

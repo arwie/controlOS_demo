@@ -50,7 +50,8 @@ sleep 3
 blockdev --rereadpt $DISKDEV
 sleep 2
 
-if [ -d /sys/firmware/efi ]; then
+if [ -d /sys/firmware/efi/efivars ]; then
+	mount -t efivarfs none /sys/firmware/efi/efivars
 	efibootmgr -c -d $DISKDEV -p 1 -l /EFI/BOOT/BOOTx64.EFI -L "controlOS"
 fi
 }
@@ -244,4 +245,4 @@ fi
 umount /mnt/init
 
 
-root_boot
+root_boot || shell
