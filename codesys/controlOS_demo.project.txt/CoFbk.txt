@@ -1,5 +1,6 @@
 TYPE CoFbk:
 STRUCT
 	done:		BOOL;
+	error:		BOOL;
 END_STRUCT
 END_TYPE

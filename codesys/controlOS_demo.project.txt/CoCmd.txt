@@ -1,8 +1,8 @@
 TYPE CoCmd:
 STRUCT
 	func:			INT;	//positive:ETC, negative:CAN
-	exec:			BOOL;
-	device:			UINT;
+	master:			USINT;
+	slave:			UINT;
 	index:			WORD;
 	subIndex:		BYTE;
 	dataLength:		USINT;

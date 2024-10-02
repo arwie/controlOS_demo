@@ -1,0 +1,32 @@
+<project xmlns="http://www.plcopen.org/xml/tc6_0200">
+  <types>
+    <dataTypes />
+    <pous />
+  </types>
+  <instances>
+    <configurations>
+      <configuration name="SoftMotion General Axis Pool">
+        <addData>
+          <data name="Device" handleUnknown="discard">
+            <Device xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="">
+              <DeviceType>
+                <DeviceIdentification>
+                  <Type>1249</Type>
+                  <Id>0000 0001</Id>
+                  <Version>4.11.0.0</Version>
+                </DeviceIdentification>
+                <Connector moduleType="1249" role="child" interface="Common.SoftMotion.GeneralImplicit" connectorId="1">
+                  <HostParameterSet />
+                </Connector>
+                <Connector moduleType="1279" interface="Common.SoftMotion.General" connectorId="2" hostpath="1">
+                  <HostParameterSet />
+                </Connector>
+                <DeviceParameterSet />
+              </DeviceType>
+            </Device>
+          </data>
+        </addData>
+      </configuration>
+    </configurations>
+  </instances>
+</project>

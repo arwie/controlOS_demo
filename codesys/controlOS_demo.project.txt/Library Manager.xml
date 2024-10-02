@@ -15,6 +15,47 @@
         <Library Name="SysTypes Interfaces, * (System)" Namespace="SysTypes" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="false" LinkAllContent="false" />
         <Library Name="#CmpApp" Namespace="CmpApp" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="false" LinkAllContent="false" DefaultResolution="CmpApp, * (System)" />
         <Library Name="IoDrvEtherCAT, 4.1.0.0 (3S - Smart Software Solutions GmbH)" Namespace="IoDrvEthercatLib" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="false" LinkAllContent="false" />
+        <Library Name="#Standard" Namespace="Standard" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="false" LinkAllContent="false" DefaultResolution="Standard, * (System)" />
+        <PlaceholderRedirections>
+          <PlaceholderRedirection Placeholder="SysCpuHandling" Redirection="SysCpuHandling, 3.5.17.0 (System)" />
+          <PlaceholderRedirection Placeholder="CmpIecTask" Redirection="CmpIecTask, 3.5.20.0 (System)" />
+          <PlaceholderRedirection Placeholder="SysTimeCore" Redirection="SysTimeCore, 3.5.17.0 (System)" />
+          <PlaceholderRedirection Placeholder="SysShm" Redirection="SysShm, 3.5.17.0 (System)" />
+          <PlaceholderRedirection Placeholder="SysTarget" Redirection="SysTarget, 3.5.17.0 (System)" />
+          <PlaceholderRedirection Placeholder="CmpSysEthernet" Redirection="SysEthernet, 3.5.20.10 (CODESYS)" />
+          <PlaceholderRedirection Placeholder="CmpSchedule" Redirection="CmpSchedule, 3.5.17.0 (System)" />
+          <PlaceholderRedirection Placeholder="CmpBinTagUtilIec" Redirection="CmpBinTagUtilIec, 3.5.17.0 (System)" />
+          <PlaceholderRedirection Placeholder="SysFile" Redirection="SysFile, 3.5.17.0 (System)" />
+          <PlaceholderRedirection Placeholder="CAA Device Diagnosis" Redirection="CAA Device Diagnosis, 3.5.20.0 (CAA Technical Workgroup)" />
+          <PlaceholderRedirection Placeholder="CAA Behaviour Model" Redirection="CAA Behaviour Model, 3.5.19.0 (CAA Technical Workgroup)" />
+          <PlaceholderRedirection Placeholder="CAA Types" Redirection="CAA Types Extern, 3.5.17.0 (CAA Technical Workgroup)" />
+          <PlaceholderRedirection Placeholder="SysShm Implementation" Redirection="SysShm Implementation, 3.5.17.0 (System)" />
+          <PlaceholderRedirection Placeholder="CAA Tick" Redirection="CAA Tick Extern, 3.5.17.0 (CAA Technical Workgroup)" />
+          <PlaceholderRedirection Placeholder="CAA TickUtil" Redirection="CAA TickUtil Extern, 3.5.17.0 (CAA Technical Workgroup)" />
+          <PlaceholderRedirection Placeholder="CmpSettings" Redirection="CmpSettings, 3.5.17.0 (System)" />
+          <PlaceholderRedirection Placeholder="IODrvEtherCATDriver" Redirection="IODrvEtherCATDriver, 4.8.0.0 (CODESYS)" />
+          <PlaceholderRedirection Placeholder="CmpSrv" Redirection="CmpSrv, 3.5.17.0 (System)" />
+          <PlaceholderRedirection Placeholder="CommFB" Redirection="CommFB, 3.5.18.0 (3S - Smart Software Solutions GmbH)" />
+          <PlaceholderRedirection Placeholder="StringUtils" Redirection="StringUtils, 3.5.20.0 (System)" />
+          <PlaceholderRedirection Placeholder="CmpIoMgr Implementation" Redirection="CmpIoMgr Implementation, 3.5.17.0 (System)" />
+          <PlaceholderRedirection Placeholder="CmpLog" Redirection="CmpLog, 3.5.17.0 (System)" />
+          <PlaceholderRedirection Placeholder="CmpAsyncMgr" Redirection="CmpAsyncMgr, 3.5.17.0 (System)" />
+          <PlaceholderRedirection Placeholder="CmpApp" Redirection="CmpApp, 3.5.17.0 (System)" />
+          <PlaceholderRedirection Placeholder="EtherCATStackLibrary" Redirection="EtherCATStack, 4.8.0.0 (CODESYS)" />
+          <PlaceholderRedirection Placeholder="SysSocket Implementation" Redirection="SysSocket Implementation, 3.5.19.0 (System)" />
+          <PlaceholderRedirection Placeholder="SysTimeRtc" Redirection="SysTimeRtc, 3.5.20.0 (System)" />
+          <PlaceholderRedirection Placeholder="SysTime" Redirection="SysTime, 3.5.17.0 (System)" />
+          <PlaceholderRedirection Placeholder="IoStandard" Redirection="IoStandard, 3.5.17.0 (System)" />
+          <PlaceholderRedirection Placeholder="SysSocket" Redirection="SysSocket, 3.5.19.0 (System)" />
+          <PlaceholderRedirection Placeholder="CmpEventMgr" Redirection="CmpEventMgr, 3.5.17.0 (System)" />
+          <PlaceholderRedirection Placeholder="Rts Service Handler" Redirection="Rts Service Handler, 3.5.17.0 (3S - Smart Software Solutions GmbH)" />
+          <PlaceholderRedirection Placeholder="IoDrvBase" Redirection="IoDrvBase, 3.5.17.0 (System)" />
+          <PlaceholderRedirection Placeholder="Standard" Redirection="Standard, 3.5.18.0 (System)" />
+          <PlaceholderRedirection Placeholder="SysSemProcess" Redirection="SysSemProcess, 3.5.17.0 (System)" />
+          <PlaceholderRedirection Placeholder="CmpEventMgr Implementation" Redirection="CmpEventMgr Implementation, 3.5.17.0 (System)" />
+          <PlaceholderRedirection Placeholder="Component Manager" Redirection="Component Manager, 3.5.17.0 (System)" />
+          <PlaceholderRedirection Placeholder="SysMem" Redirection="SysMem, 3.5.17.0 (System)" />
+        </PlaceholderRedirections>
         <addData />
       </Libraries>
     </data>

@@ -1,3 +1,20 @@
+// Copyright (c) 2023 Artur Wiebe <artur@4wiebe.de>
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+// associated documentation files (the "Software"), to deal in the Software without restriction,
+// including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
+// and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so,
+// subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+// INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+// IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+// WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+
 PROGRAM co_etc
 VAR
 	SdoWriteDWord:		ETC_CO_SdoWriteDWord;
@@ -5,16 +22,22 @@ END_VAR
 
 ////////////////////////////////
 
-CASE app.cmd.co.func OF
-	1: 	SdoWriteDWord(
-			xExecute := app.cmd.co.exec,
-			uiDevice := app.cmd.co.device,
-			wIndex := app.cmd.co.index,
-			bySubindex := app.cmd.co.subIndex,
-			usiDataLength := app.cmd.co.dataLength,
-			dwData := app.cmd.co.data,
-			udiTimeOut := 250,
-		);
-		app.fbk.co.done := SdoWriteDWord.xDone;
-END_CASE
+IF app.cmd.co.func > 0 OR (app.cmd.co.func = 0 AND (app.fbk.co.done OR app.fbk.co.error)) THEN
 
+	app.fbk.co.done  := FALSE;
+	app.fbk.co.error := FALSE;
+	
+	SdoWriteDWord(
+		xExecute := app.cmd.co.func = 2,
+		usiCom := app.cmd.co.master,
+		uiDevice := app.cmd.co.slave,
+		wIndex := app.cmd.co.index,
+		bySubindex := app.cmd.co.subIndex,
+		usiDataLength := app.cmd.co.dataLength,
+		dwData := app.cmd.co.data,
+		udiTimeOut := 250,
+	);
+	app.fbk.co.done  := app.fbk.co.done  OR SdoWriteDWord.xDone;
+	app.fbk.co.error := app.fbk.co.error OR SdoWriteDWord.xError;
+
+END_IF

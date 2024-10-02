@@ -1,5 +1,0 @@
-TYPE CoFbk:
-STRUCT
-	done:		BOOL;
-END_STRUCT
-END_TYPE

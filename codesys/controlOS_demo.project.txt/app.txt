@@ -14,6 +14,7 @@
 // WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+
 PROGRAM app
 
 VAR_OUTPUT
@@ -36,10 +37,12 @@ END_VAR
 
 ////////////////////////////////
 
-IF SysSemProcessEnter(sem, 0) = 0 THEN
-	SysSharedMemoryRead (shm,           0, ADR(cmd), SIZEOF(cmd), ADR(iec_result));
-	SysSharedMemoryWrite(shm, SIZEOF(cmd), ADR(fbk), SIZEOF(fbk), ADR(iec_result));
-	SysSemProcessLeave(sem);
+sync();
+
+IF init.done THEN
+	main();
 ELSE
-	conflicts := conflicts + 1;
+	init();
 END_IF
+
+sync();

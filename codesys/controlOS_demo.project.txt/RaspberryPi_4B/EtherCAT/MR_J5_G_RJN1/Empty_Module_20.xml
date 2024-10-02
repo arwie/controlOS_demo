@@ -1,0 +1,64 @@
+<project xmlns="http://www.plcopen.org/xml/tc6_0200">
+  <types>
+    <dataTypes />
+    <pous />
+  </types>
+  <instances>
+    <configurations>
+      <configuration name="Empty_Module_20">
+        <addData>
+          <data name="Device" handleUnknown="discard">
+            <Device xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="">
+              <DeviceType>
+                <DeviceIdentification>
+                  <Type>68</Type>
+                  <Id>A1E_00000000__Empty Module</Id>
+                  <Version>0</Version>
+                </DeviceIdentification>
+                <Connector moduleType="68" role="child" interface="Ethercat_A1E_Module_0" connectorId="1">
+                  <HostParameterSet>
+                    <ParameterSection>
+                      <Name>General</Name>
+                      <Description />
+                      <Parameter ParameterId="1090519040" type="std:DWORD" IndexInDevDesc="0">
+                        <Attributes />
+                        <Value name="_x0031_090519040" visiblename="Module ident">16#00000000</Value>
+                        <Name>Module ident</Name>
+                      </Parameter>
+                      <Parameter ParameterId="1090519056" type="std:STRING" IndexInDevDesc="1">
+                        <Attributes download="false" />
+                        <Value name="_x0031_090519056" visiblename="Module class">''</Value>
+                        <Name>Module class</Name>
+                      </Parameter>
+                    </ParameterSection>
+                    <ParameterSection>
+                      <Name>RxPDO</Name>
+                      <Description />
+                      <Parameter ParameterId="1342504960" type="std:DWORD" IndexInDevDesc="2">
+                        <Attributes />
+                        <Value name="_x0031_342504960" visiblename="Number of RxPDOs of the Slave" desc="Number of RxPDOs of the Slave">0</Value>
+                        <Name>Number of RxPDOs of the Slave</Name>
+                        <Description>Number of RxPDOs of the Slave</Description>
+                      </Parameter>
+                    </ParameterSection>
+                    <ParameterSection>
+                      <Name>TxPDO</Name>
+                      <Description />
+                      <Parameter ParameterId="1342636032" type="std:DWORD" IndexInDevDesc="3">
+                        <Attributes />
+                        <Value name="_x0031_342636032" visiblename="Number of TxPDOs of the Slave" desc="Number of TxPDOs of the Slave">0</Value>
+                        <Name>Number of TxPDOs of the Slave</Name>
+                        <Description>Number of TxPDOs of the Slave</Description>
+                      </Parameter>
+                    </ParameterSection>
+                  </HostParameterSet>
+                </Connector>
+                <DeviceParameterSet />
+              </DeviceType>
+            </Device>
+          </data>
+        </addData>
+      </configuration>
+    </configurations>
+  </instances>
+</project>

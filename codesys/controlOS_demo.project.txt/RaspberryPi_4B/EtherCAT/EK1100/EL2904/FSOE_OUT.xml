@@ -1,0 +1,641 @@
+<project xmlns="http://www.plcopen.org/xml/tc6_0200">
+  <types>
+    <dataTypes />
+    <pous />
+  </types>
+  <instances>
+    <configurations>
+      <configuration name="FSOE_OUT">
+        <addData>
+          <data name="Device" handleUnknown="discard">
+            <Device xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" fixedIndex="0" xmlns="">
+              <DeviceType>
+                <DeviceIdentification>
+                  <Type>68</Type>
+                  <Id>2_00000122_290_B583052</Id>
+                  <Version>0</Version>
+                </DeviceIdentification>
+                <Connector moduleType="68" role="child" interface="Ethercat_2_Module_290_B583052" connectorId="1">
+                  <HostParameterSet>
+                    <ParameterSection>
+                      <Name>General</Name>
+                      <Description />
+                      <Parameter ParameterId="1090519040" type="std:DWORD" IndexInDevDesc="0">
+                        <Attributes />
+                        <Value name="_x0031_090519040" visiblename="Module ident">290</Value>
+                        <Name>Module ident</Name>
+                      </Parameter>
+                      <Parameter ParameterId="1090519056" type="std:STRING" IndexInDevDesc="1">
+                        <Attributes download="false" />
+                        <Value name="_x0031_090519056" visiblename="Module class">'290'</Value>
+                        <Name>Module class</Name>
+                      </Parameter>
+                    </ParameterSection>
+                    <ParameterSection>
+                      <Name>RxPDO</Name>
+                      <Description />
+                      <ParameterSection>
+                        <Name>RxPDO1</Name>
+                        <Description />
+                        <ParameterSection>
+                          <Name>FSoE Master CMD</Name>
+                          <Description />
+                          <Parameter ParameterId="1879048194" type="localTypes:Entry" IndexInDevDesc="3">
+                            <Attributes download="false" />
+                            <Value name="_x0031_879048194" visiblename="FSoE Master CMD">
+                              <Element name="Index" visiblename="Index" desc="Index">16#7000</Element>
+                              <Element name="SubIndex" visiblename="SubIndex" desc="SubIndex">1</Element>
+                              <Element name="Size" visiblename="Size" desc="Size">8</Element>
+                              <Element name="Offset" visiblename="Offset" desc="Offset">0</Element>
+                              <Element name="DependOnSlot" visiblename="DependOnSlot" desc="DependOnSlot">False</Element>
+                              <Element name="DependOnSlotGroup" visiblename="DependOnSlotGroup" desc="DependOnSlotGroup">False</Element>
+                            </Value>
+                            <Name>FSoE Master CMD</Name>
+                          </Parameter>
+                          <Parameter ParameterId="1880096770" type="localTypes:PDO_Information" IndexInDevDesc="4">
+                            <Attributes download="false" />
+                            <Value name="_x0031_880096770" visiblename="FSoE Master CMD">
+                              <Element name="Name" visiblename="Name" desc="Name">'FSoE Master CMD'</Element>
+                              <Element name="DataType" visiblename="DataType" desc="DataType">'USINT'</Element>
+                              <Element name="Default" visiblename="Default" desc="Default">''</Element>
+                              <Element name="Comment" visiblename="Comment" desc="Comment">''</Element>
+                            </Value>
+                            <Name>FSoE Master CMD</Name>
+                          </Parameter>
+                        </ParameterSection>
+                        <ParameterSection>
+                          <Name>OutputChannel1</Name>
+                          <Description />
+                          <Parameter ParameterId="1879048195" type="localTypes:Entry" IndexInDevDesc="5">
+                            <Attributes download="false" />
+                            <Value name="_x0031_879048195" visiblename="OutputChannel1">
+                              <Element name="Index" visiblename="Index" desc="Index">16#7001</Element>
+                              <Element name="SubIndex" visiblename="SubIndex" desc="SubIndex">1</Element>
+                              <Element name="Size" visiblename="Size" desc="Size">1</Element>
+                              <Element name="Offset" visiblename="Offset" desc="Offset">0</Element>
+                              <Element name="DependOnSlot" visiblename="DependOnSlot" desc="DependOnSlot">False</Element>
+                              <Element name="DependOnSlotGroup" visiblename="DependOnSlotGroup" desc="DependOnSlotGroup">False</Element>
+                            </Value>
+                            <Name>OutputChannel1</Name>
+                          </Parameter>
+                          <Parameter ParameterId="1880096771" type="localTypes:PDO_Information" IndexInDevDesc="6">
+                            <Attributes download="false" />
+                            <Value name="_x0031_880096771" visiblename="OutputChannel1">
+                              <Element name="Name" visiblename="Name" desc="Name">'OutputChannel1'</Element>
+                              <Element name="DataType" visiblename="DataType" desc="DataType">'BOOL'</Element>
+                              <Element name="Default" visiblename="Default" desc="Default">''</Element>
+                              <Element name="Comment" visiblename="Comment" desc="Comment">''</Element>
+                            </Value>
+                            <Name>OutputChannel1</Name>
+                          </Parameter>
+                        </ParameterSection>
+                        <ParameterSection>
+                          <Name>OutputChannel2</Name>
+                          <Description />
+                          <Parameter ParameterId="1879048196" type="localTypes:Entry" IndexInDevDesc="7">
+                            <Attributes download="false" />
+                            <Value name="_x0031_879048196" visiblename="OutputChannel2">
+                              <Element name="Index" visiblename="Index" desc="Index">16#7001</Element>
+                              <Element name="SubIndex" visiblename="SubIndex" desc="SubIndex">2</Element>
+                              <Element name="Size" visiblename="Size" desc="Size">1</Element>
+                              <Element name="Offset" visiblename="Offset" desc="Offset">0</Element>
+                              <Element name="DependOnSlot" visiblename="DependOnSlot" desc="DependOnSlot">False</Element>
+                              <Element name="DependOnSlotGroup" visiblename="DependOnSlotGroup" desc="DependOnSlotGroup">False</Element>
+                            </Value>
+                            <Name>OutputChannel2</Name>
+                          </Parameter>
+                          <Parameter ParameterId="1880096772" type="localTypes:PDO_Information" IndexInDevDesc="8">
+                            <Attributes download="false" />
+                            <Value name="_x0031_880096772" visiblename="OutputChannel2">
+                              <Element name="Name" visiblename="Name" desc="Name">'OutputChannel2'</Element>
+                              <Element name="DataType" visiblename="DataType" desc="DataType">'BOOL'</Element>
+                              <Element name="Default" visiblename="Default" desc="Default">''</Element>
+                              <Element name="Comment" visiblename="Comment" desc="Comment">''</Element>
+                            </Value>
+                            <Name>OutputChannel2</Name>
+                          </Parameter>
+                        </ParameterSection>
+                        <ParameterSection>
+                          <Name>OutputChannel3</Name>
+                          <Description />
+                          <Parameter ParameterId="1879048197" type="localTypes:Entry" IndexInDevDesc="9">
+                            <Attributes download="false" />
+                            <Value name="_x0031_879048197" visiblename="OutputChannel3">
+                              <Element name="Index" visiblename="Index" desc="Index">16#7001</Element>
+                              <Element name="SubIndex" visiblename="SubIndex" desc="SubIndex">3</Element>
+                              <Element name="Size" visiblename="Size" desc="Size">1</Element>
+                              <Element name="Offset" visiblename="Offset" desc="Offset">0</Element>
+                              <Element name="DependOnSlot" visiblename="DependOnSlot" desc="DependOnSlot">False</Element>
+                              <Element name="DependOnSlotGroup" visiblename="DependOnSlotGroup" desc="DependOnSlotGroup">False</Element>
+                            </Value>
+                            <Name>OutputChannel3</Name>
+                          </Parameter>
+                          <Parameter ParameterId="1880096773" type="localTypes:PDO_Information" IndexInDevDesc="10">
+                            <Attributes download="false" />
+                            <Value name="_x0031_880096773" visiblename="OutputChannel3">
+                              <Element name="Name" visiblename="Name" desc="Name">'OutputChannel3'</Element>
+                              <Element name="DataType" visiblename="DataType" desc="DataType">'BOOL'</Element>
+                              <Element name="Default" visiblename="Default" desc="Default">''</Element>
+                              <Element name="Comment" visiblename="Comment" desc="Comment">''</Element>
+                            </Value>
+                            <Name>OutputChannel3</Name>
+                          </Parameter>
+                        </ParameterSection>
+                        <ParameterSection>
+                          <Name>OutputChannel4</Name>
+                          <Description />
+                          <Parameter ParameterId="1879048198" type="localTypes:Entry" IndexInDevDesc="11">
+                            <Attributes download="false" />
+                            <Value name="_x0031_879048198" visiblename="OutputChannel4">
+                              <Element name="Index" visiblename="Index" desc="Index">16#7001</Element>
+                              <Element name="SubIndex" visiblename="SubIndex" desc="SubIndex">4</Element>
+                              <Element name="Size" visiblename="Size" desc="Size">1</Element>
+                              <Element name="Offset" visiblename="Offset" desc="Offset">0</Element>
+                              <Element name="DependOnSlot" visiblename="DependOnSlot" desc="DependOnSlot">False</Element>
+                              <Element name="DependOnSlotGroup" visiblename="DependOnSlotGroup" desc="DependOnSlotGroup">False</Element>
+                            </Value>
+                            <Name>OutputChannel4</Name>
+                          </Parameter>
+                          <Parameter ParameterId="1880096774" type="localTypes:PDO_Information" IndexInDevDesc="12">
+                            <Attributes download="false" />
+                            <Value name="_x0031_880096774" visiblename="OutputChannel4">
+                              <Element name="Name" visiblename="Name" desc="Name">'OutputChannel4'</Element>
+                              <Element name="DataType" visiblename="DataType" desc="DataType">'BOOL'</Element>
+                              <Element name="Default" visiblename="Default" desc="Default">''</Element>
+                              <Element name="Comment" visiblename="Comment" desc="Comment">''</Element>
+                            </Value>
+                            <Name>OutputChannel4</Name>
+                          </Parameter>
+                        </ParameterSection>
+                        <ParameterSection>
+                          <Name>Entry</Name>
+                          <Description />
+                        </ParameterSection>
+                        <ParameterSection>
+                          <Name>FSoE Master CRC_0</Name>
+                          <Description />
+                          <Parameter ParameterId="1879048200" type="localTypes:Entry" IndexInDevDesc="15">
+                            <Attributes download="false" />
+                            <Value name="_x0031_879048200" visiblename="FSoE Master CRC_0">
+                              <Element name="Index" visiblename="Index" desc="Index">16#7000</Element>
+                              <Element name="SubIndex" visiblename="SubIndex" desc="SubIndex">3</Element>
+                              <Element name="Size" visiblename="Size" desc="Size">16</Element>
+                              <Element name="Offset" visiblename="Offset" desc="Offset">0</Element>
+                              <Element name="DependOnSlot" visiblename="DependOnSlot" desc="DependOnSlot">False</Element>
+                              <Element name="DependOnSlotGroup" visiblename="DependOnSlotGroup" desc="DependOnSlotGroup">False</Element>
+                            </Value>
+                            <Name>FSoE Master CRC_0</Name>
+                          </Parameter>
+                          <Parameter ParameterId="1880096776" type="localTypes:PDO_Information" IndexInDevDesc="16">
+                            <Attributes download="false" />
+                            <Value name="_x0031_880096776" visiblename="FSoE Master CRC_0">
+                              <Element name="Name" visiblename="Name" desc="Name">'FSoE Master CRC_0'</Element>
+                              <Element name="DataType" visiblename="DataType" desc="DataType">'UINT'</Element>
+                              <Element name="Default" visiblename="Default" desc="Default">''</Element>
+                              <Element name="Comment" visiblename="Comment" desc="Comment">''</Element>
+                            </Value>
+                            <Name>FSoE Master CRC_0</Name>
+                          </Parameter>
+                        </ParameterSection>
+                        <ParameterSection>
+                          <Name>FSoE Master ConnID</Name>
+                          <Description />
+                          <Parameter ParameterId="1879048201" type="localTypes:Entry" IndexInDevDesc="17">
+                            <Attributes download="false" />
+                            <Value name="_x0031_879048201" visiblename="FSoE Master ConnID">
+                              <Element name="Index" visiblename="Index" desc="Index">16#7000</Element>
+                              <Element name="SubIndex" visiblename="SubIndex" desc="SubIndex">2</Element>
+                              <Element name="Size" visiblename="Size" desc="Size">16</Element>
+                              <Element name="Offset" visiblename="Offset" desc="Offset">0</Element>
+                              <Element name="DependOnSlot" visiblename="DependOnSlot" desc="DependOnSlot">False</Element>
+                              <Element name="DependOnSlotGroup" visiblename="DependOnSlotGroup" desc="DependOnSlotGroup">False</Element>
+                            </Value>
+                            <Name>FSoE Master ConnID</Name>
+                          </Parameter>
+                          <Parameter ParameterId="1880096777" type="localTypes:PDO_Information" IndexInDevDesc="18">
+                            <Attributes download="false" />
+                            <Value name="_x0031_880096777" visiblename="FSoE Master ConnID">
+                              <Element name="Name" visiblename="Name" desc="Name">'FSoE Master ConnID'</Element>
+                              <Element name="DataType" visiblename="DataType" desc="DataType">'UINT'</Element>
+                              <Element name="Default" visiblename="Default" desc="Default">''</Element>
+                              <Element name="Comment" visiblename="Comment" desc="Comment">''</Element>
+                            </Value>
+                            <Name>FSoE Master ConnID</Name>
+                          </Parameter>
+                        </ParameterSection>
+                        <ParameterSection>
+                          <Name>---</Name>
+                          <Description />
+                          <Parameter ParameterId="1879048199" type="localTypes:Entry">
+                            <Attributes download="false" />
+                            <Value name="_x0031_879048199" visiblename="---">
+                              <Element name="Index" visiblename="Index" desc="Index">16#0000</Element>
+                              <Element name="SubIndex" visiblename="SubIndex" desc="SubIndex">0</Element>
+                              <Element name="Size" visiblename="Size" desc="Size">4</Element>
+                              <Element name="Offset" visiblename="Offset" desc="Offset">0</Element>
+                              <Element name="DependOnSlot" visiblename="DependOnSlot" desc="DependOnSlot">False</Element>
+                              <Element name="DependOnSlotGroup" visiblename="DependOnSlotGroup" desc="DependOnSlotGroup">False</Element>
+                            </Value>
+                            <Name>---</Name>
+                          </Parameter>
+                          <Parameter ParameterId="1880096775" type="localTypes:PDO_Information">
+                            <Attributes download="false" onlineaccess="none" />
+                            <Value name="_x0031_880096775" visiblename="---" onlineaccess="none">
+                              <Element name="Name" visiblename="Name" desc="Name">'---'</Element>
+                              <Element name="DataType" visiblename="DataType" desc="DataType">''</Element>
+                              <Element name="Default" visiblename="Default" desc="Default">''</Element>
+                              <Element name="Comment" visiblename="Comment" desc="Comment">''</Element>
+                            </Value>
+                            <Name>---</Name>
+                          </Parameter>
+                        </ParameterSection>
+                        <Parameter ParameterId="1879048192" type="localTypes:RxTxPdo" IndexInDevDesc="19">
+                          <Attributes download="false" />
+                          <Value name="_x0031_879048192" visiblename="RxTxPdo">
+                            <Element name="NumberofExcludes" visiblename="NumberofExcludes">0</Element>
+                            <Element name="NumberofEntries" visiblename="NumberofEntries">8</Element>
+                            <Element name="Index" visiblename="Index">16#1600</Element>
+                            <Element name="Fixed" visiblename="Fixed">True</Element>
+                            <Element name="Mandatory" visiblename="Mandatory">False</Element>
+                            <Element name="Virtual" visiblename="Virtual">False</Element>
+                            <Element name="Sm" visiblename="Sm">2</Element>
+                            <Element name="Su" visiblename="Su">0</Element>
+                            <Element name="Name" visiblename="Name">'RxPDO'</Element>
+                            <Element name="DependOnSlot" visiblename="DependOnSlot">False</Element>
+                            <Element name="DependOnSlotGroup" visiblename="DependOnSlotGroup">False</Element>
+                            <Element name="OverwrittenByModule" visiblename="OverwrittenByModule">True</Element>
+                          </Value>
+                          <Name>RxTxPdo</Name>
+                        </Parameter>
+                      </ParameterSection>
+                      <Parameter ParameterId="1342504960" type="std:DWORD" IndexInDevDesc="2">
+                        <Attributes />
+                        <Value name="_x0031_342504960" visiblename="Number of RxPDOs of the Slave" desc="Number of RxPDOs of the Slave">1</Value>
+                        <Name>Number of RxPDOs of the Slave</Name>
+                        <Description>Number of RxPDOs of the Slave</Description>
+                      </Parameter>
+                    </ParameterSection>
+                    <ParameterSection>
+                      <Name>TxPDO</Name>
+                      <Description />
+                      <ParameterSection>
+                        <Name>TxPDO1</Name>
+                        <Description />
+                        <ParameterSection>
+                          <Name>FSoE Slave CMD</Name>
+                          <Description />
+                          <Parameter ParameterId="1879375874" type="localTypes:Entry" IndexInDevDesc="21">
+                            <Attributes download="false" />
+                            <Value name="_x0031_879375874" visiblename="FSoE Slave CMD">
+                              <Element name="Index" visiblename="Index" desc="Index">16#6000</Element>
+                              <Element name="SubIndex" visiblename="SubIndex" desc="SubIndex">1</Element>
+                              <Element name="Size" visiblename="Size" desc="Size">8</Element>
+                              <Element name="Offset" visiblename="Offset" desc="Offset">0</Element>
+                              <Element name="DependOnSlot" visiblename="DependOnSlot" desc="DependOnSlot">False</Element>
+                              <Element name="DependOnSlotGroup" visiblename="DependOnSlotGroup" desc="DependOnSlotGroup">False</Element>
+                            </Value>
+                            <Name>FSoE Slave CMD</Name>
+                          </Parameter>
+                          <Parameter ParameterId="1880424450" type="localTypes:PDO_Information" IndexInDevDesc="22">
+                            <Attributes download="false" />
+                            <Value name="_x0031_880424450" visiblename="FSoE Slave CMD">
+                              <Element name="Name" visiblename="Name" desc="Name">'FSoE Slave CMD'</Element>
+                              <Element name="DataType" visiblename="DataType" desc="DataType">'USINT'</Element>
+                              <Element name="Default" visiblename="Default" desc="Default">''</Element>
+                              <Element name="Comment" visiblename="Comment" desc="Comment">''</Element>
+                            </Value>
+                            <Name>FSoE Slave CMD</Name>
+                          </Parameter>
+                        </ParameterSection>
+                        <ParameterSection>
+                          <Name>Entry</Name>
+                          <Description />
+                        </ParameterSection>
+                        <ParameterSection>
+                          <Name>FSoE Slave CRC_0</Name>
+                          <Description />
+                          <Parameter ParameterId="1879375876" type="localTypes:Entry" IndexInDevDesc="25">
+                            <Attributes download="false" />
+                            <Value name="_x0031_879375876" visiblename="FSoE Slave CRC_0">
+                              <Element name="Index" visiblename="Index" desc="Index">16#6000</Element>
+                              <Element name="SubIndex" visiblename="SubIndex" desc="SubIndex">3</Element>
+                              <Element name="Size" visiblename="Size" desc="Size">16</Element>
+                              <Element name="Offset" visiblename="Offset" desc="Offset">0</Element>
+                              <Element name="DependOnSlot" visiblename="DependOnSlot" desc="DependOnSlot">False</Element>
+                              <Element name="DependOnSlotGroup" visiblename="DependOnSlotGroup" desc="DependOnSlotGroup">False</Element>
+                            </Value>
+                            <Name>FSoE Slave CRC_0</Name>
+                          </Parameter>
+                          <Parameter ParameterId="1880424452" type="localTypes:PDO_Information" IndexInDevDesc="26">
+                            <Attributes download="false" />
+                            <Value name="_x0031_880424452" visiblename="FSoE Slave CRC_0">
+                              <Element name="Name" visiblename="Name" desc="Name">'FSoE Slave CRC_0'</Element>
+                              <Element name="DataType" visiblename="DataType" desc="DataType">'UINT'</Element>
+                              <Element name="Default" visiblename="Default" desc="Default">''</Element>
+                              <Element name="Comment" visiblename="Comment" desc="Comment">''</Element>
+                            </Value>
+                            <Name>FSoE Slave CRC_0</Name>
+                          </Parameter>
+                        </ParameterSection>
+                        <ParameterSection>
+                          <Name>FSoE Slave ConnID</Name>
+                          <Description />
+                          <Parameter ParameterId="1879375877" type="localTypes:Entry" IndexInDevDesc="27">
+                            <Attributes download="false" />
+                            <Value name="_x0031_879375877" visiblename="FSoE Slave ConnID">
+                              <Element name="Index" visiblename="Index" desc="Index">16#6000</Element>
+                              <Element name="SubIndex" visiblename="SubIndex" desc="SubIndex">2</Element>
+                              <Element name="Size" visiblename="Size" desc="Size">16</Element>
+                              <Element name="Offset" visiblename="Offset" desc="Offset">0</Element>
+                              <Element name="DependOnSlot" visiblename="DependOnSlot" desc="DependOnSlot">False</Element>
+                              <Element name="DependOnSlotGroup" visiblename="DependOnSlotGroup" desc="DependOnSlotGroup">False</Element>
+                            </Value>
+                            <Name>FSoE Slave ConnID</Name>
+                          </Parameter>
+                          <Parameter ParameterId="1880424453" type="localTypes:PDO_Information" IndexInDevDesc="28">
+                            <Attributes download="false" />
+                            <Value name="_x0031_880424453" visiblename="FSoE Slave ConnID">
+                              <Element name="Name" visiblename="Name" desc="Name">'FSoE Slave ConnID'</Element>
+                              <Element name="DataType" visiblename="DataType" desc="DataType">'UINT'</Element>
+                              <Element name="Default" visiblename="Default" desc="Default">''</Element>
+                              <Element name="Comment" visiblename="Comment" desc="Comment">''</Element>
+                            </Value>
+                            <Name>FSoE Slave ConnID</Name>
+                          </Parameter>
+                        </ParameterSection>
+                        <ParameterSection>
+                          <Name>---</Name>
+                          <Description />
+                          <Parameter ParameterId="1879375875" type="localTypes:Entry">
+                            <Attributes download="false" />
+                            <Value name="_x0031_879375875" visiblename="---">
+                              <Element name="Index" visiblename="Index" desc="Index">16#0000</Element>
+                              <Element name="SubIndex" visiblename="SubIndex" desc="SubIndex">0</Element>
+                              <Element name="Size" visiblename="Size" desc="Size">8</Element>
+                              <Element name="Offset" visiblename="Offset" desc="Offset">0</Element>
+                              <Element name="DependOnSlot" visiblename="DependOnSlot" desc="DependOnSlot">False</Element>
+                              <Element name="DependOnSlotGroup" visiblename="DependOnSlotGroup" desc="DependOnSlotGroup">False</Element>
+                            </Value>
+                            <Name>---</Name>
+                          </Parameter>
+                          <Parameter ParameterId="1880424451" type="localTypes:PDO_Information">
+                            <Attributes download="false" onlineaccess="none" />
+                            <Value name="_x0031_880424451" visiblename="---" onlineaccess="none">
+                              <Element name="Name" visiblename="Name" desc="Name">'---'</Element>
+                              <Element name="DataType" visiblename="DataType" desc="DataType">''</Element>
+                              <Element name="Default" visiblename="Default" desc="Default">''</Element>
+                              <Element name="Comment" visiblename="Comment" desc="Comment">''</Element>
+                            </Value>
+                            <Name>---</Name>
+                          </Parameter>
+                        </ParameterSection>
+                        <Parameter ParameterId="1879375872" type="localTypes:RxTxPdo" IndexInDevDesc="29">
+                          <Attributes download="false" />
+                          <Value name="_x0031_879375872" visiblename="RxTxPdo">
+                            <Element name="NumberofExcludes" visiblename="NumberofExcludes">0</Element>
+                            <Element name="NumberofEntries" visiblename="NumberofEntries">4</Element>
+                            <Element name="Index" visiblename="Index">16#1A00</Element>
+                            <Element name="Fixed" visiblename="Fixed">True</Element>
+                            <Element name="Mandatory" visiblename="Mandatory">False</Element>
+                            <Element name="Virtual" visiblename="Virtual">False</Element>
+                            <Element name="Sm" visiblename="Sm">3</Element>
+                            <Element name="Su" visiblename="Su">0</Element>
+                            <Element name="Name" visiblename="Name">'TxPDO'</Element>
+                            <Element name="DependOnSlot" visiblename="DependOnSlot">False</Element>
+                            <Element name="DependOnSlotGroup" visiblename="DependOnSlotGroup">False</Element>
+                            <Element name="OverwrittenByModule" visiblename="OverwrittenByModule">True</Element>
+                          </Value>
+                          <Name>RxTxPdo</Name>
+                        </Parameter>
+                      </ParameterSection>
+                      <Parameter ParameterId="1342636032" type="std:DWORD" IndexInDevDesc="20">
+                        <Attributes />
+                        <Value name="_x0031_342636032" visiblename="Number of TxPDOs of the Slave" desc="Number of TxPDOs of the Slave">1</Value>
+                        <Name>Number of TxPDOs of the Slave</Name>
+                        <Description>Number of TxPDOs of the Slave</Description>
+                      </Parameter>
+                    </ParameterSection>
+                    <ParameterSection>
+                      <Name>16#1600 RxPDO</Name>
+                      <Description />
+                      <Parameter ParameterId="16777218" type="std:USINT">
+                        <Attributes channel="output" safetychannel="true" />
+                        <Value name="_x0031_6777218" visiblename="FSoE Master CMD" desc="Command">
+                          <Element name="_x0031_6777218_0" visiblename="Bit0" offlineaccess="none" onlineaccess="none" desc="Command">FALSE</Element>
+                          <Element name="_x0031_6777218_1" visiblename="Bit1" offlineaccess="none" onlineaccess="none" desc="Command">FALSE</Element>
+                          <Element name="_x0031_6777218_2" visiblename="Bit2" offlineaccess="none" onlineaccess="none" desc="Command">FALSE</Element>
+                          <Element name="_x0031_6777218_3" visiblename="Bit3" offlineaccess="none" onlineaccess="none" desc="Command">FALSE</Element>
+                          <Element name="_x0031_6777218_4" visiblename="Bit4" offlineaccess="none" onlineaccess="none" desc="Command">FALSE</Element>
+                          <Element name="_x0031_6777218_5" visiblename="Bit5" offlineaccess="none" onlineaccess="none" desc="Command">FALSE</Element>
+                          <Element name="_x0031_6777218_6" visiblename="Bit6" offlineaccess="none" onlineaccess="none" desc="Command">FALSE</Element>
+                          <Element name="_x0031_6777218_7" visiblename="Bit7" offlineaccess="none" onlineaccess="none" desc="Command">FALSE</Element>
+                        </Value>
+                        <Name>FSoE Master CMD</Name>
+                        <Description>Command</Description>
+                      </Parameter>
+                      <Parameter ParameterId="16777219" type="std:BIT">
+                        <Attributes channel="output" safetychannel="true" />
+                        <Value name="_x0031_6777219" visiblename="OutputChannel1" desc="SubIndex 001" />
+                        <Name>OutputChannel1</Name>
+                        <Description>SubIndex 001</Description>
+                      </Parameter>
+                      <Parameter ParameterId="16777220" type="std:BIT">
+                        <Attributes channel="output" safetychannel="true" />
+                        <Value name="_x0031_6777220" visiblename="OutputChannel2" desc="SubIndex 002" />
+                        <Name>OutputChannel2</Name>
+                        <Description>SubIndex 002</Description>
+                      </Parameter>
+                      <Parameter ParameterId="16777221" type="std:BIT">
+                        <Attributes channel="output" safetychannel="true" />
+                        <Value name="_x0031_6777221" visiblename="OutputChannel3" desc="SubIndex 003" />
+                        <Name>OutputChannel3</Name>
+                        <Description>SubIndex 003</Description>
+                      </Parameter>
+                      <Parameter ParameterId="16777222" type="std:BIT">
+                        <Attributes channel="output" safetychannel="true" />
+                        <Value name="_x0031_6777222" visiblename="OutputChannel4" desc="SubIndex 004" />
+                        <Name>OutputChannel4</Name>
+                        <Description>SubIndex 004</Description>
+                      </Parameter>
+                      <Parameter ParameterId="16777223" type="std:BIT">
+                        <Attributes channel="output" safetychannel="true" />
+                        <Value name="_x0031_6777223" visiblename="---" desc="---" />
+                        <Name>---</Name>
+                        <Description>---</Description>
+                      </Parameter>
+                      <Parameter ParameterId="16777224" type="std:BIT">
+                        <Attributes channel="output" safetychannel="true" />
+                        <Value name="_x0031_6777224" visiblename="---" desc="---" />
+                        <Name>---</Name>
+                        <Description>---</Description>
+                      </Parameter>
+                      <Parameter ParameterId="16777225" type="std:BIT">
+                        <Attributes channel="output" safetychannel="true" />
+                        <Value name="_x0031_6777225" visiblename="---" desc="---" />
+                        <Name>---</Name>
+                        <Description>---</Description>
+                      </Parameter>
+                      <Parameter ParameterId="16777226" type="std:BIT">
+                        <Attributes channel="output" safetychannel="true" />
+                        <Value name="_x0031_6777226" visiblename="---" desc="---" />
+                        <Name>---</Name>
+                        <Description>---</Description>
+                      </Parameter>
+                      <Parameter ParameterId="16777227" type="std:UINT">
+                        <Attributes channel="output" safetychannel="true" />
+                        <Value name="_x0031_6777227" visiblename="FSoE Master CRC_0" desc="FSoE Master CRC_0">
+                          <Element name="_x0031_6777227_0" visiblename="Bit0" offlineaccess="none" onlineaccess="none" desc="FSoE Master CRC_0">FALSE</Element>
+                          <Element name="_x0031_6777227_1" visiblename="Bit1" offlineaccess="none" onlineaccess="none" desc="FSoE Master CRC_0">FALSE</Element>
+                          <Element name="_x0031_6777227_2" visiblename="Bit2" offlineaccess="none" onlineaccess="none" desc="FSoE Master CRC_0">FALSE</Element>
+                          <Element name="_x0031_6777227_3" visiblename="Bit3" offlineaccess="none" onlineaccess="none" desc="FSoE Master CRC_0">FALSE</Element>
+                          <Element name="_x0031_6777227_4" visiblename="Bit4" offlineaccess="none" onlineaccess="none" desc="FSoE Master CRC_0">FALSE</Element>
+                          <Element name="_x0031_6777227_5" visiblename="Bit5" offlineaccess="none" onlineaccess="none" desc="FSoE Master CRC_0">FALSE</Element>
+                          <Element name="_x0031_6777227_6" visiblename="Bit6" offlineaccess="none" onlineaccess="none" desc="FSoE Master CRC_0">FALSE</Element>
+                          <Element name="_x0031_6777227_7" visiblename="Bit7" offlineaccess="none" onlineaccess="none" desc="FSoE Master CRC_0">FALSE</Element>
+                          <Element name="_x0031_6777227_8" visiblename="Bit8" offlineaccess="none" onlineaccess="none" desc="FSoE Master CRC_0">FALSE</Element>
+                          <Element name="_x0031_6777227_9" visiblename="Bit9" offlineaccess="none" onlineaccess="none" desc="FSoE Master CRC_0">FALSE</Element>
+                          <Element name="_x0031_6777227_10" visiblename="Bit10" offlineaccess="none" onlineaccess="none" desc="FSoE Master CRC_0">FALSE</Element>
+                          <Element name="_x0031_6777227_11" visiblename="Bit11" offlineaccess="none" onlineaccess="none" desc="FSoE Master CRC_0">FALSE</Element>
+                          <Element name="_x0031_6777227_12" visiblename="Bit12" offlineaccess="none" onlineaccess="none" desc="FSoE Master CRC_0">FALSE</Element>
+                          <Element name="_x0031_6777227_13" visiblename="Bit13" offlineaccess="none" onlineaccess="none" desc="FSoE Master CRC_0">FALSE</Element>
+                          <Element name="_x0031_6777227_14" visiblename="Bit14" offlineaccess="none" onlineaccess="none" desc="FSoE Master CRC_0">FALSE</Element>
+                          <Element name="_x0031_6777227_15" visiblename="Bit15" offlineaccess="none" onlineaccess="none" desc="FSoE Master CRC_0">FALSE</Element>
+                        </Value>
+                        <Name>FSoE Master CRC_0</Name>
+                        <Description>FSoE Master CRC_0</Description>
+                      </Parameter>
+                      <Parameter ParameterId="16777228" type="std:UINT">
+                        <Attributes channel="output" safetychannel="true" />
+                        <Value name="_x0031_6777228" visiblename="FSoE Master ConnID" desc="FSoE Master ConnID">
+                          <Element name="_x0031_6777228_0" visiblename="Bit0" offlineaccess="none" onlineaccess="none" desc="FSoE Master ConnID">FALSE</Element>
+                          <Element name="_x0031_6777228_1" visiblename="Bit1" offlineaccess="none" onlineaccess="none" desc="FSoE Master ConnID">FALSE</Element>
+                          <Element name="_x0031_6777228_2" visiblename="Bit2" offlineaccess="none" onlineaccess="none" desc="FSoE Master ConnID">FALSE</Element>
+                          <Element name="_x0031_6777228_3" visiblename="Bit3" offlineaccess="none" onlineaccess="none" desc="FSoE Master ConnID">FALSE</Element>
+                          <Element name="_x0031_6777228_4" visiblename="Bit4" offlineaccess="none" onlineaccess="none" desc="FSoE Master ConnID">FALSE</Element>
+                          <Element name="_x0031_6777228_5" visiblename="Bit5" offlineaccess="none" onlineaccess="none" desc="FSoE Master ConnID">FALSE</Element>
+                          <Element name="_x0031_6777228_6" visiblename="Bit6" offlineaccess="none" onlineaccess="none" desc="FSoE Master ConnID">FALSE</Element>
+                          <Element name="_x0031_6777228_7" visiblename="Bit7" offlineaccess="none" onlineaccess="none" desc="FSoE Master ConnID">FALSE</Element>
+                          <Element name="_x0031_6777228_8" visiblename="Bit8" offlineaccess="none" onlineaccess="none" desc="FSoE Master ConnID">FALSE</Element>
+                          <Element name="_x0031_6777228_9" visiblename="Bit9" offlineaccess="none" onlineaccess="none" desc="FSoE Master ConnID">FALSE</Element>
+                          <Element name="_x0031_6777228_10" visiblename="Bit10" offlineaccess="none" onlineaccess="none" desc="FSoE Master ConnID">FALSE</Element>
+                          <Element name="_x0031_6777228_11" visiblename="Bit11" offlineaccess="none" onlineaccess="none" desc="FSoE Master ConnID">FALSE</Element>
+                          <Element name="_x0031_6777228_12" visiblename="Bit12" offlineaccess="none" onlineaccess="none" desc="FSoE Master ConnID">FALSE</Element>
+                          <Element name="_x0031_6777228_13" visiblename="Bit13" offlineaccess="none" onlineaccess="none" desc="FSoE Master ConnID">FALSE</Element>
+                          <Element name="_x0031_6777228_14" visiblename="Bit14" offlineaccess="none" onlineaccess="none" desc="FSoE Master ConnID">FALSE</Element>
+                          <Element name="_x0031_6777228_15" visiblename="Bit15" offlineaccess="none" onlineaccess="none" desc="FSoE Master ConnID">FALSE</Element>
+                        </Value>
+                        <Name>FSoE Master ConnID</Name>
+                        <Description>FSoE Master ConnID</Description>
+                      </Parameter>
+                    </ParameterSection>
+                    <ParameterSection>
+                      <Name>16#1A00 TxPDO</Name>
+                      <Description />
+                      <Parameter ParameterId="33554434" type="std:USINT">
+                        <Attributes channel="input" safetychannel="true" />
+                        <Value name="_x0033_3554434" visiblename="FSoE Slave CMD" desc="Command">
+                          <Element name="_x0033_3554434_0" visiblename="Bit0" offlineaccess="none" onlineaccess="none" desc="Command">FALSE</Element>
+                          <Element name="_x0033_3554434_1" visiblename="Bit1" offlineaccess="none" onlineaccess="none" desc="Command">FALSE</Element>
+                          <Element name="_x0033_3554434_2" visiblename="Bit2" offlineaccess="none" onlineaccess="none" desc="Command">FALSE</Element>
+                          <Element name="_x0033_3554434_3" visiblename="Bit3" offlineaccess="none" onlineaccess="none" desc="Command">FALSE</Element>
+                          <Element name="_x0033_3554434_4" visiblename="Bit4" offlineaccess="none" onlineaccess="none" desc="Command">FALSE</Element>
+                          <Element name="_x0033_3554434_5" visiblename="Bit5" offlineaccess="none" onlineaccess="none" desc="Command">FALSE</Element>
+                          <Element name="_x0033_3554434_6" visiblename="Bit6" offlineaccess="none" onlineaccess="none" desc="Command">FALSE</Element>
+                          <Element name="_x0033_3554434_7" visiblename="Bit7" offlineaccess="none" onlineaccess="none" desc="Command">FALSE</Element>
+                        </Value>
+                        <Name>FSoE Slave CMD</Name>
+                        <Description>Command</Description>
+                      </Parameter>
+                      <Parameter ParameterId="33554435" type="std:USINT">
+                        <Attributes channel="input" safetychannel="true" />
+                        <Value name="_x0033_3554435" visiblename="---" desc="---">
+                          <Element name="_x0033_3554435_0" visiblename="Bit0" offlineaccess="none" onlineaccess="none" desc="---">FALSE</Element>
+                          <Element name="_x0033_3554435_1" visiblename="Bit1" offlineaccess="none" onlineaccess="none" desc="---">FALSE</Element>
+                          <Element name="_x0033_3554435_2" visiblename="Bit2" offlineaccess="none" onlineaccess="none" desc="---">FALSE</Element>
+                          <Element name="_x0033_3554435_3" visiblename="Bit3" offlineaccess="none" onlineaccess="none" desc="---">FALSE</Element>
+                          <Element name="_x0033_3554435_4" visiblename="Bit4" offlineaccess="none" onlineaccess="none" desc="---">FALSE</Element>
+                          <Element name="_x0033_3554435_5" visiblename="Bit5" offlineaccess="none" onlineaccess="none" desc="---">FALSE</Element>
+                          <Element name="_x0033_3554435_6" visiblename="Bit6" offlineaccess="none" onlineaccess="none" desc="---">FALSE</Element>
+                          <Element name="_x0033_3554435_7" visiblename="Bit7" offlineaccess="none" onlineaccess="none" desc="---">FALSE</Element>
+                        </Value>
+                        <Name>---</Name>
+                        <Description>---</Description>
+                      </Parameter>
+                      <Parameter ParameterId="33554436" type="std:UINT">
+                        <Attributes channel="input" safetychannel="true" />
+                        <Value name="_x0033_3554436" visiblename="FSoE Slave CRC_0" desc="CRC0">
+                          <Element name="_x0033_3554436_0" visiblename="Bit0" offlineaccess="none" onlineaccess="none" desc="CRC0">FALSE</Element>
+                          <Element name="_x0033_3554436_1" visiblename="Bit1" offlineaccess="none" onlineaccess="none" desc="CRC0">FALSE</Element>
+                          <Element name="_x0033_3554436_2" visiblename="Bit2" offlineaccess="none" onlineaccess="none" desc="CRC0">FALSE</Element>
+                          <Element name="_x0033_3554436_3" visiblename="Bit3" offlineaccess="none" onlineaccess="none" desc="CRC0">FALSE</Element>
+                          <Element name="_x0033_3554436_4" visiblename="Bit4" offlineaccess="none" onlineaccess="none" desc="CRC0">FALSE</Element>
+                          <Element name="_x0033_3554436_5" visiblename="Bit5" offlineaccess="none" onlineaccess="none" desc="CRC0">FALSE</Element>
+                          <Element name="_x0033_3554436_6" visiblename="Bit6" offlineaccess="none" onlineaccess="none" desc="CRC0">FALSE</Element>
+                          <Element name="_x0033_3554436_7" visiblename="Bit7" offlineaccess="none" onlineaccess="none" desc="CRC0">FALSE</Element>
+                          <Element name="_x0033_3554436_8" visiblename="Bit8" offlineaccess="none" onlineaccess="none" desc="CRC0">FALSE</Element>
+                          <Element name="_x0033_3554436_9" visiblename="Bit9" offlineaccess="none" onlineaccess="none" desc="CRC0">FALSE</Element>
+                          <Element name="_x0033_3554436_10" visiblename="Bit10" offlineaccess="none" onlineaccess="none" desc="CRC0">FALSE</Element>
+                          <Element name="_x0033_3554436_11" visiblename="Bit11" offlineaccess="none" onlineaccess="none" desc="CRC0">FALSE</Element>
+                          <Element name="_x0033_3554436_12" visiblename="Bit12" offlineaccess="none" onlineaccess="none" desc="CRC0">FALSE</Element>
+                          <Element name="_x0033_3554436_13" visiblename="Bit13" offlineaccess="none" onlineaccess="none" desc="CRC0">FALSE</Element>
+                          <Element name="_x0033_3554436_14" visiblename="Bit14" offlineaccess="none" onlineaccess="none" desc="CRC0">FALSE</Element>
+                          <Element name="_x0033_3554436_15" visiblename="Bit15" offlineaccess="none" onlineaccess="none" desc="CRC0">FALSE</Element>
+                        </Value>
+                        <Name>FSoE Slave CRC_0</Name>
+                        <Description>CRC0</Description>
+                      </Parameter>
+                      <Parameter ParameterId="33554437" type="std:UINT">
+                        <Attributes channel="input" safetychannel="true" />
+                        <Value name="_x0033_3554437" visiblename="FSoE Slave ConnID" desc="FSoE Slave ConnID">
+                          <Element name="_x0033_3554437_0" visiblename="Bit0" offlineaccess="none" onlineaccess="none" desc="FSoE Slave ConnID">FALSE</Element>
+                          <Element name="_x0033_3554437_1" visiblename="Bit1" offlineaccess="none" onlineaccess="none" desc="FSoE Slave ConnID">FALSE</Element>
+                          <Element name="_x0033_3554437_2" visiblename="Bit2" offlineaccess="none" onlineaccess="none" desc="FSoE Slave ConnID">FALSE</Element>
+                          <Element name="_x0033_3554437_3" visiblename="Bit3" offlineaccess="none" onlineaccess="none" desc="FSoE Slave ConnID">FALSE</Element>
+                          <Element name="_x0033_3554437_4" visiblename="Bit4" offlineaccess="none" onlineaccess="none" desc="FSoE Slave ConnID">FALSE</Element>
+                          <Element name="_x0033_3554437_5" visiblename="Bit5" offlineaccess="none" onlineaccess="none" desc="FSoE Slave ConnID">FALSE</Element>
+                          <Element name="_x0033_3554437_6" visiblename="Bit6" offlineaccess="none" onlineaccess="none" desc="FSoE Slave ConnID">FALSE</Element>
+                          <Element name="_x0033_3554437_7" visiblename="Bit7" offlineaccess="none" onlineaccess="none" desc="FSoE Slave ConnID">FALSE</Element>
+                          <Element name="_x0033_3554437_8" visiblename="Bit8" offlineaccess="none" onlineaccess="none" desc="FSoE Slave ConnID">FALSE</Element>
+                          <Element name="_x0033_3554437_9" visiblename="Bit9" offlineaccess="none" onlineaccess="none" desc="FSoE Slave ConnID">FALSE</Element>
+                          <Element name="_x0033_3554437_10" visiblename="Bit10" offlineaccess="none" onlineaccess="none" desc="FSoE Slave ConnID">FALSE</Element>
+                          <Element name="_x0033_3554437_11" visiblename="Bit11" offlineaccess="none" onlineaccess="none" desc="FSoE Slave ConnID">FALSE</Element>
+                          <Element name="_x0033_3554437_12" visiblename="Bit12" offlineaccess="none" onlineaccess="none" desc="FSoE Slave ConnID">FALSE</Element>
+                          <Element name="_x0033_3554437_13" visiblename="Bit13" offlineaccess="none" onlineaccess="none" desc="FSoE Slave ConnID">FALSE</Element>
+                          <Element name="_x0033_3554437_14" visiblename="Bit14" offlineaccess="none" onlineaccess="none" desc="FSoE Slave ConnID">FALSE</Element>
+                          <Element name="_x0033_3554437_15" visiblename="Bit15" offlineaccess="none" onlineaccess="none" desc="FSoE Slave ConnID">FALSE</Element>
+                        </Value>
+                        <Name>FSoE Slave ConnID</Name>
+                        <Description>FSoE Slave ConnID</Description>
+                      </Parameter>
+                    </ParameterSection>
+                    <Parameter ParameterId="16777216" type="std:DWORD">
+                      <Attributes />
+                      <Value name="_x0031_6777216" visiblename="Number of Outputs">11</Value>
+                      <Name>Number of Outputs</Name>
+                    </Parameter>
+                    <Parameter ParameterId="33554432" type="std:DWORD">
+                      <Attributes />
+                      <Value name="_x0033_3554432" visiblename="Number of Inputs">4</Value>
+                      <Name>Number of Inputs</Name>
+                    </Parameter>
+                    <Parameter ParameterId="268435456" type="std:DWORD">
+                      <Attributes />
+                      <Value name="_x0032_68435456" visiblename="Number of Infos about Outputs">11</Value>
+                      <Name>Number of Infos about Outputs</Name>
+                    </Parameter>
+                    <Parameter ParameterId="536870912" type="std:DWORD">
+                      <Attributes />
+                      <Value name="_x0035_36870912" visiblename="Number of Infos about Inputs">4</Value>
+                      <Name>Number of Infos about Inputs</Name>
+                    </Parameter>
+                  </HostParameterSet>
+                </Connector>
+                <DeviceParameterSet />
+              </DeviceType>
+            </Device>
+          </data>
+        </addData>
+      </configuration>
+    </configurations>
+  </instances>
+</project>

@@ -1,4 +1,7 @@
 TYPE AppCfg:
 STRUCT
+	foo:	LREAL;
+	bar:	INT;
+	zoo:	BOOL;
 END_STRUCT
 END_TYPE

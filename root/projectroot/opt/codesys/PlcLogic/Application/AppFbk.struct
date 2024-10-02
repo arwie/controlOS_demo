@@ -1,6 +1,0 @@
-TYPE AppFbk:
-STRUCT
-	co:		CoFbk;
-	io:		ARRAY [0..15] OF BOOL;
-END_STRUCT
-END_TYPE

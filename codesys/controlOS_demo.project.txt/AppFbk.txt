@@ -1,6 +1,13 @@
 TYPE AppFbk:
 STRUCT
 	co:		CoFbk;
-	io:		ARRAY [0..15] OF BOOL;
+	
+	axis_sto:			BOOL;
+	axis_powered:		BOOL;
+
+	move_done:			BOOL;
+	move_error:			BOOL;
+	
+	io:		ARRAY [0..128] OF BOOL;
 END_STRUCT
 END_TYPE

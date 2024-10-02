@@ -130,7 +130,7 @@
                     </Parameter>
                     <Parameter ParameterId="805392384" type="std:BOOL" IndexInDevDesc="13">
                       <Attributes />
-                      <Value name="_x0038_05392384" visiblename="SlaveAutorestart" desc="Slave restarts automatically">FALSE</Value>
+                      <Value name="_x0038_05392384" visiblename="SlaveAutorestart" desc="Slave restarts automatically">False</Value>
                       <Name>SlaveAutorestart</Name>
                       <Description>Slave restarts automatically</Description>
                     </Parameter>

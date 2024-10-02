@@ -1,0 +1,11 @@
+PROGRAM init
+VAR_OUTPUT
+	done: BOOL;
+END_VAR
+VAR
+
+END_VAR
+////////////////////////////////
+
+done := TRUE;
+
