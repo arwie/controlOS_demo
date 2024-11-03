@@ -16,5 +16,5 @@ ssh \
 	-p $PORT \
 	-C \
 	-o Tunnel=ethernet \
-	-w 0 \
+	-w 0:0 \
 	root@$HOST

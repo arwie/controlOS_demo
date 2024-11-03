@@ -24,7 +24,7 @@ from shared import network
 class StatusHandler(server.WebSocketHandler):
 	async def sendStatus(self):
 		while True:
-			self.write_message(await server.run_in_executor(network.status))
+			self.write_message(await server.run_in_executor(lambda: network.status().encode()))
 			await asyncio.sleep(3)
 
 	def open(self):

@@ -26,6 +26,7 @@ poweroff = Ausschalten
 
 save = Speichern
 apply = Anwenden
+execute = Ausführen
 connect = Verbinden
 disconnect = Trennen
 

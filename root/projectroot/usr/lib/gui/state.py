@@ -41,7 +41,7 @@ class Handler(server.WebSocketHandler):
 				msg = None	# watchdog
 			except asyncio.CancelledError:
 				break
-			self.write_messageJson(msg)
+			self.write_message(msg)
 
 
 

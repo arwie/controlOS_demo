@@ -19,8 +19,10 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
 	from typing import Any
+	from collections.abc import Callable, Coroutine
 
-from contextlib import asynccontextmanager
+from contextlib import asynccontextmanager, suppress
+from functools import partial
 import asyncio
 import json
 import socket
@@ -41,7 +43,8 @@ class RequestHandler(tornado.web.RequestHandler):
 		yield
 
 	def prepare(self):
-		self.set_header('Access-Control-Allow-Origin', self.request.headers['Origin'])
+		if origin := self.request.headers.get('Origin'):
+			self.set_header('Access-Control-Allow-Origin', origin)
 	
 	def read_json(self):
 		return json.loads(self.request.body.decode())
@@ -60,16 +63,16 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
 		def __init__(self, Handler:type[WebSocketHandler]):
 			super().__init__()
 			self.Handler = Handler
-			self.connected = asyncio.Event()
+			self.connected_event = asyncio.Event()
 
 		def add(self, connection):
 			super().add(connection)
-			self.connected.set()
+			self.connected_event.set()
 
 		def discard(self, connection):
 			super().discard(connection)
 			if not self:
-				self.connected.clear()
+				self.connected_event.clear()
 
 		def write_message(self, msg: bytes | Any, **kwargs):
 			if not isinstance(msg, bytes):
@@ -80,27 +83,36 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
 		def write_update(self):
 			self.write_message(self.Handler.update())
 
-		async def update_loop(self, period:float=0.25):
-			while True:
-				await self.connected.wait()
-				await asyncio.sleep(period)
-				self.write_update()
-
 	@classmethod
 	def __init_subclass__(cls):
-		cls.canceled = False
 		cls.all = WebSocketHandler.Connections(cls)
 
 	@classmethod
 	@asynccontextmanager
-	async def exec(cls):
-		cls.canceled = False
-		try:
-			yield
-		finally:
-			cls.canceled = True
-			for conn in cls.all:
-				conn.close()
+	async def exec(cls, *, update_period: float | app.Trigger | Callable[[], Coroutine] = 0.25):
+		async with app.task_group() as cls.task_group:
+
+			if cls.update.__func__ is not WebSocketHandler.update.__func__:	#update() was overriden in subclass
+
+				if isinstance(update_period, (float, int)):
+					update_period = partial(asyncio.sleep, update_period)
+				elif isinstance(update_period, app.Trigger):
+					update_period = update_period.wait
+
+				@cls.task_group
+				async def all_update_loop():
+					while True:
+						await cls.all.connected_event.wait()
+						await update_period()
+						cls.all.write_update()
+
+			cls.canceled = False
+			try:
+				yield
+			finally:
+				cls.canceled = True
+				for conn in cls.all:
+					conn.close()
 
 	@classmethod
 	def update(cls):
@@ -125,7 +137,8 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
 	def write_message(self, msg: bytes | Any, **kwargs):
 		if not isinstance(msg, bytes):
 			msg = json.dumps(msg).encode()
-		super().write_message(msg, **kwargs)
+		with suppress(WebSocketClosedError):
+			super().write_message(msg, **kwargs).cancel()
 
 	def write_update(self):
 		self.write_message(self.update())
@@ -135,6 +148,10 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
 
 	def on_message_json(self, msg:dict):
 		raise NotImplemented
+	
+	@property
+	def connected(self):
+		return len(self.all)
 
 
 
@@ -147,8 +164,11 @@ class Placeholder(RequestHandler):
 
 	@classmethod
 	@asynccontextmanager
-	async def handle(cls, Handler: type[RequestHandler] | type[WebSocketHandler]):
-		async with Handler.exec(), app.target(cls.target):
+	async def handle(cls, Handler: type[RequestHandler] | type[WebSocketHandler], **kwargs):
+		async with (
+			Handler.exec(**kwargs),
+			app.target(cls.target),
+		):
 			cls.Handler = Handler
 			try:
 				yield
@@ -159,23 +179,22 @@ class Placeholder(RequestHandler):
 
 handlers = []
 
-def placeholder(name, params={}):
+def placeholder(name, **kwargs):
 	class NewPlaceholder(Placeholder):
 		target = name
-	handlers.append((f'/{name}', NewPlaceholder, params))
+	handlers.append((f'/{name}', NewPlaceholder, kwargs))
 	return NewPlaceholder
-
-def handler(name, params={}):
-	def add_handler(Handler):
-		handlers.append((f'/{name}', Handler, params))
-		return Handler
-	return add_handler
 
 
 
 @app.context
 async def server():
-	srv = tornado.httpserver.HTTPServer(tornado.web.Application(handlers))
+	srv = tornado.httpserver.HTTPServer(
+		tornado.web.Application(
+			handlers,
+			websocket_ping_interval=10,
+		)
+	)
 	systemdSocket = socket.fromfd(3, socket.AF_INET6, socket.SOCK_STREAM)
 	systemdSocket.setblocking(False)
 	srv.add_socket(systemdSocket)

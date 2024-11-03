@@ -1,6 +1,8 @@
 HostKey /etc/ssh/ssh_host_rsa_key
 
 PasswordAuthentication no
+KbdInteractiveAuthentication no
+
 PermitTunnel yes
 
 Subsystem sftp /usr/sbin/sftp-server

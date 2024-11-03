@@ -15,6 +15,12 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
+from __future__ import annotations
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+	from typing import Any
+
+from contextlib import suppress
 import shared
 import asyncio, os, socket, json, logging, base64
 from tornado import web, httpserver, ioloop, websocket
@@ -30,8 +36,12 @@ class RequestHandler(web.RequestHandler):
 
 
 class WebSocketHandler(websocket.WebSocketHandler):
-	def write_messageJson(self, data):
-		self.write_message(json.dumps(data).encode())
+
+	def write_message(self, msg: bytes | Any, **kwargs):
+		if not isinstance(msg, bytes):
+			msg = json.dumps(msg).encode()
+		with suppress(websocket.WebSocketClosedError):
+			super().write_message(msg, **kwargs).cancel()
 
 
 
@@ -165,6 +175,7 @@ settings = {
 	'cookie_secret':			base64.b64encode(os.urandom(64)).decode('ascii'),
 	"compiled_template_cache":	False,
 	"static_hash_cache":		False,
+	"websocket_ping_interval":	10,
 	"ui_modules": {
 		"page": PageModule
 	},

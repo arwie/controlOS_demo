@@ -26,6 +26,7 @@ poweroff = Power Off
 
 save = Save
 apply = Apply
+execute = Execute
 connect = Connect
 disconnect = Disconnect
 

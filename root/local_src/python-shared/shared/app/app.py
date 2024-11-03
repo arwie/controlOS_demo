@@ -156,9 +156,7 @@ class task_group(asyncio.TaskGroup):
 		try:
 			return await super().__aexit__(et, exc, tb)
 		except BaseExceptionGroup as eg:
-			if len(eg.exceptions) == 1 and eg.exceptions[0] is exc:
-				raise eg.exceptions[0] from None
-			else:
+			if eg.exceptions[0] is not exc or len(eg.exceptions) > 1:
 				raise
 
 

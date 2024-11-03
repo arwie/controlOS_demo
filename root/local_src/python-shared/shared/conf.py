@@ -49,6 +49,11 @@ class Conf(ConfigParser):
 				self.read_string("[{}]\n{}".format(section, data))
 
 
+	#The default converts the name to lowercase. Override to keep the key as they are.
+	def optionxform(self, optionstr):
+		return optionstr
+
+
 	def update(self, data:dict[str, dict[str, Any]]):
 		for section, options in data.items():
 			if not self.has_section(section):

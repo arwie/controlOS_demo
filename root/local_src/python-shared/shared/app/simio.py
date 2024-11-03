@@ -153,12 +153,12 @@ def output(io=None, **kwargs):
 
 
 
-SimioWebSocketPlaceholder = web.placeholder('simio')
+web_placeholder = web.placeholder('simio')
 
 @app.context
 async def exec():
 
-	class SimioWebSocketHandler(web.WebSocketHandler):
+	class WebHandler(web.WebSocketHandler):
 		@classmethod
 		def update(cls):
 			return [{
@@ -183,6 +183,5 @@ async def exec():
 			_simio[int(msg['id'])].set_override(msg['ord'])
 			self.all.write_update()
 
-	async with SimioWebSocketPlaceholder.handle(SimioWebSocketHandler):
-		async with app.task_group(SimioWebSocketHandler.all.update_loop()):
-			yield
+	async with web_placeholder.handle(WebHandler):
+		yield
