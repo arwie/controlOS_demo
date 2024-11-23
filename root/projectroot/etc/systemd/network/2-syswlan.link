@@ -1,6 +1,6 @@
 [Match]
-#     >BBE                                >PokiniF2         >raspi4b
-Path= platform-musb-hdrc.1-usb-0:1.4:1.2  pci-0000:01:00.0  platform-fd500000.pcie-pci-0000:01:00.0-usb-0:1.4:1.0
+#     >BBE                                >PokiniF2         >lyra                                   >raspi4b
+Path= platform-musb-hdrc.1-usb-0:1.4:1.2  pci-0000:01:00.0  platform-xhci-hcd.3.auto-usb-0:1.2:1.0  platform-fd500000.pcie-pci-0000:01:00.0-usb-0:1.4:1.0
 Type=wlan
 
 [Link]

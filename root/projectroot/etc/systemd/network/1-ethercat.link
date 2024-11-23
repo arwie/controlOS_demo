@@ -1,7 +1,7 @@
 [Match]
 #     >BBE                        >PokiniF2         >raspi4b
 Path= platform-4a100000.ethernet  pci-0000:02:00.0  platform-fd580000.ethernet
-OriginalName=eth*
+Type=ether
 
 [Link]
 Name=ethc

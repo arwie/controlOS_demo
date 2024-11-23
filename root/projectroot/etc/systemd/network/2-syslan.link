@@ -1,7 +1,8 @@
 [Match]
-#     >PokiniF2         >raspi4b
-Path= pci-0000:03:00.0  platform-fd500000.pcie-pci-0000:01:00.0-usb-0:1:1.0
-OriginalName=eth*
+#     >PokiniF2         >lyra                      >raspi4b
+Path= pci-0000:03:00.0  platform-8000000.ethernet  platform-fd500000.pcie-pci-0000:01:00.0-usb-0:1:1.0
+Property=IFINDEX=2 #lyra
+Type=ether
 
 [Link]
 Name=syslan

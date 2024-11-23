@@ -1,0 +1,3 @@
+/dts-v1/;
+
+#include "ti/k3-am625-phyboard-lyra-rdk.dts"

@@ -62,9 +62,7 @@ CONFIG_TUN=m
 ## Wireless (must be a module to load regulatory)
 ## firmware/regulatory.db
 CONFIG_CFG80211=m
-
-## esp32
-CONFIG_USB_SERIAL_CP210X=m
+CONFIG_MAC80211=m
 
 
 ## unused features
