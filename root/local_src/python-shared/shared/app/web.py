@@ -80,8 +80,9 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
 			for conn in self:
 				conn.write_message(msg, **kwargs)
 
-		def write_update(self):
-			self.write_message(self.Handler.update())
+		def write_update(self, *args):
+			if self:
+				self.write_message(self.Handler.update(*args))
 
 	@classmethod
 	def __init_subclass__(cls):
@@ -115,7 +116,7 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
 					conn.close()
 
 	@classmethod
-	def update(cls):
+	def update(cls, *args):
 		raise NotImplemented
 
 	def check_origin(self, origin):
@@ -140,8 +141,8 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
 		with suppress(WebSocketClosedError):
 			super().write_message(msg, **kwargs).cancel()
 
-	def write_update(self):
-		self.write_message(self.update())
+	def write_update(self, *args):
+		self.write_message(self.update(*args))
 
 	def on_message(self, msg):
 		self.on_message_json(json.loads(msg))

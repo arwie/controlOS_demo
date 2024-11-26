@@ -20,7 +20,16 @@
 
 
 {% block html %}
-<div data-bind="foreach:[{cls:'Input'},{cls:'Output'}]" class="row h-100">
+<div class="input-group mb-3">
+	<!-- ko ifnot:filter -->
+	<span class="input-group-text"><i class="fas fa-search"></i></span>
+	<!-- /ko -->
+	<!-- ko if:filter -->
+	<button data-bind="click:()=>{filter('')}" class="btn btn-secondary"><i class="fas fa-times"></i></button>
+	<!-- /ko -->
+	<input data-bind="textInput:filter" type="text" placeholder="match1 match2 match3 ..." class="form-control">
+</div>
+<div data-bind="foreach:[{cls:'Input'},{cls:'Output'}]" class="row h-100" style="min-height:0">
 	<div class="col-xxl h-100 overflow-scroll">
 		<table class="table table-hover">
 			<colgroup>
@@ -37,7 +46,7 @@
 				<th data-l10n-id="simio_override"></th>
 			</tr>
 		</thead>
-		<tbody data-bind="foreach:$model.simio().filter(io => io.cls==cls).sort((a,b) => a.name<b.name?-1:(a.name>b.name?1:0))">
+		<tbody data-bind="foreach:$model.simio().filter(io => io.cls==cls && (io.ord()!==null || RegExp($model.filter().trim().replaceAll(/ +/g,'|'),'i').test(io.name))).sort((a,b) => a.name<b.name?-1:(a.name>b.name?1:0))">
 			<tr data-bind="css:{'table-info':sim, 'table-warning':sim&&ord()!==null, 'table-danger':!sim&&ord()!==null}">
 				<th><span data-bind="text:name" class="form-control-plaintext"></span></th>
 				<td><span data-bind="text:type" class="form-control-plaintext"></span></td>
@@ -77,6 +86,7 @@ class {
 			},
 			key: (io) => io.id,
 		});
+		this.filter = ko.observable('');
 	}
 	
 	send(io, ord) {
@@ -104,10 +114,11 @@ class {
 		event.target.value = null;
 	}
 	
-	start(started) {
+	start() {
 		model.conn = webSocket(wsUrl('simio', ports.app), (msg, first)=>{
+			if (msg.length && Object.hasOwn(msg[0], 'name'))
+				model.simio.removeAll();
 			ko.mapping.fromJS(msg, model.simio);
-			if (first) started();
 		});
 	}
 	

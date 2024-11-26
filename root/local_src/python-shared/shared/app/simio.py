@@ -23,7 +23,7 @@ if TYPE_CHECKING:
 	SimioTypes = TypeVar('SimioTypes', bool, int, float, str)
 
 from typing import get_type_hints
-from contextlib import AbstractContextManager
+from contextlib import AbstractContextManager, closing, suppress
 from configparser import ConfigParser
 from . import app
 from . import web
@@ -34,16 +34,12 @@ _conf = ConfigParser()
 _conf.read('/etc/app/simio.conf')
 
 
-_simio:list[_IOBase] = []
-
-
 class _IOBase:
 	value: Any
 	_io_sim: Callable
 
-	def __init__(self, io:Callable, *, prefix=None):
-		_simio.append(self)
-		io_module = '.'.join(p.strip('_') for p in io.__module__.split('.'))
+	def __init__(self, io:Callable, *, module=None, prefix=None):
+		io_module = '.'.join(p.strip('_') for p in (module or io.__module__).split('.'))
 		io_name   = '.'.join(p.strip('_') for p in (prefix, io.__name__) if p)
 		self.name = f'{io_module}: {io_name}'
 		self.type:type = next(iter(get_type_hints(io).values()))
@@ -66,6 +62,13 @@ class _IOBase:
 			return True
 		except Exception:
 			return False
+
+	def open(self):
+		_WebHandler.add_simio(self)
+		return closing(self)
+
+	def close(self):
+		_WebHandler.remove_simio(self)
 
 
 class Input(_IOBase):
@@ -108,80 +111,138 @@ class Output(_IOBase, AbstractContextManager):
 
 
 
-if TYPE_CHECKING:
-	@overload
-	def input(
-		io: Callable[[], SimioTypes],
-		*,
-		prefix: str | None = None,
-		sim: SimioTypes | Callable[[], SimioTypes] | None = None
-	) -> Input:
-		pass
-	@overload
-	def input(
-		*,
-		prefix: str | None = None,
-		sim: SimioTypes | Callable[[], SimioTypes] | None = None
-	) -> Callable[[Callable[[], SimioTypes]], Input]:
-		pass
+class IoGroup(AbstractContextManager):
 
-def input(io=None, **kwargs):
-	def decorator(io, /):
-		return Input(io, **kwargs)
-	return decorator if io is None else decorator(io)
+	def __init__(self, *, module: str | None = None, prefix: str | None = None):
+		self.module = module
+		self.prefix = prefix
+		self._simio = list[_IOBase]()
+
+	def __exit__(self, *exc):
+		for simio in self._simio:
+			if isinstance(simio, AbstractContextManager):
+				simio.__exit__(*exc)
 
 
-if TYPE_CHECKING:
-	@overload
-	def output(
-		io: Callable[[SimioTypes], None],
-		*,
-		prefix: str | None = None,
-	) -> Output:
-		pass
-	@overload
-	def output(
-		*,
-		prefix: str | None = None,
-	) -> Callable[[Callable[[SimioTypes], None]], Output]:
-		pass
+	def open(self):
+		for simio in self._simio:
+			simio.open()
+		_WebHandler.all.write_update()
+		return closing(self)
 
-def output(io=None, **kwargs):
-	def decorator(io, /):
-		return Output(io, **kwargs)
-	return decorator if io is None else decorator(io)
+	def close(self):
+		for simio in self._simio:
+			simio.close()
+		_WebHandler.all.write_update()
 
 
+	if TYPE_CHECKING:
+		@overload
+		def input(
+			self,
+			io: Callable[[], SimioTypes],
+			*,
+			prefix: str | None = None,
+			sim: SimioTypes | Callable[[], SimioTypes] | None = None
+		) -> Input:
+			pass
+		@overload
+		def input(
+			self,
+			*,
+			prefix: str | None = None,
+			sim: SimioTypes | Callable[[], SimioTypes] | None = None
+		) -> Callable[[Callable[[], SimioTypes]], Input]:
+			pass
 
-web_placeholder = web.placeholder('simio')
+	def input(self, io=None, **kwargs):
+		def decorator(io, /):
+			kwargs.setdefault('module', self.module)
+			kwargs.setdefault('prefix', self.prefix)
+			simio = Input(io, **kwargs)
+			self._simio.append(simio)
+			return simio
+		return decorator if io is None else decorator(io)
+
+
+	if TYPE_CHECKING:
+		@overload
+		def output(
+			self,
+			io: Callable[[SimioTypes], None],
+			*,
+			prefix: str | None = None,
+		) -> Output:
+			pass
+		@overload
+		def output(
+			self,
+			*,
+			prefix: str | None = None,
+		) -> Callable[[Callable[[SimioTypes], None]], Output]:
+			pass
+
+	def output(self, io=None, **kwargs):
+		def decorator(io, /):
+			kwargs.setdefault('module', self.module)
+			kwargs.setdefault('prefix', self.prefix)
+			simio = Output(io, **kwargs)
+			self._simio.append(simio)
+			return simio
+		return decorator if io is None else decorator(io)
+
+
+
+default_io_group = IoGroup()
+input  = default_io_group.input
+output = default_io_group.output
+
+
+
+_web_placeholder = web.placeholder('simio')
+
+class _WebHandler(web.WebSocketHandler):
+
+	_simio = dict[int, _IOBase]()
+	_simio_changed = False
+
+	@classmethod
+	def add_simio(cls, simio:_IOBase):
+		cls._simio[id(simio)] = simio
+		cls._simio_changed = True
+
+	@classmethod
+	def remove_simio(cls, simio:_IOBase):
+		with suppress(Exception):
+			del cls._simio[id(simio)]
+			cls._simio_changed = True
+
+	@classmethod
+	def update(cls, full=False):
+		full = full or cls._simio_changed
+		cls._simio_changed = False
+		return [{
+			'id':		id,
+			'ord':		simio.override,
+			'val':		simio.value,
+			**({
+				'cls':		simio.__class__.__name__,
+				'name':		simio.name,
+				'type':		simio.type.__name__,
+				'sim':		simio.simulated,
+			} if full else {})
+		} for id,simio in cls._simio.items()]
+
+	def on_open(self):
+		self.write_update(True)
+
+	def on_message_json(self, msg):
+		self._simio[int(msg['id'])].set_override(msg['ord'])
+		self.all.write_update()
+
 
 @app.context
 async def exec():
-
-	class WebHandler(web.WebSocketHandler):
-		@classmethod
-		def update(cls):
-			return [{
-				'id':		id,
-				'ord':		simio.override,
-				'val':		simio.value,
-			} for id,simio in enumerate(_simio)]
-
-		def on_open(self):
-			self.write_message(
-				[{
-					'id':		id,
-					'cls':		simio.__class__.__name__,
-					'name':		simio.name,
-					'type':		simio.type.__name__,
-					'sim':		simio.simulated,
-				} for id,simio in enumerate(_simio)]
-			)
-			self.write_update()
-
-		def on_message_json(self, msg):
-			_simio[int(msg['id'])].set_override(msg['ord'])
-			self.all.write_update()
-
-	async with web_placeholder.handle(WebHandler):
-		yield
+	with default_io_group.open():
+		async with _web_placeholder.handle(_WebHandler):
+			yield

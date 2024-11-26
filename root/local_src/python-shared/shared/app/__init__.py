@@ -27,7 +27,7 @@ import signal
 from .app import *
 from . import web
 from . import simio
-from .simio import input, output
+from .simio import input, output, IoGroup
 
 
 
