@@ -1,0 +1,7 @@
+## SECTION=project_specific
+
+config CUSTOM
+	bool
+	prompt "Custom project files"
+	help
+	  FIXME

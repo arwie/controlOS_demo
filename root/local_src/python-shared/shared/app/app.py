@@ -18,10 +18,9 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-	from typing import overload, Any, TypeVar, ParamSpec
+	from typing import overload, Any
 	from collections.abc import Callable, Coroutine, AsyncGenerator
 	from contextlib import AbstractAsyncContextManager
-	P, T = ParamSpec('P'), TypeVar('T')
 
 import asyncio
 import inspect
@@ -114,9 +113,11 @@ async def _context(func):
 
 if TYPE_CHECKING:
 	@overload
-	def context(func:Callable[P, AsyncGenerator[T, Any]]) -> Callable[P, AbstractAsyncContextManager[T]]: pass
+	#def context[T, **P](func:Callable[P, AsyncGenerator[T, Any]]) -> Callable[P, AbstractAsyncContextManager[T]]: pass
+	def context(func:Callable[..., AsyncGenerator]) -> Callable[..., AbstractAsyncContextManager]: pass
 	@overload
-	def context(func:Callable[P, Coroutine[Any, Any, T]]) -> Callable[P, Coroutine[Any, Any, T]]: pass
+	#def context[T, **P](func:Callable[P, Coroutine[Any, Any, T]]) -> Callable[P, Coroutine[Any, Any, T]]: pass
+	def context(func:Callable[..., Coroutine]) -> Callable[..., Coroutine]: pass
 
 def context(func): #type:ignore
 	if inspect.isasyncgenfunction(func):
