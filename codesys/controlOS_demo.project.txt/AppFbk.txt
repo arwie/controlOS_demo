@@ -1,12 +1,18 @@
 TYPE AppFbk:
 STRUCT
 	co:		CoFbk;
-	
-	axis_sto:			BOOL;
-	axis_powered:		BOOL;
 
-	move_done:			BOOL;
-	move_error:			BOOL;
+	init_done:			BOOL;
+	
+	rbt_axes:			ARRAY [0..2] OF LREAL;
+	rbt_pos:			ARRAY [0..2] OF LREAL;
+	rbt_powered:		BOOL;
+	rbt_move_done:		BOOL;
+	rbt_move_error:		BOOL;
+
+	extra_powered:		BOOL;
+	extra_move_done:	BOOL;
+	extra_move_error:	BOOL;
 	
 	io:		ARRAY [0..128] OF BOOL;
 END_STRUCT

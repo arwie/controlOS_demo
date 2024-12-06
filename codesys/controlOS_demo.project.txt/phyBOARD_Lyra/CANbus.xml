@@ -1,0 +1,103 @@
+<project xmlns="http://www.plcopen.org/xml/tc6_0200">
+  <types>
+    <dataTypes />
+    <pous />
+  </types>
+  <instances>
+    <configurations>
+      <configuration name="CANbus">
+        <addData>
+          <data name="Device" handleUnknown="discard">
+            <Device xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="">
+              <DeviceType>
+                <DeviceIdentification>
+                  <Type>15</Type>
+                  <Id>181015</Id>
+                  <Version>4.2.0.0</Version>
+                </DeviceIdentification>
+                <Connector moduleType="257" role="child" interface="Common.PCI" connectorId="0">
+                  <HostParameterSet />
+                </Connector>
+                <Connector moduleType="15" interface="Common.CANbus" connectorId="1" hostpath="0">
+                  <HostParameterSet>
+                    <ParameterSection>
+                      <Name>Settings</Name>
+                      <Description />
+                      <Parameter ParameterId="0" type="std:INT" IndexInDevDesc="0">
+                        <Attributes />
+                        <Value name="_x0030_" visiblename="Baudrate">1000</Value>
+                        <Name>Baudrate</Name>
+                        <Unit>kbit/s</Unit>
+                      </Parameter>
+                      <Parameter ParameterId="1" type="std:DWORD" IndexInDevDesc="1">
+                        <Attributes offlineaccess="none" onlineaccess="none" />
+                        <Value name="_x0031_" visiblename="DummyParameter1" offlineaccess="none" onlineaccess="none">0</Value>
+                        <Name>DummyParameter1</Name>
+                      </Parameter>
+                      <Parameter ParameterId="2" type="localTypes:RangeNetworkID" IndexInDevDesc="2">
+                        <Attributes />
+                        <Value name="_x0032_" visiblename="NetID">0</Value>
+                        <Name>NetID</Name>
+                      </Parameter>
+                      <Parameter ParameterId="3" type="std:ARRAY[0..8] OF INT" IndexInDevDesc="3">
+                        <Attributes download="false" offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0033_" visiblename="SupportedBaudrates" offlineaccess="read" onlineaccess="read">[0, 10, 20, 50, 100, 125, 250, 500, 800, 1000]</Value>
+                        <Name>SupportedBaudrates</Name>
+                        <Unit>kbit/s</Unit>
+                      </Parameter>
+                      <Parameter ParameterId="4096" type="std:BOOL" IndexInDevDesc="4">
+                        <Attributes download="false" onlineaccess="read" />
+                        <Value name="_x0034_096" visiblename="BlockFDTSDO" onlineaccess="read">FALSE</Value>
+                        <Name>BlockFDTSDO</Name>
+                      </Parameter>
+                    </ParameterSection>
+                    <Parameter ParameterId="4098" type="std:BOOL" IndexInDevDesc="5">
+                      <Attributes download="false" offlineaccess="none" onlineaccess="none" />
+                      <Value name="_x0034_098" visiblename="Show Logger Page" offlineaccess="none" onlineaccess="none">TRUE</Value>
+                      <Name>Show Logger Page</Name>
+                    </Parameter>
+                    <Parameter ParameterId="327936" type="localTypes:CAN_Diag" IndexInDevDesc="6">
+                      <Attributes channel="diag" offlineaccess="read" onlineaccess="read" />
+                      <Value name="_x0033_27936" visiblename="Diagnosis Info" offlineaccess="read" onlineaccess="read">
+                        <Element name="structVersion" visiblename="Struct Version" offlineaccess="none" onlineaccess="none">1</Element>
+                        <Element name="currentNetId" visiblename="Current Network ID" desc="Currently used Network ID. Can be changed at runtime by DeviceDiagnosis Reconfigure." />
+                        <Element name="currentBaudrate" visiblename="Current Baudrate" desc="Currently used Baudrate. Can be changed at runtime by DeviceDiagnosis Reconfigure." />
+                        <Element name="busState" visiblename="Bus state">-1</Element>
+                        <Element name="busAlarm" visiblename="Bus Alarm" desc="If CAN driver signals a bus alarm a critical bus error occurred. The fieldbus stack will reintialize the CAN chip." />
+                        <Element name="busErrorCounter" visiblename="Bus Error counter" desc="Number of occurred bus errors. Will be reset if diagnosis will be acknowledged." />
+                        <Element name="errorcode" visiblename="Last Driver Open Error" />
+                        <Element name="driverInstances" visiblename="Driver Instances" desc="Number of driver instances currently opened by underlying fieldbus stacks." />
+                        <Element name="busLoad" visiblename="Bus Load" desc="Bus load in percent. If CAN driver does not support bus load measurement value remains 0." />
+                        <Element name="txCounter" visiblename="Tx Counter" desc="Number of successful sent CAN telegrams." />
+                        <Element name="txErrorCounter" visiblename="Tx Error Counter" desc="Value of transmit error counter provided by CAN chip." />
+                        <Element name="rxCounter" visiblename="Rx Counter" desc="Number of successful received CAN telegrams." />
+                        <Element name="rxErrorCounter" visiblename="Rx Error Counter" desc="Value of receive error counter provided by CAN chip." />
+                        <Element name="lostCounter" visiblename="Lost Counter" desc="Number of lost receive CAN telegrams." />
+                      </Value>
+                      <Name>Diagnosis Info</Name>
+                    </Parameter>
+                    <Parameter ParameterId="327937" type="std:BOOL" IndexInDevDesc="7">
+                      <Attributes channel="diagAck" offlineaccess="none" onlineaccess="none" />
+                      <Value name="_x0033_27937" visiblename="Diag Acknowledge" offlineaccess="none" onlineaccess="none" desc="Diag Acknowledge">FALSE</Value>
+                      <Name>Diag Acknowledge</Name>
+                      <Description>Diag Acknowledge</Description>
+                    </Parameter>
+                    <Parameter ParameterId="1879052288" type="std:UDINT" IndexInDevDesc="8">
+                      <Attributes offlineaccess="read" onlineaccess="read" />
+                      <Value name="_x0031_879052288" visiblename="Config Version" offlineaccess="read" onlineaccess="read">50663168</Value>
+                      <Name>Config Version</Name>
+                    </Parameter>
+                  </HostParameterSet>
+                </Connector>
+                <DeviceParameterSet />
+              </DeviceType>
+            </Device>
+          </data>
+          <data name="configurations" handleUnknown="discard">
+            <configurations />
+          </data>
+        </addData>
+      </configuration>
+    </configurations>
+  </instances>
+</project>

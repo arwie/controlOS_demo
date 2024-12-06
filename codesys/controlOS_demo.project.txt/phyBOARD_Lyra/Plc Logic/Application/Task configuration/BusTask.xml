@@ -1,0 +1,36 @@
+<project xmlns="http://www.plcopen.org/xml/tc6_0200">
+  <types>
+    <dataTypes />
+    <pous />
+  </types>
+  <instances>
+    <configurations />
+  </instances>
+  <addData>
+    <data name="http://www.3s-software.com/plcopenxml/application" handleUnknown="implementation">
+      <resource name="Application">
+        <task name="BusTask" interval="PT0.004S" priority="11">
+          <pouInstance name="app" typeName="">
+            <documentation>
+              <xhtml xmlns="http://www.w3.org/1999/xhtml" />
+            </documentation>
+          </pouInstance>
+          <addData>
+            <data name="http://www.3s-software.com/plcopenxml/tasksettings" handleUnknown="implementation">
+              <TaskSettings KindOfTask="Cyclic" Interval="4" IntervalUnit="ms" WithinSPSTimeSlicing="true">
+                <Watchdog Enabled="false" TimeUnit="ms" />
+              </TaskSettings>
+            </data>
+          </addData>
+        </task>
+        <addData>
+          <data name="http://www.3s-software.com/plcopenxml/buildproperties" handleUnknown="implementation">
+            <BuildProperties>
+              <CompilerDefines>CANOPEN_NO_HEARTBEATPRODUCING, CANOPEN_NO_MODULARDEVICES, CANOPEN_NO_NODEGUARDING, CANOPEN_NO_TIMEPRODUCING</CompilerDefines>
+            </BuildProperties>
+          </data>
+        </addData>
+      </resource>
+    </data>
+  </addData>
+</project>

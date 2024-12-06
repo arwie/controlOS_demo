@@ -1,56 +1,16 @@
 PROGRAM main
 VAR
-	ReadStatus:	MC_ReadStatus;
-	ResetTrig: R_TRIG;
-	Reset: MC_Reset;
-	Power: MC_Power;
-	MoveRelative: MC_MoveRelative;
 END_VAR
 
 
 
 ////////////////////////////////
 
-co_etc();
+co_can();
+//co_etc();
 
 
-Logical_GVL_OUT.Run := TRUE;
-Logical_GVL_OUT.Ack := TRUE;
+Exec_Robot();
 
+Exec_Extra();
 
-
-
-
-ReadStatus(
-	Axis := AxisMR,
-	Enable := TRUE,
-);
-
-ResetTrig(CLK := app.cmd.axis_power);
-Reset(
-	Axis := AxisMR,
-	Execute := ReadStatus.ErrorStop AND ResetTrig.Q,
-);
-
-
-Power(
-	Axis := AxisMR,
-	Enable := TRUE,
-	bRegulatorOn := app.cmd.axis_power,
-	bDriveStart  := app.cmd.axis_power,
-);
-app.fbk.axis_powered := Power.Status;
-
-
-MoveRelative(
-	Axis := AxisMR,
-	Execute := app.cmd.move_exec,
-	Distance := app.cmd.move_distance,
-	BufferMode := MC_BUFFER_MODE.Aborting,
-	Velocity     := app.cmd.move_velocity,
-	Acceleration := AxisMR.fSWMaxAcceleration,
-	Deceleration := AxisMR.fSWMaxDeceleration,
-	Jerk         := AxisMR.fSWMaxJerk,
-);
-app.fbk.move_done  := MoveRelative.Done;
-app.fbk.move_error := MoveRelative.Error OR Reset.Error;

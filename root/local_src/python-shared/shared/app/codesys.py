@@ -97,6 +97,11 @@ class EthercatDevice:
 		self.master = master
 
 
+	async def sdo_read(self, addr:tuple[int, int]):
+		async with self._co_lock:
+			return await self._sdo_exec(1, addr)
+
+
 	async def sdo_write(self, addr:tuple[int, int], data: c_uint8 | c_uint16 | c_uint32):
 		async with self._co_lock:
 			cmd.co.dataLength = sizeof(data)
@@ -112,6 +117,7 @@ class EthercatDevice:
 		try:
 			if not await poll(lambda: fbk.co.done, abort=lambda: fbk.co.error):
 				raise Exception(f'SDO access error: {self.slave} > {hex(addr[0])}:{addr[1]}')
+			return fbk.co.data
 		finally:
 			cmd.co.func = 0
 			await sync()

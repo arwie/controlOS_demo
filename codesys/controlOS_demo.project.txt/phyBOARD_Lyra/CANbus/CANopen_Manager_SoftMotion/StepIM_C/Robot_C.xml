@@ -1,0 +1,1189 @@
+<project xmlns="http://www.plcopen.org/xml/tc6_0200">
+  <types>
+    <dataTypes />
+    <pous />
+  </types>
+  <instances>
+    <configurations>
+      <configuration name="Robot_C">
+        <addData>
+          <data name="Device" handleUnknown="discard">
+            <Device xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="">
+              <DeviceType>
+                <DeviceIdentification>
+                  <Type>1026</Type>
+                  <Id>0000 0001</Id>
+                  <Version>4.6.1.0</Version>
+                </DeviceIdentification>
+                <Connector moduleType="1026" role="child" interface="Common.SoftMotion.CAN.DSP402" connectorId="0">
+                  <HostParameterSet>
+                    <ParameterSection>
+                      <Name>AXIS_REF: Standard</Name>
+                      <Description />
+                      <Parameter ParameterId="1021" type="std:WORD" IndexInDevDesc="0">
+                        <Attributes />
+                        <Value name="_x0031_021" visiblename="wDriveID" desc="Unique ID of the drive">3</Value>
+                        <Name>wDriveID</Name>
+                        <Description>Unique ID of the drive</Description>
+                      </Parameter>
+                      <Parameter ParameterId="1040" type="std:BOOL" IndexInDevDesc="1">
+                        <Attributes />
+                        <Value name="_x0031_040" visiblename="bVirtual" desc="Whether the drive is simulated">FALSE</Value>
+                        <Name>bVirtual</Name>
+                        <Description>Whether the drive is simulated</Description>
+                      </Parameter>
+                      <Parameter ParameterId="1060" type="std:INT" IndexInDevDesc="2">
+                        <Attributes />
+                        <Value name="_x0031_060" visiblename="iMovementType" desc="Movement type: 0: modulo, 1: finite">1</Value>
+                        <Name>iMovementType</Name>
+                        <Description>Movement type: 0: modulo, 1: finite</Description>
+                      </Parameter>
+                      <Parameter ParameterId="1061" type="std:LREAL" IndexInDevDesc="3">
+                        <Attributes />
+                        <Value name="_x0031_061" visiblename="fPositionPeriod" desc="Modulo period value for modulo drives [u]">360.0</Value>
+                        <Name>fPositionPeriod</Name>
+                        <Description>Modulo period value for modulo drives [u]</Description>
+                      </Parameter>
+                      <Parameter ParameterId="1062" type="std:INT" IndexInDevDesc="7">
+                        <Attributes />
+                        <Value name="_x0031_062" visiblename="eRampType" desc="The velocity ramp used for trajectories.">0</Value>
+                        <Name>eRampType</Name>
+                        <Description>The velocity ramp used for trajectories.</Description>
+                      </Parameter>
+                      <Parameter ParameterId="1113" type="std:LREAL" IndexInDevDesc="9">
+                        <Attributes />
+                        <Value name="_x0031_113" visiblename="fSWMaxVelocity" desc="Maximum velocity magnitude (software limit)">800</Value>
+                        <Name>fSWMaxVelocity</Name>
+                        <Description>Maximum velocity magnitude (software limit)</Description>
+                      </Parameter>
+                      <Parameter ParameterId="1123" type="std:LREAL" IndexInDevDesc="10">
+                        <Attributes />
+                        <Value name="_x0031_123" visiblename="fSWMaxAcceleration" desc="Maximum acceleration magnitude (software limit)">8000</Value>
+                        <Name>fSWMaxAcceleration</Name>
+                        <Description>Maximum acceleration magnitude (software limit)</Description>
+                      </Parameter>
+                      <Parameter ParameterId="1133" type="std:LREAL" IndexInDevDesc="11">
+                        <Attributes />
+                        <Value name="_x0031_133" visiblename="fSWMaxDeceleration" desc="Maximum deceleration magnitude (software limit)">8000</Value>
+                        <Name>fSWMaxDeceleration</Name>
+                        <Description>Maximum deceleration magnitude (software limit)</Description>
+                      </Parameter>
+                      <Parameter ParameterId="1143" type="std:LREAL" IndexInDevDesc="12">
+                        <Attributes />
+                        <Value name="_x0031_143" visiblename="fSWMaxJerk" desc="Maximum jerk magnitude (software limit)">300000</Value>
+                        <Name>fSWMaxJerk</Name>
+                        <Description>Maximum jerk magnitude (software limit)</Description>
+                      </Parameter>
+                      <Parameter ParameterId="1144" type="std:LREAL" IndexInDevDesc="8">
+                        <Attributes />
+                        <Value name="_x0031_144" visiblename="fRampJerk" desc="Jerk used for bringing acceleration to 0 when sin² ramp is interrupted.">0</Value>
+                        <Name>fRampJerk</Name>
+                        <Description>Jerk used for bringing acceleration to 0 when sin² ramp is interrupted.</Description>
+                      </Parameter>
+                      <Parameter ParameterId="1200" type="std:LREAL" IndexInDevDesc="6">
+                        <Attributes />
+                        <Value name="_x0031_200" visiblename="fSWLimitPositive" desc="Software limit in positive direction">1000.0</Value>
+                        <Name>fSWLimitPositive</Name>
+                        <Description>Software limit in positive direction</Description>
+                      </Parameter>
+                      <Parameter ParameterId="1201" type="std:LREAL" IndexInDevDesc="5">
+                        <Attributes />
+                        <Value name="_x0031_201" visiblename="fSWLimitNegative" desc="Software limit in negative direction">0.0</Value>
+                        <Name>fSWLimitNegative</Name>
+                        <Description>Software limit in negative direction</Description>
+                      </Parameter>
+                      <Parameter ParameterId="1203" type="std:LREAL" IndexInDevDesc="15">
+                        <Attributes />
+                        <Value name="_x0031_203" visiblename="fSWLimitDeceleration" desc="Deceleration for  stop on software error [u/s²]">0</Value>
+                        <Name>fSWLimitDeceleration</Name>
+                        <Description>Deceleration for  stop on software error [u/s²]</Description>
+                      </Parameter>
+                      <Parameter ParameterId="1205" type="std:BOOL" IndexInDevDesc="4">
+                        <Attributes />
+                        <Value name="_x0031_205" visiblename="bSWLimitEnable" desc="Activate/deactivate software limits">FALSE</Value>
+                        <Name>bSWLimitEnable</Name>
+                        <Description>Activate/deactivate software limits</Description>
+                      </Parameter>
+                      <Parameter ParameterId="1207" type="std:INT" IndexInDevDesc="13">
+                        <Attributes />
+                        <Value name="_x0031_207" visiblename="eCheckPositionLag" desc="Position lag mode">0</Value>
+                        <Name>eCheckPositionLag</Name>
+                        <Description>Position lag mode</Description>
+                      </Parameter>
+                      <Parameter ParameterId="1208" type="std:LREAL" IndexInDevDesc="14">
+                        <Attributes />
+                        <Value name="_x0031_208" visiblename="fMaxPositionLag" desc="Maximum position lag (magnitude) [u]">1.0</Value>
+                        <Name>fMaxPositionLag</Name>
+                        <Description>Maximum position lag (magnitude) [u]</Description>
+                      </Parameter>
+                      <Parameter ParameterId="1250" type="std:LREAL" IndexInDevDesc="16">
+                        <Attributes />
+                        <Value name="_x0031_250" visiblename="fSWErrorMaxDistance" desc="Maximum distance that may be travelled for ramping down after a software error has been detected [u]">0</Value>
+                        <Name>fSWErrorMaxDistance</Name>
+                        <Description>Maximum distance that may be travelled for ramping down after a software error has been detected [u]</Description>
+                      </Parameter>
+                    </ParameterSection>
+                    <ParameterSection>
+                      <Name>AXIS_REF: Scalings</Name>
+                      <Description />
+                      <Parameter ParameterId="1051" type="std:DWORD" IndexInDevDesc="17">
+                        <Attributes />
+                        <Value name="_x0031_051" visiblename="dwRatioTechUnitsDenom" desc="conversion inc./tech.units denominator">2048</Value>
+                        <Name>dwRatioTechUnitsDenom</Name>
+                        <Description>conversion inc./tech.units denominator</Description>
+                      </Parameter>
+                      <Parameter ParameterId="1052" type="std:DINT" IndexInDevDesc="18">
+                        <Attributes />
+                        <Value name="_x0031_052" visiblename="iRatioTechUnitsNum" desc="conversion inc./tech.units numerator">35</Value>
+                        <Name>iRatioTechUnitsNum</Name>
+                        <Description>conversion inc./tech.units numerator</Description>
+                      </Parameter>
+                      <Parameter ParameterId="5000" type="std:DINT" IndexInDevDesc="19">
+                        <Attributes />
+                        <Value name="_x0035_000" visiblename="ScalingIncs">16#1000</Value>
+                        <Name>ScalingIncs</Name>
+                      </Parameter>
+                      <Parameter ParameterId="5001" type="std:DINT" IndexInDevDesc="20">
+                        <Attributes />
+                        <Value name="_x0035_001" visiblename="ScalingMotorTurns1">1</Value>
+                        <Name>ScalingMotorTurns1</Name>
+                      </Parameter>
+                      <Parameter ParameterId="5002" type="std:DINT" IndexInDevDesc="21">
+                        <Attributes />
+                        <Value name="_x0035_002" visiblename="ScalingMotorTurns2">1</Value>
+                        <Name>ScalingMotorTurns2</Name>
+                      </Parameter>
+                      <Parameter ParameterId="5003" type="std:DINT" IndexInDevDesc="22">
+                        <Attributes />
+                        <Value name="_x0035_003" visiblename="ScalingGearOutput1">1</Value>
+                        <Name>ScalingGearOutput1</Name>
+                      </Parameter>
+                      <Parameter ParameterId="5004" type="std:DINT" IndexInDevDesc="23">
+                        <Attributes />
+                        <Value name="_x0035_004" visiblename="ScalingGearOutput2">1</Value>
+                        <Name>ScalingGearOutput2</Name>
+                      </Parameter>
+                      <Parameter ParameterId="5005" type="std:DINT" IndexInDevDesc="24">
+                        <Attributes />
+                        <Value name="_x0035_005" visiblename="ScalingUnits">70</Value>
+                        <Name>ScalingUnits</Name>
+                      </Parameter>
+                      <Parameter ParameterId="5006" type="std:BOOL" IndexInDevDesc="25">
+                        <Attributes />
+                        <Value name="_x0035_006" visiblename="InvertDirection">FALSE</Value>
+                        <Name>InvertDirection</Name>
+                      </Parameter>
+                    </ParameterSection>
+                    <ParameterSection>
+                      <Name>possible cyclic driver in-/outputs</Name>
+                      <Description />
+                      <Parameter ParameterId="8000" type="std:INT" IndexInDevDesc="26">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_000" visiblename="NumberOfOutputMappingParams" offlineaccess="read" onlineaccess="read">9</Value>
+                        <Name>NumberOfOutputMappingParams</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8010" type="std:INT" IndexInDevDesc="27">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_010" visiblename="ControlWord (out.wControlWord)" offlineaccess="read" onlineaccess="read">10064</Value>
+                        <Name>ControlWord (out.wControlWord)</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8011" type="std:STRING" IndexInDevDesc="28">
+                        <Attributes download="false" offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_011" visiblename="Object_8010" offlineaccess="read" onlineaccess="read">16#6040:16#00</Value>
+                        <Name>Object_8010</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8012" type="std:UDINT" IndexInDevDesc="29">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_012" visiblename="AdrOffset_8010" offlineaccess="read" onlineaccess="read">16</Value>
+                        <Name>AdrOffset_8010</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8013" type="std:USINT" IndexInDevDesc="30">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_013" visiblename="BitOffset_8010" offlineaccess="read" onlineaccess="read">0</Value>
+                        <Name>BitOffset_8010</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8014" type="std:USINT" IndexInDevDesc="31">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_014" visiblename="BitLength_8010" offlineaccess="read" onlineaccess="read">16</Value>
+                        <Name>BitLength_8010</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8020" type="std:INT" IndexInDevDesc="32">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_020" visiblename="set position (diSetPosition)" offlineaccess="read" onlineaccess="read">1108</Value>
+                        <Name>set position (diSetPosition)</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8021" type="std:STRING" IndexInDevDesc="33">
+                        <Attributes download="false" offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_021" visiblename="Object_8020" offlineaccess="read" onlineaccess="read">16#607A:16#00</Value>
+                        <Name>Object_8020</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8022" type="std:UDINT" IndexInDevDesc="34">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_022" visiblename="AdrOffset_8020" offlineaccess="read" onlineaccess="read">20</Value>
+                        <Name>AdrOffset_8020</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8023" type="std:USINT" IndexInDevDesc="35">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_023" visiblename="BitOffset_8020" offlineaccess="read" onlineaccess="read">0</Value>
+                        <Name>BitOffset_8020</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8024" type="std:USINT" IndexInDevDesc="36">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_024" visiblename="BitLength_8020" offlineaccess="read" onlineaccess="read">32</Value>
+                        <Name>BitLength_8020</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8030" type="std:INT" IndexInDevDesc="37">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_030" visiblename="set velocity (diSetVelocity)" offlineaccess="read" onlineaccess="read">1118</Value>
+                        <Name>set velocity (diSetVelocity)</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8031" type="std:STRING" IndexInDevDesc="38">
+                        <Attributes download="false" offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_031" visiblename="Object_8030" offlineaccess="read" onlineaccess="read">16#60FF:16#00</Value>
+                        <Name>Object_8030</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8032" type="std:UDINT" IndexInDevDesc="39">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_032" visiblename="AdrOffset_8030" offlineaccess="read" onlineaccess="read">4294967295</Value>
+                        <Name>AdrOffset_8030</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8033" type="std:USINT" IndexInDevDesc="40">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_033" visiblename="BitOffset_8030" offlineaccess="read" onlineaccess="read">0</Value>
+                        <Name>BitOffset_8030</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8034" type="std:USINT" IndexInDevDesc="41">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_034" visiblename="BitLength_8030" offlineaccess="read" onlineaccess="read">0</Value>
+                        <Name>BitLength_8030</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8040" type="std:INT" IndexInDevDesc="42">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_040" visiblename="set torque (wSetTorque)" offlineaccess="read" onlineaccess="read">1168</Value>
+                        <Name>set torque (wSetTorque)</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8041" type="std:STRING" IndexInDevDesc="43">
+                        <Attributes download="false" offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_041" visiblename="Object_8040" offlineaccess="read" onlineaccess="read">16#6071:16#00</Value>
+                        <Name>Object_8040</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8042" type="std:UDINT" IndexInDevDesc="44">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_042" visiblename="AdrOffset_8040" offlineaccess="read" onlineaccess="read">4294967295</Value>
+                        <Name>AdrOffset_8040</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8043" type="std:USINT" IndexInDevDesc="45">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_043" visiblename="BitOffset_8040" offlineaccess="read" onlineaccess="read">0</Value>
+                        <Name>BitOffset_8040</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8044" type="std:USINT" IndexInDevDesc="46">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_044" visiblename="BitLength_8040" offlineaccess="read" onlineaccess="read">0</Value>
+                        <Name>BitLength_8040</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8050" type="std:INT" IndexInDevDesc="47">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_050" visiblename="Modes of operation (OP)" offlineaccess="read" onlineaccess="read">10096</Value>
+                        <Name>Modes of operation (OP)</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8051" type="std:STRING" IndexInDevDesc="48">
+                        <Attributes download="false" offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_051" visiblename="Object_8050" offlineaccess="read" onlineaccess="read">16#6060:16#00</Value>
+                        <Name>Object_8050</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8052" type="std:UDINT" IndexInDevDesc="49">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_052" visiblename="AdrOffset_8050" offlineaccess="read" onlineaccess="read">18</Value>
+                        <Name>AdrOffset_8050</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8053" type="std:USINT" IndexInDevDesc="50">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_053" visiblename="BitOffset_8050" offlineaccess="read" onlineaccess="read">0</Value>
+                        <Name>BitOffset_8050</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8054" type="std:USINT" IndexInDevDesc="51">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_054" visiblename="BitLength_8050" offlineaccess="read" onlineaccess="read">8</Value>
+                        <Name>BitLength_8050</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8060" type="std:INT" IndexInDevDesc="52">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_060" visiblename="Touch Probe Function" offlineaccess="read" onlineaccess="read">10184</Value>
+                        <Name>Touch Probe Function</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8061" type="std:STRING" IndexInDevDesc="53">
+                        <Attributes download="false" offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_061" visiblename="Object_8060" offlineaccess="read" onlineaccess="read">16#60B8:16#00</Value>
+                        <Name>Object_8060</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8062" type="std:UDINT" IndexInDevDesc="54">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_062" visiblename="AdrOffset_8060" offlineaccess="read" onlineaccess="read">4294967295</Value>
+                        <Name>AdrOffset_8060</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8063" type="std:USINT" IndexInDevDesc="55">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_063" visiblename="BitOffset_8060" offlineaccess="read" onlineaccess="read">0</Value>
+                        <Name>BitOffset_8060</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8064" type="std:USINT" IndexInDevDesc="56">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_064" visiblename="BitLength_8060" offlineaccess="read" onlineaccess="read">0</Value>
+                        <Name>BitLength_8060</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8070" type="std:INT" IndexInDevDesc="57">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_070" visiblename="Add velocity value" offlineaccess="read" onlineaccess="read">10177</Value>
+                        <Name>Add velocity value</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8071" type="std:STRING" IndexInDevDesc="58">
+                        <Attributes download="false" offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_071" visiblename="Object_8070" offlineaccess="read" onlineaccess="read">16#60B1:16#00</Value>
+                        <Name>Object_8070</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8072" type="std:UDINT" IndexInDevDesc="59">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_072" visiblename="AdrOffset_8070" offlineaccess="read" onlineaccess="read">4294967295</Value>
+                        <Name>AdrOffset_8070</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8073" type="std:USINT" IndexInDevDesc="60">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_073" visiblename="BitOffset_8070" offlineaccess="read" onlineaccess="read">0</Value>
+                        <Name>BitOffset_8070</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8074" type="std:USINT" IndexInDevDesc="61">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_074" visiblename="BitLength_8070" offlineaccess="read" onlineaccess="read">0</Value>
+                        <Name>BitLength_8070</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8080" type="std:INT" IndexInDevDesc="62">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_080" visiblename="Add torque value" offlineaccess="read" onlineaccess="read">10178</Value>
+                        <Name>Add torque value</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8081" type="std:STRING" IndexInDevDesc="63">
+                        <Attributes download="false" offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_081" visiblename="Object_8080" offlineaccess="read" onlineaccess="read">16#60B2:16#00</Value>
+                        <Name>Object_8080</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8082" type="std:UDINT" IndexInDevDesc="64">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_082" visiblename="AdrOffset_8080" offlineaccess="read" onlineaccess="read">4294967295</Value>
+                        <Name>AdrOffset_8080</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8083" type="std:USINT" IndexInDevDesc="65">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_083" visiblename="BitOffset_8080" offlineaccess="read" onlineaccess="read">0</Value>
+                        <Name>BitOffset_8080</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8084" type="std:USINT" IndexInDevDesc="66">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_084" visiblename="BitLength_8080" offlineaccess="read" onlineaccess="read">0</Value>
+                        <Name>BitLength_8080</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8090" type="std:INT" IndexInDevDesc="67">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_090" visiblename="Digital outputs (A637)" offlineaccess="read" onlineaccess="read">10254</Value>
+                        <Name>Digital outputs (A637)</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8091" type="std:STRING" IndexInDevDesc="68">
+                        <Attributes download="false" offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_091" visiblename="Object_8090" offlineaccess="read" onlineaccess="read">16#60FE:16#01</Value>
+                        <Name>Object_8090</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8092" type="std:UDINT" IndexInDevDesc="69">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_092" visiblename="AdrOffset_8090" offlineaccess="read" onlineaccess="read">4294967295</Value>
+                        <Name>AdrOffset_8090</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8093" type="std:USINT" IndexInDevDesc="70">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_093" visiblename="BitOffset_8090" offlineaccess="read" onlineaccess="read">0</Value>
+                        <Name>BitOffset_8090</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8094" type="std:USINT" IndexInDevDesc="71">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_094" visiblename="BitLength_8090" offlineaccess="read" onlineaccess="read">0</Value>
+                        <Name>BitLength_8090</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8500" type="std:INT" IndexInDevDesc="72">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_500" visiblename="NumberOfInputMappingParams" offlineaccess="read" onlineaccess="read">12</Value>
+                        <Name>NumberOfInputMappingParams</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8510" type="std:INT" IndexInDevDesc="73">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_510" visiblename="status word (in.wStatusWord)" offlineaccess="read" onlineaccess="read">20065</Value>
+                        <Name>status word (in.wStatusWord)</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8511" type="std:STRING" IndexInDevDesc="74">
+                        <Attributes download="false" offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_511" visiblename="Object_8510" offlineaccess="read" onlineaccess="read">16#6041:16#00</Value>
+                        <Name>Object_8510</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8512" type="std:UDINT" IndexInDevDesc="75">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_512" visiblename="AdrOffset_8510" offlineaccess="read" onlineaccess="read">24</Value>
+                        <Name>AdrOffset_8510</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8513" type="std:USINT" IndexInDevDesc="76">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_513" visiblename="BitOffset_8510" offlineaccess="read" onlineaccess="read">0</Value>
+                        <Name>BitOffset_8510</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8514" type="std:USINT" IndexInDevDesc="77">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_514" visiblename="BitLength_8510" offlineaccess="read" onlineaccess="read">16</Value>
+                        <Name>BitLength_8510</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8520" type="std:INT" IndexInDevDesc="78">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_520" visiblename="actual position (diActPosition)" offlineaccess="read" onlineaccess="read">1109</Value>
+                        <Name>actual position (diActPosition)</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8521" type="std:STRING" IndexInDevDesc="79">
+                        <Attributes download="false" offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_521" visiblename="Object_8520" offlineaccess="read" onlineaccess="read">16#6064:16#00</Value>
+                        <Name>Object_8520</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8522" type="std:UDINT" IndexInDevDesc="80">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_522" visiblename="AdrOffset_8520" offlineaccess="read" onlineaccess="read">28</Value>
+                        <Name>AdrOffset_8520</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8523" type="std:USINT" IndexInDevDesc="81">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_523" visiblename="BitOffset_8520" offlineaccess="read" onlineaccess="read">0</Value>
+                        <Name>BitOffset_8520</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8524" type="std:USINT" IndexInDevDesc="82">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_524" visiblename="BitLength_8520" offlineaccess="read" onlineaccess="read">32</Value>
+                        <Name>BitLength_8520</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8530" type="std:INT" IndexInDevDesc="83">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_530" visiblename="actual velocity (diActVelocity)" offlineaccess="read" onlineaccess="read">1119</Value>
+                        <Name>actual velocity (diActVelocity)</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8531" type="std:STRING" IndexInDevDesc="84">
+                        <Attributes download="false" offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_531" visiblename="Object_8530" offlineaccess="read" onlineaccess="read">16#606C:16#00</Value>
+                        <Name>Object_8530</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8532" type="std:UDINT" IndexInDevDesc="85">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_532" visiblename="AdrOffset_8530" offlineaccess="read" onlineaccess="read">32</Value>
+                        <Name>AdrOffset_8530</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8533" type="std:USINT" IndexInDevDesc="86">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_533" visiblename="BitOffset_8530" offlineaccess="read" onlineaccess="read">0</Value>
+                        <Name>BitOffset_8530</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8534" type="std:USINT" IndexInDevDesc="87">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_534" visiblename="BitLength_8530" offlineaccess="read" onlineaccess="read">32</Value>
+                        <Name>BitLength_8530</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8540" type="std:INT" IndexInDevDesc="88">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_540" visiblename="actual torque (wActTorque)" offlineaccess="read" onlineaccess="read">1169</Value>
+                        <Name>actual torque (wActTorque)</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8541" type="std:STRING" IndexInDevDesc="89">
+                        <Attributes download="false" offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_541" visiblename="Object_8540" offlineaccess="read" onlineaccess="read">16#6077:16#00</Value>
+                        <Name>Object_8540</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8542" type="std:UDINT" IndexInDevDesc="90">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_542" visiblename="AdrOffset_8540" offlineaccess="read" onlineaccess="read">4294967295</Value>
+                        <Name>AdrOffset_8540</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8543" type="std:USINT" IndexInDevDesc="91">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_543" visiblename="BitOffset_8540" offlineaccess="read" onlineaccess="read">0</Value>
+                        <Name>BitOffset_8540</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8544" type="std:USINT" IndexInDevDesc="92">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_544" visiblename="BitLength_8540" offlineaccess="read" onlineaccess="read">0</Value>
+                        <Name>BitLength_8540</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8550" type="std:INT" IndexInDevDesc="93">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_550" visiblename="Modes of operation display (OP)" offlineaccess="read" onlineaccess="read">20097</Value>
+                        <Name>Modes of operation display (OP)</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8551" type="std:STRING" IndexInDevDesc="94">
+                        <Attributes download="false" offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_551" visiblename="Object_8550" offlineaccess="read" onlineaccess="read">16#6061:16#00</Value>
+                        <Name>Object_8550</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8552" type="std:UDINT" IndexInDevDesc="95">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_552" visiblename="AdrOffset_8550" offlineaccess="read" onlineaccess="read">26</Value>
+                        <Name>AdrOffset_8550</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8553" type="std:USINT" IndexInDevDesc="96">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_553" visiblename="BitOffset_8550" offlineaccess="read" onlineaccess="read">0</Value>
+                        <Name>BitOffset_8550</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8554" type="std:USINT" IndexInDevDesc="97">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_554" visiblename="BitLength_8550" offlineaccess="read" onlineaccess="read">8</Value>
+                        <Name>BitLength_8550</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8560" type="std:INT" IndexInDevDesc="98">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_560" visiblename="digital inputs (in.dwDigitalInputs)" offlineaccess="read" onlineaccess="read">20253</Value>
+                        <Name>digital inputs (in.dwDigitalInputs)</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8561" type="std:STRING" IndexInDevDesc="99">
+                        <Attributes download="false" offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_561" visiblename="Object_8560" offlineaccess="read" onlineaccess="read">16#60FD:16#00</Value>
+                        <Name>Object_8560</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8562" type="std:UDINT" IndexInDevDesc="100">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_562" visiblename="AdrOffset_8560" offlineaccess="read" onlineaccess="read">4294967295</Value>
+                        <Name>AdrOffset_8560</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8563" type="std:USINT" IndexInDevDesc="101">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_563" visiblename="BitOffset_8560" offlineaccess="read" onlineaccess="read">0</Value>
+                        <Name>BitOffset_8560</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8564" type="std:USINT" IndexInDevDesc="102">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_564" visiblename="BitLength_8560" offlineaccess="read" onlineaccess="read">0</Value>
+                        <Name>BitLength_8560</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8570" type="std:INT" IndexInDevDesc="103">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_570" visiblename="Touch Probe Status" offlineaccess="read" onlineaccess="read">20185</Value>
+                        <Name>Touch Probe Status</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8571" type="std:STRING" IndexInDevDesc="104">
+                        <Attributes download="false" offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_571" visiblename="Object_8570" offlineaccess="read" onlineaccess="read">16#60B9:16#00</Value>
+                        <Name>Object_8570</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8572" type="std:UDINT" IndexInDevDesc="105">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_572" visiblename="AdrOffset_8570" offlineaccess="read" onlineaccess="read">4294967295</Value>
+                        <Name>AdrOffset_8570</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8573" type="std:USINT" IndexInDevDesc="106">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_573" visiblename="BitOffset_8570" offlineaccess="read" onlineaccess="read">0</Value>
+                        <Name>BitOffset_8570</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8574" type="std:USINT" IndexInDevDesc="107">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_574" visiblename="BitLength_8570" offlineaccess="read" onlineaccess="read">0</Value>
+                        <Name>BitLength_8570</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8580" type="std:INT" IndexInDevDesc="108">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_580" visiblename="Touch Probe 1 rising edge" offlineaccess="read" onlineaccess="read">20186</Value>
+                        <Name>Touch Probe 1 rising edge</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8581" type="std:STRING" IndexInDevDesc="109">
+                        <Attributes download="false" offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_581" visiblename="Object_8580" offlineaccess="read" onlineaccess="read">16#60BA:16#00</Value>
+                        <Name>Object_8580</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8582" type="std:UDINT" IndexInDevDesc="110">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_582" visiblename="AdrOffset_8580" offlineaccess="read" onlineaccess="read">4294967295</Value>
+                        <Name>AdrOffset_8580</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8583" type="std:USINT" IndexInDevDesc="111">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_583" visiblename="BitOffset_8580" offlineaccess="read" onlineaccess="read">0</Value>
+                        <Name>BitOffset_8580</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8584" type="std:USINT" IndexInDevDesc="112">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_584" visiblename="BitLength_8580" offlineaccess="read" onlineaccess="read">0</Value>
+                        <Name>BitLength_8580</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8590" type="std:INT" IndexInDevDesc="113">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_590" visiblename="Touch Probe 1 falling edge" offlineaccess="read" onlineaccess="read">20187</Value>
+                        <Name>Touch Probe 1 falling edge</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8591" type="std:STRING" IndexInDevDesc="114">
+                        <Attributes download="false" offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_591" visiblename="Object_8590" offlineaccess="read" onlineaccess="read">16#60BB:16#00</Value>
+                        <Name>Object_8590</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8592" type="std:UDINT" IndexInDevDesc="115">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_592" visiblename="AdrOffset_8590" offlineaccess="read" onlineaccess="read">4294967295</Value>
+                        <Name>AdrOffset_8590</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8593" type="std:USINT" IndexInDevDesc="116">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_593" visiblename="BitOffset_8590" offlineaccess="read" onlineaccess="read">0</Value>
+                        <Name>BitOffset_8590</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8594" type="std:USINT" IndexInDevDesc="117">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_594" visiblename="BitLength_8590" offlineaccess="read" onlineaccess="read">0</Value>
+                        <Name>BitLength_8590</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8600" type="std:INT" IndexInDevDesc="118">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_600" visiblename="Touch Probe 2 rising edge" offlineaccess="read" onlineaccess="read">20188</Value>
+                        <Name>Touch Probe 2 rising edge</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8601" type="std:STRING" IndexInDevDesc="119">
+                        <Attributes download="false" offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_601" visiblename="Object_8600" offlineaccess="read" onlineaccess="read">16#60BC:16#00</Value>
+                        <Name>Object_8600</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8602" type="std:UDINT" IndexInDevDesc="120">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_602" visiblename="AdrOffset_8600" offlineaccess="read" onlineaccess="read">4294967295</Value>
+                        <Name>AdrOffset_8600</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8603" type="std:USINT" IndexInDevDesc="121">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_603" visiblename="BitOffset_8600" offlineaccess="read" onlineaccess="read">0</Value>
+                        <Name>BitOffset_8600</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8604" type="std:USINT" IndexInDevDesc="122">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_604" visiblename="BitLength_8600" offlineaccess="read" onlineaccess="read">0</Value>
+                        <Name>BitLength_8600</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8610" type="std:INT" IndexInDevDesc="123">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_610" visiblename="Touch Probe 2 falling edge" offlineaccess="read" onlineaccess="read">20189</Value>
+                        <Name>Touch Probe 2 falling edge</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8611" type="std:STRING" IndexInDevDesc="124">
+                        <Attributes download="false" offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_611" visiblename="Object_8600" offlineaccess="read" onlineaccess="read">16#60BD:16#00</Value>
+                        <Name>Object_8600</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8612" type="std:UDINT" IndexInDevDesc="125">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_612" visiblename="AdrOffset_8600" offlineaccess="read" onlineaccess="read">4294967295</Value>
+                        <Name>AdrOffset_8600</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8613" type="std:USINT" IndexInDevDesc="126">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_613" visiblename="BitOffset_8600" offlineaccess="read" onlineaccess="read">0</Value>
+                        <Name>BitOffset_8600</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8614" type="std:USINT" IndexInDevDesc="127">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_614" visiblename="BitLength_8600" offlineaccess="read" onlineaccess="read">0</Value>
+                        <Name>BitLength_8600</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8620" type="std:INT" IndexInDevDesc="128">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_620" visiblename="Following error (A632)" offlineaccess="read" onlineaccess="read">1243</Value>
+                        <Name>Following error (A632)</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8621" type="std:STRING" IndexInDevDesc="129">
+                        <Attributes download="false" offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_621" visiblename="Object_8620" offlineaccess="read" onlineaccess="read">16#60F4:16#00</Value>
+                        <Name>Object_8620</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8622" type="std:UDINT" IndexInDevDesc="130">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_622" visiblename="AdrOffset_8620" offlineaccess="read" onlineaccess="read">4294967295</Value>
+                        <Name>AdrOffset_8620</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8623" type="std:USINT" IndexInDevDesc="131">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_623" visiblename="BitOffset_8620" offlineaccess="read" onlineaccess="read">0</Value>
+                        <Name>BitOffset_8620</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8624" type="std:USINT" IndexInDevDesc="132">
+                        <Attributes offlineaccess="read" onlineaccess="read" />
+                        <Value name="_x0038_624" visiblename="BitLength_8620" offlineaccess="read" onlineaccess="read">0</Value>
+                        <Name>BitLength_8620</Name>
+                      </Parameter>
+                      <Parameter ParameterId="8999" type="std:BOOL" IndexInDevDesc="133">
+                        <Attributes />
+                        <Value name="_x0038_999" visiblename="Automatic Mapping">TRUE</Value>
+                        <Name>Automatic Mapping</Name>
+                      </Parameter>
+                    </ParameterSection>
+                    <ParameterSection>
+                      <Name>logical device settings</Name>
+                      <Description />
+                      <Parameter ParameterId="6000" type="std:USINT" IndexInDevDesc="134">
+                        <Attributes />
+                        <Value name="_x0036_000" visiblename="logical device number">0</Value>
+                        <Name>logical device number</Name>
+                      </Parameter>
+                    </ParameterSection>
+                    <ParameterSection>
+                      <Name>standard driver settings</Name>
+                      <Description />
+                      <Parameter ParameterId="1070" type="std:LREAL" IndexInDevDesc="135">
+                        <Attributes />
+                        <Value name="_x0031_070" visiblename="fSetActTimeLagCycles" desc="time lag between set- and act-values">3</Value>
+                        <Name>fSetActTimeLagCycles</Name>
+                        <Description>time lag between set- and act-values</Description>
+                      </Parameter>
+                      <Parameter ParameterId="7000" type="std:BOOL" IndexInDevDesc="136">
+                        <Attributes />
+                        <Value name="_x0037_000" visiblename="Set60C2">TRUE</Value>
+                        <Name>Set60C2</Name>
+                      </Parameter>
+                    </ParameterSection>
+                    <ParameterSection>
+                      <Name>AXIS_REF: DSP402 configuration</Name>
+                      <Description />
+                      <Parameter ParameterId="7100" type="std:BOOL" IndexInDevDesc="137">
+                        <Attributes />
+                        <Value name="_x0037_100" visiblename="DSP402._bImmediateDisabling" desc="TRUE: when bRegulator is reset to FALSE, disable immediately (go to &quot;Switch on disabled&quot; directly); FALSE: go via &quot;switched on&quot; and &quot;ready to switch on&quot;">FALSE</Value>
+                        <Name>DSP402._bImmediateDisabling</Name>
+                        <Description>TRUE: when bRegulator is reset to FALSE, disable immediately (go to "Switch on disabled" directly); FALSE: go via "switched on" and "ready to switch on"</Description>
+                      </Parameter>
+                      <Parameter ParameterId="7101" type="std:UINT" IndexInDevDesc="138">
+                        <Attributes />
+                        <Value name="_x0037_101" visiblename="DSP402._uiPreHomingWait" desc="cycles to wait in PRE_HOMING before setting Bit4">10</Value>
+                        <Name>DSP402._uiPreHomingWait</Name>
+                        <Description>cycles to wait in PRE_HOMING before setting Bit4</Description>
+                      </Parameter>
+                      <Parameter ParameterId="7102" type="std:UINT" IndexInDevDesc="139">
+                        <Attributes />
+                        <Value name="_x0037_102" visiblename="DSP402._uiPostHomingWait" desc="cycles to wait in HOMING_DONE after homing (precond.: bRegulatorOn=TRUE)">0</Value>
+                        <Name>DSP402._uiPostHomingWait</Name>
+                        <Description>cycles to wait in HOMING_DONE after homing (precond.: bRegulatorOn=TRUE)</Description>
+                      </Parameter>
+                      <Parameter ParameterId="7103" type="std:UINT" IndexInDevDesc="140">
+                        <Attributes />
+                        <Value name="_x0037_103" visiblename="DSP402._uiHomingMinCycles" desc="number of cycles at beginning of HOMING, where done bits are ignored">0</Value>
+                        <Name>DSP402._uiHomingMinCycles</Name>
+                        <Description>number of cycles at beginning of HOMING, where done bits are ignored</Description>
+                      </Parameter>
+                      <Parameter ParameterId="7104" type="std:UINT" IndexInDevDesc="141">
+                        <Attributes />
+                        <Value name="_x0037_104" visiblename="DSP402._uiWaitCyclesForStateSwitch" desc="cycles to wait until detecting an failure and switching back">1000</Value>
+                        <Name>DSP402._uiWaitCyclesForStateSwitch</Name>
+                        <Description>cycles to wait until detecting an failure and switching back</Description>
+                      </Parameter>
+                      <Parameter ParameterId="7105" type="std:BOOL" IndexInDevDesc="142">
+                        <Attributes />
+                        <Value name="_x0037_105" visiblename="DSP402._bPreHomingWaitBit12Clear" desc="TRUE: before starting the homing procedure (by setting Bit4) wait that Bit12 is FALSE">FALSE</Value>
+                        <Name>DSP402._bPreHomingWaitBit12Clear</Name>
+                        <Description>TRUE: before starting the homing procedure (by setting Bit4) wait that Bit12 is FALSE</Description>
+                      </Parameter>
+                      <Parameter ParameterId="7106" type="std:BOOL" IndexInDevDesc="143">
+                        <Attributes />
+                        <Value name="_x0037_106" visiblename="DSP402._bCheckBit10PostHoming" desc="TRUE: switch to HOMING_DONE if  Bit12 AND Bit10 is true (correct acc. DSP402); FALSE: ignore Bit10">TRUE</Value>
+                        <Name>DSP402._bCheckBit10PostHoming</Name>
+                        <Description>TRUE: switch to HOMING_DONE if  Bit12 AND Bit10 is true (correct acc. DSP402); FALSE: ignore Bit10</Description>
+                      </Parameter>
+                      <Parameter ParameterId="7107" type="std:BOOL" IndexInDevDesc="144">
+                        <Attributes />
+                        <Value name="_x0037_107" visiblename="DSP402._bCheckOpMode" desc="FALSE: do not re-read and check if mode has been accepted by the drive">TRUE</Value>
+                        <Name>DSP402._bCheckOpMode</Name>
+                        <Description>FALSE: do not re-read and check if mode has been accepted by the drive</Description>
+                      </Parameter>
+                      <Parameter ParameterId="7108" type="std:BOOL" IndexInDevDesc="145">
+                        <Attributes />
+                        <Value name="_x0037_108" visiblename="DSP402._bForbidReenableDuringDisabling" desc="(only relevant when _bImmediateDisabling=TRUE) TRUE: the drive is step by step disabled until the drive signals to be in &quot;Ready to switch on&quot; before a new enable command is processed.">FALSE</Value>
+                        <Name>DSP402._bForbidReenableDuringDisabling</Name>
+                        <Description>(only relevant when _bImmediateDisabling=TRUE) TRUE: the drive is step by step disabled until the drive signals to be in "Ready to switch on" before a new enable command is processed.</Description>
+                      </Parameter>
+                      <Parameter ParameterId="7109" type="std:BOOL" IndexInDevDesc="146">
+                        <Attributes />
+                        <Value name="_x0037_109" visiblename="DSP402._bCheckBit12InPositionMode" desc="TRUE: AxisIsReadyForMotion checks bit 12 in CSP or IP, FALSE: AxisIsReadyForMotion does not check bit 12.">TRUE</Value>
+                        <Name>DSP402._bCheckBit12InPositionMode</Name>
+                        <Description>TRUE: AxisIsReadyForMotion checks bit 12 in CSP or IP, FALSE: AxisIsReadyForMotion does not check bit 12.</Description>
+                      </Parameter>
+                      <Parameter ParameterId="7110" type="std:BOOL" IndexInDevDesc="147">
+                        <Attributes />
+                        <Value name="_x0037_110" visiblename="DSP402._bDoHaltWhenStopInterruptsHome" desc="TRUE: when MC_Stop interrupts MC_Halt abort homing with Bit8; FALSE: do not set Bit8 but directly switch operation mode.">TRUE</Value>
+                        <Name>DSP402._bDoHaltWhenStopInterruptsHome</Name>
+                        <Description>TRUE: when MC_Stop interrupts MC_Halt abort homing with Bit8; FALSE: do not set Bit8 but directly switch operation mode.</Description>
+                      </Parameter>
+                      <Parameter ParameterId="7111" type="std:BOOL" IndexInDevDesc="148">
+                        <Attributes />
+                        <Value name="_x0037_111" visiblename="DSP402._bCheckBit13InHomingMode" desc="TRUE: in HOMING_ACTIVE, wStatusWord.13 = TRUE leads to errorstop and (depending on _bDoHaltWhenStopInterruptsHome) wControlWord.8 := TRUE.">TRUE</Value>
+                        <Name>DSP402._bCheckBit13InHomingMode</Name>
+                        <Description>TRUE: in HOMING_ACTIVE, wStatusWord.13 = TRUE leads to errorstop and (depending on _bDoHaltWhenStopInterruptsHome) wControlWord.8 := TRUE.</Description>
+                      </Parameter>
+                      <Parameter ParameterId="7112" type="std:BOOL" IndexInDevDesc="149">
+                        <Attributes />
+                        <Value name="_x0037_112" visiblename="DSP402._bSetControlBit4InCSP" desc="TRUE: set bit 4 of status word also in CSP mode.  Some drives require this, although it is non-standard.">FALSE</Value>
+                        <Name>DSP402._bSetControlBit4InCSP</Name>
+                        <Description>TRUE: set bit 4 of status word also in CSP mode.  Some drives require this, although it is non-standard.</Description>
+                      </Parameter>
+                      <Parameter ParameterId="7113" type="std:WORD" IndexInDevDesc="150">
+                        <Attributes />
+                        <Value name="_x0037_113" visiblename="DSP402._uiHomingWaitListeningBit13" desc="In state HOMING_ACTIVE, do not listen to bit 13 during this number of cycles from setting bit 4.(Some drives need some time to reset bit 13.)">0</Value>
+                        <Name>DSP402._uiHomingWaitListeningBit13</Name>
+                        <Description>In state HOMING_ACTIVE, do not listen to bit 13 during this number of cycles from setting bit 4.(Some drives need some time to reset bit 13.)</Description>
+                      </Parameter>
+                      <Parameter ParameterId="7114" type="std:DWORD" IndexInDevDesc="151">
+                        <Attributes />
+                        <Value name="_x0037_114" visiblename="DSP402._dwStatesImmediateDisabling" desc="Only relevant when _bImmediateDisabling=FALSE.  Bit-Mask of the states for which immediate disabling turned on.&#xA;    - Bit 0: Normal operation&#xA;    - Bit 1: Quickstop&#xA;    - Bit 2: External Quickstop&#xA;    - Bit 3: Homing&#xA;Example: assuming _bImmediateDisabling is FALSE, the value 2#0110 means that only for states 'Normal operation' and 'Homing', immediate disabling is turned off. For states 'Quickstop' and 'External Quickstop', immediate disabling is turned on.">0</Value>
+                        <Name>DSP402._dwStatesImmediateDisabling</Name>
+                        <Description>Only relevant when _bImmediateDisabling=FALSE.  Bit-Mask of the states for which immediate disabling turned on.
+    - Bit 0: Normal operation
+    - Bit 1: Quickstop
+    - Bit 2: External Quickstop
+    - Bit 3: Homing
+Example: assuming _bImmediateDisabling is FALSE, the value 2#0110 means that only for states 'Normal operation' and 'Homing', immediate disabling is turned off. For states 'Quickstop' and 'External Quickstop', immediate disabling is turned on.</Description>
+                      </Parameter>
+                      <Parameter ParameterId="7115" type="std:BOOL" IndexInDevDesc="152">
+                        <Attributes />
+                        <Value name="_x0037_115" visiblename="DSP402._bRegulatorOnRequiresVoltageEnabled" desc="Whether bit 4 of the status word, voltage enabled, needs to be TRUE for bRegulatorRealState to become TRUE.">FALSE</Value>
+                        <Name>DSP402._bRegulatorOnRequiresVoltageEnabled</Name>
+                        <Description>Whether bit 4 of the status word, voltage enabled, needs to be TRUE for bRegulatorRealState to become TRUE.</Description>
+                      </Parameter>
+                      <Parameter ParameterId="7116" type="std:BOOL" IndexInDevDesc="153">
+                        <Attributes />
+                        <Value name="_x0037_116" visiblename="DSP402._bDriveStartRequiresOperationEnabled" desc="Whether bit 2 of the status word, operation enabled, needs to be TRUE for bDriveStartRealState to become TRUE.">TRUE</Value>
+                        <Name>DSP402._bDriveStartRequiresOperationEnabled</Name>
+                        <Description>Whether bit 2 of the status word, operation enabled, needs to be TRUE for bDriveStartRealState to become TRUE.</Description>
+                      </Parameter>
+                    </ParameterSection>
+                    <Parameter ParameterId="5007" type="std:BOOL">
+                      <Attributes onlineaccess="read" />
+                      <Value name="_x0035_007" visiblename="IsLinearMotor" onlineaccess="read">TRUE</Value>
+                      <Name>IsLinearMotor</Name>
+                    </Parameter>
+                    <Parameter ParameterId="8015" type="std:STRING">
+                      <Attributes offlineaccess="read" onlineaccess="read" />
+                      <Value name="_x0038_015" visiblename="Address_8010" offlineaccess="read" onlineaccess="read">'%QW8'</Value>
+                      <Name>Address_8010</Name>
+                    </Parameter>
+                    <Parameter ParameterId="8016" type="std:STRING">
+                      <Attributes offlineaccess="read" onlineaccess="read" />
+                      <Value name="_x0038_016" visiblename="Type_8010" offlineaccess="read" onlineaccess="read">'UINT'</Value>
+                      <Name>Type_8010</Name>
+                    </Parameter>
+                    <Parameter ParameterId="8017" type="std:POINTER TO BYTE">
+                      <Attributes offlineaccess="read" onlineaccess="read" />
+                      <Value name="_x0038_017" visiblename="AddressPointer_8010" offlineaccess="read" onlineaccess="read">ADR(%QW8)</Value>
+                      <Name>AddressPointer_8010</Name>
+                    </Parameter>
+                    <Parameter ParameterId="8025" type="std:STRING">
+                      <Attributes offlineaccess="read" onlineaccess="read" />
+                      <Value name="_x0038_025" visiblename="Address_8020" offlineaccess="read" onlineaccess="read">'%QD5'</Value>
+                      <Name>Address_8020</Name>
+                    </Parameter>
+                    <Parameter ParameterId="8026" type="std:STRING">
+                      <Attributes offlineaccess="read" onlineaccess="read" />
+                      <Value name="_x0038_026" visiblename="Type_8020" offlineaccess="read" onlineaccess="read">'DINT'</Value>
+                      <Name>Type_8020</Name>
+                    </Parameter>
+                    <Parameter ParameterId="8027" type="std:POINTER TO BYTE">
+                      <Attributes offlineaccess="read" onlineaccess="read" />
+                      <Value name="_x0038_027" visiblename="AddressPointer_8020" offlineaccess="read" onlineaccess="read">ADR(%QD5)</Value>
+                      <Name>AddressPointer_8020</Name>
+                    </Parameter>
+                    <Parameter ParameterId="8035" type="std:STRING">
+                      <Attributes offlineaccess="read" onlineaccess="read" />
+                      <Value name="_x0038_035" visiblename="Address_8030" offlineaccess="read" onlineaccess="read">''</Value>
+                      <Name>Address_8030</Name>
+                    </Parameter>
+                    <Parameter ParameterId="8036" type="std:STRING">
+                      <Attributes offlineaccess="read" onlineaccess="read" />
+                      <Value name="_x0038_036" visiblename="Type_8030" offlineaccess="read" onlineaccess="read">''</Value>
+                      <Name>Type_8030</Name>
+                    </Parameter>
+                    <Parameter ParameterId="8037" type="std:POINTER TO BYTE">
+                      <Attributes offlineaccess="read" onlineaccess="read" />
+                      <Value name="_x0038_037" visiblename="AddressPointer_8030" offlineaccess="read" onlineaccess="read">0</Value>
+                      <Name>AddressPointer_8030</Name>
+                    </Parameter>
+                    <Parameter ParameterId="8045" type="std:STRING">
+                      <Attributes offlineaccess="read" onlineaccess="read" />
+                      <Value name="_x0038_045" visiblename="Address_8040" offlineaccess="read" onlineaccess="read">''</Value>
+                      <Name>Address_8040</Name>
+                    </Parameter>
+                    <Parameter ParameterId="8046" type="std:STRING">
+                      <Attributes offlineaccess="read" onlineaccess="read" />
+                      <Value name="_x0038_046" visiblename="Type_8040" offlineaccess="read" onlineaccess="read">''</Value>
+                      <Name>Type_8040</Name>
+                    </Parameter>
+                    <Parameter ParameterId="8047" type="std:POINTER TO BYTE">
+                      <Attributes offlineaccess="read" onlineaccess="read" />
+                      <Value name="_x0038_047" visiblename="AddressPointer_8040" offlineaccess="read" onlineaccess="read">0</Value>
+                      <Name>AddressPointer_8040</Name>
+                    </Parameter>
+                    <Parameter ParameterId="8055" type="std:STRING">
+                      <Attributes offlineaccess="read" onlineaccess="read" />
+                      <Value name="_x0038_055" visiblename="Address_8050" offlineaccess="read" onlineaccess="read">'%QB18'</Value>
+                      <Name>Address_8050</Name>
+                    </Parameter>
+                    <Parameter ParameterId="8056" type="std:STRING">
+                      <Attributes offlineaccess="read" onlineaccess="read" />
+                      <Value name="_x0038_056" visiblename="Type_8050" offlineaccess="read" onlineaccess="read">'SINT'</Value>
+                      <Name>Type_8050</Name>
+                    </Parameter>
+                    <Parameter ParameterId="8057" type="std:POINTER TO BYTE">
+                      <Attributes offlineaccess="read" onlineaccess="read" />
+                      <Value name="_x0038_057" visiblename="AddressPointer_8050" offlineaccess="read" onlineaccess="read">ADR(%QB18)</Value>
+                      <Name>AddressPointer_8050</Name>
+                    </Parameter>
+                    <Parameter ParameterId="8065" type="std:STRING">
+                      <Attributes offlineaccess="read" onlineaccess="read" />
+                      <Value name="_x0038_065" visiblename="Address_8060" offlineaccess="read" onlineaccess="read">''</Value>
+                      <Name>Address_8060</Name>
+                    </Parameter>
+                    <Parameter ParameterId="8066" type="std:STRING">
+                      <Attributes offlineaccess="read" onlineaccess="read" />
+                      <Value name="_x0038_066" visiblename="Type_8060" offlineaccess="read" onlineaccess="read">''</Value>
+                      <Name>Type_8060</Name>
+                    </Parameter>
+                    <Parameter ParameterId="8067" type="std:POINTER TO BYTE">
+                      <Attributes offlineaccess="read" onlineaccess="read" />
+                      <Value name="_x0038_067" visiblename="AddressPointer_8060" offlineaccess="read" onlineaccess="read">0</Value>
+                      <Name>AddressPointer_8060</Name>
+                    </Parameter>
+                    <Parameter ParameterId="8075" type="std:STRING">
+                      <Attributes offlineaccess="read" onlineaccess="read" />
+                      <Value name="_x0038_075" visiblename="Address_8070" offlineaccess="read" onlineaccess="read">''</Value>
+                      <Name>Address_8070</Name>
+                    </Parameter>
+                    <Parameter ParameterId="8076" type="std:STRING">
+                      <Attributes offlineaccess="read" onlineaccess="read" />
+                      <Value name="_x0038_076" visiblename="Type_8070" offlineaccess="read" onlineaccess="read">''</Value>
+                      <Name>Type_8070</Name>
+                    </Parameter>
+                    <Parameter ParameterId="8077" type="std:POINTER TO BYTE">
+                      <Attributes offlineaccess="read" onlineaccess="read" />
+                      <Value name="_x0038_077" visiblename="AddressPointer_8070" offlineaccess="read" onlineaccess="read">0</Value>
+                      <Name>AddressPointer_8070</Name>
+                    </Parameter>
+                    <Parameter ParameterId="8085" type="std:STRING">
+                      <Attributes offlineaccess="read" onlineaccess="read" />
+                      <Value name="_x0038_085" visiblename="Address_8080" offlineaccess="read" onlineaccess="read">''</Value>
+                      <Name>Address_8080</Name>
+                    </Parameter>
+                    <Parameter ParameterId="8086" type="std:STRING">
+                      <Attributes offlineaccess="read" onlineaccess="read" />
+                      <Value name="_x0038_086" visiblename="Type_8080" offlineaccess="read" onlineaccess="read">''</Value>
+                      <Name>Type_8080</Name>
+                    </Parameter>
+                    <Parameter ParameterId="8087" type="std:POINTER TO BYTE">
+                      <Attributes offlineaccess="read" onlineaccess="read" />
+                      <Value name="_x0038_087" visiblename="AddressPointer_8080" offlineaccess="read" onlineaccess="read">0</Value>
+                      <Name>AddressPointer_8080</Name>
+                    </Parameter>
+                    <Parameter ParameterId="8095" type="std:STRING">
+                      <Attributes offlineaccess="read" onlineaccess="read" />
+                      <Value name="_x0038_095" visiblename="Address_8090" offlineaccess="read" onlineaccess="read">''</Value>
+                      <Name>Address_8090</Name>
+                    </Parameter>
+                    <Parameter ParameterId="8096" type="std:STRING">
+                      <Attributes offlineaccess="read" onlineaccess="read" />
+                      <Value name="_x0038_096" visiblename="Type_8090" offlineaccess="read" onlineaccess="read">''</Value>
+                      <Name>Type_8090</Name>
+                    </Parameter>
+                    <Parameter ParameterId="8097" type="std:POINTER TO BYTE">
+                      <Attributes offlineaccess="read" onlineaccess="read" />
+                      <Value name="_x0038_097" visiblename="AddressPointer_8090" offlineaccess="read" onlineaccess="read">0</Value>
+                      <Name>AddressPointer_8090</Name>
+                    </Parameter>
+                    <Parameter ParameterId="8515" type="std:STRING">
+                      <Attributes offlineaccess="read" onlineaccess="read" />
+                      <Value name="_x0038_515" visiblename="Address_8510" offlineaccess="read" onlineaccess="read">'%IW12'</Value>
+                      <Name>Address_8510</Name>
+                    </Parameter>
+                    <Parameter ParameterId="8516" type="std:STRING">
+                      <Attributes offlineaccess="read" onlineaccess="read" />
+                      <Value name="_x0038_516" visiblename="Type_8510" offlineaccess="read" onlineaccess="read">'UINT'</Value>
+                      <Name>Type_8510</Name>
+                    </Parameter>
+                    <Parameter ParameterId="8517" type="std:POINTER TO BYTE">
+                      <Attributes offlineaccess="read" onlineaccess="read" />
+                      <Value name="_x0038_517" visiblename="AddressPointer_8510" offlineaccess="read" onlineaccess="read">ADR(%IW12)</Value>
+                      <Name>AddressPointer_8510</Name>
+                    </Parameter>
+                    <Parameter ParameterId="8525" type="std:STRING">
+                      <Attributes offlineaccess="read" onlineaccess="read" />
+                      <Value name="_x0038_525" visiblename="Address_8520" offlineaccess="read" onlineaccess="read">'%ID7'</Value>
+                      <Name>Address_8520</Name>
+                    </Parameter>
+                    <Parameter ParameterId="8526" type="std:STRING">
+                      <Attributes offlineaccess="read" onlineaccess="read" />
+                      <Value name="_x0038_526" visiblename="Type_8520" offlineaccess="read" onlineaccess="read">'DINT'</Value>
+                      <Name>Type_8520</Name>
+                    </Parameter>
+                    <Parameter ParameterId="8527" type="std:POINTER TO BYTE">
+                      <Attributes offlineaccess="read" onlineaccess="read" />
+                      <Value name="_x0038_527" visiblename="AddressPointer_8520" offlineaccess="read" onlineaccess="read">ADR(%ID7)</Value>
+                      <Name>AddressPointer_8520</Name>
+                    </Parameter>
+                    <Parameter ParameterId="8535" type="std:STRING">
+                      <Attributes offlineaccess="read" onlineaccess="read" />
+                      <Value name="_x0038_535" visiblename="Address_8530" offlineaccess="read" onlineaccess="read">'%ID8'</Value>
+                      <Name>Address_8530</Name>
+                    </Parameter>
+                    <Parameter ParameterId="8536" type="std:STRING">
+                      <Attributes offlineaccess="read" onlineaccess="read" />
+                      <Value name="_x0038_536" visiblename="Type_8530" offlineaccess="read" onlineaccess="read">'DINT'</Value>
+                      <Name>Type_8530</Name>
+                    </Parameter>
+                    <Parameter ParameterId="8537" type="std:POINTER TO BYTE">
+                      <Attributes offlineaccess="read" onlineaccess="read" />
+                      <Value name="_x0038_537" visiblename="AddressPointer_8530" offlineaccess="read" onlineaccess="read">ADR(%ID8)</Value>
+                      <Name>AddressPointer_8530</Name>
+                    </Parameter>
+                    <Parameter ParameterId="8545" type="std:STRING">
+                      <Attributes offlineaccess="read" onlineaccess="read" />
+                      <Value name="_x0038_545" visiblename="Address_8540" offlineaccess="read" onlineaccess="read">''</Value>
+                      <Name>Address_8540</Name>
+                    </Parameter>
+                    <Parameter ParameterId="8546" type="std:STRING">
+                      <Attributes offlineaccess="read" onlineaccess="read" />
+                      <Value name="_x0038_546" visiblename="Type_8540" offlineaccess="read" onlineaccess="read">''</Value>
+                      <Name>Type_8540</Name>
+                    </Parameter>
+                    <Parameter ParameterId="8547" type="std:POINTER TO BYTE">
+                      <Attributes offlineaccess="read" onlineaccess="read" />
+                      <Value name="_x0038_547" visiblename="AddressPointer_8540" offlineaccess="read" onlineaccess="read">0</Value>
+                      <Name>AddressPointer_8540</Name>
+                    </Parameter>
+                    <Parameter ParameterId="8555" type="std:STRING">
+                      <Attributes offlineaccess="read" onlineaccess="read" />
+                      <Value name="_x0038_555" visiblename="Address_8550" offlineaccess="read" onlineaccess="read">'%IB26'</Value>
+                      <Name>Address_8550</Name>
+                    </Parameter>
+                    <Parameter ParameterId="8556" type="std:STRING">
+                      <Attributes offlineaccess="read" onlineaccess="read" />
+                      <Value name="_x0038_556" visiblename="Type_8550" offlineaccess="read" onlineaccess="read">'SINT'</Value>
+                      <Name>Type_8550</Name>
+                    </Parameter>
+                    <Parameter ParameterId="8557" type="std:POINTER TO BYTE">
+                      <Attributes offlineaccess="read" onlineaccess="read" />
+                      <Value name="_x0038_557" visiblename="AddressPointer_8550" offlineaccess="read" onlineaccess="read">ADR(%IB26)</Value>
+                      <Name>AddressPointer_8550</Name>
+                    </Parameter>
+                    <Parameter ParameterId="8565" type="std:STRING">
+                      <Attributes offlineaccess="read" onlineaccess="read" />
+                      <Value name="_x0038_565" visiblename="Address_8560" offlineaccess="read" onlineaccess="read">''</Value>
+                      <Name>Address_8560</Name>
+                    </Parameter>
+                    <Parameter ParameterId="8566" type="std:STRING">
+                      <Attributes offlineaccess="read" onlineaccess="read" />
+                      <Value name="_x0038_566" visiblename="Type_8560" offlineaccess="read" onlineaccess="read">''</Value>
+                      <Name>Type_8560</Name>
+                    </Parameter>
+                    <Parameter ParameterId="8567" type="std:POINTER TO BYTE">
+                      <Attributes offlineaccess="read" onlineaccess="read" />
+                      <Value name="_x0038_567" visiblename="AddressPointer_8560" offlineaccess="read" onlineaccess="read">0</Value>
+                      <Name>AddressPointer_8560</Name>
+                    </Parameter>
+                    <Parameter ParameterId="8575" type="std:STRING">
+                      <Attributes offlineaccess="read" onlineaccess="read" />
+                      <Value name="_x0038_575" visiblename="Address_8570" offlineaccess="read" onlineaccess="read">''</Value>
+                      <Name>Address_8570</Name>
+                    </Parameter>
+                    <Parameter ParameterId="8576" type="std:STRING">
+                      <Attributes offlineaccess="read" onlineaccess="read" />
+                      <Value name="_x0038_576" visiblename="Type_8570" offlineaccess="read" onlineaccess="read">''</Value>
+                      <Name>Type_8570</Name>
+                    </Parameter>
+                    <Parameter ParameterId="8577" type="std:POINTER TO BYTE">
+                      <Attributes offlineaccess="read" onlineaccess="read" />
+                      <Value name="_x0038_577" visiblename="AddressPointer_8570" offlineaccess="read" onlineaccess="read">0</Value>
+                      <Name>AddressPointer_8570</Name>
+                    </Parameter>
+                    <Parameter ParameterId="8585" type="std:STRING">
+                      <Attributes offlineaccess="read" onlineaccess="read" />
+                      <Value name="_x0038_585" visiblename="Address_8580" offlineaccess="read" onlineaccess="read">''</Value>
+                      <Name>Address_8580</Name>
+                    </Parameter>
+                    <Parameter ParameterId="8586" type="std:STRING">
+                      <Attributes offlineaccess="read" onlineaccess="read" />
+                      <Value name="_x0038_586" visiblename="Type_8580" offlineaccess="read" onlineaccess="read">''</Value>
+                      <Name>Type_8580</Name>
+                    </Parameter>
+                    <Parameter ParameterId="8587" type="std:POINTER TO BYTE">
+                      <Attributes offlineaccess="read" onlineaccess="read" />
+                      <Value name="_x0038_587" visiblename="AddressPointer_8580" offlineaccess="read" onlineaccess="read">0</Value>
+                      <Name>AddressPointer_8580</Name>
+                    </Parameter>
+                    <Parameter ParameterId="8595" type="std:STRING">
+                      <Attributes offlineaccess="read" onlineaccess="read" />
+                      <Value name="_x0038_595" visiblename="Address_8590" offlineaccess="read" onlineaccess="read">''</Value>
+                      <Name>Address_8590</Name>
+                    </Parameter>
+                    <Parameter ParameterId="8596" type="std:STRING">
+                      <Attributes offlineaccess="read" onlineaccess="read" />
+                      <Value name="_x0038_596" visiblename="Type_8590" offlineaccess="read" onlineaccess="read">''</Value>
+                      <Name>Type_8590</Name>
+                    </Parameter>
+                    <Parameter ParameterId="8597" type="std:POINTER TO BYTE">
+                      <Attributes offlineaccess="read" onlineaccess="read" />
+                      <Value name="_x0038_597" visiblename="AddressPointer_8590" offlineaccess="read" onlineaccess="read">0</Value>
+                      <Name>AddressPointer_8590</Name>
+                    </Parameter>
+                    <Parameter ParameterId="8605" type="std:STRING">
+                      <Attributes offlineaccess="read" onlineaccess="read" />
+                      <Value name="_x0038_605" visiblename="Address_8600" offlineaccess="read" onlineaccess="read">''</Value>
+                      <Name>Address_8600</Name>
+                    </Parameter>
+                    <Parameter ParameterId="8606" type="std:STRING">
+                      <Attributes offlineaccess="read" onlineaccess="read" />
+                      <Value name="_x0038_606" visiblename="Type_8600" offlineaccess="read" onlineaccess="read">''</Value>
+                      <Name>Type_8600</Name>
+                    </Parameter>
+                    <Parameter ParameterId="8607" type="std:POINTER TO BYTE">
+                      <Attributes offlineaccess="read" onlineaccess="read" />
+                      <Value name="_x0038_607" visiblename="AddressPointer_8600" offlineaccess="read" onlineaccess="read">0</Value>
+                      <Name>AddressPointer_8600</Name>
+                    </Parameter>
+                    <Parameter ParameterId="8615" type="std:STRING">
+                      <Attributes offlineaccess="read" onlineaccess="read" />
+                      <Value name="_x0038_615" visiblename="Address_8610" offlineaccess="read" onlineaccess="read">''</Value>
+                      <Name>Address_8610</Name>
+                    </Parameter>
+                    <Parameter ParameterId="8616" type="std:STRING">
+                      <Attributes offlineaccess="read" onlineaccess="read" />
+                      <Value name="_x0038_616" visiblename="Type_8610" offlineaccess="read" onlineaccess="read">''</Value>
+                      <Name>Type_8610</Name>
+                    </Parameter>
+                    <Parameter ParameterId="8617" type="std:POINTER TO BYTE">
+                      <Attributes offlineaccess="read" onlineaccess="read" />
+                      <Value name="_x0038_617" visiblename="AddressPointer_8610" offlineaccess="read" onlineaccess="read">0</Value>
+                      <Name>AddressPointer_8610</Name>
+                    </Parameter>
+                    <Parameter ParameterId="8625" type="std:STRING">
+                      <Attributes offlineaccess="read" onlineaccess="read" />
+                      <Value name="_x0038_625" visiblename="Address_8620" offlineaccess="read" onlineaccess="read">''</Value>
+                      <Name>Address_8620</Name>
+                    </Parameter>
+                    <Parameter ParameterId="8626" type="std:STRING">
+                      <Attributes offlineaccess="read" onlineaccess="read" />
+                      <Value name="_x0038_626" visiblename="Type_8620" offlineaccess="read" onlineaccess="read">''</Value>
+                      <Name>Type_8620</Name>
+                    </Parameter>
+                    <Parameter ParameterId="8627" type="std:POINTER TO BYTE">
+                      <Attributes offlineaccess="read" onlineaccess="read" />
+                      <Value name="_x0038_627" visiblename="AddressPointer_8620" offlineaccess="read" onlineaccess="read">0</Value>
+                      <Name>AddressPointer_8620</Name>
+                    </Parameter>
+                  </HostParameterSet>
+                </Connector>
+                <Connector moduleType="1248" interface="Common.SoftMotion.Logical" connectorId="1" hostpath="0">
+                  <HostParameterSet />
+                </Connector>
+                <DeviceParameterSet />
+              </DeviceType>
+            </Device>
+          </data>
+        </addData>
+      </configuration>
+    </configurations>
+  </instances>
+</project>

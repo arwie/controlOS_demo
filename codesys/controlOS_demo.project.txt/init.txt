@@ -3,9 +3,23 @@ VAR_OUTPUT
 	done: BOOL;
 END_VAR
 VAR
-
+	GroupEnable: MC_GroupEnable;
 END_VAR
 ////////////////////////////////
 
 done := TRUE;
 
+
+GroupEnable(
+	AxisGroup := Robot,
+	Execute := done,
+);
+done := done AND GroupEnable.Done;
+
+
+done := done AND (
+	StepIM_A.CANopenState = CIA405.DEVICE_STATE.OPERATIONAL AND
+	StepIM_B.CANopenState = CIA405.DEVICE_STATE.OPERATIONAL AND
+	StepIM_C.CANopenState = CIA405.DEVICE_STATE.OPERATIONAL
+);
+app.fbk.init_done := done;

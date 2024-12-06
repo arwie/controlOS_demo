@@ -16,6 +16,7 @@
         <Library Name="#CmpApp" Namespace="CmpApp" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="false" LinkAllContent="false" DefaultResolution="CmpApp, * (System)" />
         <Library Name="IoDrvEtherCAT, 4.1.0.0 (3S - Smart Software Solutions GmbH)" Namespace="IoDrvEthercatLib" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="false" LinkAllContent="false" />
         <Library Name="#Standard" Namespace="Standard" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="false" LinkAllContent="false" DefaultResolution="Standard, * (System)" />
+        <Library Name="#MemoryUtils" Namespace="MEMUtils" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="false" LinkAllContent="false" DefaultResolution="MemoryUtils, * (3S - Smart Software Solutions GmbH)" />
         <PlaceholderRedirections>
           <PlaceholderRedirection Placeholder="SysCpuHandling" Redirection="SysCpuHandling, 3.5.17.0 (System)" />
           <PlaceholderRedirection Placeholder="CmpIecTask" Redirection="CmpIecTask, 3.5.20.0 (System)" />
@@ -55,6 +56,10 @@
           <PlaceholderRedirection Placeholder="CmpEventMgr Implementation" Redirection="CmpEventMgr Implementation, 3.5.17.0 (System)" />
           <PlaceholderRedirection Placeholder="Component Manager" Redirection="Component Manager, 3.5.17.0 (System)" />
           <PlaceholderRedirection Placeholder="SysMem" Redirection="SysMem, 3.5.17.0 (System)" />
+          <PlaceholderRedirection Placeholder="MemoryUtils" Redirection="MemoryUtils, 3.5.18.0 (3S - Smart Software Solutions GmbH)" />
+          <PlaceholderRedirection Placeholder="CAA MemBlockMan" Redirection="CAA Memory Block Manager Extern, 3.5.5.0 (CAA Technical Workgroup)" />
+          <PlaceholderRedirection Placeholder="CAA Callback" Redirection="CAA Callback Extern, 3.5.5.40 (CAA Technical Workgroup)" />
+          <PlaceholderRedirection Placeholder="CAA ResMan" Redirection="CAA Ressource Manager Extern, 3.5.5.0 (CAA Technical Workgroup)" />
         </PlaceholderRedirections>
         <addData />
       </Libraries>

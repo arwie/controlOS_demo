@@ -1,0 +1,113 @@
+PROGRAM Exec_Robot
+VAR
+	GroupReadSetPositionAcs: SMC_GroupReadSetPosition;
+	GroupReadSetPositionWcs: SMC_GroupReadSetPosition;
+
+	GroupReadStatus: MC_GroupReadStatus;
+	GroupPower: SMC_GroupPower;
+	GroupReset: MC_GroupReset;
+	
+	GroupSetOverride: MC_GroupSetOverride;
+	GroupHalt: MC_GroupHalt;
+
+	GroupSetPosition: MC_GroupSetPosition;
+
+	MoveDirectAbsolute: MC_MoveDirectAbsolute;
+	MoveLinearAbsolute: MC_MoveLinearAbsolute;
+END_VAR
+////////////////////////////////
+
+GroupReadSetPositionAcs(
+	AxisGroup := Robot,
+	Enable := TRUE,
+	CoordSystem := SMC_COORD_SYSTEM.ACS
+);
+MEMUtils.MemCpy(ADR(app.fbk.rbt_axes), ADR(GroupReadSetPositionAcs.Position.v), SIZEOF(app.fbk.rbt_axes));
+
+GroupReadSetPositionWcs(
+	AxisGroup := Robot,
+	Enable := TRUE,
+	CoordSystem := SMC_COORD_SYSTEM.WCS
+);
+MEMUtils.MemCpy(ADR(app.fbk.rbt_pos), ADR(GroupReadSetPositionWcs.Position.v), SIZEOF(app.fbk.rbt_pos));
+
+
+GroupReadStatus(
+	AxisGroup := Robot,	
+	Enable := TRUE,
+);
+
+GroupReset(
+	AxisGroup := Robot,
+	Execute :=  app.cmd.rbt_reset AND GroupReadStatus.GroupErrorStop,
+);
+
+
+GroupPower(
+	AxisGroup := Robot,
+	Enable := TRUE,
+	bRegulatorOn := app.cmd.rbt_power OR GroupReadStatus.GroupMoving OR GroupReadStatus.GroupStopping,
+	bDriveStart  := app.cmd.rbt_power OR GroupReadStatus.GroupMoving OR GroupReadStatus.GroupStopping,
+	Status => app.fbk.rbt_powered
+);
+
+
+GroupSetOverride(
+	AxisGroup := Robot,
+	Enable := GroupPower.Status AND NOT GroupReadStatus.GroupErrorStop,
+	VelFactor     := app.cmd.rbt_override,
+	PathVelFactor := app.cmd.rbt_override,
+);
+
+
+GroupHalt(
+	AxisGroup := Robot,
+	Execute := GroupPower.Status AND app.cmd.rbt_move = 0,
+	Deceleration := 20000,
+	Jerk         := 400000,
+);
+
+
+app.fbk.rbt_move_done  := FALSE;
+app.fbk.rbt_move_error := FALSE;
+
+
+//-1: Homing
+GroupSetPosition.Position.a.a0 := app.cmd.rbt_move_coord[0] + Robot_A.fSetPosition - Robot_A.fActPosition;
+GroupSetPosition.Position.a.a1 := app.cmd.rbt_move_coord[1] + Robot_B.fSetPosition - Robot_B.fActPosition;
+GroupSetPosition.Position.a.a2 := app.cmd.rbt_move_coord[2] + Robot_C.fSetPosition - Robot_C.fActPosition;
+GroupSetPosition(
+	AxisGroup := Robot,
+	Execute := app.cmd.rbt_move = -1,
+	CoordSystem := SMC_COORD_SYSTEM.ACS,
+);
+app.fbk.rbt_move_done  := app.fbk.rbt_move_done  OR GroupSetPosition.Done;
+app.fbk.rbt_move_error := app.fbk.rbt_move_error OR GroupSetPosition.Error;
+
+
+//1: MoveDirectAbsolute
+MEMUtils.MemCpy(ADR(MoveDirectAbsolute.Position.v), ADR(app.cmd.rbt_move_coord), SIZEOF(app.cmd.rbt_move_coord));
+MoveDirectAbsolute(
+	AxisGroup := Robot,
+	Execute := app.cmd.rbt_move = 1,
+	CoordSystem := SMC_COORD_SYSTEM.ACS,
+	VelFactor := app.cmd.rbt_move_fvel,
+);
+app.fbk.rbt_move_done  := app.fbk.rbt_move_done  OR MoveDirectAbsolute.Done;
+app.fbk.rbt_move_error := app.fbk.rbt_move_error OR MoveDirectAbsolute.Error;
+
+
+//2: MoveLinearAbsolute
+
+MEMUtils.MemCpy(ADR(MoveLinearAbsolute.Position.v), ADR(app.cmd.rbt_move_coord), SIZEOF(app.cmd.rbt_move_coord));
+MoveLinearAbsolute(
+	AxisGroup := Robot,
+	Execute := app.cmd.rbt_move = 2,
+	CoordSystem := SMC_COORD_SYSTEM.WCS,
+	Velocity     := 2000,
+	Acceleration := 20000,
+	Deceleration := 20000,
+	Jerk         := 400000,
+);
+app.fbk.rbt_move_done  := app.fbk.rbt_move_done  OR MoveLinearAbsolute.Done;
+app.fbk.rbt_move_error := app.fbk.rbt_move_error OR MoveLinearAbsolute.Error;

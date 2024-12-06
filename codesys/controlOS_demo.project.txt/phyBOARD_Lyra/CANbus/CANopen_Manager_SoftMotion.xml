@@ -1,0 +1,228 @@
+<project xmlns="http://www.plcopen.org/xml/tc6_0200">
+  <types>
+    <dataTypes />
+    <pous />
+  </types>
+  <instances>
+    <configurations>
+      <configuration name="CANopen_Manager_SoftMotion">
+        <addData>
+          <data name="Device" handleUnknown="discard">
+            <Device xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="">
+              <DeviceType>
+                <DeviceIdentification>
+                  <Type>16</Type>
+                  <Id>0000 1018</Id>
+                  <Version>4.2.0.0</Version>
+                </DeviceIdentification>
+                <Connector moduleType="15" role="child" interface="Common.CANbus" connectorId="0">
+                  <HostParameterSet>
+                    <Parameter ParameterId="0" type="std:UDINT" IndexInDevDesc="0">
+                      <Attributes download="false" offlineaccess="read" onlineaccess="none" />
+                      <Value name="_x0030_" visiblename="RequiredConfigVersion" offlineaccess="read" onlineaccess="none">50659584</Value>
+                      <Name>RequiredConfigVersion</Name>
+                    </Parameter>
+                    <Parameter ParameterId="6" type="std:DWORD" IndexInDevDesc="1">
+                      <Attributes offlineaccess="none" onlineaccess="none" />
+                      <Value name="_x0036_" visiblename="Master Instance Pointer" offlineaccess="none" onlineaccess="none">0</Value>
+                      <Name>Master Instance Pointer</Name>
+                    </Parameter>
+                    <Parameter ParameterId="254" type="std:WORD" IndexInDevDesc="2">
+                      <Attributes onlineaccess="read" />
+                      <Value name="_x0032_54" visiblename="Number of Tx Messages" onlineaccess="read">256</Value>
+                      <Name>Number of Tx Messages</Name>
+                    </Parameter>
+                    <Parameter ParameterId="255" type="std:BOOL" IndexInDevDesc="3">
+                      <Attributes download="false" offlineaccess="read" onlineaccess="read" />
+                      <Value name="_x0032_55" visiblename="Suppress 1006h" offlineaccess="read" onlineaccess="read">FALSE</Value>
+                      <Name>Suppress 1006h</Name>
+                    </Parameter>
+                    <Parameter ParameterId="256" type="std:DWORD" IndexInDevDesc="4">
+                      <Attributes />
+                      <Value name="_x0032_56" visiblename="Sync CycleTime in Microseconds">4000</Value>
+                      <Name>Sync CycleTime in Microseconds</Name>
+                    </Parameter>
+                    <Parameter ParameterId="257" type="std:BOOL" IndexInDevDesc="5">
+                      <Attributes />
+                      <Value name="_x0032_57" visiblename="Enable Sync generation">TRUE</Value>
+                      <Name>Enable Sync generation</Name>
+                    </Parameter>
+                    <Parameter ParameterId="258" type="std:DWORD" IndexInDevDesc="6">
+                      <Attributes />
+                      <Value name="_x0032_58" visiblename="Sync CobID">16#00000080</Value>
+                      <Name>Sync CobID</Name>
+                    </Parameter>
+                    <Parameter ParameterId="259" type="std:UDINT" IndexInDevDesc="7">
+                      <Attributes onlineaccess="read" />
+                      <Value name="_x0032_59" visiblename="Synchronous Window Length" onlineaccess="read">1200</Value>
+                      <Name>Synchronous Window Length</Name>
+                    </Parameter>
+                    <Parameter ParameterId="260" type="std:BOOL" IndexInDevDesc="8">
+                      <Attributes onlineaccess="read" />
+                      <Value name="_x0032_60" visiblename="Manager is Sync consumer" onlineaccess="read">FALSE</Value>
+                      <Name>Manager is Sync consumer</Name>
+                    </Parameter>
+                    <Parameter ParameterId="261" type="std:BOOL" IndexInDevDesc="9">
+                      <Attributes onlineaccess="read" />
+                      <Value name="_x0032_61" visiblename="Autostart" onlineaccess="read">TRUE</Value>
+                      <Name>Autostart</Name>
+                    </Parameter>
+                    <Parameter ParameterId="262" type="std:BOOL" IndexInDevDesc="10">
+                      <Attributes onlineaccess="read" />
+                      <Value name="_x0032_62" visiblename="Start Slaves" onlineaccess="read">TRUE</Value>
+                      <Name>Start Slaves</Name>
+                    </Parameter>
+                    <Parameter ParameterId="263" type="std:BOOL" IndexInDevDesc="11">
+                      <Attributes onlineaccess="read" />
+                      <Value name="_x0032_63" visiblename="NMT Start All" onlineaccess="read">FALSE</Value>
+                      <Name>NMT Start All</Name>
+                    </Parameter>
+                    <Parameter ParameterId="264" type="std:BOOL" IndexInDevDesc="12">
+                      <Attributes onlineaccess="read" />
+                      <Value name="_x0032_64" visiblename="Polling of optional slaves" onlineaccess="read">FALSE</Value>
+                      <Name>Polling of optional slaves</Name>
+                    </Parameter>
+                    <Parameter ParameterId="265" type="localTypes:NMTErrorBehaviour" IndexInDevDesc="13">
+                      <Attributes onlineaccess="read" />
+                      <Value name="_x0032_65" visiblename="NMT Error Behaviour" onlineaccess="read">0</Value>
+                      <Name>NMT Error Behaviour</Name>
+                    </Parameter>
+                    <Parameter ParameterId="266" type="std:WORD" IndexInDevDesc="14">
+                      <Attributes onlineaccess="read" />
+                      <Value name="_x0032_66" visiblename="NMTInhibitTime" onlineaccess="read" desc="NMT Inhibit time in multiple of 100μs">10</Value>
+                      <Name>NMTInhibitTime</Name>
+                      <Unit>multiple of 100μs</Unit>
+                      <Description>NMT Inhibit time in multiple of 100μs</Description>
+                    </Parameter>
+                    <Parameter ParameterId="272" type="std:WORD" IndexInDevDesc="15">
+                      <Attributes />
+                      <Value name="_x0032_72" visiblename="Heartbeat in Milliseconds">200</Value>
+                      <Name>Heartbeat in Milliseconds</Name>
+                    </Parameter>
+                    <Parameter ParameterId="273" type="std:BOOL" IndexInDevDesc="16">
+                      <Attributes />
+                      <Value name="_x0032_73" visiblename="Enable Heartbeat generation">FALSE</Value>
+                      <Name>Enable Heartbeat generation</Name>
+                    </Parameter>
+                    <Parameter ParameterId="274" type="std:USINT" IndexInDevDesc="17">
+                      <Attributes onlineaccess="read" />
+                      <Value name="_x0032_74" visiblename="Heartbeat Node ID" onlineaccess="read">127</Value>
+                      <Name>Heartbeat Node ID</Name>
+                    </Parameter>
+                    <Parameter ParameterId="275" type="std:WORD" IndexInDevDesc="18">
+                      <Attributes download="false" />
+                      <Value name="_x0032_75" visiblename="Default slave ratio for heartbeat time in percent">150</Value>
+                      <Name>Default slave ratio for heartbeat time in percent</Name>
+                    </Parameter>
+                    <Parameter ParameterId="276" type="std:BOOL" IndexInDevDesc="19">
+                      <Attributes download="false" offlineaccess="read" onlineaccess="none" />
+                      <Value name="_x0032_76" visiblename="Optional Device Default" offlineaccess="read" onlineaccess="none">FALSE</Value>
+                      <Name>Optional Device Default</Name>
+                    </Parameter>
+                    <Parameter ParameterId="277" type="std:UDINT" IndexInDevDesc="20">
+                      <Attributes download="false" offlineaccess="read" onlineaccess="none" />
+                      <Value name="_x0032_77" visiblename="SDO Timeout Default (ms)" offlineaccess="read" onlineaccess="none">1000</Value>
+                      <Name>SDO Timeout Default (ms)</Name>
+                    </Parameter>
+                    <Parameter ParameterId="278" type="std:BOOL" IndexInDevDesc="21">
+                      <Attributes download="false" offlineaccess="read" onlineaccess="none" />
+                      <Value name="_x0032_78" visiblename="Factory Settings Default" offlineaccess="read" onlineaccess="none">TRUE</Value>
+                      <Name>Factory Settings Default</Name>
+                    </Parameter>
+                    <Parameter ParameterId="279" type="localTypes:SupervisingMechanism" IndexInDevDesc="22">
+                      <Attributes download="false" offlineaccess="read" onlineaccess="none" />
+                      <Value name="_x0032_79" visiblename="Preferred Supervising Mechanism" offlineaccess="read" onlineaccess="none">0</Value>
+                      <Name>Preferred Supervising Mechanism</Name>
+                    </Parameter>
+                    <Parameter ParameterId="280" type="std:BOOL" IndexInDevDesc="23">
+                      <Attributes download="false" offlineaccess="read" onlineaccess="none" />
+                      <Value name="_x0032_80" visiblename="EMCY Default" offlineaccess="read" onlineaccess="none">TRUE</Value>
+                      <Name>EMCY Default</Name>
+                    </Parameter>
+                    <Parameter ParameterId="281" type="std:BOOL" IndexInDevDesc="24">
+                      <Attributes download="false" offlineaccess="read" onlineaccess="none" />
+                      <Value name="_x0032_81" visiblename="Expert Settings Default" offlineaccess="read" onlineaccess="none">FALSE</Value>
+                      <Name>Expert Settings Default</Name>
+                    </Parameter>
+                    <Parameter ParameterId="283" type="std:BOOL" IndexInDevDesc="25">
+                      <Attributes download="false" offlineaccess="read" onlineaccess="none" />
+                      <Value name="_x0032_83" visiblename="Explicit deactivate PDOs Default" offlineaccess="read" onlineaccess="none">FALSE</Value>
+                      <Name>Explicit deactivate PDOs Default</Name>
+                    </Parameter>
+                    <Parameter ParameterId="284" type="std:BYTE" IndexInDevDesc="26">
+                      <Attributes onlineaccess="none" />
+                      <Value name="_x0032_84" visiblename="Redundancy NodeID" onlineaccess="none">126</Value>
+                      <Name>Redundancy NodeID</Name>
+                    </Parameter>
+                    <Parameter ParameterId="285" type="std:UDINT" IndexInDevDesc="27">
+                      <Attributes onlineaccess="none" />
+                      <Value name="_x0032_85" visiblename="Redundancy Heartbeat Wait Time" onlineaccess="none" desc="Time that passive PLC should wait for the Heartbeat of active PLC.">10000</Value>
+                      <Name>Redundancy Heartbeat Wait Time</Name>
+                      <Unit>μs</Unit>
+                      <Description>Time that passive PLC should wait for the Heartbeat of active PLC.</Description>
+                    </Parameter>
+                    <Parameter ParameterId="287" type="localTypes:Struct_SupportedFunctions" IndexInDevDesc="28">
+                      <Attributes download="false" offlineaccess="read" onlineaccess="read" />
+                      <Value name="_x0032_87" visiblename="Supported Functions" offlineaccess="read" onlineaccess="read">
+                        <Element name="SDOTimeout" visiblename="SDOTimeout">TRUE</Element>
+                        <Element name="SDOJumpToLine" visiblename="SDOJumpToLine">TRUE</Element>
+                        <Element name="SDOAbortIfError" visiblename="SDOAbortIfError">TRUE</Element>
+                        <Element name="MasterHeartbeatNodeID" visiblename="MasterHeartbeatNodeID">TRUE</Element>
+                        <Element name="InhibitTime" visiblename="InhibitTime">TRUE</Element>
+                        <Element name="EventTime" visiblename="EventTime">TRUE</Element>
+                      </Value>
+                      <Name>Supported Functions</Name>
+                    </Parameter>
+                    <Parameter ParameterId="288" type="std:USINT" IndexInDevDesc="29">
+                      <Attributes />
+                      <Value name="_x0032_88" visiblename="CANopen NodeID">127</Value>
+                      <Name>CANopen NodeID</Name>
+                    </Parameter>
+                    <Parameter ParameterId="290" type="std:DWORD" IndexInDevDesc="30">
+                      <Attributes download="false" onlineaccess="read" />
+                      <Value name="_x0032_90" visiblename="TIME COBID" onlineaccess="read">256</Value>
+                      <Name>TIME COBID</Name>
+                    </Parameter>
+                    <Parameter ParameterId="291" type="std:WORD" IndexInDevDesc="31">
+                      <Attributes download="false" onlineaccess="read" />
+                      <Value name="_x0032_91" visiblename="TIME Producer Interval (ms)" onlineaccess="read">1000</Value>
+                      <Name>TIME Producer Interval (ms)</Name>
+                    </Parameter>
+                    <Parameter ParameterId="4097" type="std:BOOL" IndexInDevDesc="32">
+                      <Attributes download="false" offlineaccess="read" onlineaccess="none" />
+                      <Value name="_x0034_097" visiblename="Disable diagnosis strings" offlineaccess="read" onlineaccess="none">FALSE</Value>
+                      <Name>Disable diagnosis strings</Name>
+                    </Parameter>
+                    <Parameter ParameterId="4098" type="std:BOOL" IndexInDevDesc="34">
+                      <Attributes download="false" offlineaccess="none" onlineaccess="none" />
+                      <Value name="_x0034_098" visiblename="Show Logger Page" offlineaccess="none" onlineaccess="none">TRUE</Value>
+                      <Name>Show Logger Page</Name>
+                    </Parameter>
+                    <Parameter ParameterId="327937" type="std:BOOL" IndexInDevDesc="33">
+                      <Attributes channel="diagAck" offlineaccess="none" onlineaccess="none" />
+                      <Value name="_x0033_27937" visiblename="Diag Acknowledge" offlineaccess="none" onlineaccess="none" desc="Diag Acknowledge">FALSE</Value>
+                      <Name>Diag Acknowledge</Name>
+                      <Description>Diag Acknowledge</Description>
+                    </Parameter>
+                    <Parameter ParameterId="1879052288" type="std:UDINT">
+                      <Attributes offlineaccess="read" onlineaccess="read" />
+                      <Value name="_x0031_879052288" visiblename="ConfigVersion" offlineaccess="read" onlineaccess="read">50659584</Value>
+                      <Name>ConfigVersion</Name>
+                    </Parameter>
+                  </HostParameterSet>
+                </Connector>
+                <Connector moduleType="16" interface="Common.CANopen" connectorId="1" hostpath="0">
+                  <HostParameterSet />
+                </Connector>
+                <DeviceParameterSet />
+              </DeviceType>
+            </Device>
+          </data>
+          <data name="configurations" handleUnknown="discard">
+            <configurations />
+          </data>
+        </addData>
+      </configuration>
+    </configurations>
+  </instances>
+</project>

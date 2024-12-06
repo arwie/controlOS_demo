@@ -2,11 +2,17 @@ TYPE AppCmd:
 STRUCT
 	co:		CoCmd;
 
-	axis_power:				BOOL;
+	rbt_power:				BOOL;
+	rbt_reset:				BOOL;
+	rbt_override:			LREAL;
+	rbt_move:				INT;
+	rbt_move_coord:			ARRAY [0..2] OF LREAL;
+	rbt_move_fvel:			LREAL;
 
-	move_exec:				BOOL;
-	move_distance:			LREAL;
-	move_velocity:			LREAL;
+	extra_power:			BOOL;
+	extra_move_exec:		BOOL;
+	extra_move_distance:	LREAL;
+	extra_move_velocity:	LREAL;
 
 	io:		ARRAY [0..128] OF BOOL;
 END_STRUCT
