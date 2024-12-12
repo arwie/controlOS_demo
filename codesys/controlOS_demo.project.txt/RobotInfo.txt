@@ -1,0 +1,38 @@
+PROGRAM RobotInfo
+VAR
+	SetPositionAcs, SetPositionWcs: SMC_GroupReadSetPosition;
+	SetVelocityWcs:	SMC_GroupReadSetVelocity;
+	SetAccelerationWcs:	SMC_GroupReadSetAcceleration;
+	CartesianVelocity, CartesianAcceleration: LREAL;
+END_VAR
+
+////////////////////////////////
+
+SetPositionAcs(
+	AxisGroup := Robot,
+	Enable := TRUE,
+	CoordSystem := SMC_COORD_SYSTEM.ACS
+);
+MEMUtils.MemCpy(ADR(app.fbk.rbt_axes), ADR(SetPositionAcs.Position.v), SIZEOF(app.fbk.rbt_axes));
+
+SetPositionWcs(
+	AxisGroup := Robot,
+	Enable := TRUE,
+	CoordSystem := SMC_COORD_SYSTEM.WCS
+);
+MEMUtils.MemCpy(ADR(app.fbk.rbt_pos), ADR(SetPositionWcs.Position.v), SIZEOF(app.fbk.rbt_pos));
+
+
+SetVelocityWcs(
+	AxisGroup := Robot,
+	Enable := TRUE,
+	CoordSystem := SMC_COORD_SYSTEM.WCS
+);
+CartesianVelocity := SQRT(EXPT(SetVelocityWcs.Velocity.c.X, 2) + EXPT(SetVelocityWcs.Velocity.c.Y, 2) + EXPT(SetVelocityWcs.Velocity.c.Z, 2));
+
+SetAccelerationWcs(
+	AxisGroup := Robot,
+	Enable := TRUE,
+	CoordSystem := SMC_COORD_SYSTEM.WCS
+);
+CartesianAcceleration := SQRT(EXPT(SetAccelerationWcs.Acceleration.c.X, 2) + EXPT(SetAccelerationWcs.Acceleration.c.Y, 2) + EXPT(SetAccelerationWcs.Acceleration.c.Z, 2));

@@ -1,8 +1,5 @@
 PROGRAM Exec_Robot
 VAR
-	GroupReadSetPositionAcs: SMC_GroupReadSetPosition;
-	GroupReadSetPositionWcs: SMC_GroupReadSetPosition;
-
 	GroupReadStatus: MC_GroupReadStatus;
 	GroupPower: SMC_GroupPower;
 	GroupReset: MC_GroupReset;
@@ -16,21 +13,6 @@ VAR
 	MoveLinearAbsolute: MC_MoveLinearAbsolute;
 END_VAR
 ////////////////////////////////
-
-GroupReadSetPositionAcs(
-	AxisGroup := Robot,
-	Enable := TRUE,
-	CoordSystem := SMC_COORD_SYSTEM.ACS
-);
-MEMUtils.MemCpy(ADR(app.fbk.rbt_axes), ADR(GroupReadSetPositionAcs.Position.v), SIZEOF(app.fbk.rbt_axes));
-
-GroupReadSetPositionWcs(
-	AxisGroup := Robot,
-	Enable := TRUE,
-	CoordSystem := SMC_COORD_SYSTEM.WCS
-);
-MEMUtils.MemCpy(ADR(app.fbk.rbt_pos), ADR(GroupReadSetPositionWcs.Position.v), SIZEOF(app.fbk.rbt_pos));
-
 
 GroupReadStatus(
 	AxisGroup := Robot,	
@@ -63,8 +45,8 @@ GroupSetOverride(
 GroupHalt(
 	AxisGroup := Robot,
 	Execute := GroupPower.Status AND app.cmd.rbt_move = 0,
-	Deceleration := 20000,
-	Jerk         := 400000,
+	Deceleration := app.cfg.robot_acc,
+	Jerk         := app.cfg.robot_jrk,
 );
 
 
@@ -104,10 +86,18 @@ MoveLinearAbsolute(
 	AxisGroup := Robot,
 	Execute := app.cmd.rbt_move = 2,
 	CoordSystem := SMC_COORD_SYSTEM.WCS,
-	Velocity     := 2000,
-	Acceleration := 20000,
-	Deceleration := 20000,
-	Jerk         := 400000,
+	Velocity     := app.cfg.robot_vel,
+	Acceleration := app.cfg.robot_acc,
+	Deceleration := app.cfg.robot_acc,
+	Jerk         := app.cfg.robot_jrk,
 );
 app.fbk.rbt_move_done  := app.fbk.rbt_move_done  OR MoveLinearAbsolute.Done;
 app.fbk.rbt_move_error := app.fbk.rbt_move_error OR MoveLinearAbsolute.Error;
+
+
+//11: CNC
+
+NCInterpreter.execute := app.cmd.rbt_move = 11;
+NCInterpreter.interpolate();
+app.fbk.rbt_move_done  := app.fbk.rbt_move_done  OR NCInterpreter.done;
+app.fbk.rbt_move_error := app.fbk.rbt_move_error OR NCInterpreter.error;

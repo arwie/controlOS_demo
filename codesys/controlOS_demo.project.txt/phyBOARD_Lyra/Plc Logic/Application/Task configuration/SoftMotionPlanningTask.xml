@@ -10,6 +10,11 @@
     <data name="http://www.3s-software.com/plcopenxml/application" handleUnknown="implementation">
       <resource name="Application">
         <task name="SoftMotionPlanningTask" priority="15">
+          <pouInstance name="NCInterpreter" typeName="">
+            <documentation>
+              <xhtml xmlns="http://www.w3.org/1999/xhtml" />
+            </documentation>
+          </pouInstance>
           <addData>
             <data name="http://www.3s-software.com/plcopenxml/tasksettings" handleUnknown="implementation">
               <TaskSettings KindOfTask="Freewheeling" Interval="t#2ms" IntervalUnit="ms" WithinSPSTimeSlicing="true">

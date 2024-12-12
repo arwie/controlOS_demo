@@ -18,8 +18,9 @@ done := done AND GroupEnable.Done;
 
 
 done := done AND (
-	StepIM_A.CANopenState = CIA405.DEVICE_STATE.OPERATIONAL AND
-	StepIM_B.CANopenState = CIA405.DEVICE_STATE.OPERATIONAL AND
-	StepIM_C.CANopenState = CIA405.DEVICE_STATE.OPERATIONAL
+	StepIM_A.GetDeviceState() = DEVICE_STATE.RUNNING AND
+	StepIM_B.GetDeviceState() = DEVICE_STATE.RUNNING AND
+	StepIM_C.GetDeviceState() = DEVICE_STATE.RUNNING
 );
 app.fbk.init_done := done;
+

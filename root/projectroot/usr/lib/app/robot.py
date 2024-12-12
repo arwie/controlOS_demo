@@ -1,5 +1,6 @@
 from contextlib import asynccontextmanager
 from shared.utils import instantiate
+from pathlib import Path
 from shared import app
 from shared.app import codesys
 from coordinates import Axes, Pos
@@ -11,6 +12,9 @@ from drives import robot_a, robot_b, robot_c
 class robot:
 
 	def __init__(self):
+		codesys.cfg.robot_vel = 2000
+		codesys.cfg.robot_acc = 20000
+		codesys.cfg.robot_jrk = 400000
 		self.override = 100
 
 
@@ -56,6 +60,13 @@ class robot:
 		app.log.info(f'Robot move linear to {pos}')
 		codesys.cmd.rbt_move_coord[:] = pos.x, pos.y, pos.z
 		await self._move_exec(2)
+
+
+	async def move_cnc(self, cnc:str, speed:float=30):
+		app.log.info(f'Robot execute CNC program', extra={'CNC':cnc})
+		Path('/run/codesys/robot.cnc').write_text(cnc)
+		codesys.cmd.rbt_move_fvel = speed / 100
+		await self._move_exec(11)
 
 
 	async def _move_exec(self, move:int):

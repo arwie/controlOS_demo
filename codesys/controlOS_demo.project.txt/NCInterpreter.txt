@@ -1,0 +1,55 @@
+PROGRAM NCInterpreter
+VAR_INPUT
+	execute: BOOL;
+END_VAR
+VAR_OUTPUT
+	done:  BOOL;
+	error: BOOL;
+END_VAR
+VAR
+	ReadNCFile: SMC_ReadNCFile2;
+	NCInterpreter: SMC_NCInterpreter;
+	SmoothPath: SMC_SmoothPath;
+	CheckVelocities: SMC_CheckVelocities;
+	NCInterpreterBuffer, SmoothPathBuffer: ARRAY[0..99] OF SMC_GEOINFO;
+
+	Interpolator: SMC_Interpolator;
+	GroupConvertPosition: SMC_GroupConvertPosition;
+	ControlAxisByPos_A, ControlAxisByPos_B, ControlAxisByPos_C: SMC_ControlAxisByPos;
+END_VAR
+
+////////////////////////////////
+
+ReadNCFile(
+	bExecute := execute, 
+	sFileName := '/run/codesys/robot.cnc',
+	fDefaultVel     := app.cfg.robot_vel * app.cmd.rbt_move_fvel,
+	fDefaultAccel   := app.cfg.robot_acc,
+	fDefaultDecel   := app.cfg.robot_acc,
+	fDefaultVelFF   := app.cfg.robot_vel * app.cmd.rbt_move_fvel,
+	fDefaultAccelFF := app.cfg.robot_acc,
+	fDefaultDecelFF := app.cfg.robot_acc,
+);
+
+NCInterpreter.piStartPosition.dX := RobotInfo.SetPositionWcs.Position.c.X;
+NCInterpreter.piStartPosition.dY := RobotInfo.SetPositionWcs.Position.c.Y;
+NCInterpreter.piStartPosition.dZ := RobotInfo.SetPositionWcs.Position.c.Z;
+
+NCInterpreter(
+	bExecute := execute,
+	nSizeOutQueue := SIZEOF(NCInterpreterBuffer), 
+	pbyBufferOutQueue := ADR(NCInterpreterBuffer), 
+	sentences := ReadNCFile.sentences,
+);
+
+SmoothPath(
+	bExecute:= execute,
+	poqDataIn:= NCInterpreter.poqDataOut,
+	nSizeOutQueue := SIZEOF(SmoothPathBuffer), 
+	pbyBufferOutQueue := ADR(SmoothPathBuffer), 
+);
+
+CheckVelocities(
+	bExecute:= execute,
+	poqDataIn:= SmoothPath.poqDataOut
+);

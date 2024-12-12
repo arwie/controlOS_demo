@@ -17,7 +17,7 @@
           </pouInstance>
           <addData>
             <data name="http://www.3s-software.com/plcopenxml/tasksettings" handleUnknown="implementation">
-              <TaskSettings KindOfTask="Cyclic" Interval="4" IntervalUnit="ms" WithinSPSTimeSlicing="true">
+              <TaskSettings KindOfTask="Cyclic" Interval="4000" IntervalUnit="µs" WithinSPSTimeSlicing="true">
                 <Watchdog Enabled="false" TimeUnit="ms" />
               </TaskSettings>
             </data>

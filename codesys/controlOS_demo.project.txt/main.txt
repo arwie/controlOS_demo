@@ -9,7 +9,7 @@ END_VAR
 co_can();
 //co_etc();
 
-
+RobotInfo();
 Exec_Robot();
 
 Exec_Extra();

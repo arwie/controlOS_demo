@@ -1,10 +1,10 @@
 from ctypes import *  #type:ignore
 class AppCfg(Structure):
-	foo: float
-	bar: int
-	zoo: bool
+	robot_vel: float
+	robot_acc: float
+	robot_jrk: float
 	_fields_ = [
-		('foo', c_double),
-		('bar', c_int16),
-		('zoo', c_bool),
+		('robot_vel', c_double),
+		('robot_acc', c_double),
+		('robot_jrk', c_double),
 	]

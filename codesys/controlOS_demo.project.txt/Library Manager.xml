@@ -60,6 +60,13 @@
           <PlaceholderRedirection Placeholder="EtherCATStackLibrary" Redirection="EtherCATStack, 4.8.0.0 (CODESYS)" />
           <PlaceholderRedirection Placeholder="CAA Types" Redirection="CAA Types Extern, 3.5.17.0 (CAA Technical Workgroup)" />
           <PlaceholderRedirection Placeholder="SysMem" Redirection="SysMem, 3.5.17.0 (System)" />
+          <PlaceholderRedirection Placeholder="CAA CanL2" Redirection="CAA Can Low Level Extern, 3.5.5.0 (CAA Technical Workgroup)" />
+          <PlaceholderRedirection Placeholder="CAA CanL2I" Redirection="CAA Can Low Level Imp Extern, 3.5.17.0 (CAA Technical Workgroup)" />
+          <PlaceholderRedirection Placeholder="CAA CANopen Manager" Redirection="CAA CANopen Manager, 4.1.0.0 (CAA Technical Workgroup)" />
+          <PlaceholderRedirection Placeholder="CAA CANopen Stack" Redirection="CAA CanOpen Stack, 4.1.0.0 (CAA Technical Workgroup)" />
+          <PlaceholderRedirection Placeholder="CANbusDevice" Redirection="CANbusDevice, 4.2.0.0 (3S - Smart Software Solutions GmbH)" />
+          <PlaceholderRedirection Placeholder="IoDriver Utility" Redirection="IoDrvUtility, 3.5.18.0 (3S - Smart Software Solutions GmbH)" />
+          <PlaceholderRedirection Placeholder="Redundancy Implementation" Redirection="NotImplementedByDevice, 3.5.17.0 (System)" />
         </PlaceholderRedirections>
         <addData />
       </Libraries>

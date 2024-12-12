@@ -1,0 +1,59 @@
+METHOD interpolate
+VAR
+	pos: SMC_POS_REF;
+END_VAR
+
+////////////////////////////////
+
+Interpolator(
+	bExecute := execute,
+	poqDataIn := CheckVelocities.poqDataOut,
+	dOverride := app.cmd.rbt_override,
+	dwIpoTime := 4000,
+	bEmergency_Stop := ControlAxisByPos_A.bStopIpo OR ControlAxisByPos_B.bStopIpo OR ControlAxisByPos_C.bStopIpo,
+	bDone  => done,
+);
+
+pos.c.X := Interpolator.piSetPosition.dX;
+pos.c.Y := Interpolator.piSetPosition.dY;
+pos.c.Z := Interpolator.piSetPosition.dZ;
+GroupConvertPosition(
+	AxisGroup := Robot,
+	Enable := execute,
+	CoordSystemIn := SMC_COORD_SYSTEM.WCS,
+	CoordSystemOut := SMC_COORD_SYSTEM.ACS,
+	PositionIn := pos,
+);
+
+ControlAxisByPos_A(
+	Axis := Robot_A,
+	bEnable := Interpolator.bWorking,
+	iStatus := Interpolator.iStatus,
+	fSetPosition := GroupConvertPosition.PositionOut.a.a0,
+	fGapVelocity     := Robot_A.fSWMaxVelocity,
+	fGapAcceleration := Robot_A.fSWMaxAcceleration,
+	fGapDeceleration := Robot_A.fSWMaxDeceleration,
+	fGapJerk         := Robot_A.fSWMaxJerk,
+);
+ControlAxisByPos_B(
+	Axis := Robot_B,
+	bEnable := Interpolator.bWorking,
+	iStatus := Interpolator.iStatus,
+	fSetPosition := GroupConvertPosition.PositionOut.a.a1,
+	fGapVelocity     := Robot_B.fSWMaxVelocity,
+	fGapAcceleration := Robot_B.fSWMaxAcceleration,
+	fGapDeceleration := Robot_B.fSWMaxDeceleration,
+	fGapJerk         := Robot_B.fSWMaxJerk,
+);
+ControlAxisByPos_C(
+	Axis := Robot_C,
+	bEnable := Interpolator.bWorking,
+	iStatus := Interpolator.iStatus,
+	fSetPosition := GroupConvertPosition.PositionOut.a.a2,
+	fGapVelocity     := Robot_C.fSWMaxVelocity,
+	fGapAcceleration := Robot_C.fSWMaxAcceleration,
+	fGapDeceleration := Robot_C.fSWMaxDeceleration,
+	fGapJerk         := Robot_C.fSWMaxJerk,
+);
+
+error := Interpolator.bError OR ControlAxisByPos_A.bError OR ControlAxisByPos_B.bError OR ControlAxisByPos_C.bError;
