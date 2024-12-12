@@ -70,23 +70,25 @@ class robot:
 
 	async def home(self):
 		app.log.info(f'Robot homing started at {robot.axes()}')
-	
+
+		HOME_AXES = Axes(310-53.37, 310-55.37, 310-52.43) #manually calibrated
+
 		async def setup_drives(torque, following_error):
 			for drive in (robot_a, robot_b, robot_c):
 				await drive.set_torque(torque)
 				await drive.set_following_error(following_error)
 
-		async def set_position(a, b, c):
-			codesys.cmd.rbt_move_coord[:] = a, b, c
+		async def set_position(axes:Axes):
+			codesys.cmd.rbt_move_coord[:] = axes.a, axes.b, axes.c
 			await self._move_exec(-1)
 
 		await setup_drives(20, 200)
 
 		async with self.power():
-			await set_position(370, 370, 370)
+			await set_position(Axes(370, 370, 370))
 			await self.move_direct(Axes(200, 200, 200), 5)
-			await set_position(240, 240, 240)
-			await self.move_direct(Axes(240, 240, 240), 20)
+			await set_position(HOME_AXES)
+			await self.move_direct(HOME_AXES, 30)
 			await self.move_direct(Axes(300, 300, 300), 10)
 
 		await setup_drives(100, 10)
