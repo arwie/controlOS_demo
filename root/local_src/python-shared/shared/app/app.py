@@ -16,12 +16,9 @@
 
 
 from __future__ import annotations
-from typing import TYPE_CHECKING
-if TYPE_CHECKING:
-	from typing import overload, Any
-	from collections.abc import Callable, Coroutine, AsyncGenerator
-	from contextlib import AbstractAsyncContextManager
-
+from typing import overload, Any
+from collections.abc import Callable, Coroutine, AsyncGenerator
+from contextlib import AbstractAsyncContextManager
 import asyncio
 import inspect
 from functools import partial
@@ -111,13 +108,13 @@ async def _context(func):
 		log.info(f'Context {name} stopped')
 
 
-if TYPE_CHECKING:
-	@overload
-	#def context[T, **P](func:Callable[P, AsyncGenerator[T, Any]]) -> Callable[P, AbstractAsyncContextManager[T]]: pass
-	def context(func:Callable[..., AsyncGenerator]) -> Callable[..., AbstractAsyncContextManager]: pass
-	@overload
-	#def context[T, **P](func:Callable[P, Coroutine[Any, Any, T]]) -> Callable[P, Coroutine[Any, Any, T]]: pass
-	def context(func:Callable[..., Coroutine]) -> Callable[..., Coroutine]: pass
+@overload
+#def context[T, **P](func:Callable[P, AsyncGenerator[T, Any]]) -> Callable[P, AbstractAsyncContextManager[T]]: pass
+def context(func:Callable[..., AsyncGenerator]) -> Callable[..., AbstractAsyncContextManager]: pass
+
+@overload
+#def context[T, **P](func:Callable[P, Coroutine[Any, Any, T]]) -> Callable[P, Coroutine[Any, Any, T]]: pass
+def context(func:Callable[..., Coroutine]) -> Callable[..., Coroutine]: pass
 
 def context(func): #type:ignore
 	if inspect.isasyncgenfunction(func):
@@ -226,3 +223,30 @@ class disableable:
 		async with self.lock:
 			if not self.disabled:
 				return await self._func(*args, **kwargs)
+
+
+
+class CommandRunner:
+
+	def __init__(self, handler: Callable[[int, Any], Coroutine]):
+		self.handler = handler
+
+	async def run(self):
+		while True:
+			self.cancelled = False
+			self.future = asyncio.Future[tuple[int, Any]]()
+			cmd, data = await self.future
+			try:
+				with raise_cancelling:
+					await self.handler(cmd, data)
+			except Exception as e:
+				log.exception(e)
+
+	def busy(self):
+		return self.future.result()[0] if self.future.done() else 0
+
+	def __call__(self, cmd:int, data:Any=None):
+		if not self.future.done():
+			self.future.set_result((cmd, data))
+		else:
+			self.cancelled = True

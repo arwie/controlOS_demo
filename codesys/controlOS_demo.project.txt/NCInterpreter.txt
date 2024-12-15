@@ -26,7 +26,7 @@ ReadNCFile(
 	fDefaultVel     := app.cfg.robot_vel * app.cmd.rbt_move_fvel,
 	fDefaultAccel   := app.cfg.robot_acc,
 	fDefaultDecel   := app.cfg.robot_acc,
-	fDefaultVelFF   := app.cfg.robot_vel * app.cmd.rbt_move_fvel,
+	fDefaultVelFF   := app.cfg.robot_vel,
 	fDefaultAccelFF := app.cfg.robot_acc,
 	fDefaultDecelFF := app.cfg.robot_acc,
 );

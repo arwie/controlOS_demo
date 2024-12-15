@@ -2,6 +2,9 @@ METHOD StopDone
 
 ////////////////////////////////
 
-SysSharedMemoryClose(shm);
+SysSharedMemoryDelete(shm);
 
-AppReset(AppGetCurrent(ADR(iec_result)), CmpApp.RESET_OPTION.RTS_RESET_COLD);
+AppReset(
+	AppGetFirstApp(ADR(iec_result)),
+	RESET_OPTION.RTS_RESET_COLD
+);

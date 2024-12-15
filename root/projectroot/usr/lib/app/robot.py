@@ -5,6 +5,7 @@ from shared import app
 from shared.app import codesys
 from coordinates import Axes, Pos
 from drives import robot_a, robot_b, robot_c
+from cnc import CNCProgram
 
 
 
@@ -31,6 +32,9 @@ class robot:
 
 	def axes(self):
 		return Axes(*codesys.fbk.rbt_axes)
+	
+	def pos(self):
+		return Pos(*codesys.fbk.rbt_pos)
 
 
 	@asynccontextmanager
@@ -62,9 +66,9 @@ class robot:
 		await self._move_exec(2)
 
 
-	async def move_cnc(self, cnc:str, speed:float=30):
+	async def move_cnc(self, cnc:str|CNCProgram, speed:float=30):
 		app.log.info(f'Robot execute CNC program', extra={'CNC':cnc})
-		Path('/run/codesys/robot.cnc').write_text(cnc)
+		Path('/run/codesys/robot.cnc').write_text(str(cnc))
 		codesys.cmd.rbt_move_fvel = speed / 100
 		await self._move_exec(11)
 

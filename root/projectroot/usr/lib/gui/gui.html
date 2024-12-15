@@ -2,33 +2,29 @@
 
 
 {% block head %}
-	<script src="{{static_url('bootstrap-select.js')}}"></script>
-	<link rel="stylesheet" href="{{static_url('bootstrap-select.css')}}">
 	<script src="{{static_url('chart.js')}}"></script>
 {% end %}
 
 
-{% block body %}
+{% block navBar %}
 <navBar>
 	<div class="navbar-nav">
 		{% include "app/menu.html" %}
 	</div>
-	<div class="navbar-nav ml-auto">
+	<div class="navbar-nav ms-auto">
 		<navLocale></navLocale>
 		<navPoweroff></navPoweroff>
 	</div>
 </navBar>
-<main class="container-fluid">
-	<breadcrumb></breadcrumb>
-	
+{% end %}
+
+{% block main %}
 	{% module page("homepage.html", start=True) %}
-	
 	{% module page("app/app.html") %}
-</main>
 {% end %}
 
 
-{% block script %}
+{% block script_ %}
 	{% include "gui.js" %}
 {% end %}
 

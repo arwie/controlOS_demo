@@ -73,6 +73,7 @@ async def exec(period:float):
 						await asyncio.sleep(period)
 
 				async with app.task_group(sync_loop):
+					await sync()
 					try:
 						yield
 					finally:

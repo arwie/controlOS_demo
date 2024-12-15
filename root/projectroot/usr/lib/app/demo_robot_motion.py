@@ -43,8 +43,8 @@ async def demo_move_cnc(rounds):
 
 
 
-async def run_demo():
-	robot.override = 70
+async def run():
+	robot.override = 50
 
 	while True:
 		await app.sleep(1)
