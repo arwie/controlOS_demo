@@ -1,6 +1,6 @@
 {% include "common/en.ftl" %}
 
-title	= ARTUR WIEBE
+title	= WIEBE Engineering
 
 reset			= Reset
 
