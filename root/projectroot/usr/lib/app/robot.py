@@ -3,6 +3,7 @@ from shared.utils import instantiate
 from pathlib import Path
 from shared import app
 from shared.app import codesys
+from shared.condition import Timer, Timeout
 from coordinates import Axes, Pos
 from drives import robot_a, robot_b, robot_c
 from cnc import CNCProgram
@@ -16,6 +17,7 @@ class robot:
 		codesys.cfg.robot_vel = 2000
 		codesys.cfg.robot_acc = 20000
 		codesys.cfg.robot_jrk = 400000
+
 		self.override = 100
 
 
@@ -60,9 +62,10 @@ class robot:
 		await self._move_exec(1)
 
 
-	async def move_linear(self, pos:Pos):
+	async def move_linear(self, pos:Pos, speed:float=100):
 		app.log.info(f'Robot move linear to {pos}')
 		codesys.cmd.rbt_move_coord[:] = pos.x, pos.y, pos.z
+		codesys.cmd.rbt_move_fvel = speed / 100
 		await self._move_exec(2)
 
 
@@ -81,6 +84,38 @@ class robot:
 		finally:
 			codesys.cmd.rbt_move = 0
 			await codesys.sync()
+
+
+	@asynccontextmanager
+	async def jog(self):
+		watchdog = Timeout(0.2)
+
+		async def jog_task():
+			while True:
+				await app.poll(lambda: any(codesys.cmd.rbt_move_coord))
+				async with self.power():
+					codesys.cmd.rbt_move = 99
+					try:
+						power_timer = Timer(15)
+						while power_timer and not (codesys.fbk.rbt_move_error or watchdog()):
+							await app.sleep()
+							if any(codesys.cmd.rbt_move_coord):
+								power_timer.reset()
+					finally:
+						codesys.cmd.rbt_move = 0
+						await codesys.sync()
+				await app.poll(lambda: not any(codesys.cmd.rbt_move_coord))
+
+		def jog_control(direction:Pos|None=None, speed:float=10):
+			"""Calling jog_control without args resets the watchdog."""
+			watchdog.reset()
+			if direction is not None:
+				codesys.cmd.rbt_move_coord[:] = direction.x, direction.y, direction.z
+				codesys.cmd.rbt_move_fvel = speed / 100
+
+		jog_control(Pos())
+		async with app.task_group(jog_task):
+			yield jog_control
 
 
 	async def home(self):

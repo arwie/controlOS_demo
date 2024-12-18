@@ -1,21 +1,21 @@
 
 
 <script type="text/html" id="xyzrInput">
-	<div class="row">
+	<div class="row gy-1 gx-3">
 		<div class="input-group col-lg">
-			<div class="input-group-prepend"><span class="input-group-text">X</span></div>
+			<span class="input-group-text">X</span>
 			<input data-bind="value:value.x, ro:$component.ro" type="number" step="any" class="form-control">
 		</div>
 		<div class="input-group col-lg">
-			<div class="input-group-prepend"><span class="input-group-text">Y</span></div>
+			<span class="input-group-text">Y</span>
 			<input data-bind="value:value.y, ro:$component.ro" type="number" step="any" class="form-control">
 		</div>
 		<div class="input-group col-lg" data-bind="if:'z' in value">
-			<div class="input-group-prepend"><span class="input-group-text">Z</span></div>
+			<span class="input-group-text">Z</span>
 			<input data-bind="value:value.z, ro:$component.ro" type="number" step="any" class="form-control">
 		</div>
 		<div class="input-group col-lg" data-bind="if:'r' in value">
-			<div class="input-group-prepend"><span class="input-group-text">R</span></div>
+			<span class="input-group-text">R</span>
 			<input data-bind="value:value.r, ro:$component.ro" type="number" step="any" class="form-control">
 		</div>
 	</div>

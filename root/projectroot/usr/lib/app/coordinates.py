@@ -83,6 +83,14 @@ class Pos:
 			r = self.r - other.r,
 		)
 
+	def __mul__(self, factor:float):
+		return Pos(
+			x = self.x * factor,
+			y = self.y * factor,
+			z = self.z * factor,
+			r = self.r * factor,
+		)
+
 	def __invert__(self):
 		"""Return inverted Pos instance"""
 		sr, cr = deg.sin(-self.r), deg.cos(-self.r)

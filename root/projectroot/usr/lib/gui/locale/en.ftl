@@ -11,11 +11,11 @@ data_ppmParts	= Parts
 data_ppmPpm		= Parts per Minute
 
 teach			= Teach
-teach_position	= Position
+teach_position	= Current position
 teach_speed		= Speed
 teach_tool		= Gripper
 teach_grip		= Grip
-teach_goto		= Move to position
+teach_snap		= Snap to position
 teach_conv		= Conveyor
 
 tool_none		= No gripper

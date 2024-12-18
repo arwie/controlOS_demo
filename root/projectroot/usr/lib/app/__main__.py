@@ -2,6 +2,7 @@ from shared import app
 from shared.app import codesys
 import drives
 from robot import robot
+import teach
 
 import demo_robot_motion
 import demo_cnc_paint
@@ -13,8 +14,10 @@ async def operation():
 	await drives.initialize()
 	await robot.home()
 
+	await teach.run()
+
 	#await demo_robot_motion.run()
-	await demo_cnc_paint.run()
+	#await demo_cnc_paint.run()
 
 
 

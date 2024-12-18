@@ -2,26 +2,11 @@
 
 
 {% block html %}
-<div class="form-group">
-	<label data-l10n-id="teach_position"></label>
-	<div data-bind="foreach:['x','y','z','r']" class="row">
-		<div class="input-group col-lg">
-			<div class="input-group-prepend"><span data-bind="text:$data.toUpperCase()" class="input-group-text"></span></div>
-			<input data-bind="value:$model.info.pos[$data]().toFixed(2)" type="text" class="form-control" readonly>
-		</div>
-	</div>
-</div>
-
-<div class="form-group">
-	<label data-l10n-id="teach_speed"></label>
-	<input data-bind="value:$model.speed" type="range" min="1" max="15" step="0.1" class="custom-range">
-</div>
-
-<div class="form-group">
-	<label data-l10n-id="teach_tool"></label>
+<div class="mb-3">
+	<label class="form-label" data-l10n-id="teach_tool"></label>
 	<div class="row">
 		<div class="col">
-			<select data-bind="event:{change:$model.selectTool}, value:$model.info.tool, valueAllowUnset:true" class="custom-select">
+			<select data-bind="event:{change:$model.selectTool}, value:$model.info.tool, valueAllowUnset:true" class="form-select">
 				 <option value="0"  data-l10n-id="tool_none"></option>
 				 <option value="1"  data-l10n-id="tool_magnet"></option>
 				 <option value="2"  data-l10n-id="tool_vacuum"></option>
@@ -30,82 +15,91 @@
 			</select>
 		</div>
 		<div class="col-2">
-			<div class="custom-control custom-switch">
-				<input data-bind="event:{change:$model.gripTool}, checked:$model.info.gripped()" type="checkbox" class="custom-control-input" id="teach_grip">
-				<label class="custom-control-label" for="teach_grip" data-l10n-id="teach_grip"></label>
+			<div class="form-check form-switch mt-2">
+				<input data-bind="event:{change:$model.gripTool}, checked:$model.info.gripped()" type="checkbox" class="form-check-input" id="teach_grip">
+				<label class="form-check-label" for="teach_grip" data-l10n-id="teach_grip"></label>
 			</div>
 		</div>
 	</div>
 </div>
 
-<div class="form-group">
-	<label data-l10n-id="teach_goto"></label>
-	<div class="row">
-		<div class="col">
-			<xyzrInput params="value:$model.gotoPos"></xyzrInput>
-		</div>
-		<div class="col-lg-2">
-			<button data-bind="press:{start:$model.goto, stop:$model.moveStop}" class="btn btn-block btn-success"><i class="fas fa-play"></i></button>
+<hr class="my-4">
+
+<div class="mb-3">
+	<label class="form-label" data-l10n-id="teach_position"></label>
+	<div data-bind="foreach:['x','y','z','r']" class="row gy-1 gx-3">
+		<div class="input-group col-sm">
+			<span data-bind="text:$data.toUpperCase()" class="input-group-text"></span>
+			<input data-bind="value:$model.info.pos[$data]().toFixed(2)" type="text" class="form-control" readonly>
 		</div>
 	</div>
 </div>
 
-<hr class="my-5">
+<div class="mb-3">
+	<label class="form-label" data-l10n-id="teach_snap"></label>
+	<div data-bind="foreach:['x','y','z','r']" class="row gy-1 gx-3">
+		<div class="input-group col-sm">
+			<span data-bind="text:$data.toUpperCase()" class="input-group-text"></span>
+			<input data-bind="textInput:$model.snap[$data]" type="number" class="form-control">
+		</div>
+	</div>
+</div>
+
+<div class="mb-3">
+	<label class="form-label" data-l10n-id="teach_speed"></label>
+	<input data-bind="value:$model.speed" type="range" min="0.1" max="8" step="0.1" class="form-range">
+</div>
 
 <div class="row my-5">
 	<div class="col">
-		<button data-bind="press:{start:()=>{$model.moveDelta({x:0,y:0,z:-1,r:0})}, stop:$model.moveStop}" class="btn btn-block btn-lg btn-secondary"><i class="fa fa-minus"></i> Z</button>
+		<button data-bind="press:{start:()=>{$model.moveDelta({z:1})}, stop:$model.moveStop}" class="btn btn-lg btn-secondary w-100"><i class="fa fa-plus"></i> Z</button>
 	</div>
 	<div class="col"></div>
 	<div class="col">
-		<button data-bind="press:{start:()=>{$model.moveDelta({x:0,y:-1,z:0,r:0})}, stop:$model.moveStop}" class="btn btn-block btn-lg btn-secondary"><i class="fa fa-minus"></i> Y</button>
+		<button data-bind="press:{start:()=>{$model.moveDelta({y:-1})}, stop:$model.moveStop}" class="btn btn-lg btn-secondary w-100"><i class="fa fa-minus"></i> Y</button>
 	</div>
 	<div class="col"></div>
 	<div class="col">
-		<button data-bind="press:{start:()=>{$model.moveDelta({x:0,y:0,z:0,r:-1})}, stop:$model.moveStop}" class="btn btn-block btn-lg btn-secondary"><i class="fa fa-minus"></i> R</button>
+		<button data-bind="press:{start:()=>{$model.moveDelta({r:-1})}, stop:$model.moveStop}" class="btn btn-lg btn-secondary w-100"><i class="fa fa-minus"></i> R</button>
 	</div>
 </div>
 <div class="row my-5">
 	<div class="col"></div>
 	<div class="col">
-		<button data-bind="press:{start:()=>{$model.moveDelta({x:-1,y:0,z:0,r:0})}, stop:$model.moveStop}" class="btn btn-block btn-lg btn-secondary"><i class="fa fa-minus"></i> X</button>
+		<button data-bind="press:{start:()=>{$model.moveDelta({x:-1})}, stop:$model.moveStop}" class="btn btn-lg btn-secondary w-100"><i class="fa fa-minus"></i> X</button>
 	</div>
 	<div class="col"></div>
 	<div class="col">
-		<button data-bind="press:{start:()=>{$model.moveDelta({x:1,y:0,z:0,r:0})}, stop:$model.moveStop}" class="btn btn-block btn-lg btn-secondary"><i class="fa fa-plus" ></i> X</button>
+		<button data-bind="press:{start:()=>{$model.moveDelta({x:1})}, stop:$model.moveStop}" class="btn btn-lg btn-secondary w-100"><i class="fa fa-plus" ></i> X</button>
 	</div>
 	<div class="col"></div>
 </div>
 <div class="row my-5">
 	<div class="col">
-		<button data-bind="press:{start:()=>{$model.moveDelta({x:0,y:0,z:1,r:0})}, stop:$model.moveStop}" class="btn btn-block btn-lg btn-secondary"><i class="fa fa-plus" ></i> Z</button>
+		<button data-bind="press:{start:()=>{$model.moveDelta({z:-1})}, stop:$model.moveStop}" class="btn btn-lg btn-secondary w-100"><i class="fa fa-minus" ></i> Z</button>
 	</div>
 	<div class="col"></div>
 	<div class="col">
-		<button data-bind="press:{start:()=>{$model.moveDelta({x:0,y:1,z:0,r:0})}, stop:$model.moveStop}" class="btn btn-block btn-lg btn-secondary"><i class="fa fa-plus" ></i> Y</button>
+		<button data-bind="press:{start:()=>{$model.moveDelta({y:1})}, stop:$model.moveStop}" class="btn btn-lg btn-secondary w-100"><i class="fa fa-plus" ></i> Y</button>
 	</div>
 	<div class="col"></div>
 	<div class="col">
-		<button data-bind="press:{start:()=>{$model.moveDelta({x:0,y:0,z:0,r:1})}, stop:$model.moveStop}" class="btn btn-block btn-lg btn-secondary"><i class="fa fa-plus"></i> R</button>
+		<button data-bind="press:{start:()=>{$model.moveDelta({r:1})}, stop:$model.moveStop}" class="btn btn-lg btn-secondary w-100"><i class="fa fa-plus"></i> R</button>
 	</div>
 </div>
 
-<hr class="my-5">
+<hr class="my-4">
 
-<div class="form-group">
-	<label data-l10n-id="teach_conv"></label>
-	<div class="input-group">
-		<div class="input-group-prepend" style="min-width:35%">
-			<button data-bind="press:{start:()=>{$model.moveConv(-1)}, stop:$model.moveStop}" class="btn btn-block btn-lg btn-secondary">
-				<i class="fas fa-minus"></i>
-			</button>
-		</div>
-		<input data-bind="value:$model.info.conv().toFixed(2)" class="form-control form-control-lg text-center" disabled>
-		<div class="input-group-append" style="min-width:35%">
-			<button data-bind="press:{start:()=>{$model.moveConv(1)}, stop:$model.moveStop}" class="btn btn-block btn-lg btn-secondary">
-				<i class="fas fa-plus"></i>
-			</button>
-		</div>
+<div class="mb-3">
+	<label class="form-label" data-l10n-id="teach_conv"></label>
+	<div class="input-group input-group-lg">
+		<button data-bind="press:{start:()=>{$model.moveConv(-1)}, stop:$model.moveStop}" class="btn btn-secondary w-25">
+			<i class="fas fa-minus"></i>
+		</button>
+		<input data-bind="value:$model.info.conv().toFixed(2)" class="form-control text-center" disabled>
+		<button data-bind="press:{start:()=>{$model.moveConv(1)}, stop:$model.moveStop}" class="btn btn-secondary w-25">
+			<i class="fas fa-plus"></i>
+		</button>
 	</div>
 </div>
 {% end %}
@@ -115,23 +109,14 @@
 class {
 	constructor() {
 		this.info = ko.mapping.fromJS({});
-		this.speed = ko.observable('5');
-		this.gotoPos = ko.mapping.fromJS({x:0, y:0, z:0, r:0});
+		this.speed = ko.observable('3');
+		this.snap = ko.mapping.fromJS({x:'', y:'', z:'', r:''});
 		this.watchdog = null;
 	}
 	
 	moveStop()			{ model.sendCmd(0); }
-	
-	moveDelta(dir)		{ model.sendCmd(1,  {abs:false, dir:dir}); }
-	moveConv(dir)		{ model.sendCmd(11, {dir:{x:dir,y:dir,z:dir,r:dir}}); }
-	
-	goto() {
-		document.activeElement.blur();
-		let pos = {};
-		for (let key of ['x','y','z','r']) 
-			pos[key] = parseFloat(model.gotoPos[key]());
-		model.sendCmd(1, {abs:true, dir:pos});
-	}
+	moveDelta(dir)		{ model.sendCmd(1,  {dir:dir}); }
+	moveConv(dir)		{ model.sendCmd(11, {dir:dir}); }
 	
 	selectTool(ctx, event) {
 		model.sendCmd(-1, {tool:parseInt(event.target.value)});
@@ -142,31 +127,31 @@ class {
 	}
 	
 	sendCmd(cmd, args={}) {
-		if (cmd>0)
-			this.watchdog = setInterval(model.mc.sendJson, 50);
-		else
-			clearInterval(this.watchdog);
-		
 		args.cmd = cmd;
-		args.speed = parseFloat(model.speed());
-		model.mc.sendJson(args);
+		if (cmd > 0) {
+			args.speed = parseFloat(model.speed());
+			args.snap = ko.mapping.toJS(model.snap);
+		}
+		model.ws.sendJson(args);
 		//console.log(args); 
 	}
 	
 	start(started) {
-		model.mc = webSocket(wsUrl('mc', 55001), (data, first)=>{
-			ko.mapping.fromJS(data, model.info);
+		model.ws = webSocket(wsUrl('teach', ports.app), (msg, first)=>{
+			ko.mapping.fromJS(msg, model.info);
 			if (first) started();
 		});
+		this.watchdog = setInterval(model.ws.sendJson, 50);
 	}
 	
 	stop() {
-		model.mc.close();
+		clearInterval(this.watchdog);
+		model.ws.close();
 	}
 }
 {% end %}
 
 
 {% block guard %}
-	return gui.isState('mc@teach');
+	return gui.isState('app@teach');
 {% end %}

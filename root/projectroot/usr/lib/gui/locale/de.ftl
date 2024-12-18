@@ -8,11 +8,11 @@ data_ppmParts	= Teile
 data_ppmPpm		= Teile pro Minute
 
 teach			= Teachen
-teach_position	= Position
+teach_position	= Aktuelle Position
 teach_speed		= Geschwindigkeit
 teach_tool		= Greifer
 teach_grip		= Greifen
-teach_goto		= Bewege zu Position
+teach_snap		= Einrasten auf Position
 teach_conv		= Förderband
 
 tool_none		= Kein Greifer
