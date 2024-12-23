@@ -56,11 +56,11 @@
 	</div>
 	<div class="col"></div>
 	<div class="col">
-		<button data-bind="press:{start:()=>{$model.moveDelta({y:-1})}, stop:$model.moveStop}" class="btn btn-lg btn-secondary w-100"><i class="fa fa-minus"></i> Y</button>
+		<button data-bind="press:{start:()=>{$model.moveDelta({y:1})}, stop:$model.moveStop}" class="btn btn-lg btn-secondary w-100"><i class="fa fa-plus"></i> Y</button>
 	</div>
 	<div class="col"></div>
 	<div class="col">
-		<button data-bind="press:{start:()=>{$model.moveDelta({r:-1})}, stop:$model.moveStop}" class="btn btn-lg btn-secondary w-100"><i class="fa fa-minus"></i> R</button>
+		<button data-bind="press:{start:()=>{$model.moveDelta({r:1})}, stop:$model.moveStop}" class="btn btn-lg btn-secondary w-100"><i class="fa fa-plus"></i> R</button>
 	</div>
 </div>
 <div class="row my-5">
@@ -80,11 +80,11 @@
 	</div>
 	<div class="col"></div>
 	<div class="col">
-		<button data-bind="press:{start:()=>{$model.moveDelta({y:1})}, stop:$model.moveStop}" class="btn btn-lg btn-secondary w-100"><i class="fa fa-plus" ></i> Y</button>
+		<button data-bind="press:{start:()=>{$model.moveDelta({y:-1})}, stop:$model.moveStop}" class="btn btn-lg btn-secondary w-100"><i class="fa fa-minus" ></i> Y</button>
 	</div>
 	<div class="col"></div>
 	<div class="col">
-		<button data-bind="press:{start:()=>{$model.moveDelta({r:1})}, stop:$model.moveStop}" class="btn btn-lg btn-secondary w-100"><i class="fa fa-plus"></i> R</button>
+		<button data-bind="press:{start:()=>{$model.moveDelta({r:-1})}, stop:$model.moveStop}" class="btn btn-lg btn-secondary w-100"><i class="fa fa-minus"></i> R</button>
 	</div>
 </div>
 
