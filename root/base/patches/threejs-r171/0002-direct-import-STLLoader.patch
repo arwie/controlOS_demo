@@ -1,25 +1,25 @@
-From 85ad97f2d5bd4e4578ffea4b92c75b2a397a15f3 Mon Sep 17 00:00:00 2001
+From c27c36f792ff77817a89aadd4246ccc8c97ce3a6 Mon Sep 17 00:00:00 2001
 From: Artur Wiebe <artur@4wiebe.de>
-Date: Tue, 7 Nov 2023 15:05:30 +0100
-Subject: [PATCH 2/2] direct import: STLLoader.js
+Date: Mon, 23 Dec 2024 16:28:56 +0100
+Subject: [PATCH 2/4] direct import STLLoader
 
 ---
  examples/jsm/loaders/STLLoader.js | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/examples/jsm/loaders/STLLoader.js b/examples/jsm/loaders/STLLoader.js
-index 75d4f84..d86e980 100644
+index b94b806..aed3a90 100644
 --- a/examples/jsm/loaders/STLLoader.js
 +++ b/examples/jsm/loaders/STLLoader.js
-@@ -6,7 +6,7 @@ import {
- 	Float32BufferAttribute,
+@@ -7,7 +7,7 @@ import {
  	Loader,
- 	Vector3
+ 	Vector3,
+ 	SRGBColorSpace
 -} from 'three';
 +} from './three.module.js';
  
  /**
   * Description: A THREE loader for STL ASCII files, as created by Solidworks and other CAD programs.
 -- 
-2.42.0
+2.47.1
 

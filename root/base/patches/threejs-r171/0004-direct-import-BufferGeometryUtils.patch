@@ -1,0 +1,25 @@
+From d5c25f6e7abe3ad4a2de5f6c07eb3b59de204251 Mon Sep 17 00:00:00 2001
+From: Artur Wiebe <artur@4wiebe.de>
+Date: Mon, 23 Dec 2024 16:29:27 +0100
+Subject: [PATCH 4/4] direct import BufferGeometryUtils
+
+---
+ examples/jsm/utils/BufferGeometryUtils.js | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/examples/jsm/utils/BufferGeometryUtils.js b/examples/jsm/utils/BufferGeometryUtils.js
+index cc3e4ef..de61dca 100644
+--- a/examples/jsm/utils/BufferGeometryUtils.js
++++ b/examples/jsm/utils/BufferGeometryUtils.js
+@@ -9,7 +9,7 @@ import {
+ 	TriangleStripDrawMode,
+ 	TrianglesDrawMode,
+ 	Vector3,
+-} from 'three';
++} from './three.module.js';
+ 
+ function computeMikkTSpaceTangents( geometry, MikkTSpace, negateSign = true ) {
+ 
+-- 
+2.47.1
+

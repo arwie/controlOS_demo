@@ -14,8 +14,8 @@ PACKAGES-$(PTXCONF_GUI_THREEJS) += gui-threejs
 #
 # Paths and names
 #
-GUI_THREEJS_VERSION		:= r158
-GUI_THREEJS_MD5			:= 8377ec26caa05069907c42af865000d5
+GUI_THREEJS_VERSION		:= r171
+GUI_THREEJS_MD5			:= e05faf180cae2f92421572918e38bf58
 GUI_THREEJS			:= threejs-$(GUI_THREEJS_VERSION)
 GUI_THREEJS_SUFFIX		:= tar.gz
 GUI_THREEJS_URL			:= https://github.com/mrdoob/three.js/archive/refs/tags/$(GUI_THREEJS_VERSION).$(GUI_THREEJS_SUFFIX)
@@ -53,12 +53,20 @@ $(STATEDIR)/gui-threejs.targetinstall:
 	@$(call install_fixup, gui-threejs,DESCRIPTION,missing)
 
 	@$(call install_copy, gui-threejs, 0, 0, 0644, \
-		$(GUI_THREEJS_DIR)/build/three.module.min.js, /usr/lib/gui/static/three/three.module.js)
+		$(GUI_THREEJS_DIR)/build/three.module.js, /usr/lib/gui/static/three/three.module.js)
+	@$(call install_copy, gui-threejs, 0, 0, 0644, \
+		$(GUI_THREEJS_DIR)/build/three.core.js, /usr/lib/gui/static/three/three.core.js)
 
 	@$(call install_copy, gui-threejs, 0, 0, 0644, \
 		$(GUI_THREEJS_DIR)/examples/jsm/controls/OrbitControls.js, /usr/lib/gui/static/three/OrbitControls.js)
+
 	@$(call install_copy, gui-threejs, 0, 0, 0644, \
 		$(GUI_THREEJS_DIR)/examples/jsm/loaders/STLLoader.js, /usr/lib/gui/static/three/STLLoader.js)
+	@$(call install_copy, gui-threejs, 0, 0, 0644, \
+		$(GUI_THREEJS_DIR)/examples/jsm/loaders/GLTFLoader.js, /usr/lib/gui/static/three/GLTFLoader.js)
+
+	@$(call install_copy, gui-threejs, 0, 0, 0644, \
+		$(GUI_THREEJS_DIR)/examples/jsm/utils/BufferGeometryUtils.js, /usr/lib/gui/static/three/BufferGeometryUtils.js)
 
 	@$(call install_finish, gui-threejs)
 	@$(call touch)

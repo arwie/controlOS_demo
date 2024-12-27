@@ -15,19 +15,34 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-import * as THREE				from '/static/three/three.module.js';
-import { STLLoader }			from '/static/three/STLLoader.js';
+import {
+	Bone,
+	Mesh,
+	MeshPhongMaterial,
+} from '/static/three/three.module.js';
+import { STLLoader } from '/static/three/STLLoader.js';
 
 
-const loader = new STLLoader();
 
-
-export default function loadStl(file, material)
+//material: Material or Material properties
+//bones: Bone or [Bone]
+export default function loadStl(file, material, bones = new Bone())
 {
-	let bone = new THREE.Bone();
-	if (file) loader.load(file, (geometry) => {
-		bone.add(new THREE.Mesh(geometry, material.isMaterial ? material : new THREE.MeshPhongMaterial(material))); 
-	});
-	return bone;
-}
+	if (file)
+		new STLLoader().load(file, (geometry) => {
 
+			if (!material.isMaterial)
+				material = new MeshPhongMaterial(material);
+
+			if (geometry.hasColors) {
+				material.vertexColors = true;
+				material.opacity = geometry.alpha;
+			}
+
+			for (let bone of (Array.isArray(bones) ? bones : [bones]))
+				bone.add(new Mesh(geometry, material));
+
+		});
+
+	return bones;
+}
