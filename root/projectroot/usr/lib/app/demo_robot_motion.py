@@ -47,7 +47,7 @@ async def run():
 	robot.override = 50
 
 	while True:
-		await app.sleep(1)
+		await app.sleep(0.5)
 		try:
 			await demo_move_direct(3)
 			await demo_move_linear(3)

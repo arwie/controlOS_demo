@@ -8,8 +8,8 @@ from robot import robot, Pos
 web_placeholder = app.web.placeholder('teach')
 
 
-
-async def run():
+@app.context
+async def exec():
 	async with robot.jog() as robot_jog_control:
 
 		class WebHandler(app.web.WebSocketHandler):
@@ -45,5 +45,5 @@ async def run():
 
 
 		async with web_placeholder.handle(WebHandler):
-			await Event().wait()
+			yield
 

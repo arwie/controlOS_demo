@@ -4,7 +4,7 @@ if TYPE_CHECKING:
 	from collections.abc import Mapping
 
 from math import sqrt
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass, asdict, astuple
 from shared import deg
 
 
@@ -14,6 +14,9 @@ class Axes:
 	a: float = 0
 	b: float = 0
 	c: float = 0
+
+	def astuple(self):
+		return astuple(self)
 
 	def asdict(self):
 		return asdict(self)
