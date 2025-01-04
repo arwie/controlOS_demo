@@ -9,7 +9,7 @@
         <addData>
           <data name="Device" handleUnknown="discard">
             <Device xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="">
-              <DeviceType>
+              <DeviceType Disable="true">
                 <DeviceIdentification>
                   <Type>18</Type>
                   <Id>2E1_A5A5</Id>

@@ -134,7 +134,7 @@
                       </Parameter>
                       <Parameter ParameterId="1052" type="std:DINT" IndexInDevDesc="18">
                         <Attributes />
-                        <Value name="_x0031_052" visiblename="iRatioTechUnitsNum" desc="conversion inc./tech.units numerator">25</Value>
+                        <Value name="_x0031_052" visiblename="iRatioTechUnitsNum" desc="conversion inc./tech.units numerator">5</Value>
                         <Name>iRatioTechUnitsNum</Name>
                         <Description>conversion inc./tech.units numerator</Description>
                       </Parameter>
@@ -165,7 +165,7 @@
                       </Parameter>
                       <Parameter ParameterId="5005" type="std:DINT" IndexInDevDesc="24">
                         <Attributes />
-                        <Value name="_x0035_005" visiblename="ScalingUnits">100</Value>
+                        <Value name="_x0035_005" visiblename="ScalingUnits">20</Value>
                         <Name>ScalingUnits</Name>
                       </Parameter>
                       <Parameter ParameterId="5006" type="std:BOOL" IndexInDevDesc="25">

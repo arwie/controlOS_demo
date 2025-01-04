@@ -10,9 +10,10 @@ STRUCT
 	rbt_move_done:		BOOL;
 	rbt_move_error:		BOOL;
 
-	extra_powered:		BOOL;
-	extra_move_done:	BOOL;
-	extra_move_error:	BOOL;
+	conv_pos:			LREAL;
+	conv_powered:		BOOL;
+	conv_move_done:		BOOL;
+	conv_move_error:	BOOL;
 	
 	io:		ARRAY [0..128] OF BOOL;
 END_STRUCT

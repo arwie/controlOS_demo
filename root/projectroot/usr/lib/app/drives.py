@@ -8,11 +8,12 @@ POSITION_FACTOR_ROBOT = 4096 / 70
 
 
 class StepIM(CanopenDevice):
-	POSITION_FACTOR = 4096 / 360
 
-	def __init__(self, slave:int, name:str):
+	def __init__(self, slave:int, name:str, rev_units:float=360):
 		super().__init__(slave)
 		self.name = name
+		self.pos_factor = 4096 / rev_units
+
 
 	async def initialize(self):
 		self.max_current = await self.sdo_read((0x6075, 0))
@@ -24,7 +25,7 @@ class StepIM(CanopenDevice):
 
 
 	async def set_following_error(self, error:float):
-		error_drive = int(error * self.POSITION_FACTOR)
+		error_drive = int(error * self.pos_factor)
 		await robot_a.sdo_write((0x6065, 0), c_uint32(error_drive))
 
 
@@ -35,13 +36,16 @@ class StepIM(CanopenDevice):
 
 
 class RobotDrive(StepIM):
-	POSITION_FACTOR = 4096 / 70
+	pass
+
+
+robot_a = RobotDrive(1, 'Robot_A', 70)
+robot_b = RobotDrive(2, 'Robot_B', 70)
+robot_c = RobotDrive(3, 'Robot_C', 70)
 
 
 
-robot_a = RobotDrive(1, 'Robot_A')
-robot_b = RobotDrive(2, 'Robot_B')
-robot_c = RobotDrive(3, 'Robot_C')
+conv_drive = StepIM(4, 'Conv', 20)
 
 
 

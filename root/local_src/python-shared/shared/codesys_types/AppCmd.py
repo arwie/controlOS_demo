@@ -8,10 +8,10 @@ class AppCmd(Structure):
 	rbt_move: int
 	rbt_move_coord: list[float]
 	rbt_move_fvel: float
-	extra_power: bool
-	extra_move_exec: bool
-	extra_move_distance: float
-	extra_move_velocity: float
+	conv_power: bool
+	conv_reset: bool
+	conv_move: int
+	conv_move_vel: float
 	io: list[bool]
 	_fields_ = [
 		('co', CoCmd),
@@ -21,9 +21,9 @@ class AppCmd(Structure):
 		('rbt_move', c_int16),
 		('rbt_move_coord', c_double * 3),
 		('rbt_move_fvel', c_double),
-		('extra_power', c_bool),
-		('extra_move_exec', c_bool),
-		('extra_move_distance', c_double),
-		('extra_move_velocity', c_double),
+		('conv_power', c_bool),
+		('conv_reset', c_bool),
+		('conv_move', c_int16),
+		('conv_move_vel', c_double),
 		('io', c_bool * 129),
 	]

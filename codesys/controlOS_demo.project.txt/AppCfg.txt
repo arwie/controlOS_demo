@@ -3,5 +3,8 @@ STRUCT
 	robot_vel:		LREAL;
 	robot_acc:		LREAL;
 	robot_jrk:		LREAL;
+
+	conv_acc:		LREAL;
+	conv_jrk:		LREAL;
 END_STRUCT
 END_TYPE

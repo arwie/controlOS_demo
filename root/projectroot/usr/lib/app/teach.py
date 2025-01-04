@@ -2,6 +2,7 @@ from asyncio import Event
 from dataclasses import astuple
 from shared import app
 from robot import robot, Pos
+from conv import conv
 
 
 
@@ -10,14 +11,18 @@ web_placeholder = app.web.placeholder('teach')
 
 @app.context
 async def exec():
-	async with robot.jog() as robot_jog_control:
+	async with robot.jog() as robot_jog_control, conv.jog() as conv_jog_control:
 
 		class WebHandler(app.web.WebSocketHandler):
 			@classmethod
 			def update(cls):
 				return {
-					'pos': robot.pos().asdict(),
-					'conv': 0,
+					'robot': {
+						'pos': robot.pos().asdict(),
+					},
+					'conv': {
+						'pos': conv.pos(),
+					},
 					'tool': 0,
 					'gripped': False,
 				}
@@ -26,9 +31,11 @@ async def exec():
 				match msg.get('cmd'):
 					case None: #watchdog
 						robot_jog_control()
+						conv_jog_control()
 
 					case 0: #stop
 						robot_jog_control(Pos())
+						conv_jog_control(0)
 
 					case 1: #robot jog
 						direction = Pos(**msg['dir'])
@@ -42,6 +49,9 @@ async def exec():
 									distance = abs(sp)
 
 						robot_jog_control(direction * distance, msg['speed'])
+
+					case 11: #conv jog
+						conv_jog_control(msg['dir'], msg['speed'])
 
 
 		async with web_placeholder.handle(WebHandler):

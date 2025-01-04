@@ -1,0 +1,79 @@
+PROGRAM Exec_Conv
+VAR
+	ReadSetPosition: SMC_ReadSetPosition;
+	ReadStatus:	MC_ReadStatus;
+	Reset: MC_Reset;
+	Power: MC_Power;
+	Halt: MC_Halt;
+
+	MoveVelocity: MC_MoveVelocity;
+	Jog: MC_Jog;
+END_VAR
+
+////////////////////////////////
+
+ReadSetPosition(
+	Axis := Conv,
+	Enable := TRUE,
+	Position => app.fbk.conv_pos
+);
+
+
+ReadStatus(
+	Axis := Conv,
+	Enable := TRUE,
+);
+
+Reset(
+	Axis := Conv,
+	Execute := app.cmd.conv_reset AND ReadStatus.ErrorStop,
+);
+
+
+Power(
+	Axis := Conv,
+	Enable := TRUE,
+	bRegulatorOn := app.cmd.conv_power,
+	bDriveStart  := app.cmd.conv_power,
+	Status => app.fbk.conv_powered
+);
+
+
+Halt(
+	Axis := Conv,
+	Execute := Power.Status AND app.cmd.conv_move = 0,
+	Deceleration := app.cfg.conv_acc,
+	Jerk         := app.cfg.conv_jrk,
+);
+
+
+app.fbk.conv_move_done  := FALSE;
+app.fbk.conv_move_error := FALSE;
+
+
+//1: MoveVelocity
+
+MoveVelocity(
+	Axis := Conv,
+	Execute := app.cmd.conv_move = 1,
+	BufferMode := MC_BUFFER_MODE.Aborting,
+	Velocity     := app.cmd.conv_move_vel,
+	Acceleration := app.cfg.conv_acc,
+	Deceleration := app.cfg.conv_acc,
+	Jerk         := app.cfg.conv_jrk,
+);
+app.fbk.conv_move_error := app.fbk.conv_move_error OR MoveVelocity.Error;
+
+
+//99: JOG
+
+Jog(
+	Axis := Conv,
+	JogForward  := app.cmd.conv_move = 99 AND app.cmd.conv_move_vel > 0,
+	JogBackward := app.cmd.conv_move = 99 AND app.cmd.conv_move_vel < 0,
+	Velocity     := ABS(app.cmd.conv_move_vel),
+	Acceleration := app.cfg.conv_acc,
+	Deceleration := app.cfg.conv_acc,
+	Jerk         := app.cfg.conv_jrk,
+);
+app.fbk.rbt_move_error := app.fbk.rbt_move_error OR Jog.error;

@@ -30,7 +30,7 @@
 	<div data-bind="foreach:['x','y','z','r']" class="row gy-1 gx-3">
 		<div class="input-group col-sm">
 			<span data-bind="text:$data.toUpperCase()" class="input-group-text"></span>
-			<input data-bind="value:$model.info.pos[$data]().toFixed(2)" type="text" class="form-control" readonly>
+			<input data-bind="value:$model.info.robot.pos[$data]().toFixed(2)" type="text" class="form-control" readonly>
 		</div>
 	</div>
 </div>
@@ -96,7 +96,7 @@
 		<button data-bind="press:{start:()=>{$model.moveConv(-1)}, stop:$model.moveStop}" class="btn btn-secondary w-25">
 			<i class="fas fa-minus"></i>
 		</button>
-		<input data-bind="value:$model.info.conv().toFixed(2)" class="form-control text-center" disabled>
+		<input data-bind="value:$model.info.conv.pos().toFixed(2)" class="form-control text-center" disabled>
 		<button data-bind="press:{start:()=>{$model.moveConv(1)}, stop:$model.moveStop}" class="btn btn-secondary w-25">
 			<i class="fas fa-plus"></i>
 		</button>
@@ -141,7 +141,7 @@ class {
 			ko.mapping.fromJS(msg, model.info);
 			if (first) started();
 		});
-		this.watchdog = setInterval(model.ws.sendJson, 50);
+		this.watchdog = setInterval(model.ws.sendJson, 100);
 	}
 	
 	stop() {

@@ -87,8 +87,8 @@ class robot:
 
 
 	@asynccontextmanager
-	async def jog(self):
-		watchdog = Timeout(0.2)
+	async def jog(self, power_time=15):
+		watchdog = Timeout(0.3)
 
 		async def jog_task():
 			while True:
@@ -96,7 +96,7 @@ class robot:
 				async with self.power():
 					codesys.cmd.rbt_move = 99
 					try:
-						power_timer = Timer(15)
+						power_timer = Timer(power_time)
 						while power_timer and not (codesys.fbk.rbt_move_error or watchdog()):
 							await app.sleep()
 							if any(codesys.cmd.rbt_move_coord):

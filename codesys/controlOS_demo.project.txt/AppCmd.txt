@@ -9,10 +9,10 @@ STRUCT
 	rbt_move_coord:			ARRAY [0..2] OF LREAL;
 	rbt_move_fvel:			LREAL;
 
-	extra_power:			BOOL;
-	extra_move_exec:		BOOL;
-	extra_move_distance:	LREAL;
-	extra_move_velocity:	LREAL;
+	conv_power:				BOOL;
+	conv_reset:				BOOL;
+	conv_move:				INT;
+	conv_move_vel:			LREAL;
 
 	io:		ARRAY [0..128] OF BOOL;
 END_STRUCT
