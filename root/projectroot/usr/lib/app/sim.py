@@ -1,5 +1,7 @@
+from dataclasses import asdict, astuple
 from shared import app
 from robot import robot
+from conv import conv, ConvItem
 import buttons
 
 
@@ -31,8 +33,11 @@ class WebHandler(app.web.WebSocketHandler):
 		return {
 			'cmd': 0,
 			'robot': {
-				'axes': robot.axes().astuple(),
-				'pos':  robot.pos().asdict(),
+				'axes': astuple(robot.axes()),
+				'pos': asdict(robot.pos()),
+			},
+			'conv': {
+				'pos': conv.pos(),
 			},
 		}
 
@@ -47,3 +52,17 @@ async def exec():
 		async with app.task_group(cmd_handler.run):
 			yield
 
+
+
+def conv_place_item(item:ConvItem):
+	WebHandler.all.write_message({
+		'cmd': 11,
+		'id': str(id(item)),
+		'item': asdict(item),
+	})
+
+def conv_remove_item(item:ConvItem):
+	WebHandler.all.write_message({
+		'cmd': 12,
+		'id': str(id(item)),
+	})

@@ -7,6 +7,7 @@ from shared.condition import Timer, Timeout
 from coordinates import Axes, Pos
 from drives import robot_a, robot_b, robot_c
 from cnc import CNCProgram
+from conv import ConvItem
 
 
 
@@ -74,6 +75,12 @@ class robot:
 		Path('/run/codesys/robot.cnc').write_text(str(cnc))
 		codesys.cmd.rbt_move_fvel = speed / 100
 		await self._move_exec(11)
+
+
+	async def conv_pick(self, item:ConvItem):
+		codesys.cmd.rbt_move_coord[:] = item.pos.x, item.pos.y, item.pos.z
+		codesys.cmd.rbt_move_coord_conv = item.conv
+		await self._move_exec(31)
 
 
 	async def _move_exec(self, move:int):

@@ -134,7 +134,7 @@
                       </Parameter>
                       <Parameter ParameterId="1052" type="std:DINT" IndexInDevDesc="18">
                         <Attributes />
-                        <Value name="_x0031_052" visiblename="iRatioTechUnitsNum" desc="conversion inc./tech.units numerator">5</Value>
+                        <Value name="_x0031_052" visiblename="iRatioTechUnitsNum" desc="conversion inc./tech.units numerator">-5</Value>
                         <Name>iRatioTechUnitsNum</Name>
                         <Description>conversion inc./tech.units numerator</Description>
                       </Parameter>
@@ -170,7 +170,7 @@
                       </Parameter>
                       <Parameter ParameterId="5006" type="std:BOOL" IndexInDevDesc="25">
                         <Attributes />
-                        <Value name="_x0035_006" visiblename="InvertDirection">FALSE</Value>
+                        <Value name="_x0035_006" visiblename="InvertDirection">TRUE</Value>
                         <Name>InvertDirection</Name>
                       </Parameter>
                     </ParameterSection>

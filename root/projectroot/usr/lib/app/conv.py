@@ -1,9 +1,18 @@
 from contextlib import asynccontextmanager
+from dataclasses import dataclass
 from shared.utils import instantiate
 from shared import app
-from drives import conv_drive
 from shared.app import codesys
 from shared.condition import Timer, Timeout
+from coordinates import Pos
+from drives import conv_drive
+
+
+
+@dataclass
+class ConvItem:
+	pos: Pos
+	conv: float
 
 
 
@@ -33,6 +42,17 @@ class conv:
 			if not await codesys.poll(lambda: not codesys.fbk.conv_powered, timeout=3):
 				app.log.warning('Conveyor not disabled in time')
 			await app.sleep(0.2) #Let the hardware settle befor next enable
+
+
+	@asynccontextmanager
+	async def move_velocity(self, velocity:float):
+		codesys.cmd.conv_move_vel = velocity
+		codesys.cmd.conv_move = 1
+		try:
+			yield
+		finally:
+			codesys.cmd.conv_move = 0
+			await codesys.sync()
 
 
 	@asynccontextmanager

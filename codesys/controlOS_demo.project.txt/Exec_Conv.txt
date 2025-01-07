@@ -33,8 +33,8 @@ Reset(
 Power(
 	Axis := Conv,
 	Enable := TRUE,
-	bRegulatorOn := app.cmd.conv_power,
-	bDriveStart  := app.cmd.conv_power,
+	bRegulatorOn := app.cmd.conv_power OR ReadStatus.DiscreteMotion OR ReadStatus.ContinuousMotion OR ReadStatus.Stopping,
+	bDriveStart  := app.cmd.conv_power OR ReadStatus.DiscreteMotion OR ReadStatus.ContinuousMotion OR ReadStatus.Stopping,
 	Status => app.fbk.conv_powered
 );
 

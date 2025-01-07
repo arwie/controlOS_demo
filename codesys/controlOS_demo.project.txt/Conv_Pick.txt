@@ -1,0 +1,103 @@
+PROGRAM Conv_Pick
+VAR_INPUT
+	Execute: BOOL;
+	ItemPos: MC_COORD_REF;
+	ItemConv: LREAL;
+END_VAR
+VAR_OUTPUT
+	Done:  BOOL;
+	Error: BOOL;
+END_VAR
+VAR CONSTANT
+	HomePos: SMC_POS_REF := (c:= (X:=-80, Y:=0, Z:=-600));
+	ConvOrigin: MC_COORD_REF := (X:=150, Y:=-100, Z:=-650, A:=90);
+END_VAR
+VAR
+	ConvSetPosition: SMC_ReadSetPosition;
+	TrackConveyorBelt: MC_TrackConveyorBelt;
+	MoveAboveItem: MC_MoveLinearAbsolute;
+	MoveDownItem, MoveUpItem: MC_MoveLinearRelative;
+	WaitTrackItem: SMC_GroupWait;
+	MoveHome: MC_MoveLinearAbsolute;
+END_VAR
+
+////////////////////////////////
+
+ConvSetPosition(
+	Axis := Conv,
+	Enable := Execute,
+);
+
+
+TrackConveyorBelt.InitialObjectPosition := ItemPos;
+TrackConveyorBelt.InitialObjectPosition.X := ItemPos.X + (ConvSetPosition.Position - ItemConv);
+TrackConveyorBelt(
+	AxisGroup := Robot,
+	ConveyorBelt := Conv,
+	Execute := Execute AND TrackConveyorBelt.InitialObjectPosition.X > 0,
+	CoordSystem := SMC_COORD_SYSTEM.PCS_1,
+	ConveyorBeltOrigin := ConvOrigin,
+);
+
+
+MoveAboveItem.Position.c.Z := 70;
+MoveAboveItem(
+	AxisGroup := Robot,
+	Execute := TrackConveyorBelt.Done,
+	CoordSystem := SMC_COORD_SYSTEM.PCS_1,
+	Velocity     := app.cfg.robot_vel,
+	Acceleration := app.cfg.robot_acc,
+	Deceleration := app.cfg.robot_acc,
+	Jerk         := app.cfg.robot_jrk,
+);
+
+MoveDownItem.Distance.c.Z := -15;
+MoveDownItem.TransitionParameter[0] := 10;
+MoveDownItem(
+	AxisGroup := Robot,
+	Execute := MoveAboveItem.CommandAccepted,
+	CoordSystem := SMC_COORD_SYSTEM.PCS_1,
+	Velocity     := app.cfg.robot_vel,
+	Acceleration := app.cfg.robot_acc,
+	Deceleration := app.cfg.robot_acc,
+	Jerk         := app.cfg.robot_jrk,
+	BufferMode := MC_BUFFER_MODE.BlendingHigh,
+	TransitionMode := MC_TRANSITION_MODE.TMCornerDistance,
+);
+
+
+WaitTrackItem(
+	AxisGroup := Robot,
+	Execute := MoveDownItem.Done,
+	WaitTime := 0.1,
+);
+
+
+MoveUpItem.Distance.c.Z := ABS(MoveDownItem.Distance.c.Z);
+MoveUpItem(
+	AxisGroup := Robot,
+	Execute := WaitTrackItem.Done,
+	CoordSystem := SMC_COORD_SYSTEM.PCS_1,
+	Velocity     := app.cfg.robot_vel,
+	Acceleration := app.cfg.robot_acc,
+	Deceleration := app.cfg.robot_acc,
+	Jerk         := app.cfg.robot_jrk,
+);
+
+
+MoveHome.TransitionParameter[0] := 10;
+MoveHome(
+	AxisGroup := Robot,
+	Execute := MoveUpItem.CommandAccepted,
+	CoordSystem := SMC_COORD_SYSTEM.WCS,
+	Position := HomePos,
+	Velocity     := app.cfg.robot_vel,
+	Acceleration := app.cfg.robot_acc,
+	Deceleration := app.cfg.robot_acc,
+	Jerk         := app.cfg.robot_jrk,
+	BufferMode := MC_BUFFER_MODE.BlendingHigh,
+	TransitionMode := MC_TRANSITION_MODE.TMCornerDistance,
+);
+
+
+Done := MoveHome.Done;

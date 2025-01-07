@@ -23,6 +23,10 @@
 {% block script %}
 	import {
 		Bone,
+		CylinderGeometry,
+		MeshPhongMaterial,
+		Mesh,
+		MathUtils,
 		AxesHelper,
 	} from '{{static_url('three/three.module.js')}}';
 	import Scene from '{{static_url('sim/scene.mjs')}}';
@@ -45,8 +49,62 @@
 			loadStl('{{static_url('sim/robot/arm.stl')}}',   {color:'OrangeRed'}, this.arms);
 			loadStl('{{static_url('sim/robot/rod.stl')}}',   {color:'SlateGray'}, this.rods);
 
+			this.tool = loadStl('{{static_url('sim/robot/tool.stl')}}', {color:'FireBrick'});
+			this.tool.position.z = -50;
+			this.plate.add(this.tool);
+
 			this.add(new AxesHelper(200));
 			this.plate.add(new AxesHelper(100));
+		}
+	}
+
+
+	class Conv extends Bone {
+		constructor() {
+			super();
+
+			this.position.set(+150, -100, -650);
+			this.rotation.z = MathUtils.degToRad(90);
+
+			loadStl('{{static_url('sim/conv.stl')}}', {color:'Black', transparent:true, opacity:0.7}, this);
+			this.add(new AxesHelper(100));
+
+			this.belt = new Bone();
+			this.add(this.belt);
+		}
+
+		setPos(pos) {
+			this.belt.position.x = pos;
+		}
+
+		placeItem(item, pos, belt_pos) {
+			item.position.x = pos.x - belt_pos;
+			item.position.y = pos.y;
+			this.belt.add(item);
+		}
+
+		removeItem(item_name) {
+			this.belt.getObjectByName(item_name)?.dispose();
+		}
+	}
+
+
+	class Item extends Bone {
+		constructor(name, radius=15, height=10) {
+			super();
+			this.name = name;
+			this.geometry = new CylinderGeometry(radius, radius, height, 16);
+			let cylinder = new Mesh(this.geometry, Item.material);
+			cylinder.rotation.x = MathUtils.degToRad(90);
+			cylinder.position.z = height / 2;
+			this.add(cylinder);
+		}
+
+		static material = new MeshPhongMaterial({color:'Green'});
+
+		dispose() {
+			this.removeFromParent();
+			this.geometry.dispose();
 		}
 	}
 {% end %}
@@ -57,7 +115,8 @@ class {
 	constructor() {
 		this.scene = new Scene();
 		this.robot = new IgusDeltaRobot();
-		this.scene.add(this.robot);
+		this.conv = new Conv();
+		this.scene.add(this.robot, this.conv);
 	}
 	
 	send(cmd, args={}) {
@@ -70,7 +129,14 @@ class {
 			switch (msg.cmd) {
 				case 0:
 					this.robot.setPose(msg.robot.axes, msg.robot.pos);
+					this.conv.setPos(msg.conv.pos);
 					this.scene.render();
+					break;
+				case 11:
+					this.conv.placeItem(new Item(msg.id), msg.item.pos, msg.item.conv);
+					break;
+				case 12:
+					this.conv.removeItem(msg.id);
 					break;
 			}
 		});

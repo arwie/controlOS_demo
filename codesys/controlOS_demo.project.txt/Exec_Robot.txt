@@ -107,6 +107,17 @@ app.fbk.rbt_move_done  := app.fbk.rbt_move_done  OR NCInterpreter.done;
 app.fbk.rbt_move_error := app.fbk.rbt_move_error OR NCInterpreter.error;
 
 
+//31: Conv pick
+
+MEMUtils.MemCpy(ADR(Conv_Pick.ItemPos), ADR(app.cmd.rbt_move_coord), SIZEOF(app.cmd.rbt_move_coord));
+Conv_Pick(
+	Execute := app.cmd.rbt_move = 31,
+	ItemConv := app.cmd.rbt_move_coord_conv,
+);
+app.fbk.rbt_move_done  := app.fbk.rbt_move_done  OR Conv_Pick.Done;
+app.fbk.rbt_move_error := app.fbk.rbt_move_error OR Conv_Pick.Error;
+
+
 //99: JOG
 
 GroupJog.MaxLinearDistance := 0.001;

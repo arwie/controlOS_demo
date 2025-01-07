@@ -7,6 +7,7 @@ STRUCT
 	rbt_override:			LREAL;
 	rbt_move:				INT;
 	rbt_move_coord:			ARRAY [0..2] OF LREAL;
+	rbt_move_coord_conv:	LREAL;
 	rbt_move_fvel:			LREAL;
 
 	conv_power:				BOOL;
