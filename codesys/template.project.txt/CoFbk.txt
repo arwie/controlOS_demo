@@ -1,0 +1,7 @@
+TYPE CoFbk:
+STRUCT
+	data:		DWORD;
+	done:		BOOL;
+	error:		BOOL;
+END_STRUCT
+END_TYPE

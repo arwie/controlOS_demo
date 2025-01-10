@@ -1,0 +1,17 @@
+METHOD PrepareStart
+VAR
+	shm_size: __UXINT;
+	cfg_fh: RTS_IEC_HANDLE;
+END_VAR
+
+////////////////////////////////
+
+shm_size := SIZEOF(fbk) + SIZEOF(cmd);
+sem := SysSemProcessCreate('codesys', ADR(iec_result));
+shm := SysSharedMemoryCreate('codesys', 0, ADR(shm_size), ADR(iec_result));	
+
+cfg_fh := SysFileOpen(CFG_FILE, SysFile.ACCESS_MODE.AM_READ, ADR(iec_result));
+IF cfg_fh <> RTS_INVALID_HANDLE THEN
+	SysFileRead(cfg_fh, ADR(cfg), SIZEOF(cfg), ADR(iec_result));
+	SysFileClose(cfg_fh);
+END_IF

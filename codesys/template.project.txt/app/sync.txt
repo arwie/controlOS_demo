@@ -1,0 +1,11 @@
+METHOD sync
+
+////////////////////////////////
+
+IF SysSemProcessEnter(sem, 0) = 0 THEN
+	SysSharedMemoryRead (shm,           0, ADR(cmd), SIZEOF(cmd), ADR(iec_result));
+	SysSharedMemoryWrite(shm, SIZEOF(cmd), ADR(fbk), SIZEOF(fbk), ADR(iec_result));
+	SysSemProcessLeave(sem);
+ELSE
+	conflicts := conflicts + 1;
+END_IF

@@ -1,0 +1,11 @@
+PROGRAM main
+VAR
+END_VAR
+
+
+
+////////////////////////////////
+
+co_etc();
+co_can();
+

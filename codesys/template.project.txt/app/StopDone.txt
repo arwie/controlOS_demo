@@ -1,0 +1,10 @@
+METHOD StopDone
+
+////////////////////////////////
+
+SysSharedMemoryDelete(shm);
+
+AppReset(
+	AppGetFirstApp(ADR(iec_result)),
+	RESET_OPTION.RTS_RESET_COLD
+);

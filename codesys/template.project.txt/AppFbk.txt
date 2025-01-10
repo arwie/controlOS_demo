@@ -1,0 +1,9 @@
+TYPE AppFbk:
+STRUCT
+	co:		CoFbk;
+
+	init_done:			BOOL;
+
+	io:		ARRAY [0..128] OF UINT;
+END_STRUCT
+END_TYPE

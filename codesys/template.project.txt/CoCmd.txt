@@ -1,0 +1,11 @@
+TYPE CoCmd:
+STRUCT
+	func:			INT;	//positive:ETC, negative:CAN
+	master:			USINT;
+	slave:			UINT;
+	index:			WORD;
+	subIndex:		BYTE;
+	dataLength:		USINT;
+	data:			DWORD;
+END_STRUCT
+END_TYPE
