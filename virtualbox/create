@@ -27,7 +27,7 @@ vboxmanage createvm --uuid=$UUID \
 vboxmanage modifyvm $UUID \
 	--firmware=efi64 \
 	--memory=1024 \
-	--cpus=2 \
+	--cpus=3 \
 	--nic1=hostonly \
 	--nicpromisc1=allow-all \
 	--nic2=nat \

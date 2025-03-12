@@ -1,0 +1,44 @@
+## SECTION=shell_and_console
+
+menuconfig RNG_TOOLS
+	tristate
+	prompt "rng-tools rngd                "
+	select LIBC_PTHREAD
+	select OPENSSL
+	select LIBCURL
+	select LIBCAP
+	help
+	  random number generator daemon - seed kernel random from hwrng
+
+	  This daemon feeds data from a random number generator to the kernel's
+	  random number entropy pool, after first checking the data to ensure
+	  that it is properly random.
+
+	  By default, a hardware rng at /dev/hwrng is used as entropy source.
+
+if RNG_TOOLS
+
+config RNG_TOOLS_RNGD
+	bool
+	default y
+	prompt "install rngd"
+
+config RNG_TOOLS_STARTSCRIPT
+	bool
+	default y
+	select RNG_TOOLS_RNGD
+	depends on INITMETHOD_BBINIT
+	prompt "install /etc/init.d/rngd"
+
+config RNG_TOOLS_SYSTEMD_UNIT
+	bool
+	default y
+	depends on INITMETHOD_SYSTEMD
+	select RNG_TOOLS_RNGD
+	prompt "install systemd unit files"
+
+config RNG_TOOLS_RNGTEST
+	bool
+	prompt "install rngtest"
+
+endif

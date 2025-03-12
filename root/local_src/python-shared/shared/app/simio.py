@@ -38,13 +38,13 @@ class _IOBase:
 	value: Any
 	_io_sim: Callable
 
-	def __init__(self, io:Callable, *, module=None, prefix=None):
+	def __init__(self, io:Callable, *, module=None, prefix=None, simulated=False):
 		io_module = '.'.join(p.strip('_') for p in (module or io.__module__).split('.'))
 		io_name   = '.'.join(p.strip('_') for p in (prefix, io.__name__) if p)
 		self.name = f'{io_module}: {io_name}'
 		self.type:type = next(iter(get_type_hints(io).values()))
 		self.override = None
-		self.simulated = _conf.getboolean(
+		self.simulated = simulated or _conf.getboolean(
 			io_module, io_name,
 			fallback=_conf.getboolean(
 				io_module, self.__class__.__name__,
@@ -140,10 +140,7 @@ class IoGroup(AbstractContextManager):
 		@overload
 		def input(
 			self,
-			io: Callable[[], SimioTypes],
-			*,
-			prefix: str | None = None,
-			sim: SimioTypes | Callable[[], SimioTypes] | None = None
+			io: Callable[[], SimioTypes]
 		) -> Input:
 			pass
 		@overload
@@ -151,7 +148,8 @@ class IoGroup(AbstractContextManager):
 			self,
 			*,
 			prefix: str | None = None,
-			sim: SimioTypes | Callable[[], SimioTypes] | None = None
+			sim: SimioTypes | Callable[[], SimioTypes] | None = None,
+			simulated = False,
 		) -> Callable[[Callable[[], SimioTypes]], Input]:
 			pass
 
@@ -169,9 +167,7 @@ class IoGroup(AbstractContextManager):
 		@overload
 		def output(
 			self,
-			io: Callable[[SimioTypes], None],
-			*,
-			prefix: str | None = None,
+			io: Callable[[SimioTypes], None]
 		) -> Output:
 			pass
 		@overload
@@ -179,6 +175,7 @@ class IoGroup(AbstractContextManager):
 			self,
 			*,
 			prefix: str | None = None,
+			simulated = False,
 		) -> Callable[[Callable[[SimioTypes], None]], Output]:
 			pass
 

@@ -1,0 +1,4 @@
+/platform-*/
+/configs/**/*.old
+selected_platformconfig
+selected_toolchain

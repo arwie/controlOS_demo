@@ -5,6 +5,7 @@ Name=sys
 RequiredForOnline=degraded-carrier
 
 [Network]
+Address=90.0.0.1/24
 DHCPServer=yes
 IPMasquerade=ipv4
 

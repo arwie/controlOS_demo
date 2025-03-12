@@ -1,0 +1,13 @@
+#!/bin/sh
+
+BASEDIR=$(dirname $(realpath $0))
+
+
+. $BASEDIR/config
+
+
+podman build \
+	--tag=ptxdist-$PTXDIST_VERSION \
+	--build-arg PTXDIST_VERSION=$PTXDIST_VERSION \
+	--build-arg OSELAS_VERSION=$OSELAS_VERSION \
+	$BASEDIR

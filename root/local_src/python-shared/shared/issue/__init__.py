@@ -41,7 +41,7 @@ def get_network():
 	return network.status().encode()
 
 def get_journal():
-	return system.run('set -o pipefail; journalctl --merge --no-pager --output=export --since=-28days | xz -T0', True)
+	return system.run('set -o pipefail; journalctl --merge --no-pager --output=export --since=-28days | xz -T0 -4', True)
 
 def get_short_log():
 	return system.run(['journalctl','--merge','--no-pager','--quiet','--output=short','--priority=warning','--reverse','--lines=50'], True, text=True)

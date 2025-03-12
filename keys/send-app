@@ -1,6 +1,6 @@
 #!/bin/sh
 
-HOST=${1-sys}
+HOST=${1-controlOS}
 
 BASEDIR=$(dirname $(realpath $0))
 

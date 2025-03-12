@@ -1,9 +1,0 @@
-## SECTION=python3
-
-config PYTHON3_PYOPENSSL
-	tristate
-	select PYTHON3
-	select PYTHON3_SSL
-	prompt "pyOpenSSL"
-	help
-	  High-level wrapper around a subset of the OpenSSL library.

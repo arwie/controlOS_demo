@@ -1,0 +1,90 @@
+ARG DEBIAN_RELEASE=bookworm
+
+FROM debian:$DEBIAN_RELEASE-slim
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+	ca-certificates \
+	build-essential \
+	python3 \
+	ccache \
+	git \
+	ssh \
+	gpg gpg-agent \
+	bash-completion
+
+
+ARG DEBIAN_RELEASE
+ARG PTXDIST_VERSION
+ARG OSELAS_VERSION
+
+COPY <<EOF /etc/apt/sources.list.d/pengutronix.list
+deb https://debian.pengutronix.de/debian/ $DEBIAN_RELEASE main contrib non-free
+EOF
+
+RUN apt-get update --allow-insecure-repositories && apt-get install -y --no-install-recommends --allow-unauthenticated \
+	pengutronix-archive-keyring \
+	oselas.toolchain-$OSELAS_VERSION-x86-64-unknown-linux-gnu \
+	oselas.toolchain-$OSELAS_VERSION-aarch64-v8a-linux-gnu \
+	autoconf \
+	automake \
+	pkg-config \
+	libncurses-dev \
+	gawk \
+	flex \
+	bison \
+	texinfo \
+	file \
+	unzip \
+	wget
+
+RUN git clone --depth=1 --branch=ptxdist-${PTXDIST_VERSION} https://git.pengutronix.de/git/ptxdist /ptxdist-src \
+	&& cd /ptxdist-src \
+	&& ./autogen.sh \
+	&& ./configure \
+	&& make \
+	&& make install \
+	&& cd && rm -rf /ptxdist-src
+
+
+ARG ESP_IDF_VERSION=4.4.4
+ENV IDF_TOOLS_PATH=/opt/esp-idf
+
+RUN apt-get install -y --no-install-recommends \
+	python3-pip \
+	python3-virtualenv \
+	libusb-1.0-0-dev
+
+RUN git clone --depth=1 --shallow-submodules --recursive --branch=v$ESP_IDF_VERSION https://github.com/espressif/esp-idf.git $IDF_TOOLS_PATH \
+	&& cd $IDF_TOOLS_PATH \
+	&& ./install.sh esp32 \
+	&& rm -rf dist
+
+
+RUN apt-get install -y --no-install-recommends \
+	python3-venv \
+	python3-jinja2 \
+	libxml-parser-perl \
+	libelf-dev \
+	diffstat \
+	bc \
+	cpio
+
+
+COPY <<EOF /etc/profile.d/alias.sh
+alias ll='ls -lAh --color'
+EOF
+
+RUN passwd --delete root
+
+
+RUN useradd --create-home dev
+USER dev
+
+
+RUN cd && <<EOF cat > $(ptxdist print PTXDIST_PTXRC)
+PTXCONF_SETUP_SRCDIR="/home/dev/src"
+PTXCONF_SETUP_CCACHE=y
+EOF
+
+
+CMD ["bash", "--login"]

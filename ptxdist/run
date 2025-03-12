@@ -1,0 +1,24 @@
+#!/bin/sh
+
+BASEDIR=$(dirname $(realpath $0))
+
+
+. $BASEDIR/config
+
+IMAGE=ptxdist-$PTXDIST_VERSION
+HOMEDIR=/home/dev
+WORKDIR=$HOMEDIR/$(basename $(realpath $BASEDIR/..))
+
+
+podman run \
+	--rm \
+	--tty \
+	--interactive \
+	--userns=keep-id:uid=1000,gid=1000 \
+	--volume=$IMAGE-src:$HOMEDIR/src \
+	--volume=$IMAGE-cache:$HOMEDIR/.cache \
+	--volume=$BASEDIR/..:$WORKDIR \
+	--workdir=$WORKDIR \
+	--hostname=${IMAGE//./-} \
+	--name=$IMAGE \
+	$IMAGE
