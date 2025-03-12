@@ -11,23 +11,19 @@
 #
 PACKAGES-$(PTXCONF_CODEMETER) += codemeter
 
-CODEMETER_VERSION		:= 8.10.6221.500
+CODEMETER_VERSION		:= 8.20.6539.500
 ifdef PTXCONF_ARCH_X86_64
-CODEMETER_SOURCE		:= $(SRCDIR)/codemeter-lite_$(CODEMETER_VERSION)_amd64.deb
-CODEMETER_MD5			:= 818105b2ec913b2d57b9f98622ddf113
+CODEMETER			:= codemeter-lite_$(CODEMETER_VERSION)_amd64
+CODEMETER_MD5			:= 0719e7c9f31d81c75b7b8f791813b9d2
 CODEMETER_LIB			:= x86_64-linux-gnu
 endif
-ifdef PTXCONF_ARCH_ARM
-CODEMETER_SOURCE		:= $(SRCDIR)/codemeter-lite_$(CODEMETER_VERSION)_armhf.deb
-CODEMETER_MD5			:= 0d29ce55d7bdb8065a64d3398d288271
-CODEMETER_LIB			:= arm-linux-gnueabihf
-endif
 ifdef PTXCONF_ARCH_ARM64
-CODEMETER_SOURCE		:= $(SRCDIR)/codemeter-lite_$(CODEMETER_VERSION)_arm64.deb
-CODEMETER_MD5			:= e3662dec1bd69d5ada72053370868c52
+CODEMETER			:= codemeter-lite_$(CODEMETER_VERSION)_arm64
+CODEMETER_MD5			:= 05aa58cf28f0f7607bceb6bf21533bfe
 CODEMETER_LIB			:= aarch64-linux-gnu
 endif
-CODEMETER			:= codemeter-$(CODEMETER_VERSION)
+CODEMETER_SRC			:= $(SRCDIR)/$(CODEMETER).deb
+CODEMETER_URL			:= file://$(CODEMETER_SRC)
 CODEMETER_LICENSE		:= unknown
 
 # ----------------------------------------------------------------------------
@@ -46,7 +42,7 @@ $(STATEDIR)/codemeter.install:
 	@$(call targetinfo)
 
 	rm -rf $(CODEMETER_PKGDIR)/*
-	-fakeroot dpkg --force-all --root=$(CODEMETER_PKGDIR) --install $(CODEMETER_SOURCE)
+	-fakeroot dpkg --force-all --root=$(CODEMETER_PKGDIR) --install $(CODEMETER_SRC)
 	mv $(CODEMETER_PKGDIR)/lib/* $(CODEMETER_PKGDIR)/usr/lib
 
 	@$(call touch)

@@ -6,7 +6,8 @@ menuconfig CODESYS
 	select LIBC_PTHREAD
 	select LIBC_RT
 	select LIBC_M
-	select CODEMETER	if RUNTIME
+	select CODEMETER		if RUNTIME
+	select PYTHON3_POSIX_IPC	if RUNTIME
 	prompt "CODESYS"
 	help
 	  CODESYS Control Linux SL is an IEC 61131-3-compliant SoftPLC
@@ -17,6 +18,7 @@ if CODESYS
 
 config CODESYS_DEPLOY
 	bool
+	default y
 	prompt "Bundle codesys applications in /opt/codesys/PlcLogic"
 
 endif
