@@ -1,8 +1,2 @@
-CONFIG_CMDLINE="mitigations=off console=ttyS2,115200n8 earlycon=ns16550a,mmio32,0x02800000"
+CONFIG_CMDLINE="console=ttyS2,115200n8 earlycon=ns16550a,mmio32,0x02800000"
 CONFIG_CMDLINE_FORCE=y
-
-# CONFIG_EFI is not set
-# CONFIG_VT is not set
-# CONFIG_STAGING is not set
-# CONFIG_ANDROID is not set
-# CONFIG_GAMEPORT is not set

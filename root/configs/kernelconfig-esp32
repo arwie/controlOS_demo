@@ -1,0 +1,3 @@
+## esp32 USB serial drivers
+CONFIG_USB_SERIAL=m
+CONFIG_USB_SERIAL_CP210X=m

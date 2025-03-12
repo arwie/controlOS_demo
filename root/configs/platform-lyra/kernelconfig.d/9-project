@@ -1,4 +1,4 @@
-CONFIG_CMDLINE="mitigations=off console=ttyS2,115200n8 earlycon=ns16550a,mmio32,0x02800000 isolcpus=1 nohz_full=1 rcu_nocbs=1"
+CONFIG_CMDLINE="console=ttyS2,115200n8 earlycon=ns16550a,mmio32,0x02800000 isolcpus=1"
 CONFIG_CMDLINE_FORCE=y
 
 # CONFIG_MEDIA_SUPPORT is not set
