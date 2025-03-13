@@ -1,0 +1,22 @@
+<project xmlns="http://www.plcopen.org/xml/tc6_0200">
+  <types>
+    <dataTypes />
+    <pous />
+  </types>
+  <instances>
+    <configurations />
+  </instances>
+  <addData>
+    <data name="http://www.3s-software.com/plcopenxml/application" handleUnknown="implementation">
+      <resource name="Application">
+        <addData>
+          <data name="http://www.3s-software.com/plcopenxml/buildproperties" handleUnknown="implementation">
+            <BuildProperties>
+              <CompilerDefines>CANOPEN_NO_HEARTBEATPRODUCING, CANOPEN_NO_MODULARDEVICES, CANOPEN_NO_NODEGUARDING, CANOPEN_NO_TIMEPRODUCING</CompilerDefines>
+            </BuildProperties>
+          </data>
+        </addData>
+      </resource>
+    </data>
+  </addData>
+</project>

@@ -13,7 +13,7 @@
                 <DeviceIdentification>
                   <Type>16</Type>
                   <Id>0000 1018</Id>
-                  <Version>4.2.0.0</Version>
+                  <Version>4.3.0.0</Version>
                 </DeviceIdentification>
                 <Connector moduleType="15" role="child" interface="Common.CANbus" connectorId="0">
                   <HostParameterSet>
@@ -188,17 +188,17 @@
                       <Value name="_x0032_91" visiblename="TIME Producer Interval (ms)" onlineaccess="read">1000</Value>
                       <Name>TIME Producer Interval (ms)</Name>
                     </Parameter>
-                    <Parameter ParameterId="4097" type="std:BOOL" IndexInDevDesc="32">
+                    <Parameter ParameterId="4097" type="std:BOOL" IndexInDevDesc="30">
                       <Attributes download="false" offlineaccess="read" onlineaccess="none" />
                       <Value name="_x0034_097" visiblename="Disable diagnosis strings" offlineaccess="read" onlineaccess="none">FALSE</Value>
                       <Name>Disable diagnosis strings</Name>
                     </Parameter>
-                    <Parameter ParameterId="4098" type="std:BOOL" IndexInDevDesc="34">
+                    <Parameter ParameterId="4098" type="std:BOOL" IndexInDevDesc="32">
                       <Attributes download="false" offlineaccess="none" onlineaccess="none" />
                       <Value name="_x0034_098" visiblename="Show Logger Page" offlineaccess="none" onlineaccess="none">TRUE</Value>
                       <Name>Show Logger Page</Name>
                     </Parameter>
-                    <Parameter ParameterId="327937" type="std:BOOL" IndexInDevDesc="33">
+                    <Parameter ParameterId="327937" type="std:BOOL" IndexInDevDesc="31">
                       <Attributes channel="diagAck" offlineaccess="none" onlineaccess="none" />
                       <Value name="_x0033_27937" visiblename="Diag Acknowledge" offlineaccess="none" onlineaccess="none" desc="Diag Acknowledge">FALSE</Value>
                       <Name>Diag Acknowledge</Name>

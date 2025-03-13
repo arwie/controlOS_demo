@@ -29,9 +29,11 @@ vboxmanage modifyvm $UUID \
 	--memory=1024 \
 	--cpus=3 \
 	--nic1=hostonly \
+	--nic-type1=virtio \
 	--nicpromisc1=allow-all \
 	--host-only-adapter1=vboxnet0 \
 	--nic2=nat \
+	--nic-type2=virtio \
 	--rtcuseutc=on \
 	--graphicscontroller=vmsvga \
 	--vram=16 \

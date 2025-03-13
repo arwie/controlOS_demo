@@ -1,0 +1,20 @@
+<project xmlns="http://www.plcopen.org/xml/tc6_0200">
+  <types>
+    <dataTypes />
+    <pous />
+  </types>
+  <instances>
+    <configurations>
+      <configuration name="SoftMotion General Axis Pool">
+        <addData>
+          <data name="ExplicitConnector" handleUnknown="discard">
+            <ExplicitConnector connectorID="2" />
+          </data>
+          <data name="configurations" handleUnknown="discard">
+            <configurations />
+          </data>
+        </addData>
+      </configuration>
+    </configurations>
+  </instances>
+</project>

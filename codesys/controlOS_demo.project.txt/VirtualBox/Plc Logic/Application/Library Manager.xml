@@ -22,12 +22,7 @@
         <Library Name="#SM3_Transformation" Namespace="TRAFO" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="true" LinkAllContent="false" DefaultResolution="SM3_Transformation, 4.17.0.0 (CODESYS)" />
         <Library Name="#IoStandard" Namespace="IoStandard" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="true" LinkAllContent="true" DefaultResolution="IoStandard, 3.5.17.0 (System)" />
         <Library Name="#3SLicense" Namespace="_3S_LICENSE" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="true" LinkAllContent="false" DefaultResolution="3SLicense, 0.0.0.0 (3S - Smart Software Solutions GmbH)" ResolverGuid="97c3b452-d9fa-4ac2-9d0c-3d420aa6d95b" />
-        <Library Name="#CANbusDevice" Namespace="CANbusDevice" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="true" LinkAllContent="false" DefaultResolution="CANbusDevice, 4.3.0.0 (CODESYS)" />
-        <Library Name="#3S CANopenStack" Namespace="_3SCOS" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="true" LinkAllContent="false" DefaultResolution="3S CANopenStack, 4.3.0.0 (CODESYS)" />
-        <Library Name="#SM3_Drive_CAN" Namespace="SM3_Drive_CAN" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="true" LinkAllContent="false" DefaultResolution="SM3_Drive_CAN, 4.16.0.0 (CODESYS)" />
-        <Library Name="#SM3_Drive_CAN_DS402_CyclicSync" Namespace="SM3_Drive_CAN_DS402_CyclicSync" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="true" LinkAllContent="false" DefaultResolution="SM3_Drive_CAN_DS402_CyclicSync, 4.14.0.0 (3S - Smart Software Solutions GmbH)" />
         <Library Name="#CAA Device Diagnosis" Namespace="DED" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="true" LinkAllContent="false" DefaultResolution="CAA Device Diagnosis, 3.5.20.0 (CAA Technical Workgroup)" />
-        <Library Name="#CAA CiA405" Namespace="CIA405" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="false" LinkAllContent="false" DefaultResolution="CAA CiA 405, 4.3.0.0 (CODESYS)" />
         <PlaceholderRedirections>
           <PlaceholderRedirection Placeholder="System_VisuElemTextEditor" Redirection="VisuElemTextEditor, 4.7.0.0 (System)" />
           <PlaceholderRedirection Placeholder="Standard" Redirection="Standard, 3.5.18.0 (System)" />

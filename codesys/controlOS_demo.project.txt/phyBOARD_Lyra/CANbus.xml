@@ -13,7 +13,7 @@
                 <DeviceIdentification>
                   <Type>15</Type>
                   <Id>181015</Id>
-                  <Version>4.2.0.0</Version>
+                  <Version>4.3.0.0</Version>
                 </DeviceIdentification>
                 <Connector moduleType="257" role="child" interface="Common.PCI" connectorId="0">
                   <HostParameterSet />
@@ -39,7 +39,7 @@
                         <Value name="_x0032_" visiblename="NetID">0</Value>
                         <Name>NetID</Name>
                       </Parameter>
-                      <Parameter ParameterId="3" type="std:ARRAY[0..8] OF INT" IndexInDevDesc="3">
+                      <Parameter ParameterId="3" type="std:ARRAY[0..9] OF INT" IndexInDevDesc="3">
                         <Attributes download="false" offlineaccess="read" onlineaccess="read" />
                         <Value name="_x0033_" visiblename="SupportedBaudrates" offlineaccess="read" onlineaccess="read">[0, 10, 20, 50, 100, 125, 250, 500, 800, 1000]</Value>
                         <Name>SupportedBaudrates</Name>

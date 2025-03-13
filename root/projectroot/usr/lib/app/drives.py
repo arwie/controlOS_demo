@@ -1,9 +1,12 @@
 from shared import app
 from shared.app.codesys import CanopenDevice
 from ctypes import c_uint8, c_uint16, c_uint32
+from shared import system
 
 
 POSITION_FACTOR_ROBOT = 4096 / 70
+
+virtual = system.virtual()
 
 
 
@@ -16,17 +19,20 @@ class StepIM(CanopenDevice):
 
 
 	async def initialize(self):
-		self.max_current = await self.sdo_read((0x6075, 0))
+		if not virtual:
+			self.max_current = await self.sdo_read((0x6075, 0))
 
 
 	async def set_torque(self, torque:float=100):
-		current = int(self.max_current * torque / 100)
-		await robot_a.sdo_write((0x6073, 0), c_uint16(current))
+		if not virtual:
+			current = int(self.max_current * torque / 100)
+			await robot_a.sdo_write((0x6073, 0), c_uint16(current))
 
 
 	async def set_following_error(self, error:float):
-		error_drive = int(error * self.pos_factor)
-		await robot_a.sdo_write((0x6065, 0), c_uint32(error_drive))
+		if not virtual:
+			error_drive = int(error * self.pos_factor)
+			await robot_a.sdo_write((0x6065, 0), c_uint32(error_drive))
 
 
 	async def _save(self):

@@ -25,6 +25,7 @@ if TYPE_CHECKING:
 from typing import get_type_hints
 from contextlib import AbstractContextManager, closing, suppress
 from configparser import ConfigParser
+from shared import system
 from . import app
 from . import web
 
@@ -32,6 +33,7 @@ from . import web
 
 _conf = ConfigParser()
 _conf.read('/etc/app/simio.conf')
+_virtual = system.virtual()
 
 
 class _IOBase:
@@ -50,7 +52,7 @@ class _IOBase:
 				io_module, self.__class__.__name__,
 				fallback=_conf.getboolean(
 					'app', self.__class__.__name__,
-					fallback=False
+					fallback=_virtual
 				)
 			)
 		)

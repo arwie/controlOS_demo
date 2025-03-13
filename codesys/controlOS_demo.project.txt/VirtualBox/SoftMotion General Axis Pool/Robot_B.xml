@@ -1,0 +1,143 @@
+<project xmlns="http://www.plcopen.org/xml/tc6_0200">
+  <types>
+    <dataTypes />
+    <pous />
+  </types>
+  <instances>
+    <configurations>
+      <configuration name="Robot_B">
+        <addData>
+          <data name="Device" handleUnknown="discard">
+            <Device xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="">
+              <DeviceType>
+                <DeviceIdentification>
+                  <Type>1024</Type>
+                  <Id>FFFF 0001</Id>
+                  <Version>4.0.0.0</Version>
+                </DeviceIdentification>
+                <Connector moduleType="1024" role="child" interface="Common.SoftMotion.General" connectorId="0">
+                  <HostParameterSet>
+                    <ParameterSection>
+                      <Name>AXIS_REF: Standard</Name>
+                      <Description />
+                      <Parameter ParameterId="1021" type="std:WORD" IndexInDevDesc="0">
+                        <Attributes />
+                        <Value name="_x0031_021" visiblename="wDriveID" desc="Unique ID of the drive">7</Value>
+                        <Name>wDriveID</Name>
+                        <Description>Unique ID of the drive</Description>
+                      </Parameter>
+                      <Parameter ParameterId="1040" type="std:BOOL" IndexInDevDesc="1">
+                        <Attributes offlineaccess="read" />
+                        <Value name="_x0031_040" visiblename="bVirtual" offlineaccess="read" desc="drive is simulated">TRUE</Value>
+                        <Name>bVirtual</Name>
+                        <Description>drive is simulated</Description>
+                      </Parameter>
+                      <Parameter ParameterId="1060" type="std:INT" IndexInDevDesc="2">
+                        <Attributes />
+                        <Value name="_x0031_060" visiblename="iMovementType" desc="Movement type: 0: modulo, 1: finite">1</Value>
+                        <Name>iMovementType</Name>
+                        <Description>Movement type: 0: modulo, 1: finite</Description>
+                      </Parameter>
+                      <Parameter ParameterId="1061" type="std:LREAL" IndexInDevDesc="3">
+                        <Attributes />
+                        <Value name="_x0031_061" visiblename="fPositionPeriod" desc="Modulo period value for modulo drives [u]">360.0</Value>
+                        <Name>fPositionPeriod</Name>
+                        <Description>Modulo period value for modulo drives [u]</Description>
+                      </Parameter>
+                      <Parameter ParameterId="1062" type="std:INT" IndexInDevDesc="7">
+                        <Attributes />
+                        <Value name="_x0031_062" visiblename="eRampType" desc="The velocity ramp used for trajectories.">0</Value>
+                        <Name>eRampType</Name>
+                        <Description>The velocity ramp used for trajectories.</Description>
+                      </Parameter>
+                      <Parameter ParameterId="1113" type="std:LREAL" IndexInDevDesc="9">
+                        <Attributes />
+                        <Value name="_x0031_113" visiblename="fSWMaxVelocity" desc="Maximum velocity magnitude (software limit)">800</Value>
+                        <Name>fSWMaxVelocity</Name>
+                        <Description>Maximum velocity magnitude (software limit)</Description>
+                      </Parameter>
+                      <Parameter ParameterId="1123" type="std:LREAL" IndexInDevDesc="10">
+                        <Attributes />
+                        <Value name="_x0031_123" visiblename="fSWMaxAcceleration" desc="Maximum acceleration magnitude (software limit)">8000</Value>
+                        <Name>fSWMaxAcceleration</Name>
+                        <Description>Maximum acceleration magnitude (software limit)</Description>
+                      </Parameter>
+                      <Parameter ParameterId="1133" type="std:LREAL" IndexInDevDesc="11">
+                        <Attributes />
+                        <Value name="_x0031_133" visiblename="fSWMaxDeceleration" desc="Maximum deceleration magnitude (software limit)">8000</Value>
+                        <Name>fSWMaxDeceleration</Name>
+                        <Description>Maximum deceleration magnitude (software limit)</Description>
+                      </Parameter>
+                      <Parameter ParameterId="1143" type="std:LREAL" IndexInDevDesc="12">
+                        <Attributes />
+                        <Value name="_x0031_143" visiblename="fSWMaxJerk" desc="Maximum jerk magnitude (software limit)">300000</Value>
+                        <Name>fSWMaxJerk</Name>
+                        <Description>Maximum jerk magnitude (software limit)</Description>
+                      </Parameter>
+                      <Parameter ParameterId="1144" type="std:LREAL" IndexInDevDesc="8">
+                        <Attributes />
+                        <Value name="_x0031_144" visiblename="fRampJerk" desc="Jerk used for bringing acceleration to 0 when sin² ramp is interrupted.">0</Value>
+                        <Name>fRampJerk</Name>
+                        <Description>Jerk used for bringing acceleration to 0 when sin² ramp is interrupted.</Description>
+                      </Parameter>
+                      <Parameter ParameterId="1200" type="std:LREAL" IndexInDevDesc="6">
+                        <Attributes />
+                        <Value name="_x0031_200" visiblename="fSWLimitPositive" desc="Software limit in positive direction">1000.0</Value>
+                        <Name>fSWLimitPositive</Name>
+                        <Description>Software limit in positive direction</Description>
+                      </Parameter>
+                      <Parameter ParameterId="1201" type="std:LREAL" IndexInDevDesc="5">
+                        <Attributes />
+                        <Value name="_x0031_201" visiblename="fSWLimitNegative" desc="Software limit in negative direction">0.0</Value>
+                        <Name>fSWLimitNegative</Name>
+                        <Description>Software limit in negative direction</Description>
+                      </Parameter>
+                      <Parameter ParameterId="1203" type="std:LREAL" IndexInDevDesc="13">
+                        <Attributes />
+                        <Value name="_x0031_203" visiblename="fSWLimitDeceleration" desc="Deceleration for  stop on software error [u/s²]">0</Value>
+                        <Name>fSWLimitDeceleration</Name>
+                        <Description>Deceleration for  stop on software error [u/s²]</Description>
+                      </Parameter>
+                      <Parameter ParameterId="1205" type="std:BOOL" IndexInDevDesc="4">
+                        <Attributes />
+                        <Value name="_x0031_205" visiblename="bSWLimitEnable" desc="Activate/deactivate software limits">FALSE</Value>
+                        <Name>bSWLimitEnable</Name>
+                        <Description>Activate/deactivate software limits</Description>
+                      </Parameter>
+                      <Parameter ParameterId="1250" type="std:LREAL" IndexInDevDesc="14">
+                        <Attributes />
+                        <Value name="_x0031_250" visiblename="fSWErrorMaxDistance" desc="Maximum distance that may be travelled for ramping down after a software error has been detected [u]">0</Value>
+                        <Name>fSWErrorMaxDistance</Name>
+                        <Description>Maximum distance that may be travelled for ramping down after a software error has been detected [u]</Description>
+                      </Parameter>
+                    </ParameterSection>
+                    <ParameterSection>
+                      <Name>AXIS_REF: scaling settings</Name>
+                      <Description />
+                      <Parameter ParameterId="1051" type="std:DWORD" IndexInDevDesc="15">
+                        <Attributes />
+                        <Value name="_x0031_051" visiblename="dwRatioTechUnitsDenom" desc="conversion inc./tech.units denominator">1</Value>
+                        <Name>dwRatioTechUnitsDenom</Name>
+                        <Description>conversion inc./tech.units denominator</Description>
+                      </Parameter>
+                      <Parameter ParameterId="1052" type="std:DINT" IndexInDevDesc="16">
+                        <Attributes />
+                        <Value name="_x0031_052" visiblename="iRatioTechUnitsNum" desc="conversion inc./tech.units numerator">1</Value>
+                        <Name>iRatioTechUnitsNum</Name>
+                        <Description>conversion inc./tech.units numerator</Description>
+                      </Parameter>
+                    </ParameterSection>
+                  </HostParameterSet>
+                </Connector>
+                <Connector moduleType="1248" interface="Common.SoftMotion.Logical" connectorId="1" hostpath="0">
+                  <HostParameterSet />
+                </Connector>
+                <DeviceParameterSet />
+              </DeviceType>
+            </Device>
+          </data>
+        </addData>
+      </configuration>
+    </configurations>
+  </instances>
+</project>

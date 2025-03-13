@@ -18,9 +18,10 @@ done := done AND GroupEnable.Done;
 
 
 done := done AND (
-	StepIM_A.GetDeviceState() = DEVICE_STATE.RUNNING AND
-	StepIM_B.GetDeviceState() = DEVICE_STATE.RUNNING AND
-	StepIM_C.GetDeviceState() = DEVICE_STATE.RUNNING
+	Robot_A.bCommunication AND
+	Robot_B.bCommunication AND
+	Robot_C.bCommunication
 );
-app.fbk.init_done := done;
 
+
+app.fbk.init_done := done;
