@@ -1,82 +1,106 @@
-BASEDIR=$(shell pwd)
-NP=$(shell nproc)
+PLATFORM ?= x86
+
+PLATFORMCONFIG = configs/platform-$(PLATFORM)/platformconfig
+KERNELCONFIG   = configs/platform-$(PLATFORM)/kernelconfig
+
+PTXDIST = ptxdist --quiet --progress -j$(shell nproc) --platformconfig=$(PLATFORMCONFIG)
 
 
 
-all: system
+all: install_img
 	@echo "#############################################"
 	@echo "Build completed successfully!"
 
-system: update
+
+install_img: system_img
 	@cd boot \
-		&& ptxdist -j$(NP) -k --collectionconfig=configs/system  image system.img \
-		&& ptxdist -j$(NP) -k --collectionconfig=configs/install image install.img
+		&& $(PTXDIST) --collectionconfig=configs/install image install.img
 
-update: initramfs
+system_img: update .boot-go
+	@cd boot \
+		&& $(PTXDIST) --collectionconfig=configs/system  image system.img
+
+.boot-go: get
+	@cd boot \
+		&& $(PTXDIST) go
+
+
+update: .initramfs
 	@cd root \
-		&& ptxdist -j$(NP) -k images
+		&& $(PTXDIST) images
 
-initramfs:
+.initramfs: get
 	@cd root/base/initramfs \
-		&& ptxdist -j$(NP) -k images
+		&& $(PTXDIST) images
+
+
+get:
+	@for p in boot root/base/initramfs root; do( \
+		cd $$p \
+			&& $(PTXDIST) get \
+	);done
 
 
 
 clean:
-	@for p in boot/base boot root/base/initramfs root/base root; do \
+	@for p in boot/base boot root/base/initramfs root/base root; do( \
 		echo "Removing: $$p/platform-*" \
-		&& rm -rf $(BASEDIR)/$$p/platform-* \
-	;done
+		&& rm -rf $$p/platform-* \
+	);done
 
 
 clean-target:
-	@for p in boot root/base/initramfs root; do \
-		cd $(BASEDIR)/$$p \
-		&& ptxdist -q clean target \
-	;done
+	@for p in boot root/base/initramfs root; do( \
+		cd $$p \
+			&& $(PTXDIST) clean target \
+	);done
 
 
-
-PLATFORM=$(shell cd boot && ptxdist print PTXCONF_PLATFORM)
-KERNELCONFIG=configs/platform-$(PLATFORM)/kernelconfig
 
 kernel-oldconfig:
-	@cd $(BASEDIR)/boot \
+	@cd boot \
 		&& cat base/$(KERNELCONFIG).d/* $(KERNELCONFIG).d/* > $(KERNELCONFIG) \
-		&& yes "" | ptxdist oldconfig kernel > /dev/null
+		&& yes "" | $(PTXDIST) oldconfig kernel > /dev/null
 
-	@cd $(BASEDIR)/root/base \
+	@cd root/base \
 		&& cat base/$(KERNELCONFIG).d/* $(KERNELCONFIG).d/* > $(KERNELCONFIG) \
-		&& yes "" | ptxdist oldconfig kernel > /dev/null
+		&& yes "" | $(PTXDIST) oldconfig kernel > /dev/null
 
-	@if [ -d "$(BASEDIR)/root/$(KERNELCONFIG).d" ]; then \
-		cd $(BASEDIR)/root \
+	@if [ -d "root/$(KERNELCONFIG).d" ]; then \
+		cd root \
 			&& cat base/base/$(KERNELCONFIG).d/* base/$(KERNELCONFIG).d/* $(KERNELCONFIG).d/* > $(KERNELCONFIG) \
 			&& rm -f $(KERNELCONFIG).diff \
-			&& yes "" | ptxdist oldconfig kernel > /dev/null \
+			&& yes "" | $(PTXDIST) oldconfig kernel > /dev/null \
 	;fi
 
 
 oldconfig:
-	@for p in root/base/initramfs boot root; do \
-		cd $(BASEDIR)/$$p \
-		&& ptxdist oldconfig \
-		&& ptxdist oldconfig platform \
-	;done
+	@for p in root/base/initramfs boot root; do( \
+		cd $$p \
+			&& $(PTXDIST) oldconfig \
+			&& $(PTXDIST) oldconfig platform \
+	);done
 
 
 
 include ptxdist/config
 
 migrate:
-	@for p in root/base/initramfs boot root; do \
+	@for p in root/base/initramfs boot root; do( \
 		echo "####################\n\n Migrating: $$p \n\n####################" \
-		&& cd $(BASEDIR)/$$p \
-		&& /usr/local/lib/ptxdist-$(PTXDIST_VERSION)/bin/ptxdist migrate \
-	;done
+		&& cd $$p \
+			&& /usr/local/lib/ptxdist-$(PTXDIST_VERSION)/bin/$(PTXDIST) migrate \
+	);done
+
+
+
+menuconfig:
+	@cd root \
+		&& $(PTXDIST) menuconfig
 
 
 
 keygen:
-	$(BASEDIR)/keys/gpg-keygen
-	$(BASEDIR)/keys/ssh-keygen
+	@cd keys \
+		&& ./gpg-keygen
+		&& ./ssh-keygen

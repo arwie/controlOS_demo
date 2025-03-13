@@ -30,11 +30,12 @@ vboxmanage modifyvm $UUID \
 	--cpus=3 \
 	--nic1=hostonly \
 	--nicpromisc1=allow-all \
+	--host-only-adapter1=vboxnet0 \
 	--nic2=nat \
 	--rtcuseutc=on \
 	--graphicscontroller=vmsvga \
 	--vram=16 \
-	--audio=none
+	--audio-enabled=off
 
 
 # create and attach system disk
