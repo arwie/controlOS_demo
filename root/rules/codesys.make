@@ -20,17 +20,17 @@ ifdef PTXCONF_ARCH_ARM64
 CODESYS				:= codesyscontrol_linuxarm64_$(CODESYS_VERSION)_arm64
 CODESYS_MD5			:= b953cdca55c5d61d841d3c0b2ae2ad74
 endif
-CODESYS_SRC			:= $(SRCDIR)/$(CODESYS).deb
-CODESYS_URL			:= file://$(CODESYS_SRC)
+CODESYS_URL			:= https://undefined
+CODESYS_SOURCE			:= $(SRCDIR)/$(CODESYS).deb
 CODESYS_LICENSE			:= unknown
 
 # ----------------------------------------------------------------------------
 # Get
 # ----------------------------------------------------------------------------
 
-#$(STATEDIR)/codesys.get:
-#	@$(call targetinfo)
-#	@$(call touch)
+$(CODESYS_SOURCE):
+	@$(call targetinfo)
+	@cp -v --update $(PTXDIST_WORKSPACE)/../codesys/$(CODESYS).deb $(CODESYS_SOURCE)
 
 # ----------------------------------------------------------------------------
 # Install
@@ -38,7 +38,7 @@ CODESYS_LICENSE			:= unknown
 
 $(STATEDIR)/codesys.install:
 	@$(call targetinfo)
-	-fakeroot dpkg --force-all --root=$(CODESYS_PKGDIR) --install $(CODESYS_SRC)
+	-fakeroot dpkg --force-all --root=$(CODESYS_PKGDIR) --install $(CODESYS_SOURCE)
 	@$(call touch)
 
 # ----------------------------------------------------------------------------

@@ -22,17 +22,17 @@ CODEMETER			:= codemeter-lite_$(CODEMETER_VERSION)_arm64
 CODEMETER_MD5			:= 05aa58cf28f0f7607bceb6bf21533bfe
 CODEMETER_LIB			:= aarch64-linux-gnu
 endif
-CODEMETER_SRC			:= $(SRCDIR)/$(CODEMETER).deb
-CODEMETER_URL			:= file://$(CODEMETER_SRC)
+CODEMETER_URL			:= https://undefined
+CODEMETER_SOURCE		:= $(SRCDIR)/$(CODEMETER).deb
 CODEMETER_LICENSE		:= unknown
 
 # ----------------------------------------------------------------------------
 # Get
 # ----------------------------------------------------------------------------
 
-#$(STATEDIR)/codemeter.get:
-#	@$(call targetinfo)
-#	@$(call touch)
+$(CODEMETER_SOURCE):
+	@$(call targetinfo)
+	@cp -v --update $(PTXDIST_WORKSPACE)/../codesys/$(CODEMETER).deb $(CODEMETER_SOURCE)
 
 # ----------------------------------------------------------------------------
 # Install
@@ -42,7 +42,7 @@ $(STATEDIR)/codemeter.install:
 	@$(call targetinfo)
 
 	rm -rf $(CODEMETER_PKGDIR)/*
-	-fakeroot dpkg --force-all --root=$(CODEMETER_PKGDIR) --install $(CODEMETER_SRC)
+	-fakeroot dpkg --force-all --root=$(CODEMETER_PKGDIR) --install $(CODEMETER_SOURCE)
 	mv $(CODEMETER_PKGDIR)/lib/* $(CODEMETER_PKGDIR)/usr/lib
 
 	@$(call touch)
