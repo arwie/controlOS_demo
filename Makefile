@@ -109,5 +109,5 @@ select-target:
 
 keygen:
 	@cd keys \
-		&& ./gpg-keygen
+		&& ./gpg-keygen \
 		&& ./ssh-keygen
