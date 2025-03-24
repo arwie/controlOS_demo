@@ -2,7 +2,7 @@
 # Automatically generated file; DO NOT EDIT.
 # Linux/x86 6.6.74 Kernel Configuration
 #
-CONFIG_CC_VERSION_TEXT="x86_64-unknown-linux-gnu-gcc (OSELAS.Toolchain-2024.11.0 14-20241109) 14.2.1 20241109"
+CONFIG_CC_VERSION_TEXT="x86_64-unknown-linux-gnu-gcc (OSELAS.Toolchain-2024.11.1 14-20250308) 14.2.1 20250308"
 CONFIG_CC_IS_GCC=y
 CONFIG_GCC_VERSION=140201
 CONFIG_CLANG_VERSION=0

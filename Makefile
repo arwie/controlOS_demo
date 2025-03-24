@@ -99,10 +99,10 @@ menuconfig:
 		&& $(PTXDIST) menuconfig
 
 
-select-target:
+select-platform:
 	@for p in boot/base boot root/base/initramfs root/base; do( \
 		cd $$p \
-			&& ptxdist platform $(PLATFORMCONFIG) \
+			&& ln -sf $(PLATFORMCONFIG) selected_platformconfig \
 	);done
 
 

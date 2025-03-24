@@ -63,7 +63,10 @@ RUN git clone --depth=1 --shallow-submodules --recursive --branch=v$ESP_IDF_VERS
 RUN apt-get install -y --no-install-recommends \
 	python3-venv \
 	python3-jinja2 \
+	python3-yaml \
 	libxml-parser-perl \
+	libjson-perl \
+	ruby \
 	libelf-dev \
 	diffstat \
 	bc \

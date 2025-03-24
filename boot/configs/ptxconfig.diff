@@ -1,4 +1,4 @@
-fd21e633f9342bef2d7ada1b0d3977a1
+98434b37c793befe546ac1fd3229c084
 # PTXCONF_BC is undefined
 # PTXCONF_BOOTCHART is undefined
 # PTXCONF_BRIDGE_UTILS is undefined
@@ -1060,7 +1060,6 @@ PTXCONF_ROOTFS_VAR_RUN=y
 # PTXCONF_ROOTFS_VAR_TMP is not set
 # PTXCONF_RTPS is undefined
 # PTXCONF_SED is undefined
-# PTXCONF_SETSERIAL is undefined
 # PTXCONF_SYSKLOGD is undefined
 PTXCONF_SYSTEM=y
 # PTXCONF_TAR is undefined
