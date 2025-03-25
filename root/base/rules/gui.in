@@ -1,11 +1,27 @@
 ## SECTION=project_specific
 
-config GUI
+menuconfig GUI
 	bool
-	select PYTHON3_TORNADO	if RUNTIME
-	select GUI_BOOTSTRAP	if RUNTIME
+	select PYTHON3_TORNADO		if RUNTIME
+	select GUI_BOOTSTRAP		if RUNTIME
 	select GUI_JQUERY		if RUNTIME
-	select GUI_FONTAWESOME	if RUNTIME
-	prompt "gui"
+	select GUI_FONTAWESOME		if RUNTIME
+	select COG			if GUI_WPEWEBKIT && RUNTIME
+	select WESTON			if GUI_WPEWEBKIT && RUNTIME
+	select WESTON_GL		if GUI_WPEWEBKIT && RUNTIME
+	select WESTON_SHELL_KIOSK	if GUI_WPEWEBKIT && RUNTIME
+	select WESTON_INSTALL_CONFIG	if GUI_WPEWEBKIT && RUNTIME
+	select MENU_XORG_FONTS		if GUI_WPEWEBKIT && RUNTIME
+	select XORG_FONT_TTF		if GUI_WPEWEBKIT && RUNTIME
+	prompt "GUI"
 	help
-	  FIXME
+	  Graphical User Interface (WEB-UI)
+
+
+if GUI
+
+config GUI_WPEWEBKIT
+	bool
+	prompt "Graphics stack with WPE WebKit full screen browser"
+
+endif

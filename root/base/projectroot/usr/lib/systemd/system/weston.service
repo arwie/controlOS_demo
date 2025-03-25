@@ -1,0 +1,16 @@
+[Unit]
+Requires=dev-dri-card0.device
+After=dev-dri-card0.device
+
+
+[Service]
+Type=notify
+
+User=daemon
+SupplementaryGroups=seat
+
+RuntimeDirectory=xdg
+RuntimeDirectoryMode=700
+Environment="XDG_RUNTIME_DIR=/run/xdg"
+
+ExecStart=weston --modules=systemd-notify.so

@@ -36,7 +36,10 @@ vboxmanage modifyvm $UUID \
 	--nic-type2=virtio \
 	--rtcuseutc=on \
 	--graphicscontroller=vmsvga \
-	--vram=16 \
+	--vram=128 \
+	--accelerate-3d=on \
+	--usb-xhci=on \
+	--mouse=usbtablet \
 	--audio-enabled=off
 
 

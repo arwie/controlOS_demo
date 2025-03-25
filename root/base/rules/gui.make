@@ -32,14 +32,22 @@ $(STATEDIR)/gui.targetinstall:
 	@$(call install_init, gui)
 
 	@$(call install_alternative_tree, gui, 0, 0, /usr/lib/gui)
-	
+
 	@$(call install_alternative, gui, 0, 0, 0644, /usr/lib/systemd/system/gui.service)
 	@$(call install_alternative, gui, 0, 0, 0644, /usr/lib/systemd/system/gui.socket)
 	@$(call install_link,        gui, ../gui.socket, /usr/lib/systemd/system/sockets.target.wants/gui.socket)
-	
+
 	@$(call install_alternative, gui, 0, 0, 0644, /usr/lib/systemd/system/studio.service)
 	@$(call install_alternative, gui, 0, 0, 0644, /usr/lib/systemd/system/studio.socket)
-	
+
+ifdef PTXCONF_GUI_WPEWEBKIT
+	@$(call install_alternative, gui, 0, 0, 0644, /usr/lib/udev/rules.d/60-drm-systemd.rules)
+	@$(call install_alternative, gui, 0, 0, 0644, /usr/lib/systemd/system/weston.service)
+	@$(call install_alternative, gui, 0, 0, 0644, /etc/cog.conf)
+	@$(call install_alternative, gui, 0, 0, 0644, /usr/lib/systemd/system/cog.service)
+	@$(call install_link,        gui, ../cog.service, /usr/lib/systemd/system/multi-user.target.wants/cog.service)
+endif
+
 	@$(call install_finish,gui)
 	@$(call touch)
 

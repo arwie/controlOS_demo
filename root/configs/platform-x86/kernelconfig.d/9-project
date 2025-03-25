@@ -1,0 +1,8 @@
+## ThinkEdge
+## frimware: iwlwifi-ty-a0-gf-a0-83.ucode + iwlwifi-ty-a0-gf-a0.pnvm
+CONFIG_IGC=m
+CONFIG_IWLWIFI=m
+CONFIG_IWLMVM=m
+
+CONFIG_DRM=m
+CONFIG_DRM_VMWGFX=m
