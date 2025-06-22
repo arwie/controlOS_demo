@@ -1,0 +1,17 @@
+## SECTION=web
+
+menuconfig GUI_ACE
+	tristate
+	prompt "gui-ace"
+	help
+	  Ace is an embeddable code editor written in JavaScript.
+
+
+if GUI_ACE
+
+config GUI_ACE_MODES
+	string
+	default "python ini"
+	prompt "Supported languages (space separated list)"
+
+endif

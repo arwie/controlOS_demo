@@ -1,0 +1,53 @@
+{% comment 
+# SPDX-FileCopyrightText: 2025 Artur Wiebe <artur@4wiebe.de>
+# SPDX-License-Identifier: MIT
+%}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8"/>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<title data-l10n-id="title"></title>
+	<link rel="icon" href="{{static_url(favicon) if favicon else 'data:,'}}">
+
+	{% for href in stylesheets %}
+		<link rel="stylesheet" href="{{href if href.startswith('http') else static_url(href)}}"/>
+	{% end %}
+
+	<script defer src="{{static_url('locale/l20n.js')}}"></script>
+	<link rel="localization" href="web.locale?ftl={locale}">
+	<meta name="availableLanguages" content="{{available_languages}}">
+	<meta name="defaultLanguage" content="en">
+
+	<script type="importmap">
+		{ "imports": {% raw importmap %} }
+	</script>
+</head>
+
+<body style="overscroll-behavior:contain;" class="vh-100">
+
+	<div id="gui-view" class="h-100"></div>
+
+	<dialog id="gui-disconnected"
+		closedby="none"
+		style="border:none; background-color:transparent; user-select:none;"
+		oncancel="event.preventDefault()"
+		onfocus="event.target.blur()"
+	>
+		<span style='font-size:200px;'>&#9940;</span>
+	</dialog>
+
+</body>
+
+<script type="module">
+	//{% for mjs in imports %}
+		import '{{mjs}}';
+	//{% end %}
+	import('web').then(web => web.default());
+</script>
+
+</html>

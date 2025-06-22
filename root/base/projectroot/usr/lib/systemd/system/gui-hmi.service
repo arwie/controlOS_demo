@@ -1,0 +1,7 @@
+[Unit]
+PartOf=gui-hmi.socket
+
+[Service]
+SyslogIdentifier=gui-hmi
+WorkingDirectory=/usr/lib/gui
+ExecStart=/usr/bin/python -Bu /usr/lib/gui hmi

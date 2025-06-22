@@ -1,6 +1,0 @@
-[Unit]
-PartOf=studio.socket
-
-[Service]
-WorkingDirectory=/usr/lib/gui
-ExecStart=/usr/lib/gui/studio-server

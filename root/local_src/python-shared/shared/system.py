@@ -35,7 +35,7 @@ def run(cmd, capture=False, **kwargs):
 		raise Exception(errorText) from e
 
 
-def statusText(unit):
+def status_text(unit:str) -> str:
 	return run(['systemctl', '--no-pager', '--full', 'status', unit], True, text=True, check=False)
 
 def restart(unit):

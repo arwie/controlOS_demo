@@ -19,9 +19,8 @@ from collections.abc import Callable
 from email.mime.multipart	import MIMEMultipart
 from email.mime.text		import MIMEText
 from email.mime.application	import MIMEApplication
-from shared.utils import import_all_in_package
-import json
 from textwrap import indent
+from shared.utils import import_all_in_package
 from shared.conf import Conf
 from shared import system
 from shared import network
@@ -29,10 +28,9 @@ import logging
 
 
 
-def get_version():
-	with open('/version') as f:
-		version = json.load(f)
-	return f"{version['name'] or '-'} ({version['id']})"
+def get_release():
+	with open('/etc/os-release') as release:
+		return str().join(l for l in release if l.startswith('PTXDIST_'))
 
 def get_backup():
 	return system.run(['backup'], True)
@@ -41,7 +39,7 @@ def get_network():
 	return network.status().encode()
 
 def get_journal():
-	return system.run('set -o pipefail; journalctl --merge --no-pager --output=export --since=-28days | xz -T0 -4', True)
+	return system.run('set -o pipefail; journalctl --merge --no-pager --output=export --since=-28days --lines=150000 | xz -T0 -4', True)
 
 def get_short_log():
 	return system.run(['journalctl','--merge','--no-pager','--quiet','--output=short','--priority=warning','--reverse','--lines=50'], True, text=True)
@@ -61,7 +59,7 @@ def add_attachment(name:str, contents:Callable[[], str | bytes]):
 import_all_in_package(__file__, __name__)
 
 
-add_attachment('Version',	get_version)
+add_attachment('Release',	get_release)
 add_attachment('Short Log',	get_short_log)
 
 

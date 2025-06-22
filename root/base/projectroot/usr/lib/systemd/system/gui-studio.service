@@ -1,0 +1,7 @@
+[Unit]
+PartOf=gui-studio.socket
+
+[Service]
+SyslogIdentifier=gui-studio
+WorkingDirectory=/usr/lib/gui
+ExecStart=/usr/bin/python -Bu /usr/lib/gui studio

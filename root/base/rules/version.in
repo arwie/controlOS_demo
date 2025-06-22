@@ -1,7 +1,0 @@
-## SECTION=project_specific
-
-config VERSION
-	bool
-	prompt "version"
-	help
-	  FIXME

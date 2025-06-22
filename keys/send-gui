@@ -19,8 +19,8 @@ rsyncsys() {
 }
 
 
-sshsys "mount --options=remount,rw --target=/ && rm -f /version"
+sshsys "mount --options=remount,rw --target=/mnt/root"
 
-rsyncsys root/projectroot/usr/lib/gui /usr/lib
+rsyncsys root/projectroot/usr/lib/gui /mnt/root/usr/lib
 
-sshsys "systemctl --quiet stop gui.service studio.service"
+sshsys "systemctl --quiet stop gui-*.service"

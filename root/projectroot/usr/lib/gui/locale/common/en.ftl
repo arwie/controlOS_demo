@@ -1,19 +1,6 @@
 {% comment 
-# Copyright (c) 2017 Artur Wiebe <artur@4wiebe.de>
-#
-# Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
-# associated documentation files (the "Software"), to deal in the Software without restriction,
-# including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
-# and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so,
-# subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
-# INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-# WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+# SPDX-FileCopyrightText: 2025 Artur Wiebe <artur@4wiebe.de>
+# SPDX-License-Identifier: MIT
 %}
 
 {% include "_all.ftl" %}
@@ -29,11 +16,22 @@ apply = Apply
 execute = Execute
 connect = Connect
 disconnect = Disconnect
+download = Download
 
+
+diag = Diagnostics
 
 log = Log
 log_follow = Follow new messages
 log_priority = Priority
+log_priority-0 = Emergency
+log_priority-1 = Alert
+log_priority-2 = Critical
+log_priority-3 = Error
+log_priority-4 = Warning
+log_priority-5 = Notice
+log_priority-6 = Info
+log_priority-7 = Debug
 log_identifier = Identifier
 log_host = Host
 log_date = Date
@@ -45,22 +43,6 @@ log_extendOlder = Load older
 log_empty = No messages available
 log_extlogImport = Import file
 
-update = Update
-update_version = Current version
-update_versionName = Version
-update_versionId = ID
-update_file = Update from file
-update_revert = Revert last update
-update_revertDate = Date of last update
-
-
-remote = Remote access
-remote_active = Remote access is activated!
-remote_port = Service port number
-remote_enable = Activate
-remote_disable = Deactivate
-
-
 issue = Issue report
 issue_description = Issue description
 issue_contact = Contact person
@@ -71,6 +53,26 @@ issue_send = Send to manufacturer
 issue_sendSuccess = Issue was sent successfully to the manufacturer.
 issue_sendFail = Issue could not be sent. Please download and send manually.
 
+
+system = System
+
+update = Update
+update_version = Current version
+update_versionName = Version
+update_buildDate = Build date
+update_file = Update from file
+update_revert = Revert last update
+update_revertDate = Date of last update
+
+backup = Backup
+backup_download = Download backup
+backup_restore = Restore backup
+
+remote = Remote access
+remote_active = Remote access is activated!
+remote_port = Service port number
+remote_enable = Activate
+remote_disable = Deactivate
 
 network = Network
 network_save = {save}
@@ -97,12 +99,13 @@ network_port = Port
 network_user = User
 
 
+studio = Studio
+
 simio = SimIO
 simio_cls-Input = Inputs
 simio_cls-Output = Outputs
 simio_type = Type
 simio_value = Value
 simio_override = Override
-
 
 sim = Simulation

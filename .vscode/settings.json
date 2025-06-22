@@ -11,11 +11,12 @@
 	],
 	"python.analysis.extraPaths": [
 		"root/local_src/python-shared",
-		"root/platform-x86/sysroot-target/usr/lib/python3.11/site-packages",
-		"root/platform-x86/sysroot-host/usr/lib/python3.11/site-packages"
+		"root/platform-any/sysroot-target/usr/lib/python3.13/site-packages",
+		"root/platform-any/sysroot-host/usr/lib/python3.13/site-packages"
 	],
 	"python.analysis.diagnosticMode": "workspace",
 	"workbench.editor.customLabels.patterns": {
-		"**/__init__.py": "${dirname}.${extname}"
+		"**/__init__.py": "${dirname}.${extname}",
+		"**/index.mjs":   "${dirname}.${extname}",
 	},
 }

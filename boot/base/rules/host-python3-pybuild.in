@@ -1,0 +1,11 @@
+## SECTION=hosttools_noprompt
+
+config HOST_PYTHON3_PYBUILD
+	tristate
+	default y if ALLYES
+	select HOST_PYTHON3
+	select HOST_PYTHON3_FLIT_CORE
+	select HOST_PYTHON3_PACKAGING
+	select HOST_PYTHON3_PYPROJECT_HOOKS
+	select HOST_PYTHON3_TOMLI
+	select HOST_PYTHON3_INSTALLER

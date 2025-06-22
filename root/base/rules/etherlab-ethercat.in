@@ -5,4 +5,4 @@ config ETHERLAB_ETHERCAT
 	select ETHERLAB_ETHERCAT_MODULES
 	prompt "etherlab-ethercat"
 	help
-	  IgH EtherLab EtherCAT(R) Master 
+	  IgH EtherLab EtherCAT(R) Master

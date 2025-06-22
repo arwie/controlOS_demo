@@ -1,5 +1,5 @@
 [Unit]
-Wants=studio.socket
+Wants=gui-studio.socket
 
 [Install]
 WantedBy=multi-user.target

@@ -4,4 +4,4 @@ config GUI_BOOTSTRAP
 	tristate
 	prompt "gui-bootstrap"
 	help
-	  Sleek, intuitive, and powerful front-end framework for faster and easier web development. 
+	  Sleek, intuitive, and powerful front-end framework for faster and easier web development.

@@ -16,20 +16,17 @@ install_img: system_img
 	@cd boot \
 		&& $(PTXDIST) --collectionconfig=configs/install image install.img
 
-system_img: update .boot-go
+system_img: update
 	@cd boot \
 		&& $(PTXDIST) --collectionconfig=configs/system  image system.img
-
-.boot-go: get
-	@cd boot \
-		&& $(PTXDIST) go
 
 
 update: .initramfs
 	@cd root \
+		&& ln -sf platform-$(PLATFORM) platform-any \
 		&& $(PTXDIST) images
 
-.initramfs: get
+.initramfs:
 	@cd root/base/initramfs \
 		&& $(PTXDIST) images
 

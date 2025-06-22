@@ -14,14 +14,16 @@ PACKAGES-$(PTXCONF_GUI_BOOTSTRAP) += gui-bootstrap
 #
 # Paths and names
 #
-GUI_BOOTSTRAP_VERSION		:= 5.3.3
-GUI_BOOTSTRAP_MD5		:= 88c53934caeda10985e78860ee071554
+GUI_BOOTSTRAP_VERSION		:= 5.3.6
+GUI_BOOTSTRAP_MD5		:= 1b9352d329303763c1fdc746518e1eed
 GUI_BOOTSTRAP			:= bootstrap-$(GUI_BOOTSTRAP_VERSION)
 GUI_BOOTSTRAP_SUFFIX		:= zip
 GUI_BOOTSTRAP_URL		:= https://github.com/twbs/bootstrap/releases/download/v$(GUI_BOOTSTRAP_VERSION)/$(GUI_BOOTSTRAP)-dist.$(GUI_BOOTSTRAP_SUFFIX)
 GUI_BOOTSTRAP_SOURCE		:= $(SRCDIR)/$(GUI_BOOTSTRAP).$(GUI_BOOTSTRAP_SUFFIX)
 GUI_BOOTSTRAP_DIR		:= $(BUILDDIR)/$(GUI_BOOTSTRAP)
 GUI_BOOTSTRAP_LICENSE		:= MIT
+
+GUI_BOOTSTRAP_INSTALL		:= /usr/lib/gui/bootstrap
 
 # ----------------------------------------------------------------------------
 # Compile
@@ -52,9 +54,11 @@ $(STATEDIR)/gui-bootstrap.targetinstall:
 	@$(call install_fixup, gui-bootstrap,DESCRIPTION,missing)
 
 	@$(call install_copy, gui-bootstrap, 0, 0, 0644, \
-		$(GUI_BOOTSTRAP_DIR)/css/bootstrap.min.css, /usr/lib/gui/static/bootstrap.css)
+		$(GUI_BOOTSTRAP_DIR)/css/bootstrap.min.css, \
+		$(GUI_BOOTSTRAP_INSTALL)/bootstrap.css)
 	@$(call install_copy, gui-bootstrap, 0, 0, 0644, \
-		$(GUI_BOOTSTRAP_DIR)/js/bootstrap.bundle.min.js, /usr/lib/gui/static/bootstrap.js)
+		$(GUI_BOOTSTRAP_DIR)/js/bootstrap.bundle.min.js, \
+		$(GUI_BOOTSTRAP_INSTALL)/index.js)
 
 	@$(call install_finish, gui-bootstrap)
 	@$(call touch)

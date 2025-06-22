@@ -1,0 +1,7 @@
+[Unit]
+PartOf=gui-admin.socket
+
+[Service]
+SyslogIdentifier=gui-admin
+WorkingDirectory=/usr/lib/gui
+ExecStart=/usr/bin/python -Bu /usr/lib/gui admin

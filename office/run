@@ -1,0 +1,6 @@
+#!/bin/sh
+
+BASEDIR=$(dirname $(realpath $0))
+
+
+cd $BASEDIR && python -Bu .

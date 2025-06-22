@@ -33,12 +33,15 @@ $(STATEDIR)/gui.targetinstall:
 
 	@$(call install_alternative_tree, gui, 0, 0, /usr/lib/gui)
 
-	@$(call install_alternative, gui, 0, 0, 0644, /usr/lib/systemd/system/gui.service)
-	@$(call install_alternative, gui, 0, 0, 0644, /usr/lib/systemd/system/gui.socket)
-	@$(call install_link,        gui, ../gui.socket, /usr/lib/systemd/system/sockets.target.wants/gui.socket)
+	@$(call install_alternative, gui, 0, 0, 0644, /usr/lib/systemd/system/gui-hmi.service)
+	@$(call install_alternative, gui, 0, 0, 0644, /usr/lib/systemd/system/gui-hmi.socket)
+	@$(call install_link,        gui, ../gui-hmi.socket, /usr/lib/systemd/system/sockets.target.wants/gui-hmi.socket)
 
-	@$(call install_alternative, gui, 0, 0, 0644, /usr/lib/systemd/system/studio.service)
-	@$(call install_alternative, gui, 0, 0, 0644, /usr/lib/systemd/system/studio.socket)
+	@$(call install_alternative, gui, 0, 0, 0644, /usr/lib/systemd/system/gui-admin.service)
+	@$(call install_alternative, gui, 0, 0, 0644, /usr/lib/systemd/system/gui-admin.socket)
+
+	@$(call install_alternative, gui, 0, 0, 0644, /usr/lib/systemd/system/gui-studio.service)
+	@$(call install_alternative, gui, 0, 0, 0644, /usr/lib/systemd/system/gui-studio.socket)
 
 ifdef PTXCONF_GUI_WPEWEBKIT
 	@$(call install_alternative, gui, 0, 0, 0644, /usr/lib/udev/rules.d/60-drm-systemd.rules)

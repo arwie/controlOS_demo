@@ -1,0 +1,8 @@
+## SECTION=web
+
+config GUI_VUE
+	tristate
+	prompt "gui-vue"
+	help
+	  An approachable, performant and versatile framework
+	  for building web user interfaces.

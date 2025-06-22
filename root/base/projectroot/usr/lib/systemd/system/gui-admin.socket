@@ -1,0 +1,6 @@
+[Unit]
+StopWhenUnneeded=true
+
+[Socket]
+ListenStream=8080
+BindToDevice=sys
