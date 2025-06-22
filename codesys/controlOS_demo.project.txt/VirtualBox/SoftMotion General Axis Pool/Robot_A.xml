@@ -13,7 +13,7 @@
                 <DeviceIdentification>
                   <Type>1024</Type>
                   <Id>FFFF 0001</Id>
-                  <Version>4.0.0.0</Version>
+                  <Version>4.18.0.0</Version>
                 </DeviceIdentification>
                 <Connector moduleType="1024" role="child" interface="Common.SoftMotion.General" connectorId="0">
                   <HostParameterSet>

@@ -1,5 +1,0 @@
-METHOD ResetDone
-
-////////////////////////////////
-
-SysFileDelete(CFG_FILE);

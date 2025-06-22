@@ -13,7 +13,7 @@
                 <DeviceIdentification>
                   <Type>4096</Type>
                   <Id>0000 0007</Id>
-                  <Version>4.14.0.0</Version>
+                  <Version>4.15.0.0</Version>
                 </DeviceIdentification>
                 <Connector moduleType="256" interface="Common.PCI" connectorId="0">
                   <HostParameterSet />

@@ -13,7 +13,7 @@
                 <DeviceIdentification>
                   <Type>1026</Type>
                   <Id>0000 0001</Id>
-                  <Version>4.6.1.0</Version>
+                  <Version>4.18.0.0</Version>
                 </DeviceIdentification>
                 <Connector moduleType="1026" role="child" interface="Common.SoftMotion.CAN.DSP402" connectorId="0">
                   <HostParameterSet>
@@ -194,17 +194,17 @@
                       </Parameter>
                       <Parameter ParameterId="8012" type="std:UDINT" IndexInDevDesc="29">
                         <Attributes offlineaccess="read" onlineaccess="read" />
-                        <Value name="_x0038_012" visiblename="AdrOffset_8010" offlineaccess="read" onlineaccess="read">0</Value>
+                        <Value name="_x0038_012" visiblename="AdrOffset_8010" offlineaccess="read" onlineaccess="read" />
                         <Name>AdrOffset_8010</Name>
                       </Parameter>
                       <Parameter ParameterId="8013" type="std:USINT" IndexInDevDesc="30">
                         <Attributes offlineaccess="read" onlineaccess="read" />
-                        <Value name="_x0038_013" visiblename="BitOffset_8010" offlineaccess="read" onlineaccess="read">0</Value>
+                        <Value name="_x0038_013" visiblename="BitOffset_8010" offlineaccess="read" onlineaccess="read" />
                         <Name>BitOffset_8010</Name>
                       </Parameter>
                       <Parameter ParameterId="8014" type="std:USINT" IndexInDevDesc="31">
                         <Attributes offlineaccess="read" onlineaccess="read" />
-                        <Value name="_x0038_014" visiblename="BitLength_8010" offlineaccess="read" onlineaccess="read">16</Value>
+                        <Value name="_x0038_014" visiblename="BitLength_8010" offlineaccess="read" onlineaccess="read" />
                         <Name>BitLength_8010</Name>
                       </Parameter>
                       <Parameter ParameterId="8020" type="std:INT" IndexInDevDesc="32">
@@ -219,17 +219,17 @@
                       </Parameter>
                       <Parameter ParameterId="8022" type="std:UDINT" IndexInDevDesc="34">
                         <Attributes offlineaccess="read" onlineaccess="read" />
-                        <Value name="_x0038_022" visiblename="AdrOffset_8020" offlineaccess="read" onlineaccess="read">4</Value>
+                        <Value name="_x0038_022" visiblename="AdrOffset_8020" offlineaccess="read" onlineaccess="read" />
                         <Name>AdrOffset_8020</Name>
                       </Parameter>
                       <Parameter ParameterId="8023" type="std:USINT" IndexInDevDesc="35">
                         <Attributes offlineaccess="read" onlineaccess="read" />
-                        <Value name="_x0038_023" visiblename="BitOffset_8020" offlineaccess="read" onlineaccess="read">0</Value>
+                        <Value name="_x0038_023" visiblename="BitOffset_8020" offlineaccess="read" onlineaccess="read" />
                         <Name>BitOffset_8020</Name>
                       </Parameter>
                       <Parameter ParameterId="8024" type="std:USINT" IndexInDevDesc="36">
                         <Attributes offlineaccess="read" onlineaccess="read" />
-                        <Value name="_x0038_024" visiblename="BitLength_8020" offlineaccess="read" onlineaccess="read">32</Value>
+                        <Value name="_x0038_024" visiblename="BitLength_8020" offlineaccess="read" onlineaccess="read" />
                         <Name>BitLength_8020</Name>
                       </Parameter>
                       <Parameter ParameterId="8030" type="std:INT" IndexInDevDesc="37">
@@ -244,17 +244,17 @@
                       </Parameter>
                       <Parameter ParameterId="8032" type="std:UDINT" IndexInDevDesc="39">
                         <Attributes offlineaccess="read" onlineaccess="read" />
-                        <Value name="_x0038_032" visiblename="AdrOffset_8030" offlineaccess="read" onlineaccess="read">4294967295</Value>
+                        <Value name="_x0038_032" visiblename="AdrOffset_8030" offlineaccess="read" onlineaccess="read" />
                         <Name>AdrOffset_8030</Name>
                       </Parameter>
                       <Parameter ParameterId="8033" type="std:USINT" IndexInDevDesc="40">
                         <Attributes offlineaccess="read" onlineaccess="read" />
-                        <Value name="_x0038_033" visiblename="BitOffset_8030" offlineaccess="read" onlineaccess="read">0</Value>
+                        <Value name="_x0038_033" visiblename="BitOffset_8030" offlineaccess="read" onlineaccess="read" />
                         <Name>BitOffset_8030</Name>
                       </Parameter>
                       <Parameter ParameterId="8034" type="std:USINT" IndexInDevDesc="41">
                         <Attributes offlineaccess="read" onlineaccess="read" />
-                        <Value name="_x0038_034" visiblename="BitLength_8030" offlineaccess="read" onlineaccess="read">0</Value>
+                        <Value name="_x0038_034" visiblename="BitLength_8030" offlineaccess="read" onlineaccess="read" />
                         <Name>BitLength_8030</Name>
                       </Parameter>
                       <Parameter ParameterId="8040" type="std:INT" IndexInDevDesc="42">
@@ -269,17 +269,17 @@
                       </Parameter>
                       <Parameter ParameterId="8042" type="std:UDINT" IndexInDevDesc="44">
                         <Attributes offlineaccess="read" onlineaccess="read" />
-                        <Value name="_x0038_042" visiblename="AdrOffset_8040" offlineaccess="read" onlineaccess="read">4294967295</Value>
+                        <Value name="_x0038_042" visiblename="AdrOffset_8040" offlineaccess="read" onlineaccess="read" />
                         <Name>AdrOffset_8040</Name>
                       </Parameter>
                       <Parameter ParameterId="8043" type="std:USINT" IndexInDevDesc="45">
                         <Attributes offlineaccess="read" onlineaccess="read" />
-                        <Value name="_x0038_043" visiblename="BitOffset_8040" offlineaccess="read" onlineaccess="read">0</Value>
+                        <Value name="_x0038_043" visiblename="BitOffset_8040" offlineaccess="read" onlineaccess="read" />
                         <Name>BitOffset_8040</Name>
                       </Parameter>
                       <Parameter ParameterId="8044" type="std:USINT" IndexInDevDesc="46">
                         <Attributes offlineaccess="read" onlineaccess="read" />
-                        <Value name="_x0038_044" visiblename="BitLength_8040" offlineaccess="read" onlineaccess="read">0</Value>
+                        <Value name="_x0038_044" visiblename="BitLength_8040" offlineaccess="read" onlineaccess="read" />
                         <Name>BitLength_8040</Name>
                       </Parameter>
                       <Parameter ParameterId="8050" type="std:INT" IndexInDevDesc="47">
@@ -294,17 +294,17 @@
                       </Parameter>
                       <Parameter ParameterId="8052" type="std:UDINT" IndexInDevDesc="49">
                         <Attributes offlineaccess="read" onlineaccess="read" />
-                        <Value name="_x0038_052" visiblename="AdrOffset_8050" offlineaccess="read" onlineaccess="read">2</Value>
+                        <Value name="_x0038_052" visiblename="AdrOffset_8050" offlineaccess="read" onlineaccess="read" />
                         <Name>AdrOffset_8050</Name>
                       </Parameter>
                       <Parameter ParameterId="8053" type="std:USINT" IndexInDevDesc="50">
                         <Attributes offlineaccess="read" onlineaccess="read" />
-                        <Value name="_x0038_053" visiblename="BitOffset_8050" offlineaccess="read" onlineaccess="read">0</Value>
+                        <Value name="_x0038_053" visiblename="BitOffset_8050" offlineaccess="read" onlineaccess="read" />
                         <Name>BitOffset_8050</Name>
                       </Parameter>
                       <Parameter ParameterId="8054" type="std:USINT" IndexInDevDesc="51">
                         <Attributes offlineaccess="read" onlineaccess="read" />
-                        <Value name="_x0038_054" visiblename="BitLength_8050" offlineaccess="read" onlineaccess="read">8</Value>
+                        <Value name="_x0038_054" visiblename="BitLength_8050" offlineaccess="read" onlineaccess="read" />
                         <Name>BitLength_8050</Name>
                       </Parameter>
                       <Parameter ParameterId="8060" type="std:INT" IndexInDevDesc="52">
@@ -319,17 +319,17 @@
                       </Parameter>
                       <Parameter ParameterId="8062" type="std:UDINT" IndexInDevDesc="54">
                         <Attributes offlineaccess="read" onlineaccess="read" />
-                        <Value name="_x0038_062" visiblename="AdrOffset_8060" offlineaccess="read" onlineaccess="read">4294967295</Value>
+                        <Value name="_x0038_062" visiblename="AdrOffset_8060" offlineaccess="read" onlineaccess="read" />
                         <Name>AdrOffset_8060</Name>
                       </Parameter>
                       <Parameter ParameterId="8063" type="std:USINT" IndexInDevDesc="55">
                         <Attributes offlineaccess="read" onlineaccess="read" />
-                        <Value name="_x0038_063" visiblename="BitOffset_8060" offlineaccess="read" onlineaccess="read">0</Value>
+                        <Value name="_x0038_063" visiblename="BitOffset_8060" offlineaccess="read" onlineaccess="read" />
                         <Name>BitOffset_8060</Name>
                       </Parameter>
                       <Parameter ParameterId="8064" type="std:USINT" IndexInDevDesc="56">
                         <Attributes offlineaccess="read" onlineaccess="read" />
-                        <Value name="_x0038_064" visiblename="BitLength_8060" offlineaccess="read" onlineaccess="read">0</Value>
+                        <Value name="_x0038_064" visiblename="BitLength_8060" offlineaccess="read" onlineaccess="read" />
                         <Name>BitLength_8060</Name>
                       </Parameter>
                       <Parameter ParameterId="8070" type="std:INT" IndexInDevDesc="57">
@@ -344,17 +344,17 @@
                       </Parameter>
                       <Parameter ParameterId="8072" type="std:UDINT" IndexInDevDesc="59">
                         <Attributes offlineaccess="read" onlineaccess="read" />
-                        <Value name="_x0038_072" visiblename="AdrOffset_8070" offlineaccess="read" onlineaccess="read">4294967295</Value>
+                        <Value name="_x0038_072" visiblename="AdrOffset_8070" offlineaccess="read" onlineaccess="read" />
                         <Name>AdrOffset_8070</Name>
                       </Parameter>
                       <Parameter ParameterId="8073" type="std:USINT" IndexInDevDesc="60">
                         <Attributes offlineaccess="read" onlineaccess="read" />
-                        <Value name="_x0038_073" visiblename="BitOffset_8070" offlineaccess="read" onlineaccess="read">0</Value>
+                        <Value name="_x0038_073" visiblename="BitOffset_8070" offlineaccess="read" onlineaccess="read" />
                         <Name>BitOffset_8070</Name>
                       </Parameter>
                       <Parameter ParameterId="8074" type="std:USINT" IndexInDevDesc="61">
                         <Attributes offlineaccess="read" onlineaccess="read" />
-                        <Value name="_x0038_074" visiblename="BitLength_8070" offlineaccess="read" onlineaccess="read">0</Value>
+                        <Value name="_x0038_074" visiblename="BitLength_8070" offlineaccess="read" onlineaccess="read" />
                         <Name>BitLength_8070</Name>
                       </Parameter>
                       <Parameter ParameterId="8080" type="std:INT" IndexInDevDesc="62">
@@ -369,17 +369,17 @@
                       </Parameter>
                       <Parameter ParameterId="8082" type="std:UDINT" IndexInDevDesc="64">
                         <Attributes offlineaccess="read" onlineaccess="read" />
-                        <Value name="_x0038_082" visiblename="AdrOffset_8080" offlineaccess="read" onlineaccess="read">4294967295</Value>
+                        <Value name="_x0038_082" visiblename="AdrOffset_8080" offlineaccess="read" onlineaccess="read" />
                         <Name>AdrOffset_8080</Name>
                       </Parameter>
                       <Parameter ParameterId="8083" type="std:USINT" IndexInDevDesc="65">
                         <Attributes offlineaccess="read" onlineaccess="read" />
-                        <Value name="_x0038_083" visiblename="BitOffset_8080" offlineaccess="read" onlineaccess="read">0</Value>
+                        <Value name="_x0038_083" visiblename="BitOffset_8080" offlineaccess="read" onlineaccess="read" />
                         <Name>BitOffset_8080</Name>
                       </Parameter>
                       <Parameter ParameterId="8084" type="std:USINT" IndexInDevDesc="66">
                         <Attributes offlineaccess="read" onlineaccess="read" />
-                        <Value name="_x0038_084" visiblename="BitLength_8080" offlineaccess="read" onlineaccess="read">0</Value>
+                        <Value name="_x0038_084" visiblename="BitLength_8080" offlineaccess="read" onlineaccess="read" />
                         <Name>BitLength_8080</Name>
                       </Parameter>
                       <Parameter ParameterId="8090" type="std:INT" IndexInDevDesc="67">
@@ -394,17 +394,17 @@
                       </Parameter>
                       <Parameter ParameterId="8092" type="std:UDINT" IndexInDevDesc="69">
                         <Attributes offlineaccess="read" onlineaccess="read" />
-                        <Value name="_x0038_092" visiblename="AdrOffset_8090" offlineaccess="read" onlineaccess="read">4294967295</Value>
+                        <Value name="_x0038_092" visiblename="AdrOffset_8090" offlineaccess="read" onlineaccess="read" />
                         <Name>AdrOffset_8090</Name>
                       </Parameter>
                       <Parameter ParameterId="8093" type="std:USINT" IndexInDevDesc="70">
                         <Attributes offlineaccess="read" onlineaccess="read" />
-                        <Value name="_x0038_093" visiblename="BitOffset_8090" offlineaccess="read" onlineaccess="read">0</Value>
+                        <Value name="_x0038_093" visiblename="BitOffset_8090" offlineaccess="read" onlineaccess="read" />
                         <Name>BitOffset_8090</Name>
                       </Parameter>
                       <Parameter ParameterId="8094" type="std:USINT" IndexInDevDesc="71">
                         <Attributes offlineaccess="read" onlineaccess="read" />
-                        <Value name="_x0038_094" visiblename="BitLength_8090" offlineaccess="read" onlineaccess="read">0</Value>
+                        <Value name="_x0038_094" visiblename="BitLength_8090" offlineaccess="read" onlineaccess="read" />
                         <Name>BitLength_8090</Name>
                       </Parameter>
                       <Parameter ParameterId="8500" type="std:INT" IndexInDevDesc="72">
@@ -424,17 +424,17 @@
                       </Parameter>
                       <Parameter ParameterId="8512" type="std:UDINT" IndexInDevDesc="75">
                         <Attributes offlineaccess="read" onlineaccess="read" />
-                        <Value name="_x0038_512" visiblename="AdrOffset_8510" offlineaccess="read" onlineaccess="read">0</Value>
+                        <Value name="_x0038_512" visiblename="AdrOffset_8510" offlineaccess="read" onlineaccess="read" />
                         <Name>AdrOffset_8510</Name>
                       </Parameter>
                       <Parameter ParameterId="8513" type="std:USINT" IndexInDevDesc="76">
                         <Attributes offlineaccess="read" onlineaccess="read" />
-                        <Value name="_x0038_513" visiblename="BitOffset_8510" offlineaccess="read" onlineaccess="read">0</Value>
+                        <Value name="_x0038_513" visiblename="BitOffset_8510" offlineaccess="read" onlineaccess="read" />
                         <Name>BitOffset_8510</Name>
                       </Parameter>
                       <Parameter ParameterId="8514" type="std:USINT" IndexInDevDesc="77">
                         <Attributes offlineaccess="read" onlineaccess="read" />
-                        <Value name="_x0038_514" visiblename="BitLength_8510" offlineaccess="read" onlineaccess="read">16</Value>
+                        <Value name="_x0038_514" visiblename="BitLength_8510" offlineaccess="read" onlineaccess="read" />
                         <Name>BitLength_8510</Name>
                       </Parameter>
                       <Parameter ParameterId="8520" type="std:INT" IndexInDevDesc="78">
@@ -449,17 +449,17 @@
                       </Parameter>
                       <Parameter ParameterId="8522" type="std:UDINT" IndexInDevDesc="80">
                         <Attributes offlineaccess="read" onlineaccess="read" />
-                        <Value name="_x0038_522" visiblename="AdrOffset_8520" offlineaccess="read" onlineaccess="read">4</Value>
+                        <Value name="_x0038_522" visiblename="AdrOffset_8520" offlineaccess="read" onlineaccess="read" />
                         <Name>AdrOffset_8520</Name>
                       </Parameter>
                       <Parameter ParameterId="8523" type="std:USINT" IndexInDevDesc="81">
                         <Attributes offlineaccess="read" onlineaccess="read" />
-                        <Value name="_x0038_523" visiblename="BitOffset_8520" offlineaccess="read" onlineaccess="read">0</Value>
+                        <Value name="_x0038_523" visiblename="BitOffset_8520" offlineaccess="read" onlineaccess="read" />
                         <Name>BitOffset_8520</Name>
                       </Parameter>
                       <Parameter ParameterId="8524" type="std:USINT" IndexInDevDesc="82">
                         <Attributes offlineaccess="read" onlineaccess="read" />
-                        <Value name="_x0038_524" visiblename="BitLength_8520" offlineaccess="read" onlineaccess="read">32</Value>
+                        <Value name="_x0038_524" visiblename="BitLength_8520" offlineaccess="read" onlineaccess="read" />
                         <Name>BitLength_8520</Name>
                       </Parameter>
                       <Parameter ParameterId="8530" type="std:INT" IndexInDevDesc="83">
@@ -474,17 +474,17 @@
                       </Parameter>
                       <Parameter ParameterId="8532" type="std:UDINT" IndexInDevDesc="85">
                         <Attributes offlineaccess="read" onlineaccess="read" />
-                        <Value name="_x0038_532" visiblename="AdrOffset_8530" offlineaccess="read" onlineaccess="read">8</Value>
+                        <Value name="_x0038_532" visiblename="AdrOffset_8530" offlineaccess="read" onlineaccess="read" />
                         <Name>AdrOffset_8530</Name>
                       </Parameter>
                       <Parameter ParameterId="8533" type="std:USINT" IndexInDevDesc="86">
                         <Attributes offlineaccess="read" onlineaccess="read" />
-                        <Value name="_x0038_533" visiblename="BitOffset_8530" offlineaccess="read" onlineaccess="read">0</Value>
+                        <Value name="_x0038_533" visiblename="BitOffset_8530" offlineaccess="read" onlineaccess="read" />
                         <Name>BitOffset_8530</Name>
                       </Parameter>
                       <Parameter ParameterId="8534" type="std:USINT" IndexInDevDesc="87">
                         <Attributes offlineaccess="read" onlineaccess="read" />
-                        <Value name="_x0038_534" visiblename="BitLength_8530" offlineaccess="read" onlineaccess="read">32</Value>
+                        <Value name="_x0038_534" visiblename="BitLength_8530" offlineaccess="read" onlineaccess="read" />
                         <Name>BitLength_8530</Name>
                       </Parameter>
                       <Parameter ParameterId="8540" type="std:INT" IndexInDevDesc="88">
@@ -499,17 +499,17 @@
                       </Parameter>
                       <Parameter ParameterId="8542" type="std:UDINT" IndexInDevDesc="90">
                         <Attributes offlineaccess="read" onlineaccess="read" />
-                        <Value name="_x0038_542" visiblename="AdrOffset_8540" offlineaccess="read" onlineaccess="read">4294967295</Value>
+                        <Value name="_x0038_542" visiblename="AdrOffset_8540" offlineaccess="read" onlineaccess="read" />
                         <Name>AdrOffset_8540</Name>
                       </Parameter>
                       <Parameter ParameterId="8543" type="std:USINT" IndexInDevDesc="91">
                         <Attributes offlineaccess="read" onlineaccess="read" />
-                        <Value name="_x0038_543" visiblename="BitOffset_8540" offlineaccess="read" onlineaccess="read">0</Value>
+                        <Value name="_x0038_543" visiblename="BitOffset_8540" offlineaccess="read" onlineaccess="read" />
                         <Name>BitOffset_8540</Name>
                       </Parameter>
                       <Parameter ParameterId="8544" type="std:USINT" IndexInDevDesc="92">
                         <Attributes offlineaccess="read" onlineaccess="read" />
-                        <Value name="_x0038_544" visiblename="BitLength_8540" offlineaccess="read" onlineaccess="read">0</Value>
+                        <Value name="_x0038_544" visiblename="BitLength_8540" offlineaccess="read" onlineaccess="read" />
                         <Name>BitLength_8540</Name>
                       </Parameter>
                       <Parameter ParameterId="8550" type="std:INT" IndexInDevDesc="93">
@@ -524,17 +524,17 @@
                       </Parameter>
                       <Parameter ParameterId="8552" type="std:UDINT" IndexInDevDesc="95">
                         <Attributes offlineaccess="read" onlineaccess="read" />
-                        <Value name="_x0038_552" visiblename="AdrOffset_8550" offlineaccess="read" onlineaccess="read">2</Value>
+                        <Value name="_x0038_552" visiblename="AdrOffset_8550" offlineaccess="read" onlineaccess="read" />
                         <Name>AdrOffset_8550</Name>
                       </Parameter>
                       <Parameter ParameterId="8553" type="std:USINT" IndexInDevDesc="96">
                         <Attributes offlineaccess="read" onlineaccess="read" />
-                        <Value name="_x0038_553" visiblename="BitOffset_8550" offlineaccess="read" onlineaccess="read">0</Value>
+                        <Value name="_x0038_553" visiblename="BitOffset_8550" offlineaccess="read" onlineaccess="read" />
                         <Name>BitOffset_8550</Name>
                       </Parameter>
                       <Parameter ParameterId="8554" type="std:USINT" IndexInDevDesc="97">
                         <Attributes offlineaccess="read" onlineaccess="read" />
-                        <Value name="_x0038_554" visiblename="BitLength_8550" offlineaccess="read" onlineaccess="read">8</Value>
+                        <Value name="_x0038_554" visiblename="BitLength_8550" offlineaccess="read" onlineaccess="read" />
                         <Name>BitLength_8550</Name>
                       </Parameter>
                       <Parameter ParameterId="8560" type="std:INT" IndexInDevDesc="98">
@@ -549,17 +549,17 @@
                       </Parameter>
                       <Parameter ParameterId="8562" type="std:UDINT" IndexInDevDesc="100">
                         <Attributes offlineaccess="read" onlineaccess="read" />
-                        <Value name="_x0038_562" visiblename="AdrOffset_8560" offlineaccess="read" onlineaccess="read">4294967295</Value>
+                        <Value name="_x0038_562" visiblename="AdrOffset_8560" offlineaccess="read" onlineaccess="read" />
                         <Name>AdrOffset_8560</Name>
                       </Parameter>
                       <Parameter ParameterId="8563" type="std:USINT" IndexInDevDesc="101">
                         <Attributes offlineaccess="read" onlineaccess="read" />
-                        <Value name="_x0038_563" visiblename="BitOffset_8560" offlineaccess="read" onlineaccess="read">0</Value>
+                        <Value name="_x0038_563" visiblename="BitOffset_8560" offlineaccess="read" onlineaccess="read" />
                         <Name>BitOffset_8560</Name>
                       </Parameter>
                       <Parameter ParameterId="8564" type="std:USINT" IndexInDevDesc="102">
                         <Attributes offlineaccess="read" onlineaccess="read" />
-                        <Value name="_x0038_564" visiblename="BitLength_8560" offlineaccess="read" onlineaccess="read">0</Value>
+                        <Value name="_x0038_564" visiblename="BitLength_8560" offlineaccess="read" onlineaccess="read" />
                         <Name>BitLength_8560</Name>
                       </Parameter>
                       <Parameter ParameterId="8570" type="std:INT" IndexInDevDesc="103">
@@ -574,17 +574,17 @@
                       </Parameter>
                       <Parameter ParameterId="8572" type="std:UDINT" IndexInDevDesc="105">
                         <Attributes offlineaccess="read" onlineaccess="read" />
-                        <Value name="_x0038_572" visiblename="AdrOffset_8570" offlineaccess="read" onlineaccess="read">4294967295</Value>
+                        <Value name="_x0038_572" visiblename="AdrOffset_8570" offlineaccess="read" onlineaccess="read" />
                         <Name>AdrOffset_8570</Name>
                       </Parameter>
                       <Parameter ParameterId="8573" type="std:USINT" IndexInDevDesc="106">
                         <Attributes offlineaccess="read" onlineaccess="read" />
-                        <Value name="_x0038_573" visiblename="BitOffset_8570" offlineaccess="read" onlineaccess="read">0</Value>
+                        <Value name="_x0038_573" visiblename="BitOffset_8570" offlineaccess="read" onlineaccess="read" />
                         <Name>BitOffset_8570</Name>
                       </Parameter>
                       <Parameter ParameterId="8574" type="std:USINT" IndexInDevDesc="107">
                         <Attributes offlineaccess="read" onlineaccess="read" />
-                        <Value name="_x0038_574" visiblename="BitLength_8570" offlineaccess="read" onlineaccess="read">0</Value>
+                        <Value name="_x0038_574" visiblename="BitLength_8570" offlineaccess="read" onlineaccess="read" />
                         <Name>BitLength_8570</Name>
                       </Parameter>
                       <Parameter ParameterId="8580" type="std:INT" IndexInDevDesc="108">
@@ -599,17 +599,17 @@
                       </Parameter>
                       <Parameter ParameterId="8582" type="std:UDINT" IndexInDevDesc="110">
                         <Attributes offlineaccess="read" onlineaccess="read" />
-                        <Value name="_x0038_582" visiblename="AdrOffset_8580" offlineaccess="read" onlineaccess="read">4294967295</Value>
+                        <Value name="_x0038_582" visiblename="AdrOffset_8580" offlineaccess="read" onlineaccess="read" />
                         <Name>AdrOffset_8580</Name>
                       </Parameter>
                       <Parameter ParameterId="8583" type="std:USINT" IndexInDevDesc="111">
                         <Attributes offlineaccess="read" onlineaccess="read" />
-                        <Value name="_x0038_583" visiblename="BitOffset_8580" offlineaccess="read" onlineaccess="read">0</Value>
+                        <Value name="_x0038_583" visiblename="BitOffset_8580" offlineaccess="read" onlineaccess="read" />
                         <Name>BitOffset_8580</Name>
                       </Parameter>
                       <Parameter ParameterId="8584" type="std:USINT" IndexInDevDesc="112">
                         <Attributes offlineaccess="read" onlineaccess="read" />
-                        <Value name="_x0038_584" visiblename="BitLength_8580" offlineaccess="read" onlineaccess="read">0</Value>
+                        <Value name="_x0038_584" visiblename="BitLength_8580" offlineaccess="read" onlineaccess="read" />
                         <Name>BitLength_8580</Name>
                       </Parameter>
                       <Parameter ParameterId="8590" type="std:INT" IndexInDevDesc="113">
@@ -624,17 +624,17 @@
                       </Parameter>
                       <Parameter ParameterId="8592" type="std:UDINT" IndexInDevDesc="115">
                         <Attributes offlineaccess="read" onlineaccess="read" />
-                        <Value name="_x0038_592" visiblename="AdrOffset_8590" offlineaccess="read" onlineaccess="read">4294967295</Value>
+                        <Value name="_x0038_592" visiblename="AdrOffset_8590" offlineaccess="read" onlineaccess="read" />
                         <Name>AdrOffset_8590</Name>
                       </Parameter>
                       <Parameter ParameterId="8593" type="std:USINT" IndexInDevDesc="116">
                         <Attributes offlineaccess="read" onlineaccess="read" />
-                        <Value name="_x0038_593" visiblename="BitOffset_8590" offlineaccess="read" onlineaccess="read">0</Value>
+                        <Value name="_x0038_593" visiblename="BitOffset_8590" offlineaccess="read" onlineaccess="read" />
                         <Name>BitOffset_8590</Name>
                       </Parameter>
                       <Parameter ParameterId="8594" type="std:USINT" IndexInDevDesc="117">
                         <Attributes offlineaccess="read" onlineaccess="read" />
-                        <Value name="_x0038_594" visiblename="BitLength_8590" offlineaccess="read" onlineaccess="read">0</Value>
+                        <Value name="_x0038_594" visiblename="BitLength_8590" offlineaccess="read" onlineaccess="read" />
                         <Name>BitLength_8590</Name>
                       </Parameter>
                       <Parameter ParameterId="8600" type="std:INT" IndexInDevDesc="118">
@@ -649,17 +649,17 @@
                       </Parameter>
                       <Parameter ParameterId="8602" type="std:UDINT" IndexInDevDesc="120">
                         <Attributes offlineaccess="read" onlineaccess="read" />
-                        <Value name="_x0038_602" visiblename="AdrOffset_8600" offlineaccess="read" onlineaccess="read">4294967295</Value>
+                        <Value name="_x0038_602" visiblename="AdrOffset_8600" offlineaccess="read" onlineaccess="read" />
                         <Name>AdrOffset_8600</Name>
                       </Parameter>
                       <Parameter ParameterId="8603" type="std:USINT" IndexInDevDesc="121">
                         <Attributes offlineaccess="read" onlineaccess="read" />
-                        <Value name="_x0038_603" visiblename="BitOffset_8600" offlineaccess="read" onlineaccess="read">0</Value>
+                        <Value name="_x0038_603" visiblename="BitOffset_8600" offlineaccess="read" onlineaccess="read" />
                         <Name>BitOffset_8600</Name>
                       </Parameter>
                       <Parameter ParameterId="8604" type="std:USINT" IndexInDevDesc="122">
                         <Attributes offlineaccess="read" onlineaccess="read" />
-                        <Value name="_x0038_604" visiblename="BitLength_8600" offlineaccess="read" onlineaccess="read">0</Value>
+                        <Value name="_x0038_604" visiblename="BitLength_8600" offlineaccess="read" onlineaccess="read" />
                         <Name>BitLength_8600</Name>
                       </Parameter>
                       <Parameter ParameterId="8610" type="std:INT" IndexInDevDesc="123">
@@ -674,17 +674,17 @@
                       </Parameter>
                       <Parameter ParameterId="8612" type="std:UDINT" IndexInDevDesc="125">
                         <Attributes offlineaccess="read" onlineaccess="read" />
-                        <Value name="_x0038_612" visiblename="AdrOffset_8600" offlineaccess="read" onlineaccess="read">4294967295</Value>
+                        <Value name="_x0038_612" visiblename="AdrOffset_8600" offlineaccess="read" onlineaccess="read" />
                         <Name>AdrOffset_8600</Name>
                       </Parameter>
                       <Parameter ParameterId="8613" type="std:USINT" IndexInDevDesc="126">
                         <Attributes offlineaccess="read" onlineaccess="read" />
-                        <Value name="_x0038_613" visiblename="BitOffset_8600" offlineaccess="read" onlineaccess="read">0</Value>
+                        <Value name="_x0038_613" visiblename="BitOffset_8600" offlineaccess="read" onlineaccess="read" />
                         <Name>BitOffset_8600</Name>
                       </Parameter>
                       <Parameter ParameterId="8614" type="std:USINT" IndexInDevDesc="127">
                         <Attributes offlineaccess="read" onlineaccess="read" />
-                        <Value name="_x0038_614" visiblename="BitLength_8600" offlineaccess="read" onlineaccess="read">0</Value>
+                        <Value name="_x0038_614" visiblename="BitLength_8600" offlineaccess="read" onlineaccess="read" />
                         <Name>BitLength_8600</Name>
                       </Parameter>
                       <Parameter ParameterId="8620" type="std:INT" IndexInDevDesc="128">
@@ -699,17 +699,17 @@
                       </Parameter>
                       <Parameter ParameterId="8622" type="std:UDINT" IndexInDevDesc="130">
                         <Attributes offlineaccess="read" onlineaccess="read" />
-                        <Value name="_x0038_622" visiblename="AdrOffset_8620" offlineaccess="read" onlineaccess="read">4294967295</Value>
+                        <Value name="_x0038_622" visiblename="AdrOffset_8620" offlineaccess="read" onlineaccess="read" />
                         <Name>AdrOffset_8620</Name>
                       </Parameter>
                       <Parameter ParameterId="8623" type="std:USINT" IndexInDevDesc="131">
                         <Attributes offlineaccess="read" onlineaccess="read" />
-                        <Value name="_x0038_623" visiblename="BitOffset_8620" offlineaccess="read" onlineaccess="read">0</Value>
+                        <Value name="_x0038_623" visiblename="BitOffset_8620" offlineaccess="read" onlineaccess="read" />
                         <Name>BitOffset_8620</Name>
                       </Parameter>
                       <Parameter ParameterId="8624" type="std:USINT" IndexInDevDesc="132">
                         <Attributes offlineaccess="read" onlineaccess="read" />
-                        <Value name="_x0038_624" visiblename="BitLength_8620" offlineaccess="read" onlineaccess="read">0</Value>
+                        <Value name="_x0038_624" visiblename="BitLength_8620" offlineaccess="read" onlineaccess="read" />
                         <Name>BitLength_8620</Name>
                       </Parameter>
                       <Parameter ParameterId="8999" type="std:BOOL" IndexInDevDesc="133">
