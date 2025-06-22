@@ -10,7 +10,7 @@ Before=app.service
 
 [Service]
 WorkingDirectory=/var/opt/codesys
-RuntimeDirectory=codesys
+RuntimeDirectory=codesys codesysextension
 
 StandardOutput=tty
 TTYPath=/run/codesys-log/tty
@@ -21,6 +21,10 @@ CPUAffinity=1
 Environment="RTS_EOE_DEV=tap3"
 
 ExecStartPre=-/opt/codesys/scripts/select-application
+ExecStartPre=/bin/sh -c 'echo STOP > /var/opt/codesysextension/runstop.switch'
 
 Type=exec
 ExecStart=/opt/codesys/bin/codesyscontrol.bin /etc/codesyscontrol/CODESYSControl.cfg
+
+# wait for plcshell
+ExecStartPost=/bin/sh -c 'while [ ! -e /run/codesysextension/plcshell.sock ]; do sleep 1; done'

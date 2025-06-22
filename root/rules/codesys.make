@@ -11,14 +11,14 @@
 #
 PACKAGES-$(PTXCONF_CODESYS) += codesys
 
-CODESYS_VERSION			:= 4.14.0.0
+CODESYS_VERSION			:= 4.15.0.0
 ifdef PTXCONF_ARCH_X86_64
 CODESYS				:= codesyscontrol_linux_$(CODESYS_VERSION)_amd64
-CODESYS_MD5			:= f29447ec15261ddc627dc425a7d416cd
+CODESYS_MD5			:= 368a0b203ac95c13e1316bb5d2e2ff6a
 endif
 ifdef PTXCONF_ARCH_ARM64
 CODESYS				:= codesyscontrol_linuxarm64_$(CODESYS_VERSION)_arm64
-CODESYS_MD5			:= b953cdca55c5d61d841d3c0b2ae2ad74
+CODESYS_MD5			:= 91b4f8200d4d4b40dcf7aa0008a9f180
 endif
 CODESYS_URL			:= https://undefined
 CODESYS_SOURCE			:= $(SRCDIR)/$(CODESYS).deb

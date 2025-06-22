@@ -21,6 +21,7 @@ from ctypes import addressof, sizeof, memmove, c_byte, c_uint8, c_uint16, c_uint
 import posix_ipc
 from pathlib import Path
 from functools import partial
+from contextlib import closing
 from shared.codesys_types import AppCfg, AppCmd, AppFbk
 from . import app
 
@@ -45,45 +46,58 @@ def runstop_switch(run:bool):
 	Path('/var/opt/codesysextension/runstop.switch').write_bytes(b'RUN' if run else b'STOP')
 
 
+async def shell_cmd(cmd:str):
+	reader, writer = await asyncio.open_unix_connection('/var/run/codesysextension/plcshell.sock')
+	with closing(writer):
+		writer.write(f'{cmd}\n'.encode())
+		await writer.drain()
+		result = await reader.readline()
+		writer.write(b'reflect\n')
+		await writer.drain()
+		result += await reader.readuntil(b'reflect')
+		return '\n'.join(l.decode() for l in result.split(b'\r\n')[:-1] if l)
+
+
 
 @app.context
 async def exec(period:float):
-	cfg_path = Path('/run/codesys/cfg')
-	cfg_path.write_bytes(bytes(cfg))
+	Path('/run/codesys/cfg').write_bytes(bytes(cfg))
+
+	await shell_cmd('resetprgcold application')
 	runstop_switch(True)
+	await shell_cmd('startprg application')
+
+	if not await app.poll(Path('/dev/shm/codesys').exists, timeout=30):
+		raise Exception('codesys application not started')
+
+	sem = posix_ipc.Semaphore('/codesys')
+	shm = posix_ipc.SharedMemory('/codesys')
 	try:
-		if not await app.poll(lambda: Path('/dev/shm/codesys').exists(), timeout=90):
-			raise Exception('codesys application not started')
-		sem = posix_ipc.Semaphore('/codesys')
-		shm = posix_ipc.SharedMemory('/codesys')
-		try:
-			with mmap.mmap(shm.fd, shm.size) as mapfile:
-				cmd_addr, cmd_size = addressof(cmd), sizeof(cmd)
-				fbk_addr, fbk_size = addressof(fbk), sizeof(fbk)
-				assert shm.size >= cmd_size + fbk_size
-				shm_cmd_addr = addressof(c_byte.from_buffer(mapfile))
-				shm_fbk_addr = addressof(c_byte.from_buffer(mapfile, cmd_size))
+		with mmap.mmap(shm.fd, shm.size) as mapfile:
+			cmd_addr, cmd_size = addressof(cmd), sizeof(cmd)
+			fbk_addr, fbk_size = addressof(fbk), sizeof(fbk)
+			assert shm.size >= cmd_size + fbk_size
+			shm_cmd_addr = addressof(c_byte.from_buffer(mapfile))
+			shm_fbk_addr = addressof(c_byte.from_buffer(mapfile, cmd_size))
 
-				async def sync_loop():
-					while True:
-						with sem:
-							memmove(shm_cmd_addr, cmd_addr, cmd_size)
-							memmove(fbk_addr, shm_fbk_addr, fbk_size)
-						_sync_trigger()
-						await asyncio.sleep(period)
+			async def sync_loop():
+				while True:
+					with sem:
+						memmove(shm_cmd_addr, cmd_addr, cmd_size)
+						memmove(fbk_addr, shm_fbk_addr, fbk_size)
+					_sync_trigger()
+					await asyncio.sleep(period)
 
-				async with app.task_group(sync_loop):
+			async with app.task_group(sync_loop):
+				await sync()
+				try:
+					yield
+				finally:
 					await sync()
-					try:
-						yield
-					finally:
-						await sync()
-		finally:
-			shm.close_fd()
-			sem.close()
+
 	finally:
-		runstop_switch(False)
-		await app.poll(lambda: not cfg_path.exists(), timeout=10)
+		shm.close_fd()
+		sem.close()
 
 
 
