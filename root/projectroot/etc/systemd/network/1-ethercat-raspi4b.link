@@ -1,0 +1,6 @@
+[Match]
+Path=platform-fd580000.ethernet
+Type=ether
+
+[Link]
+Name=ethc

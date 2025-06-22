@@ -1,4 +1,6 @@
 CONFIG_CMDLINE="console=ttyS2,115200n8 earlycon=ns16550a,mmio32,0x02800000 isolcpus=1"
 CONFIG_CMDLINE_FORCE=y
 
+CONFIG_DRM=m
+
 # CONFIG_MEDIA_SUPPORT is not set

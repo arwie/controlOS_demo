@@ -1,0 +1,7 @@
+[Match]
+Path=platform-8000000.ethernet
+Property=IFINDEX=2
+Type=ether
+
+[Link]
+Name=syslan
