@@ -1,5 +1,6 @@
 from asyncio import Event
 from dataclasses import astuple
+from numbers import Number
 from shared import app
 from robot import robot, Pos
 from conv import conv
@@ -43,8 +44,8 @@ async def exec():
 						#compute travel distance if jogging towards snap
 						distance = 500
 						for s,d,p in zip(msg['snap'].values(), astuple(direction), astuple(robot.pos())):
-							if len(s) and d:
-								sp = float(s) - p
+							if isinstance(s, Number) and d:
+								sp = s - p
 								if sp * d > 0.1:
 									distance = abs(sp)
 

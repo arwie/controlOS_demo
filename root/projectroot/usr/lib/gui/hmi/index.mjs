@@ -12,14 +12,6 @@ import { LocaleDropdown } from 'locale'
 export const hmiIndex = addPage('hmi');
 
 
-hmiIndex.redirect = () => {
-	for (const route of hmiIndex.children) {
-		if (route.beforeEnter()===true)
-			return route;
-	}
-};
-
-
 
 setRootView({
 	setup() {
