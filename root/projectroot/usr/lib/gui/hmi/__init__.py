@@ -10,6 +10,7 @@ web.document.stylesheets.append('fontawesome/css/all.css')
 web.document.imports.add('hmi')
 
 web.document.imports.add('hmi/teach')
+web.document.imports.add('hmi/paint')
 
 
 import system
