@@ -1,6 +1,1 @@
-CONFIG_INITRAMFS_SOURCE="${PTXDIST_WORKSPACE}/../initramfs/platform-raspi4b/images/root.cpio"
-
-# CONFIG_EFI is not set
-# CONFIG_VT is not set
-# CONFIG_ANDROID is not set
-# CONFIG_GAMEPORT is not set
+CONFIG_INITRAMFS_SOURCE="${PTXDIST_WORKSPACE}/base/initramfs/platform-raspi4b/images/root.cpio"
