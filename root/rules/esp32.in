@@ -2,6 +2,7 @@
 
 menuconfig ESP32
 	tristate
+	select HOST_CMAKE
 	select ESPTOOL		if RUNTIME
 	prompt "esp32"
 	help

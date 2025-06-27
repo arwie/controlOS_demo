@@ -2,4 +2,4 @@
 
 #include "broadcom/bcm2711-rpi-4-b.dts"
 
-#include "waveshare-can.dtsi"
+#include "waveshare-can-fd.dtsi"

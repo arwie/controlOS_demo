@@ -5,7 +5,7 @@
   </types>
   <instances>
     <configurations>
-      <configuration name="phyBOARD_Lyra">
+      <configuration name="raspi4b">
         <addData>
           <data name="Device" handleUnknown="discard">
             <Device xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="">
