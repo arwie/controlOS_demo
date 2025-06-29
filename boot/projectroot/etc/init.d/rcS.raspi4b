@@ -1,0 +1,181 @@
+#!/bin/sh
+
+# Copyright (c) 2016 Artur Wiebe <artur@4wiebe.de>
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+# associated documentation files (the "Software"), to deal in the Software without restriction,
+# including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so,
+# subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+# INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+# WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+
+waitfs()
+{
+TIMEOUT=${2-100}
+while ! findfs LABEL=$1 > /dev/null; do
+	[ $(( --TIMEOUT )) -gt 0 ] || return 1
+	echo -ne "waiting for $1 device $TIMEOUT ...     \r"
+	sleep 0.1;
+done
+}
+
+
+data_format()
+{
+echo "appending data partition (using rest of sd-card)"
+sfdisk -a $DISKDEV << +++++
+-,+,-,-
++++++
+
+sync
+sleep 3
+blockdev --rereadpt $DISKDEV
+sleep 2
+}
+
+
+data_init()
+{
+echo "running data init"
+
+echo "(re)creating data fs ..."
+mkfs.ext4 -Fq -L "DATA" $DATADEV
+mount /mnt/data
+
+echo "initializing data fs ..."
+tar -C /mnt/data -x -f /mnt/init/data
+
+sync
+fstrim -v /mnt/data
+
+umount /mnt/data
+rm -f /mnt/init/data
+sync
+
+echo "finished data init"
+}
+
+
+init_mount() 
+{
+echo "check and mount init partition"
+
+fsck.fat -pv $INITDEV
+mount /mnt/init
+
+# delete all stubs created by fsck
+find /mnt/init -iname "*.REC" -delete
+}
+
+
+root_update() 
+{
+echo "running update"
+
+echo "testing update file integrity"
+if ! tar -x -O -f /mnt/init/update &> /dev/null
+then
+	echo "update file is corrupt -> deleting"
+	rm -f /mnt/init/update
+	return 1
+fi
+
+echo "(re)creating root fs ..."
+mkfs.ext4 -Fq -L "ROOT" $ROOTDEV
+mount /mnt/root
+
+echo "updating root fs ..."
+tar -C /mnt/root -x -f /mnt/init/update
+
+echo "preparing production boot partition ..."
+. /mnt/root/boot/boot.conf
+cp /mnt/root/boot/$IMAGE /mnt/init/kernel8.img
+cp /mnt/root/boot/$DTB   /mnt/init/bcm2711-rpi-4-b.dtb
+echo $BOOTARGS > /mnt/init/cmdline.txt
+
+sync
+fstrim -v /mnt/root
+fstrim -v /mnt/init
+
+umount /mnt/root
+rm -f /mnt/init/update
+sync
+
+echo "finished update"
+}
+
+
+root_boot() 
+{
+echo "starting root system"
+sync
+raspi-reboot 2
+}
+
+
+shell()
+{
+echo "starting recovery shell"
+
+waitfs BOOT    30
+waitfs INSTALL 30
+mount -a
+
+run-parts -a start /etc/rc.d
+
+exec /bin/sh
+}
+
+
+waitfs BOOT || shell
+
+
+
+BOOTDEV=$(findfs LABEL=BOOT)
+case $BOOTDEV in
+	/dev/sd*)
+		DISKDEV=${BOOTDEV%?}
+		INITDEV=${DISKDEV}2
+		ROOTDEV=${DISKDEV}3
+		DATADEV=${DISKDEV}4
+		;;
+	*)
+		DISKDEV=${BOOTDEV%??}
+		INITDEV=${DISKDEV}p2
+		ROOTDEV=${DISKDEV}p3
+		DATADEV=${DISKDEV}p4
+		;;
+esac
+echo "using: DISKDEV=$DISKDEV INITDEV=$INITDEV ROOTDEV=$ROOTDEV DATADEV=$DATADEV"
+
+
+
+if [ ! -b $DATADEV ]; then
+	data_format
+fi
+
+
+init_mount
+
+if [ -f /mnt/init/data ]; then
+	data_init
+else
+	fsck.ext4 -pv $DATADEV
+fi
+
+if [ -f /mnt/init/update ]; then
+	root_update
+fi
+
+umount /mnt/init
+
+
+root_boot || shell

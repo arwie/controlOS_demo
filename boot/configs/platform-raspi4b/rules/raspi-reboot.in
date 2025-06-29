@@ -1,0 +1,8 @@
+## SECTION=platform_project_specific
+
+config RASPI_REBOOT
+	tristate
+	prompt "raspi-reboot"
+	help
+	  Reboot syscall with a parameter,
+	  which allows to reboot from an other partition.
