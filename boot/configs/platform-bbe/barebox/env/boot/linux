@@ -1,5 +1,0 @@
-#!/bin/sh
-
-global.bootm.image=/boot/linux.bin
-global.bootm.oftree=/boot/linux.dtb
-global.linux.bootargs.console="console=ttyS0,115200n8"

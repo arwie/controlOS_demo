@@ -1,9 +1,0 @@
-#!/bin/sh
-
-HOST=controlOS
-
-BASEDIR=$(dirname $(realpath $0))
-
-
-scp -i $BASEDIR/ssh/id_rsa $1/* root@$HOST:/etc/app/.
-ssh -i $BASEDIR/ssh/id_rsa root@$HOST "reboot"

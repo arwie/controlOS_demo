@@ -1,3 +1,0 @@
-#!/bin/sh
-
-exec cat /proc/device-tree/model
