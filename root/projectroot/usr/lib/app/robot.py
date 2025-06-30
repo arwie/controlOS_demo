@@ -142,6 +142,7 @@ class robot:
 		await setup_drives(20, 200)
 
 		async with self.power():
+			await app.sleep(1)
 			await set_position(Axes(370, 370, 370))
 			await self.move_direct(Axes(200, 200, 200), 5)
 			await set_position(HOME_AXES)

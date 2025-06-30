@@ -58,3 +58,5 @@ conv_drive = StepIM(4, 'Conv', 20)
 async def initialize():
 	for drive in (robot_a, robot_b, robot_c):
 		await drive.initialize()
+
+	await app.sleep(1) # drives jump if enabled too soon (Servotronix bug)

@@ -13,8 +13,8 @@ import demo_conv_pick_virt
 
 
 #demo = demo_robot_motion.run
-demo = demo_cnc_paint.run
-#demo = demo_conv_pick_virt.run
+#demo = demo_cnc_paint.run
+demo = demo_conv_pick_virt.run
 
 
 @app.context
