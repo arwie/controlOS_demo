@@ -1,6 +1,0 @@
-[Match]
-Path=platform-xhci-hcd.3.auto-usb-0:1.2:1.0
-Type=wlan
-
-[Link]
-Name=syswlan
