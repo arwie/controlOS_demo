@@ -9,7 +9,7 @@ XI110116 = projects.primary.find('XI110116', True)[0]	#inputs
 
 
 for dev, templ in [(XI211116, cmd), (XI110116, fbk)]:
-	idx = 0
+	idx = 1
 	for p in dev.connectors.by_id(1).host_parameters:
 		if p.io_mapping:
 			variable = templ.format(idx)

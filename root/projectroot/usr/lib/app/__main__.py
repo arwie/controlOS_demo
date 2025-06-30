@@ -6,15 +6,9 @@ import buttons
 import sim
 import teach
 
-import demo_robot_motion
-import demo_cnc_paint
-import demo_conv_pick_virt
 
+from programs import hardware_test as program
 
-
-#demo = demo_robot_motion.run
-#demo = demo_cnc_paint.run
-demo = demo_conv_pick_virt.run
 
 
 @app.context
@@ -27,7 +21,7 @@ async def operation():
 		async with teach.exec():
 			await app.poll(buttons.start)
 
-		async with app.task_group(demo):
+		async with app.task_group(program.run):
 			await app.poll(buttons.stop)
 
 

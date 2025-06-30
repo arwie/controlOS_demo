@@ -29,6 +29,7 @@
         <Library Name="#SM3_Drive_CAN" Namespace="SM3_Drive_CAN" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="true" LinkAllContent="false" DefaultResolution="SM3_Drive_CAN, 4.18.0.0 (CODESYS)" />
         <Library Name="#SM3_Drive_CAN_DS402_CyclicSync" Namespace="SM3_Drive_CAN_DS402_CyclicSync" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="true" LinkAllContent="false" DefaultResolution="SM3_Drive_CAN_DS402_CyclicSync, 4.18.0.0 (CODESYS)" />
         <Library Name="#CAA Device Diagnosis" Namespace="DED" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="true" LinkAllContent="false" DefaultResolution="CAA Device Diagnosis, 3.5.21.0 (CAA Technical Workgroup)" />
+        <Library Name="#IODrvEtherCAT" Namespace="IoDrvEthercatLib" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="true" LinkAllContent="false" DefaultResolution="IoDrvEtherCAT, 4.1.0.0 (3S - Smart Software Solutions GmbH)" />
         <PlaceholderRedirections>
           <PlaceholderRedirection Placeholder="System_VisuElemTextEditor" Redirection="VisuElemTextEditor, 4.7.0.0 (System)" />
           <PlaceholderRedirection Placeholder="Standard" Redirection="Standard, 3.5.18.0 (System)" />

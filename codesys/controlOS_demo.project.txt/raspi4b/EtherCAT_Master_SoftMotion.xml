@@ -1,0 +1,382 @@
+<project xmlns="http://www.plcopen.org/xml/tc6_0200">
+  <types>
+    <dataTypes />
+    <pous />
+  </types>
+  <instances>
+    <configurations>
+      <configuration name="EtherCAT_Master_SoftMotion">
+        <addData>
+          <data name="Device" handleUnknown="discard">
+            <Device xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="">
+              <DeviceType>
+                <DeviceIdentification>
+                  <Type>64</Type>
+                  <Id>0000 1002</Id>
+                  <Version>4.9.0.0</Version>
+                </DeviceIdentification>
+                <Connector moduleType="257" role="child" interface="Common.PCI" connectorId="1">
+                  <HostParameterSet />
+                </Connector>
+                <Connector moduleType="64" interface="Common.Ethercat" connectorId="2" hostpath="1">
+                  <HostParameterSet>
+                    <ParameterSection>
+                      <Name>Second Network adapter</Name>
+                      <Description />
+                      <Parameter ParameterId="1073745920" type="std:BOOL" IndexInDevDesc="30">
+                        <Attributes />
+                        <Value name="_x0031_073745920" visiblename="EnableSecondAdapter" desc="Enable second network adapter">FALSE</Value>
+                        <Name>EnableSecondAdapter</Name>
+                        <Description>Enable second network adapter</Description>
+                      </Parameter>
+                      <Parameter ParameterId="1073745925" type="std:ARRAY [0..5] OF BYTE" IndexInDevDesc="31">
+                        <Attributes />
+                        <Value name="_x0031_073745925" visiblename="SrcAddress" desc="Source Address">[0,0,0,0,0,0]</Value>
+                        <Name>SrcAddress</Name>
+                        <Description>Source Address</Description>
+                      </Parameter>
+                      <Parameter ParameterId="1073745927" type="std:ARRAY [0..5] OF BYTE" IndexInDevDesc="32">
+                        <Attributes />
+                        <Value name="_x0031_073745927" visiblename="DestAddress" desc="Destination Address">[255,255,255,255,255,255]</Value>
+                        <Name>DestAddress</Name>
+                        <Description>Destination Address</Description>
+                      </Parameter>
+                      <Parameter ParameterId="1073745929" type="std:STRING(100)" IndexInDevDesc="33">
+                        <Attributes />
+                        <Value name="_x0031_073745929" visiblename="NetworkName" desc="Name of the network card">''</Value>
+                        <Name>NetworkName</Name>
+                        <Description>Name of the network card</Description>
+                      </Parameter>
+                      <Parameter ParameterId="1073745930" type="std:WSTRING(100)" IndexInDevDesc="34">
+                        <Attributes />
+                        <Value name="_x0031_073745930" visiblename="NetworkName" desc="Name of the network card">""</Value>
+                        <Name>NetworkName</Name>
+                        <Description>Name of the network card</Description>
+                      </Parameter>
+                      <Parameter ParameterId="1073745931" type="std:BOOL" IndexInDevDesc="35">
+                        <Attributes />
+                        <Value name="_x0031_073745931" visiblename="SelectNetworkByName" desc="Select network by name">FALSE</Value>
+                        <Name>SelectNetworkByName</Name>
+                        <Description>Select network by name</Description>
+                      </Parameter>
+                      <Parameter ParameterId="1073745932" type="std:BOOL" IndexInDevDesc="36">
+                        <Attributes />
+                        <Value name="_x0031_073745932" visiblename="CompareNetworkName" desc="Comapare exact network name">FALSE</Value>
+                        <Name>CompareNetworkName</Name>
+                        <Description>Comapare exact network name</Description>
+                      </Parameter>
+                    </ParameterSection>
+                    <ParameterSection>
+                      <Name>Diagnosis</Name>
+                      <Description />
+                      <Parameter ParameterId="805502976" type="localTypes:StructStatistics" IndexInDevDesc="50">
+                        <Attributes channel="diag" offlineaccess="none" />
+                        <Value name="_x0038_05502976" visiblename="Statistics" offlineaccess="none">
+                          <Element name="SendFrameCount" visiblename="SendFrameCount">0</Element>
+                          <Element name="FramesPerSecond" visiblename="FramesPerSecond">0</Element>
+                          <Element name="LostFrameCount" visiblename="LostFrameCount">0</Element>
+                          <Element name="TxErrorCount" visiblename="TxErrorCount">0</Element>
+                          <Element name="RxErrorCount" visiblename="RxErrorCount">0</Element>
+                          <Element name="RecvAvg_Cycle" visiblename="Recv Time (Avg)" desc="Average Time for receiving Ethernet frames per paket" />
+                          <Element name="RecvMax_Cycle" visiblename="Recv Time (Max)" desc="Max Time for receiving Ethernet frames per paket" />
+                          <Element name="SendAvg_Cycle" visiblename="Send Time (Avg)" desc="Average Time for sending Ethernet frames per paket" />
+                          <Element name="SendMax_Cycle" visiblename="Send Time (Max)" desc="Max Time for sending Ethernet frames per paket" />
+                          <Element name="LostCycleCount" visiblename="LostCycleCount" desc="Number of lost iec cycles" />
+                        </Value>
+                        <Name>Statistics</Name>
+                      </Parameter>
+                      <Parameter ParameterId="805502977" type="std:BOOL" IndexInDevDesc="51">
+                        <Attributes channel="diagAck" />
+                        <Value name="_x0038_05502977" visiblename="Clear Statistics" desc="Clear Statistics">FALSE</Value>
+                        <Name>Clear Statistics</Name>
+                        <Description>Clear Statistics</Description>
+                      </Parameter>
+                    </ParameterSection>
+                    <ParameterSection>
+                      <Name>Mailbox Gateway</Name>
+                      <Description />
+                      <Parameter ParameterId="1073750016" type="std:BOOL" IndexInDevDesc="52">
+                        <Attributes />
+                        <Value name="_x0031_073750016" visiblename="Enable mailbox gateway" desc="if true then mailbox gateway is enabled">FALSE</Value>
+                        <Name>Enable mailbox gateway</Name>
+                        <Description>if true then mailbox gateway is enabled</Description>
+                      </Parameter>
+                      <Parameter ParameterId="1073750018" type="std:ARRAY[0..3] OF BYTE" IndexInDevDesc="53">
+                        <Attributes />
+                        <Value name="_x0031_073750018" visiblename="IP address" desc="IP address of mailbox gateway">[0,0,0,0]</Value>
+                        <Name>IP address</Name>
+                        <Description>IP address of mailbox gateway</Description>
+                      </Parameter>
+                    </ParameterSection>
+                    <Parameter ParameterId="805306368" type="std:DWORD" IndexInDevDesc="10">
+                      <Attributes />
+                      <Value name="_x0038_05306368" visiblename="Autoconfig" desc="Automatic configuration">1</Value>
+                      <Name>Autoconfig</Name>
+                      <Description>Automatic configuration</Description>
+                    </Parameter>
+                    <Parameter ParameterId="805306369" type="std:BOOL" IndexInDevDesc="45">
+                      <Attributes download="false" offlineaccess="none" />
+                      <Value name="_x0038_05306369" visiblename="ShowLoggerPage" offlineaccess="none" desc="Show the logger page for the master">true</Value>
+                      <Name>ShowLoggerPage</Name>
+                      <Description>Show the logger page for the master</Description>
+                    </Parameter>
+                    <Parameter ParameterId="805306371" type="std:BOOL" IndexInDevDesc="46">
+                      <Attributes download="false" offlineaccess="none" />
+                      <Value name="_x0038_05306371" visiblename="SupportMemoryService" offlineaccess="none" desc="Stack supports memory service">true</Value>
+                      <Name>SupportMemoryService</Name>
+                      <Description>Stack supports memory service</Description>
+                    </Parameter>
+                    <Parameter ParameterId="805306375" type="std:BOOL" IndexInDevDesc="47">
+                      <Attributes download="false" offlineaccess="none" />
+                      <Value name="_x0038_05306375" visiblename="ShowSafetyChannels" offlineaccess="none" desc="if true then safety channels are shown and mappable">true</Value>
+                      <Name>ShowSafetyChannels</Name>
+                      <Description>if true then safety channels are shown and mappable</Description>
+                    </Parameter>
+                    <Parameter ParameterId="805306377" type="std:BOOL" IndexInDevDesc="48">
+                      <Attributes download="false" offlineaccess="none" />
+                      <Value name="_x0038_05306377" visiblename="ShowSafetyConnections" offlineaccess="none" desc="if true then safety connections page is shown">true</Value>
+                      <Name>ShowSafetyConnections</Name>
+                      <Description>if true then safety connections page is shown</Description>
+                    </Parameter>
+                    <Parameter ParameterId="805306379" type="std:BOOL" IndexInDevDesc="49">
+                      <Attributes download="false" offlineaccess="none" />
+                      <Value name="_x0038_05306379" visiblename="ShpwDCStatistik" offlineaccess="none" desc="true: DC Statistics page is shown">true</Value>
+                      <Name>ShpwDCStatistik</Name>
+                      <Description>true: DC Statistics page is shown</Description>
+                    </Parameter>
+                    <Parameter ParameterId="805326848" type="std:DWORD" IndexInDevDesc="11">
+                      <Attributes />
+                      <Value name="_x0038_05326848" visiblename="MasterCycleTime" desc="Master Cycle Time">4000</Value>
+                      <Name>MasterCycleTime</Name>
+                      <Description>Master Cycle Time</Description>
+                    </Parameter>
+                    <Parameter ParameterId="805371904" type="std:BOOL" IndexInDevDesc="12">
+                      <Attributes />
+                      <Value name="_x0038_05371904" visiblename="MasterUseLRW" desc="Master uses LRW command">FALSE</Value>
+                      <Name>MasterUseLRW</Name>
+                      <Description>Master uses LRW command</Description>
+                    </Parameter>
+                    <Parameter ParameterId="805392384" type="std:BOOL" IndexInDevDesc="13">
+                      <Attributes />
+                      <Value name="_x0038_05392384" visiblename="SlaveAutorestart" desc="Slave restarts automatically">FALSE</Value>
+                      <Name>SlaveAutorestart</Name>
+                      <Description>Slave restarts automatically</Description>
+                    </Parameter>
+                    <Parameter ParameterId="805392640" type="std:BOOL" IndexInDevDesc="42">
+                      <Attributes />
+                      <Value name="_x0038_05392640" visiblename="Keep last input data" desc="Keep last input data">TRUE</Value>
+                      <Name>Keep last input data</Name>
+                      <Description>Keep last input data</Description>
+                    </Parameter>
+                    <Parameter ParameterId="805392650" type="std:BOOL" IndexInDevDesc="43">
+                      <Attributes />
+                      <Value name="_x0038_05392650" visiblename="OnlyArpBroadcasts" desc="true: transmit only ARP broadcasts, false: transmit all broadcasts">TRUE</Value>
+                      <Name>OnlyArpBroadcasts</Name>
+                      <Description>true: transmit only ARP broadcasts, false: transmit all broadcasts</Description>
+                    </Parameter>
+                    <Parameter ParameterId="805437440" type="std:USINT" IndexInDevDesc="14">
+                      <Attributes />
+                      <Value name="_x0038_05437440" visiblename="SlaveCheckMode" desc="Mode for vendor product check">0</Value>
+                      <Name>SlaveCheckMode</Name>
+                      <Description>Mode for vendor product check</Description>
+                    </Parameter>
+                    <Parameter ParameterId="805437441" type="std:BOOL" IndexInDevDesc="15">
+                      <Attributes />
+                      <Value name="_x0038_05437441" visiblename="CheckPortStatus" desc="Check of the port status of last slave">FALSE</Value>
+                      <Name>CheckPortStatus</Name>
+                      <Description>Check of the port status of last slave</Description>
+                    </Parameter>
+                    <Parameter ParameterId="805457920" type="std:STRING(100)" IndexInDevDesc="16">
+                      <Attributes />
+                      <Value name="_x0038_05457920" visiblename="NetworkName" desc="Name of the network card">'ethc'</Value>
+                      <Name>NetworkName</Name>
+                      <Description>Name of the network card</Description>
+                    </Parameter>
+                    <Parameter ParameterId="805457921" type="std:WSTRING(100)" IndexInDevDesc="17">
+                      <Attributes />
+                      <Value name="_x0038_05457921" visiblename="NetworkName" desc="Name of the network card">"ethc"</Value>
+                      <Name>NetworkName</Name>
+                      <Description>Name of the network card</Description>
+                    </Parameter>
+                    <Parameter ParameterId="805458176" type="std:BOOL" IndexInDevDesc="18">
+                      <Attributes />
+                      <Value name="_x0038_05458176" visiblename="SelectNetworkByName" desc="Select network by name">True</Value>
+                      <Name>SelectNetworkByName</Name>
+                      <Description>Select network by name</Description>
+                    </Parameter>
+                    <Parameter ParameterId="805458177" type="std:BOOL" IndexInDevDesc="19">
+                      <Attributes />
+                      <Value name="_x0038_05458177" visiblename="CompareNetworkName" desc="Comapare exact network name">FALSE</Value>
+                      <Name>CompareNetworkName</Name>
+                      <Description>Comapare exact network name</Description>
+                    </Parameter>
+                    <Parameter ParameterId="805458432" type="std:BOOL" IndexInDevDesc="20">
+                      <Attributes />
+                      <Value name="_x0038_05458432" visiblename="EnableTaskMessage" desc="Enable transmission per task">FALSE</Value>
+                      <Name>EnableTaskMessage</Name>
+                      <Description>Enable transmission per task</Description>
+                    </Parameter>
+                    <Parameter ParameterId="805458688" type="std:BOOL" IndexInDevDesc="21">
+                      <Attributes />
+                      <Value name="_x0038_05458688" visiblename="DisableTaskGeneration" desc="Disable automatic task generation">FALSE</Value>
+                      <Name>DisableTaskGeneration</Name>
+                      <Description>Disable automatic task generation</Description>
+                    </Parameter>
+                    <Parameter ParameterId="805458944" type="std:BOOL" IndexInDevDesc="22">
+                      <Attributes />
+                      <Value name="_x0038_05458944" visiblename="FrameAtTaskStart" desc="Send frame at task cycle start">TRUE</Value>
+                      <Name>FrameAtTaskStart</Name>
+                      <Description>Send frame at task cycle start</Description>
+                    </Parameter>
+                    <Parameter ParameterId="805458960" type="std:BOOL" IndexInDevDesc="23">
+                      <Attributes />
+                      <Value name="_x0038_05458960" visiblename="WaitForPacket" desc="Wait for packets in the same cycle/ FrameAtTaskStart must be also set">FALSE</Value>
+                      <Name>WaitForPacket</Name>
+                      <Description>Wait for packets in the same cycle/ FrameAtTaskStart must be also set</Description>
+                    </Parameter>
+                    <Parameter ParameterId="805458968" type="std:BOOL" IndexInDevDesc="24">
+                      <Attributes />
+                      <Value name="_x0038_05458968" visiblename="SplitFrame" desc="Splits cylic frames in process data and asynchronous messages">FALSE</Value>
+                      <Name>SplitFrame</Name>
+                      <Description>Splits cylic frames in process data and asynchronous messages</Description>
+                    </Parameter>
+                    <Parameter ParameterId="805459200" type="std:BOOL" IndexInDevDesc="26">
+                      <Attributes />
+                      <Value name="_x0038_05459200" visiblename="ScanForAliasAddress" desc="Enables scan for alias address">TRUE</Value>
+                      <Name>ScanForAliasAddress</Name>
+                      <Description>Enables scan for alias address</Description>
+                    </Parameter>
+                    <Parameter ParameterId="805459280" type="std:WORD" IndexInDevDesc="25">
+                      <Attributes />
+                      <Value name="_x0038_05459280" visiblename="DCSyncInWindow" desc="sync window for xDistributedClockInSync">50</Value>
+                      <Name>DCSyncInWindow</Name>
+                      <Description>sync window for xDistributedClockInSync</Description>
+                    </Parameter>
+                    <Parameter ParameterId="805459456" type="std:SINT" IndexInDevDesc="27">
+                      <Attributes />
+                      <Value name="_x0038_05459456" visiblename="SyncOffset" desc="Master synchronisation offset">20</Value>
+                      <Name>SyncOffset</Name>
+                      <Description>Master synchronisation offset</Description>
+                    </Parameter>
+                    <Parameter ParameterId="805459712" type="std:UDINT" IndexInDevDesc="28">
+                      <Attributes />
+                      <Value name="_x0038_05459712" visiblename="SyncWindowMonitoring" desc="Slave sync window monitoring">0</Value>
+                      <Name>SyncWindowMonitoring</Name>
+                      <Description>Slave sync window monitoring</Description>
+                    </Parameter>
+                    <Parameter ParameterId="805459713" type="std:UDINT" IndexInDevDesc="29">
+                      <Attributes download="false" offlineaccess="none" />
+                      <Value name="_x0038_05459713" visiblename="DCMode" offlineaccess="none" desc="Mode for distributed clock">0</Value>
+                      <Name>DCMode</Name>
+                      <Description>Mode for distributed clock</Description>
+                    </Parameter>
+                    <Parameter ParameterId="805459968" type="std:BOOL" IndexInDevDesc="37">
+                      <Attributes download="false" offlineaccess="none" />
+                      <Value name="_x0038_05459968" visiblename="CustomENIExport" offlineaccess="none" desc="Export ENI file with custom settings">FALSE</Value>
+                      <Name>CustomENIExport</Name>
+                      <Description>Export ENI file with custom settings</Description>
+                    </Parameter>
+                    <Parameter ParameterId="805459969" type="std:BOOL" IndexInDevDesc="38">
+                      <Attributes download="false" offlineaccess="none" />
+                      <Value name="_x0038_05459969" visiblename="IgnoreManualAddres" offlineaccess="none" desc="Ignore manual address settings in the ENI export">FALSE</Value>
+                      <Name>IgnoreManualAddres</Name>
+                      <Description>Ignore manual address settings in the ENI export</Description>
+                    </Parameter>
+                    <Parameter ParameterId="805459974" type="std:BOOL" IndexInDevDesc="39">
+                      <Attributes download="false" offlineaccess="none" />
+                      <Value name="_x0038_05459974" visiblename="CreateENIFileForSimulation" offlineaccess="none" desc="Creates ENI xml file for simulation devices">TRUE</Value>
+                      <Name>CreateENIFileForSimulation</Name>
+                      <Description>Creates ENI xml file for simulation devices</Description>
+                    </Parameter>
+                    <Parameter ParameterId="805459975" type="std:BOOL" IndexInDevDesc="40">
+                      <Attributes download="false" offlineaccess="none" />
+                      <Value name="_x0038_05459975" visiblename="CreateENIFileWithIoLink" offlineaccess="none" desc="Creates ENI xml file containing IO-Link devices">FALSE</Value>
+                      <Name>CreateENIFileWithIoLink</Name>
+                      <Description>Creates ENI xml file containing IO-Link devices</Description>
+                    </Parameter>
+                    <Parameter ParameterId="805459984" type="std:BOOL" IndexInDevDesc="41">
+                      <Attributes offlineaccess="none" />
+                      <Value name="_x0038_05459984" visiblename="Enable sync units" offlineaccess="none" desc="Enable support for sync units">TRUE</Value>
+                      <Name>Enable sync units</Name>
+                      <Description>Enable support for sync units</Description>
+                    </Parameter>
+                    <Parameter ParameterId="1073741826" type="std:DWORD" IndexInDevDesc="0">
+                      <Attributes />
+                      <Value name="_x0031_073741826" visiblename="NumberOfOutputSlaves" desc="Number of Slaves with an Output">0</Value>
+                      <Name>NumberOfOutputSlaves</Name>
+                      <Description>Number of Slaves with an Output</Description>
+                    </Parameter>
+                    <Parameter ParameterId="1073741827" type="std:DWORD" IndexInDevDesc="1">
+                      <Attributes />
+                      <Value name="_x0031_073741827" visiblename="NumberOfInputSlaves" desc="Number of Slaves with an Input">0</Value>
+                      <Name>NumberOfInputSlaves</Name>
+                      <Description>Number of Slaves with an Input</Description>
+                    </Parameter>
+                    <Parameter ParameterId="1073741829" type="std:DWORD" IndexInDevDesc="2">
+                      <Attributes />
+                      <Value name="_x0031_073741829" visiblename="SrcAddress1" desc="Two zero Bytes and the First Two Bytes of the Source Address">0</Value>
+                      <Name>SrcAddress1</Name>
+                      <Description>Two zero Bytes and the First Two Bytes of the Source Address</Description>
+                    </Parameter>
+                    <Parameter ParameterId="1073741830" type="std:DWORD" IndexInDevDesc="3">
+                      <Attributes />
+                      <Value name="_x0031_073741830" visiblename="SrcAddress2" desc="Lower 4 Bytes of the Source Address">0</Value>
+                      <Name>SrcAddress2</Name>
+                      <Description>Lower 4 Bytes of the Source Address</Description>
+                    </Parameter>
+                    <Parameter ParameterId="1073741831" type="std:DWORD" IndexInDevDesc="4">
+                      <Attributes />
+                      <Value name="_x0031_073741831" visiblename="DestAddress1" desc="Two zero Bytes and the First Two Bytes of the Destination Address">65535</Value>
+                      <Name>DestAddress1</Name>
+                      <Description>Two zero Bytes and the First Two Bytes of the Destination Address</Description>
+                    </Parameter>
+                    <Parameter ParameterId="1073741832" type="std:DWORD" IndexInDevDesc="5">
+                      <Attributes />
+                      <Value name="_x0031_073741832" visiblename="DestAddress2" desc="Lower 4 Bytes of the Destination Address">4294967295</Value>
+                      <Name>DestAddress2</Name>
+                      <Description>Lower 4 Bytes of the Destination Address</Description>
+                    </Parameter>
+                    <Parameter ParameterId="1073741833" type="std:DWORD" IndexInDevDesc="6">
+                      <Attributes />
+                      <Value name="_x0031_073741833" visiblename="ImageOutAddress" desc="Address of the Output">33554432</Value>
+                      <Name>ImageOutAddress</Name>
+                      <Description>Address of the Output</Description>
+                    </Parameter>
+                    <Parameter ParameterId="1073741834" type="std:DWORD" IndexInDevDesc="7">
+                      <Attributes />
+                      <Value name="_x0031_073741834" visiblename="ImageOutLength" desc="Length of the Output">0</Value>
+                      <Name>ImageOutLength</Name>
+                      <Description>Length of the Output</Description>
+                    </Parameter>
+                    <Parameter ParameterId="1073741835" type="std:DWORD" IndexInDevDesc="8">
+                      <Attributes />
+                      <Value name="_x0031_073741835" visiblename="ImageInAddress" desc="Address of the Input">16777216</Value>
+                      <Name>ImageInAddress</Name>
+                      <Description>Address of the Input</Description>
+                    </Parameter>
+                    <Parameter ParameterId="1073741836" type="std:DWORD" IndexInDevDesc="9">
+                      <Attributes />
+                      <Value name="_x0031_073741836" visiblename="ImageInLength" desc="Length of the Input">0</Value>
+                      <Name>ImageInLength</Name>
+                      <Description>Length of the Input</Description>
+                    </Parameter>
+                    <Parameter ParameterId="1879052288" type="std:UDINT" IndexInDevDesc="44">
+                      <Attributes download="false" offlineaccess="none" />
+                      <Value name="_x0031_879052288" visiblename="Config version" offlineaccess="none" desc="Config version">50662144</Value>
+                      <Name>Config version</Name>
+                      <Description>Config version</Description>
+                    </Parameter>
+                  </HostParameterSet>
+                </Connector>
+                <DeviceParameterSet />
+              </DeviceType>
+            </Device>
+          </data>
+          <data name="configurations" handleUnknown="discard">
+            <configurations />
+          </data>
+        </addData>
+      </configuration>
+    </configurations>
+  </instances>
+</project>
