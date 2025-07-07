@@ -9,8 +9,9 @@ END_VAR
 co_can();
 //co_etc();
 
+Safety();
+
 RobotInfo();
 Exec_Robot();
 
 Exec_Conv();
-

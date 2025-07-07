@@ -30,13 +30,14 @@
         <Library Name="#SM3_Drive_CAN_DS402_CyclicSync" Namespace="SM3_Drive_CAN_DS402_CyclicSync" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="true" LinkAllContent="false" DefaultResolution="SM3_Drive_CAN_DS402_CyclicSync, 4.18.0.0 (CODESYS)" />
         <Library Name="#CAA Device Diagnosis" Namespace="DED" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="true" LinkAllContent="false" DefaultResolution="CAA Device Diagnosis, 3.5.21.0 (CAA Technical Workgroup)" />
         <Library Name="#IODrvEtherCAT" Namespace="IoDrvEthercatLib" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="true" LinkAllContent="false" DefaultResolution="IoDrvEtherCAT, 4.1.0.0 (3S - Smart Software Solutions GmbH)" />
+        <Library Name="#IODrvEL6900" Namespace="IoDrvEL6900" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="true" LinkAllContent="false" DefaultResolution="IODrvEL6900, 4.4.0.0 (3S - Smart Software Solutions GmbH)" />
         <PlaceholderRedirections>
           <PlaceholderRedirection Placeholder="System_VisuElemTextEditor" Redirection="VisuElemTextEditor, 4.7.0.0 (System)" />
           <PlaceholderRedirection Placeholder="Standard" Redirection="Standard, 3.5.18.0 (System)" />
           <PlaceholderRedirection Placeholder="System_VisuElemMeter" Redirection="VisuElemMeter, 4.7.0.0 (System)" />
           <PlaceholderRedirection Placeholder="System_VisuElemsSpecialControls" Redirection="VisuElemsSpecialControls, 4.7.0.0 (System)" />
-          <PlaceholderRedirection Placeholder="System_VisuElemBase" Redirection="VisuElemBase, 4.7.0.0 (System)" />
           <PlaceholderRedirection Placeholder="System_VisuElemTrace" Redirection="VisuElemTrace, 4.7.0.0 (System)" />
+          <PlaceholderRedirection Placeholder="FloatingPointUtils" Redirection="FloatingPointUtils, 3.5.21.0 (System)" />
           <PlaceholderRedirection Placeholder="System_VisuElem3DPath" Redirection="VisuElem3DPath, 4.7.0.0 (System)" />
           <PlaceholderRedirection Placeholder="System_VisuInputs" Redirection="VisuInputs, 4.7.0.0 (System)" />
           <PlaceholderRedirection Placeholder="System_VisuElemCamDisplayer" Redirection="VisuElemCamDisplayer, 4.7.0.0 (System)" />
@@ -46,7 +47,7 @@
           <PlaceholderRedirection Placeholder="System_VisuElemsAlarm" Redirection="VisuElemsAlarm, 4.7.0.0 (System)" />
           <PlaceholderRedirection Placeholder="Standard64" Redirection="Standard64, 3.5.20.0 (System)" />
           <PlaceholderRedirection Placeholder="System_VisuElemsWinControls" Redirection="VisuElemsWinControls, 4.7.0.0 (System)" />
-          <PlaceholderRedirection Placeholder="FloatingPointUtils" Redirection="FloatingPointUtils, 3.5.21.0 (System)" />
+          <PlaceholderRedirection Placeholder="System_VisuElemBase" Redirection="VisuElemBase, 4.7.0.0 (System)" />
           <PlaceholderRedirection Placeholder="System_VisuNativeControl" Redirection="VisuNativeControl, 4.7.0.0 (System)" />
         </PlaceholderRedirections>
         <addData />

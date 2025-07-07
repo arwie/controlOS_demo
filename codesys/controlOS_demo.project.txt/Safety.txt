@@ -1,0 +1,11 @@
+PROGRAM Safety
+VAR
+	ErrAck:	BOOL;
+	STO: BOOL;
+END_VAR
+
+////////////////////////////////
+
+SafetyCmd.ErrAck := ErrAck;
+
+STO := SafetyFbk.FbkSTO;

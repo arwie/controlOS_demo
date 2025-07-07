@@ -1,0 +1,330 @@
+<project xmlns="http://www.plcopen.org/xml/tc6_0200">
+  <types>
+    <dataTypes />
+    <pous />
+  </types>
+  <instances>
+    <configurations>
+      <configuration name="DO_">
+        <addData>
+          <data name="Device" handleUnknown="discard">
+            <Device xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" fixedIndex="1" xmlns="">
+              <DeviceType>
+                <DeviceIdentification>
+                  <Type>68</Type>
+                  <Id>2_000000C8_200_B583052</Id>
+                  <Version>0</Version>
+                </DeviceIdentification>
+                <Connector moduleType="68" role="child" interface="Ethercat_2_Module_200_B583052" connectorId="1">
+                  <HostParameterSet>
+                    <ParameterSection>
+                      <Name>General</Name>
+                      <Description />
+                      <Parameter ParameterId="1090519040" type="std:DWORD" IndexInDevDesc="0">
+                        <Attributes />
+                        <Value name="_x0031_090519040" visiblename="Module ident">200</Value>
+                        <Name>Module ident</Name>
+                      </Parameter>
+                      <Parameter ParameterId="1090519056" type="std:STRING" IndexInDevDesc="1">
+                        <Attributes download="false" />
+                        <Value name="_x0031_090519056" visiblename="Module class">'200'</Value>
+                        <Name>Module class</Name>
+                      </Parameter>
+                    </ParameterSection>
+                    <ParameterSection>
+                      <Name>RxPDO</Name>
+                      <Description />
+                      <ParameterSection>
+                        <Name>RxPDO1</Name>
+                        <Description />
+                        <ParameterSection>
+                          <Name>Output Channel 1</Name>
+                          <Description />
+                          <Parameter ParameterId="1879048194" type="localTypes:Entry" IndexInDevDesc="3">
+                            <Attributes download="false" />
+                            <Value name="_x0031_879048194" visiblename="Output Channel 1">
+                              <Element name="Index" visiblename="Index" desc="Index">16#7010</Element>
+                              <Element name="SubIndex" visiblename="SubIndex" desc="SubIndex">1</Element>
+                              <Element name="Size" visiblename="Size" desc="Size">1</Element>
+                              <Element name="Offset" visiblename="Offset" desc="Offset">0</Element>
+                              <Element name="DependOnSlot" visiblename="DependOnSlot" desc="DependOnSlot">False</Element>
+                              <Element name="DependOnSlotGroup" visiblename="DependOnSlotGroup" desc="DependOnSlotGroup">False</Element>
+                            </Value>
+                            <Name>Output Channel 1</Name>
+                          </Parameter>
+                          <Parameter ParameterId="1880096770" type="localTypes:PDO_Information" IndexInDevDesc="4">
+                            <Attributes download="false" />
+                            <Value name="_x0031_880096770" visiblename="Output Channel 1">
+                              <Element name="Name" visiblename="Name" desc="Name">'Output Channel 1'</Element>
+                              <Element name="DataType" visiblename="DataType" desc="DataType">'BOOL'</Element>
+                              <Element name="Default" visiblename="Default" desc="Default">''</Element>
+                              <Element name="Comment" visiblename="Comment" desc="Comment">''</Element>
+                            </Value>
+                            <Name>Output Channel 1</Name>
+                          </Parameter>
+                        </ParameterSection>
+                        <ParameterSection>
+                          <Name>Output Channel 2</Name>
+                          <Description />
+                          <Parameter ParameterId="1879048195" type="localTypes:Entry" IndexInDevDesc="5">
+                            <Attributes download="false" />
+                            <Value name="_x0031_879048195" visiblename="Output Channel 2">
+                              <Element name="Index" visiblename="Index" desc="Index">16#7010</Element>
+                              <Element name="SubIndex" visiblename="SubIndex" desc="SubIndex">2</Element>
+                              <Element name="Size" visiblename="Size" desc="Size">1</Element>
+                              <Element name="Offset" visiblename="Offset" desc="Offset">0</Element>
+                              <Element name="DependOnSlot" visiblename="DependOnSlot" desc="DependOnSlot">False</Element>
+                              <Element name="DependOnSlotGroup" visiblename="DependOnSlotGroup" desc="DependOnSlotGroup">False</Element>
+                            </Value>
+                            <Name>Output Channel 2</Name>
+                          </Parameter>
+                          <Parameter ParameterId="1880096771" type="localTypes:PDO_Information" IndexInDevDesc="6">
+                            <Attributes download="false" />
+                            <Value name="_x0031_880096771" visiblename="Output Channel 2">
+                              <Element name="Name" visiblename="Name" desc="Name">'Output Channel 2'</Element>
+                              <Element name="DataType" visiblename="DataType" desc="DataType">'BOOL'</Element>
+                              <Element name="Default" visiblename="Default" desc="Default">''</Element>
+                              <Element name="Comment" visiblename="Comment" desc="Comment">''</Element>
+                            </Value>
+                            <Name>Output Channel 2</Name>
+                          </Parameter>
+                        </ParameterSection>
+                        <ParameterSection>
+                          <Name>Output Channel 3</Name>
+                          <Description />
+                          <Parameter ParameterId="1879048196" type="localTypes:Entry" IndexInDevDesc="7">
+                            <Attributes download="false" />
+                            <Value name="_x0031_879048196" visiblename="Output Channel 3">
+                              <Element name="Index" visiblename="Index" desc="Index">16#7010</Element>
+                              <Element name="SubIndex" visiblename="SubIndex" desc="SubIndex">3</Element>
+                              <Element name="Size" visiblename="Size" desc="Size">1</Element>
+                              <Element name="Offset" visiblename="Offset" desc="Offset">0</Element>
+                              <Element name="DependOnSlot" visiblename="DependOnSlot" desc="DependOnSlot">False</Element>
+                              <Element name="DependOnSlotGroup" visiblename="DependOnSlotGroup" desc="DependOnSlotGroup">False</Element>
+                            </Value>
+                            <Name>Output Channel 3</Name>
+                          </Parameter>
+                          <Parameter ParameterId="1880096772" type="localTypes:PDO_Information" IndexInDevDesc="8">
+                            <Attributes download="false" />
+                            <Value name="_x0031_880096772" visiblename="Output Channel 3">
+                              <Element name="Name" visiblename="Name" desc="Name">'Output Channel 3'</Element>
+                              <Element name="DataType" visiblename="DataType" desc="DataType">'BOOL'</Element>
+                              <Element name="Default" visiblename="Default" desc="Default">''</Element>
+                              <Element name="Comment" visiblename="Comment" desc="Comment">''</Element>
+                            </Value>
+                            <Name>Output Channel 3</Name>
+                          </Parameter>
+                        </ParameterSection>
+                        <ParameterSection>
+                          <Name>Output Channel 4</Name>
+                          <Description />
+                          <Parameter ParameterId="1879048197" type="localTypes:Entry" IndexInDevDesc="9">
+                            <Attributes download="false" />
+                            <Value name="_x0031_879048197" visiblename="Output Channel 4">
+                              <Element name="Index" visiblename="Index" desc="Index">16#7010</Element>
+                              <Element name="SubIndex" visiblename="SubIndex" desc="SubIndex">4</Element>
+                              <Element name="Size" visiblename="Size" desc="Size">1</Element>
+                              <Element name="Offset" visiblename="Offset" desc="Offset">0</Element>
+                              <Element name="DependOnSlot" visiblename="DependOnSlot" desc="DependOnSlot">False</Element>
+                              <Element name="DependOnSlotGroup" visiblename="DependOnSlotGroup" desc="DependOnSlotGroup">False</Element>
+                            </Value>
+                            <Name>Output Channel 4</Name>
+                          </Parameter>
+                          <Parameter ParameterId="1880096773" type="localTypes:PDO_Information" IndexInDevDesc="10">
+                            <Attributes download="false" />
+                            <Value name="_x0031_880096773" visiblename="Output Channel 4">
+                              <Element name="Name" visiblename="Name" desc="Name">'Output Channel 4'</Element>
+                              <Element name="DataType" visiblename="DataType" desc="DataType">'BOOL'</Element>
+                              <Element name="Default" visiblename="Default" desc="Default">''</Element>
+                              <Element name="Comment" visiblename="Comment" desc="Comment">''</Element>
+                            </Value>
+                            <Name>Output Channel 4</Name>
+                          </Parameter>
+                        </ParameterSection>
+                        <ParameterSection>
+                          <Name>Entry</Name>
+                          <Description />
+                        </ParameterSection>
+                        <ParameterSection>
+                          <Name>---</Name>
+                          <Description />
+                          <Parameter ParameterId="1879048198" type="localTypes:Entry">
+                            <Attributes download="false" />
+                            <Value name="_x0031_879048198" visiblename="---">
+                              <Element name="Index" visiblename="Index" desc="Index">16#0000</Element>
+                              <Element name="SubIndex" visiblename="SubIndex" desc="SubIndex">0</Element>
+                              <Element name="Size" visiblename="Size" desc="Size">12</Element>
+                              <Element name="Offset" visiblename="Offset" desc="Offset">0</Element>
+                              <Element name="DependOnSlot" visiblename="DependOnSlot" desc="DependOnSlot">False</Element>
+                              <Element name="DependOnSlotGroup" visiblename="DependOnSlotGroup" desc="DependOnSlotGroup">False</Element>
+                            </Value>
+                            <Name>---</Name>
+                          </Parameter>
+                          <Parameter ParameterId="1880096774" type="localTypes:PDO_Information">
+                            <Attributes download="false" onlineaccess="none" />
+                            <Value name="_x0031_880096774" visiblename="---" onlineaccess="none">
+                              <Element name="Name" visiblename="Name" desc="Name">'---'</Element>
+                              <Element name="DataType" visiblename="DataType" desc="DataType">''</Element>
+                              <Element name="Default" visiblename="Default" desc="Default">''</Element>
+                              <Element name="Comment" visiblename="Comment" desc="Comment">''</Element>
+                            </Value>
+                            <Name>---</Name>
+                          </Parameter>
+                        </ParameterSection>
+                        <Parameter ParameterId="1879048192" type="localTypes:RxTxPdo" IndexInDevDesc="13">
+                          <Attributes download="false" />
+                          <Value name="_x0031_879048192" visiblename="RxTxPdo">
+                            <Element name="NumberofExcludes" visiblename="NumberofExcludes">0</Element>
+                            <Element name="NumberofEntries" visiblename="NumberofEntries">5</Element>
+                            <Element name="Index" visiblename="Index">16#1601</Element>
+                            <Element name="Fixed" visiblename="Fixed">True</Element>
+                            <Element name="Mandatory" visiblename="Mandatory">False</Element>
+                            <Element name="Virtual" visiblename="Virtual">False</Element>
+                            <Element name="Sm" visiblename="Sm">2</Element>
+                            <Element name="Su" visiblename="Su">0</Element>
+                            <Element name="Name" visiblename="Name">'RxPDO'</Element>
+                            <Element name="DependOnSlot" visiblename="DependOnSlot">False</Element>
+                            <Element name="DependOnSlotGroup" visiblename="DependOnSlotGroup">False</Element>
+                            <Element name="OverwrittenByModule" visiblename="OverwrittenByModule">True</Element>
+                          </Value>
+                          <Name>RxTxPdo</Name>
+                        </Parameter>
+                      </ParameterSection>
+                      <Parameter ParameterId="1342504960" type="std:DWORD" IndexInDevDesc="2">
+                        <Attributes />
+                        <Value name="_x0031_342504960" visiblename="Number of RxPDOs of the Slave" desc="Number of RxPDOs of the Slave">1</Value>
+                        <Name>Number of RxPDOs of the Slave</Name>
+                        <Description>Number of RxPDOs of the Slave</Description>
+                      </Parameter>
+                    </ParameterSection>
+                    <ParameterSection>
+                      <Name>TxPDO</Name>
+                      <Description />
+                      <Parameter ParameterId="1342636032" type="std:DWORD" IndexInDevDesc="14">
+                        <Attributes />
+                        <Value name="_x0031_342636032" visiblename="Number of TxPDOs of the Slave" desc="Number of TxPDOs of the Slave">0</Value>
+                        <Name>Number of TxPDOs of the Slave</Name>
+                        <Description>Number of TxPDOs of the Slave</Description>
+                      </Parameter>
+                    </ParameterSection>
+                    <ParameterSection>
+                      <Name>16#1601 RxPDO</Name>
+                      <Description />
+                      <Parameter ParameterId="16777218" type="std:BIT">
+                        <Attributes channel="output" />
+                        <Value name="_x0031_6777218" visiblename="Output Channel 1" desc="Output 0" />
+                        <Name>Output Channel 1</Name>
+                        <Description>Output 0</Description>
+                      </Parameter>
+                      <Parameter ParameterId="16777219" type="std:BIT">
+                        <Attributes channel="output" />
+                        <Value name="_x0031_6777219" visiblename="Output Channel 2" desc="Output 1" />
+                        <Name>Output Channel 2</Name>
+                        <Description>Output 1</Description>
+                      </Parameter>
+                      <Parameter ParameterId="16777220" type="std:BIT">
+                        <Attributes channel="output" />
+                        <Value name="_x0031_6777220" visiblename="Output Channel 3" desc="Output 2" />
+                        <Name>Output Channel 3</Name>
+                        <Description>Output 2</Description>
+                      </Parameter>
+                      <Parameter ParameterId="16777221" type="std:BIT">
+                        <Attributes channel="output" />
+                        <Value name="_x0031_6777221" visiblename="Output Channel 4" desc="Output 3" />
+                        <Name>Output Channel 4</Name>
+                        <Description>Output 3</Description>
+                      </Parameter>
+                      <Parameter ParameterId="16777222" type="std:BIT">
+                        <Attributes channel="output" offlineaccess="none" onlineaccess="none" />
+                        <Value name="_x0031_6777222" visiblename="---" offlineaccess="none" onlineaccess="none" desc="---" />
+                        <Name>---</Name>
+                        <Description>---</Description>
+                      </Parameter>
+                      <Parameter ParameterId="16777223" type="std:BIT">
+                        <Attributes channel="output" offlineaccess="none" onlineaccess="none" />
+                        <Value name="_x0031_6777223" visiblename="---" offlineaccess="none" onlineaccess="none" desc="---" />
+                        <Name>---</Name>
+                        <Description>---</Description>
+                      </Parameter>
+                      <Parameter ParameterId="16777224" type="std:BIT">
+                        <Attributes channel="output" offlineaccess="none" onlineaccess="none" />
+                        <Value name="_x0031_6777224" visiblename="---" offlineaccess="none" onlineaccess="none" desc="---" />
+                        <Name>---</Name>
+                        <Description>---</Description>
+                      </Parameter>
+                      <Parameter ParameterId="16777225" type="std:BIT">
+                        <Attributes channel="output" offlineaccess="none" onlineaccess="none" />
+                        <Value name="_x0031_6777225" visiblename="---" offlineaccess="none" onlineaccess="none" desc="---" />
+                        <Name>---</Name>
+                        <Description>---</Description>
+                      </Parameter>
+                      <Parameter ParameterId="16777226" type="std:BIT">
+                        <Attributes channel="output" offlineaccess="none" onlineaccess="none" />
+                        <Value name="_x0031_6777226" visiblename="---" offlineaccess="none" onlineaccess="none" desc="---" />
+                        <Name>---</Name>
+                        <Description>---</Description>
+                      </Parameter>
+                      <Parameter ParameterId="16777227" type="std:BIT">
+                        <Attributes channel="output" offlineaccess="none" onlineaccess="none" />
+                        <Value name="_x0031_6777227" visiblename="---" offlineaccess="none" onlineaccess="none" desc="---" />
+                        <Name>---</Name>
+                        <Description>---</Description>
+                      </Parameter>
+                      <Parameter ParameterId="16777228" type="std:BIT">
+                        <Attributes channel="output" offlineaccess="none" onlineaccess="none" />
+                        <Value name="_x0031_6777228" visiblename="---" offlineaccess="none" onlineaccess="none" desc="---" />
+                        <Name>---</Name>
+                        <Description>---</Description>
+                      </Parameter>
+                      <Parameter ParameterId="16777229" type="std:BIT">
+                        <Attributes channel="output" offlineaccess="none" onlineaccess="none" />
+                        <Value name="_x0031_6777229" visiblename="---" offlineaccess="none" onlineaccess="none" desc="---" />
+                        <Name>---</Name>
+                        <Description>---</Description>
+                      </Parameter>
+                      <Parameter ParameterId="16777230" type="std:BIT">
+                        <Attributes channel="output" offlineaccess="none" onlineaccess="none" />
+                        <Value name="_x0031_6777230" visiblename="---" offlineaccess="none" onlineaccess="none" desc="---" />
+                        <Name>---</Name>
+                        <Description>---</Description>
+                      </Parameter>
+                      <Parameter ParameterId="16777231" type="std:BIT">
+                        <Attributes channel="output" offlineaccess="none" onlineaccess="none" />
+                        <Value name="_x0031_6777231" visiblename="---" offlineaccess="none" onlineaccess="none" desc="---" />
+                        <Name>---</Name>
+                        <Description>---</Description>
+                      </Parameter>
+                      <Parameter ParameterId="16777232" type="std:BIT">
+                        <Attributes channel="output" offlineaccess="none" onlineaccess="none" />
+                        <Value name="_x0031_6777232" visiblename="---" offlineaccess="none" onlineaccess="none" desc="---" />
+                        <Name>---</Name>
+                        <Description>---</Description>
+                      </Parameter>
+                      <Parameter ParameterId="16777233" type="std:BIT">
+                        <Attributes channel="output" offlineaccess="none" onlineaccess="none" />
+                        <Value name="_x0031_6777233" visiblename="---" offlineaccess="none" onlineaccess="none" desc="---" />
+                        <Name>---</Name>
+                        <Description>---</Description>
+                      </Parameter>
+                    </ParameterSection>
+                    <Parameter ParameterId="16777216" type="std:DWORD">
+                      <Attributes />
+                      <Value name="_x0031_6777216" visiblename="Number of Outputs">16</Value>
+                      <Name>Number of Outputs</Name>
+                    </Parameter>
+                    <Parameter ParameterId="268435456" type="std:DWORD">
+                      <Attributes />
+                      <Value name="_x0032_68435456" visiblename="Number of Infos about Outputs">16</Value>
+                      <Name>Number of Infos about Outputs</Name>
+                    </Parameter>
+                  </HostParameterSet>
+                </Connector>
+                <DeviceParameterSet />
+              </DeviceType>
+            </Device>
+          </data>
+        </addData>
+      </configuration>
+    </configurations>
+  </instances>
+</project>
