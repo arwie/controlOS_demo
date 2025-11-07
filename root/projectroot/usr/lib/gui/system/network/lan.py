@@ -7,7 +7,7 @@ from shared import system
 from shared.conf import Conf
 
 
-web.document.imports.add('system/network/lan')
+web.document.imports.append('system/network/lan')
 
 
 @web.handler

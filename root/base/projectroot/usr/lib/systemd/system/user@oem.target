@@ -1,0 +1,6 @@
+[Unit]
+StopWhenUnneeded=true
+
+Wants=gui-studio.socket
+
+Wants=user@admin.target

@@ -19,7 +19,7 @@ export const DiagDropdown = {
 	components: { NavDropdown, PageLink },
 	template: //html
 	`
-	<NavDropdown icon="eye" data-l10n-id="diag" right>
+	<NavDropdown icon="eye" :title="$t('diag.title')" right>
 		<PageLink v-for="to in links" :to />
 	</NavDropdown>
 	`

@@ -8,7 +8,7 @@ from shared.utils import import_all_in_package
 
 
 
-web.document.imports.add('system/network')
+web.document.imports.append('system/network')
 
 
 @web.handler

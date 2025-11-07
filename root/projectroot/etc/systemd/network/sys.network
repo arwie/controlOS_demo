@@ -5,9 +5,13 @@ Name=sys
 RequiredForOnline=degraded-carrier
 
 [Network]
-Address=90.0.0.1/24
+ConfigureWithoutCarrier=yes
 DHCPServer=yes
 IPMasquerade=ipv4
+
+[Address]
+Address=90.0.0.1/24
+DuplicateAddressDetection=none
 
 [DHCPServer]
 PoolOffset=200

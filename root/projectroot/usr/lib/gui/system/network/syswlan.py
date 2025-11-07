@@ -7,7 +7,7 @@ from shared import system
 from shared.conf import Conf
 
 
-web.document.imports.add('system/network/syswlan')
+web.document.imports.append('system/network/syswlan')
 
 
 @web.handler

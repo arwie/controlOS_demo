@@ -43,14 +43,14 @@ class SqliteTable:
 		self.name	= name
 		self.select	= ','.join(['id','ord']+[c for c,d in self.schema.items() if not d.startswith('BLOB')])
 	
-	def list(self, where:dict={}, order='ord'):
+	def list(self, where:dict={}, order='ord') -> list[dict]:
 		where_sql = f"WHERE {' AND '.join(f'{c}=:{c}' for c in where.keys())}" if where else ''
 		return self.dbr.execute(
 			f'SELECT {self.select} FROM {self.name} {where_sql} ORDER BY {order}',
 			where
 		).fetchall()
 	
-	def load(self, id, select=None):
+	def load(self, id, select=None) -> dict:
 		return self.dbr.execute(
 			f'SELECT {select if select else self.select} FROM {self.name} WHERE id=:id',
 			{'id':id}
@@ -139,7 +139,7 @@ class Sqlite:
 	
 	def create(self, definition):
 		for table in definition:
-			columns = ','.join(f'{c} {d}' for c,d in table[1].items()),
+			columns = ','.join(f'{c} {d}' for c,d in table[1].items())
 			constraint = f',{table[2]}' if len(table)>=3 else ''
 			self.db.execute(
 				f'CREATE TABLE IF NOT EXISTS {table[0]} (id INTEGER PRIMARY KEY AUTOINCREMENT, ord INTEGER, {columns} {constraint})'

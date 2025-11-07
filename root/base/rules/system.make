@@ -82,7 +82,12 @@ $(STATEDIR)/system.targetinstall:
 	@$(call install_alternative, system, 0, 0, 0644, /root/.profile)
 	@$(call install_alternative, system, 0, 0, 0644, /usr/lib/systemd/system/debug.target)
 	@$(call install_alternative, system, 0, 0, 0644, /usr/lib/systemd/system/remote@.service)
-	@$(call install_link,        system, ../gui-studio.socket, /usr/lib/systemd/system/dev-disk-by\\x2dlabel-INSTALL.device.wants/gui-studio.socket)
+	
+	# user levels
+	@$(call install_alternative, system, 0, 0, 0644, /usr/lib/systemd/system/user@.target)
+	@$(call install_alternative, system, 0, 0, 0644, /usr/lib/systemd/system/user@oem.target)
+	@$(call install_alternative, system, 0, 0, 0644, /usr/lib/systemd/system/user@admin.target)
+	@$(call install_link,        system, ../user@oem.target, /usr/lib/systemd/system/dev-disk-by\\x2dlabel-INSTALL.device.wants/user@oem.target)
 	
 	# journal helpers
 	@$(call install_alternative, system, 0, 0, 0644, /usr/lib/systemd/system/journal-cleanup.service)

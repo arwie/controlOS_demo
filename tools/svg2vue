@@ -1,0 +1,107 @@
+#!/usr/bin/python -Bu
+
+# SPDX-FileCopyrightText: 2025 Artur Wiebe <artur@4wiebe.de>
+# SPDX-License-Identifier: MIT
+
+from argparse import ArgumentParser
+from pathlib import Path
+from lxml import etree
+from io import BytesIO
+import re
+
+
+args_parser = ArgumentParser()
+args_parser.add_argument('input', help='SVG source file')
+args_parser.add_argument('output', nargs='?', help='MJS Vue component output file (default: input with .svg replaced by .mjs)')
+args = args_parser.parse_args()
+
+if args.output is None:
+	args.output = Path(args.input).with_suffix('.mjs')
+
+
+svg_xml = Path(args.input).read_bytes()
+
+# remove all namespace declarations
+svg_xml = re.sub(rb'\s+xmlns[^=]*="[^"]*"', bytes(), svg_xml)
+
+# parse svg
+svg = etree.parse(
+	BytesIO(svg_xml),
+	etree.XMLParser(
+		recover=True,
+		remove_comments=True,
+	)
+).getroot()
+
+
+# remove unused elements and attributes
+for ns in ('sodipodi:','inkscape:'):
+
+	for element in svg.iter():
+		if ns in element.tag:
+			element.getparent().remove(element)
+
+	for element in svg.iter():
+		for attr in element.keys():
+			if ns in attr:
+				element.attrib.pop(attr)
+
+for element in svg.iter():
+	if element.tag in ('title','desc'):
+		element.getparent().remove(element)
+
+
+# extract symbol elements as components
+components = {}
+
+for element in svg.findall('.//symbol[@v-props]'):
+	components[element.attrib.pop('id')] = element
+	element.getparent().remove(element)
+	element.tag = 'g'
+
+# add the svg root as last component
+components[None] = svg
+
+
+# write the .mjs
+with open(args.output, 'w') as file:
+
+	file.write('let components = {};\n')
+
+	for name, element in components.items():
+
+		props = element.attrib.pop('v-props').split()
+		emits = element.attrib.pop('v-emits', '').split()
+
+		# replace use tags with components
+		for use in element.findall('.//use'):
+			href = use.attrib.get('xlink:href').lstrip('#')
+			if href in components:
+				use.tag = href
+				use.attrib.pop('xlink:href')
+
+		# replace style tags with <component is="style">
+		for style in element.findall('.//style'):
+			style.tag = 'component'
+			style.attrib['is'] = 'style'
+
+		# remove all attr for which there exist :attr
+		for el in element.iter():
+			for attr in el.attrib.keys():
+				if attr.startswith(':'):
+					if not (del_attr := attr.lstrip(':')) in ('class','style'):
+						el.attrib.pop(del_attr, None)
+
+		etree.indent(element, space="\t", level=1)
+
+		file.write(f"""
+{f"components['{name}'] =" if name else "export default"} {{
+	props: {props},
+	emits: {emits},
+	components,
+	template: //html
+	`
+	{etree.tostring(element, encoding=str).strip()}
+	`
+}}
+""")

@@ -3,6 +3,7 @@
 
 import { ref } from 'vue'
 import { url, updateDeep } from 'web/utils'
+import { BFormCheckbox } from 'bootstrap/vue'
 import { ButtonBar, feedback } from 'web/widgets'
 import { networkIndex } from 'system/network'
 
@@ -34,29 +35,28 @@ networkIndex.addPage('syswlan', {
 
 		return { enabled, conf, save }
 	},
-	components: { ButtonBar },
+	components: { BFormCheckbox, ButtonBar },
 	template: //html
 	`
-	<div class="mb-3 form-check form-switch">
-		<input v-model="enabled" type="checkbox" id="network_syswlanEnabled" class="form-check-input">
-		<label class="form-check-label" for="network_syswlanEnabled" data-l10n-id="network_enabled"></label>
+	<div class="mb-3">
+		<BFormCheckbox v-model="enabled" switch>{{ $t('system.network.enabled') }}</BFormCheckbox>
 	</div>
 	<div v-if="enabled">
 		<div class="mb-3">
-			<label class="form-label" data-l10n-id="network_ssid"></label>
+			<label class="form-label">{{ $t('system.network.ssid') }}</label>
 			<input v-model="conf.ssid" type="text" class="form-control">
 		</div>
 		<div class="mb-3">
-			<label class="form-label" data-l10n-id="network_password"></label>
+			<label class="form-label">{{ $t('system.network.password') }}</label>
 			<input v-model="conf.wpa_passphrase" type="text" minlength="8" class="form-control">
 		</div>
 		<div class="row">
 			<div class="mb-3 col-md">
-				<label class="form-label" data-l10n-id="network_country"></label>
+				<label class="form-label">{{ $t('system.network.country') }}</label>
 				<input v-model="conf.country_code" type="text" class="form-control">
 			</div>
 			<div class="mb-3 col-md">
-				<label class="form-label" data-l10n-id="network_channel"></label>
+				<label class="form-label">{{ $t('system.network.channel') }}</label>
 				<select v-model="conf.channel" class="form-select">
 					<option v-for="channel in [1,2,3,4,5,6,7,8,9,10,11,12,13]">{{channel}}</option>
 				</select>
@@ -64,7 +64,7 @@ networkIndex.addPage('syswlan', {
 		</div>
 	</div>
 	<ButtonBar>
-		<button @click="save" class="btn btn-primary" data-l10n-id="network_save"></button>
+		<button @click="save" class="btn btn-primary">{{ $t('save') }}</button>
 	</ButtonBar>
 	`
 })

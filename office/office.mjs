@@ -3,6 +3,7 @@
 
 import { setRootView, addPage } from 'web'
 import { RootView, PageLink } from 'web/widgets'
+import { LocaleDropdown } from 'web/locale'
 
 
 
@@ -16,13 +17,16 @@ setRootView({
 			links: officeIndex.children,
 		}
 	},
-	components: { RootView, PageLink },
+	components: { RootView, PageLink, LocaleDropdown },
 	template: //html
 	`
-	<RootView>
+	<RootView title="controlOS - Office">
 		<template #navbar>
 			<PageLink to="/diag/log" />
 			<PageLink v-for="to in links" :to />
+		</template>
+		<template #navbar-right>
+			<LocaleDropdown />
 		</template>
 	</RootView>
 	`

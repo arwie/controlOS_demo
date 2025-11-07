@@ -3,7 +3,7 @@
 
 import { router } from 'web'
 import { poll } from 'web/utils'
-import { ref, computed, watch, provide, inject, useSlots } from 'vue'
+import { ref, computed, watchEffect, provide, inject, useSlots } from 'vue'
 
 
 
@@ -27,24 +27,22 @@ export const PageLink = {
 		:to
 		v-show="!to.beforeEnter || to.beforeEnter()===true"
 		:class="cls"
-		:data-l10n-id="to.meta.l10n"
 		@click="navbarCollapse"
 		activeClass="active"
-	/>
+	>
+		<slot>{{$t(to.name+'.title')}}</slot>
+	</RouterLink>
 	`
 }
 
 
 export const PageView = {
 	props: ['key'],
-	setup(props) {
-		return { props }
-	},
 	template: //html
 	`
 	<RouterView v-slot="{ Component }">
 		<Suspense v-if="Component">
-			<component :is="Component" :key="props.key"/>
+			<component :is="Component" :key="key"/>
 		</Suspense>
 		<slot v-else></slot>
 	</RootView>
@@ -53,12 +51,11 @@ export const PageView = {
 
 
 export const RootView = {
-	props: ['image','style'],
+	props: ['title','style'],
 	setup(props) {
-		return {
-			image: props.image,
-			syle: props.style,
-		}
+		watchEffect(() => {
+			document.title = props.title;
+		});
 	},
 	components: { PageView },
 	template: //html
@@ -66,8 +63,7 @@ export const RootView = {
 	<nav class="navbar navbar-expand-lg fixed-top bg-light" :style>
 		<div class="container-fluid">
 			<a href="#" class="navbar-brand">
-				<img  v-if="image" :src="image" height="22" class="d-inline-block align-baseline"/>
-				<span v-else data-l10n-id="title"></span>
+				<slot name="navbar-brand">{{title}}</slot>
 			</a>
 			<button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar-collapse">
 				<span class="navbar-toggler-icon"></span>
@@ -92,46 +88,23 @@ export const RootView = {
 export const NavDropdown = {
 	props: {
 		icon: String,
-		dataL10nId: String,
+		title: String,
 		right: Boolean,
 	},
-	setup(props) {
+	setup() {
 		provide('class', 'dropdown-item');
-		return {
-			icon: props.icon,
-			dataL10nId: props.dataL10nId,
-			right: props.right,
-		}
 	},
 	template: //html
 	`
 	<div class="nav-item dropdown">
 		<a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
 			<i v-if="icon" :class="'fas fa-'+icon"></i>
-			<span v-if="dataL10nId" :class="{'d-none d-xxl-inline':icon}" :data-l10n-id></span>
+			<span v-if="title" :class="{'d-none d-xxl-inline':icon}">{{title}}</span>
 		</a>
 		<div class="dropdown-menu" :class="{'dropdown-menu-end':right}">
 			<slot></slot>
 		</div>
 	</div>
-	`
-}
-
-
-export const Tabs = {
-	setup() {
-		function tabs() {
-			return Object.keys(useSlots());
-		}
-		const tab = ref(tabs()[0]);
-		return { tabs, tab }
-	},
-	template: //html
-	`
-	<div class="nav nav-tabs nav-fill mb-4">
-		<a v-for="t in tabs()" @click.prevent="tab=t" :class="{active:tab==t}" :data-l10n-id="t" class="nav-link" href="#"></a>
-	</div>
-	<slot :name="tab"></slot>
 	`
 }
 
@@ -210,17 +183,15 @@ export const PressButton = {
 
 
 export const FileButton = {
-	props: ['data-l10n-id','disabled'],
-	emits: ['file'],
-	setup(props) {
-		return { props }
+	props: {
+		disabled: Boolean,
 	},
+	emits: ['file'],
 	template: //html
 	`
-	<label class="btn" :class="{disabled:props.disabled}">
-		<span :data-l10n-id="props.dataL10nId"></span>
+	<label class="btn" :class="{ disabled }">
 		<slot></slot>
-		<input type="file" @change="$emit('file', $event.target.files[0], $event.target.parentElement)" :disabled="props.disabled" hidden>
+		<input type="file" @change="$emit('file', $event.target.files[0], $event.target.parentElement)" :disabled hidden>
 	</label>
 	`
 }

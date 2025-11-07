@@ -14,14 +14,24 @@ PACKAGES-$(PTXCONF_GUI_BOOTSTRAP) += gui-bootstrap
 #
 # Paths and names
 #
-GUI_BOOTSTRAP_VERSION		:= 5.3.6
-GUI_BOOTSTRAP_MD5		:= 1b9352d329303763c1fdc746518e1eed
+GUI_BOOTSTRAP_VERSION		:= 5.3.8
+GUI_BOOTSTRAP_MD5		:= 47618f513bb53f5ed4d36a2170d3c478
 GUI_BOOTSTRAP			:= bootstrap-$(GUI_BOOTSTRAP_VERSION)
 GUI_BOOTSTRAP_SUFFIX		:= zip
 GUI_BOOTSTRAP_URL		:= https://github.com/twbs/bootstrap/releases/download/v$(GUI_BOOTSTRAP_VERSION)/$(GUI_BOOTSTRAP)-dist.$(GUI_BOOTSTRAP_SUFFIX)
 GUI_BOOTSTRAP_SOURCE		:= $(SRCDIR)/$(GUI_BOOTSTRAP).$(GUI_BOOTSTRAP_SUFFIX)
 GUI_BOOTSTRAP_DIR		:= $(BUILDDIR)/$(GUI_BOOTSTRAP)
 GUI_BOOTSTRAP_LICENSE		:= MIT
+
+GUI_BOOTSTRAP_VUE_VERSION	:= 0.40.6
+GUI_BOOTSTRAP_VUE_MD5		:= 510a7eb50b8acfbda6148a8b7122c348
+GUI_BOOTSTRAP_VUE		:= bootstrap-vue-next-$(GUI_BOOTSTRAP_VUE_VERSION)
+GUI_BOOTSTRAP_VUE_SUFFIX	:= tgz
+GUI_BOOTSTRAP_VUE_URL		:= https://registry.npmjs.org/bootstrap-vue-next/-/$(GUI_BOOTSTRAP_VUE).$(GUI_BOOTSTRAP_VUE_SUFFIX)
+GUI_BOOTSTRAP_VUE_SOURCE	:= $(SRCDIR)/$(GUI_BOOTSTRAP_VUE).$(GUI_BOOTSTRAP_VUE_SUFFIX)
+GUI_BOOTSTRAP_VUE_DIR		:= $(BUILDDIR)/$(GUI_BOOTSTRAP_VUE)
+GUI_BOOTSTRAP_VUE_LICENSE	:= MIT
+GUI_BOOTSTRAP_PARTS		+= GUI_BOOTSTRAP_VUE
 
 GUI_BOOTSTRAP_INSTALL		:= /usr/lib/gui/bootstrap
 
@@ -59,6 +69,13 @@ $(STATEDIR)/gui-bootstrap.targetinstall:
 	@$(call install_copy, gui-bootstrap, 0, 0, 0644, \
 		$(GUI_BOOTSTRAP_DIR)/js/bootstrap.bundle.min.js, \
 		$(GUI_BOOTSTRAP_INSTALL)/index.js)
+
+	@$(call install_glob, gui-bootstrap, 0, 0, \
+		$(GUI_BOOTSTRAP_VUE_DIR)/dist, \
+		$(GUI_BOOTSTRAP_INSTALL)/vue, *.mjs *.css,)
+	@$(call install_link, gui-bootstrap, \
+		bootstrap-vue-next.mjs, \
+		$(GUI_BOOTSTRAP_INSTALL)/vue/index.mjs)
 
 	@$(call install_finish, gui-bootstrap)
 	@$(call touch)

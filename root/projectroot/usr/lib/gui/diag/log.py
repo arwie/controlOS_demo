@@ -5,7 +5,7 @@ import asyncio
 import web
 
 
-web.document.imports.add('diag/log')
+web.document.imports.append('diag/log')
 
 
 

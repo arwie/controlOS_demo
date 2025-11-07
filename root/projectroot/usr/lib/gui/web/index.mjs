@@ -4,10 +4,20 @@
 import { createApp, shallowRef } from 'vue'
 import { createRouter, createWebHashHistory } from 'vue/router'
 import { url, poll, isObject } from 'web/utils'
+import { i18n } from 'web/locale'
 
 
 
 let rootView;
+
+export const app = createApp({
+	setup() {
+		return { rootView }
+	},
+	template: '<component :is="rootView"/>'
+});
+app.config.compilerOptions.whitespace = 'preserve';
+app.use(i18n);
 
 export function setRootView(component) {
 	rootView = component;
@@ -20,10 +30,7 @@ export let router;
 export function addPage(path, component, parent=null) {
 	const route = {
 		path: parent ? path : `/${path}`,
-		name: parent ? `${parent.name}_${path}` : path,
-		meta: {
-			l10n: component?.l10n || path,
-		},
+		name: parent ? `${parent.name}.${path}` : path,
 		component,
 		children: [],
 		addPage(path, component) {
@@ -54,6 +61,7 @@ export default async function() {
 		history: createWebHashHistory(),
 		routes,
 	});
+	app.use(router);
 
 	function disconnected() {
 		if (watchdog !== null) {
@@ -83,10 +91,7 @@ export default async function() {
 		watchdog = setTimeout(disconnected, 15000);
 	});
 	ws.onclose = ws.onerror = disconnected;
-	await ws.sync;
 
-	const app = createApp(rootView);
-	app.config.compilerOptions.whitespace = 'preserve';
-	app.use(router);
+	await ws.sync;
 	app.mount('#gui-view');
 }

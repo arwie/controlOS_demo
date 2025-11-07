@@ -2,14 +2,15 @@
 Requires=weston.service
 After=weston.service
 After=network.target
-Wants=systemd-networkd-wait-online@sys.service
-After=systemd-networkd-wait-online@sys.service
 
 
 [Service]
 User=daemon
 
+StateDirectory=wpe
+
 Environment="XDG_RUNTIME_DIR=/run/xdg"
+Environment="XDG_DATA_HOME=/var/lib/"
 Environment="WAYLAND_DISPLAY=wayland-1"
 
-ExecStart=cog --config=/etc/cog.conf  http://sys
+ExecStart=cog --config=/etc/cog.conf --doc-viewer  http://sys

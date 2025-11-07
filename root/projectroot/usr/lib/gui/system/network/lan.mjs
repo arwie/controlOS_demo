@@ -47,30 +47,30 @@ export const NetworkConf = {
 	<div class="mb-3">
 		<div class="form-check form-check-inline">
 			<input v-model="conf" type="radio" :value="confDhcp" :id="idDhcp" class="form-check-input">
-			<label :for="idDhcp" class="form-check-label" data-l10n-id="network_dhcp"></label>
+			<label :for="idDhcp" class="form-check-label">{{ $t('system.network.dhcp') }}</label>
 		</div>
 		<div class="form-check form-check-inline">
 			<input v-model="conf" type="radio" :value="confStatic" :id="idStatic" class="form-check-input">
-			<label :for="idStatic" class="form-check-label" data-l10n-id="network_maunal"></label>
+			<label :for="idStatic" class="form-check-label">{{ $t('system.network.manual') }}</label>
 		</div>
 	</div>
 	<div v-if="conf===confStatic">
 		<div class="mb-3">
-			<label class="form-label" data-l10n-id="network_address"></label>
+			<label class="form-label">{{ $t('system.network.address') }}</label>
 			<input v-model="conf.Network.Address" type="text" class="form-control">
 		</div>
 		<div class="mb-3">
-			<label class="form-label" data-l10n-id="network_gateway"></label>
+			<label class="form-label">{{ $t('system.network.gateway') }}</label>
 			<input v-model="conf.Network.Gateway" type="text" class="form-control">
 		</div>
 		<div class="mb-3">
-			<label class="form-label" data-l10n-id="network_dns"></label>
+			<label class="form-label">{{ $t('system.network.dns') }}</label>
 			<input v-model="conf.Network.DNS" type="text" class="form-control">
 		</div>
 	</div>
 	<div v-if="conf===confDhcp">
 		<div class="mb-3">
-			<label class="form-label" data-l10n-id="network_hostname"></label>
+			<label class="form-label">{{ $t('system.network.hostname') }}</label>
 			<input v-model="conf.DHCP.Hostname" type="text" class="form-control">
 		</div>
 	</div>
@@ -96,7 +96,7 @@ networkIndex.addPage('lan', {
 	`
 	<NetworkConf ref="lanConf" type="lan"/>
 	<ButtonBar>
-		<button @click="save" class="btn btn-primary" data-l10n-id="network_save"></button>
+		<button @click="save" class="btn btn-primary">{{ $t('save') }}</button>
 	</ButtonBar>
 	`
 })

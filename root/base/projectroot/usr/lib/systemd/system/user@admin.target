@@ -1,0 +1,4 @@
+[Unit]
+StopWhenUnneeded=true
+
+Wants=gui-admin.socket

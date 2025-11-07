@@ -8,7 +8,7 @@ from shared import system
 from .lan import network as lan_network
 
 
-web.document.imports.add('system/network/wlan')
+web.document.imports.append('system/network/wlan')
 
 
 

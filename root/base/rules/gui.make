@@ -47,6 +47,7 @@ ifdef PTXCONF_GUI_WPEWEBKIT
 	@$(call install_alternative, gui, 0, 0, 0644, /usr/lib/udev/rules.d/60-drm-systemd.rules)
 	@$(call install_alternative, gui, 0, 0, 0644, /usr/lib/systemd/system/weston.service)
 	@$(call install_alternative, gui, 0, 0, 0644, /etc/cog.conf)
+	@$(call install_alternative, gui, 0, 0, 0644, /etc/tmpfiles.d/fontconfig.conf)
 	@$(call install_alternative, gui, 0, 0, 0644, /usr/lib/systemd/system/cog.service)
 	@$(call install_link,        gui, ../cog.service, /usr/lib/systemd/system/multi-user.target.wants/cog.service)
 endif

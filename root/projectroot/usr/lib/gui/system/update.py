@@ -8,7 +8,7 @@ from asyncio import to_thread
 from shared import system
 
 
-web.document.imports.add('system/update')
+web.document.imports.append('system/update')
 
 
 @web.handler

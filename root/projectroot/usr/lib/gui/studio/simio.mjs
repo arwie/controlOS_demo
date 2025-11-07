@@ -83,10 +83,10 @@ studioIndex.addPage('simio', {
 				</colgroup>  
 			<thead>
 				<tr>
-					<th :data-l10n-id="'simio_cls-'+cls"></th>
-					<th data-l10n-id="simio_type"></th>
-					<th data-l10n-id="simio_value" class="text-end"></th>
-					<th data-l10n-id="simio_override"></th>
+					<th>{{ $t('studio.simio.cls_'+cls) }}</th>
+					<th>{{ $t('studio.simio.type') }}</th>
+					<th class="text-end">{{ $t('studio.simio.value') }}</th>
+					<th>{{ $t('studio.simio.override') }}</th>
 				</tr>
 			</thead>
 			<tbody>

@@ -6,7 +6,7 @@ from asyncio import to_thread
 from shared import system
 
 
-web.document.imports.add('system/backup')
+web.document.imports.append('system/backup')
 
 
 @web.handler

@@ -9,15 +9,23 @@ import web
 web.document.importmap.update({
 	'vue':			'https://unpkg.com/vue@3.5/dist/vue.esm-browser.prod.js',
 	'vue/router':	'https://unpkg.com/vue-router@4.5/dist/vue-router.esm-browser.prod.js',
+	'vue/i18n':		'https://unpkg.com/vue-i18n@11.1.11/dist/vue-i18n.esm-browser.prod.js',
 })
 
-web.document.stylesheets.append('https://unpkg.com/bootstrap@5.3/dist/css/bootstrap.min.css')
-web.document.imports.add('https://unpkg.com/bootstrap@5.3/dist/js/bootstrap.bundle.min.js')
+web.document.importmap.update({
+	'bootstrap':		'https://unpkg.com/bootstrap@5.3/dist/js/bootstrap.bundle.min.js',
+	'bootstrap/vue':	'https://unpkg.com/bootstrap-vue-next@0.30.4/dist/bootstrap-vue-next.mjs',
+})
+web.document.stylesheets.extend([
+	'https://unpkg.com/bootstrap@5.3/dist/css/bootstrap.min.css',
+	'https://unpkg.com/bootstrap-vue-next@0.30.4/dist/bootstrap-vue-next.css',
+])
+web.document.imports.append('web/use/bootstrap')
 
 web.document.stylesheets.append('https://unpkg.com/@fortawesome/fontawesome-free@6.7/css/all.min.css')
 
 
-web.document.imports.add('office')
+web.document.imports.append('office')
 
 
 import extlog

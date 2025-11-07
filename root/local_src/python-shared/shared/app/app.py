@@ -218,27 +218,37 @@ class disableable:
 
 
 
-class CommandRunner:
+class CommandExecutor:
 
-	def __init__(self, handler: Callable[[int, Any], Coroutine]):
+	def __init__(self, handler: Callable[[int, dict], Coroutine]):
 		self.handler = handler
+		self.cancelled = True
+		self.future = None
+
 
 	async def run(self):
-		while True:
-			self.cancelled = False
-			self.future = asyncio.Future[tuple[int, Any]]()
-			cmd, data = await self.future
-			try:
-				with raise_cancelling:
-					await self.handler(cmd, data)
-			except Exception as e:
-				log.exception(e)
+		try:
+			while True:
+				self.cancelled = False
+				self.future = asyncio.Future[tuple[int, dict]]()
+				cmd, data = await self.future
+				try:
+					with raise_cancelling:
+						await self.handler(cmd, data)
+				except Exception as e:
+					log.exception(e)
+		finally:
+			self.future = None
+
 
 	def busy(self):
-		return self.future.result()[0] if self.future.done() else 0
+		"""Returns the command number that is currently being executed"""
+		return self.future.result()[0] if self.future and self.future.done() else 0
 
-	def __call__(self, cmd:int, data:Any=None):
-		if not self.future.done():
+
+	def __call__(self, cmd:int, data:dict={}):
+		"""Schedules a command to be executed"""
+		if self.future and not self.future.done():
 			self.future.set_result((cmd, data))
 		else:
 			self.cancelled = True

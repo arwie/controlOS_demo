@@ -11,17 +11,11 @@
 
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-	<title data-l10n-id="title"></title>
 	<link rel="icon" href="{{static_url(favicon) if favicon else 'data:,'}}">
 
 	{% for href in stylesheets %}
 		<link rel="stylesheet" href="{{href if href.startswith('http') else static_url(href)}}"/>
 	{% end %}
-
-	<script defer src="{{static_url('locale/l20n.js')}}"></script>
-	<link rel="localization" href="web.locale?ftl={locale}">
-	<meta name="availableLanguages" content="{{available_languages}}">
-	<meta name="defaultLanguage" content="en">
 
 	<script type="importmap">
 		{ "imports": {% raw importmap %} }

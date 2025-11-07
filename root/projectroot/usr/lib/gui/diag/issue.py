@@ -6,7 +6,7 @@ from asyncio import to_thread
 from shared import network
 
 
-web.document.imports.add('diag/issue')
+web.document.imports.append('diag/issue')
 
 
 text = """\

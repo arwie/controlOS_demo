@@ -19,7 +19,7 @@ export const networkIndex = systemIndex.addPage('network', {
 	`
 	<div class="row h-100 mb-3">
 		<div class="col-lg-3 nav nav-pills flex-column mb-4">
-			<PageLink v-for="to in links" :to :data-l10n-id="'network_'+to.path" />
+			<PageLink v-for="to in links" :to>{{$t(to.name)}}</PageLink>
 		</div>
 		<div class="col-lg h-100">
 			<RouterView />

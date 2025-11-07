@@ -68,20 +68,6 @@ class setup(ModuleHandler):
 
 
 @handler
-class locale(RequestHandler):
-
-	@staticmethod
-	def get_template_path():
-		return Path(cwd, 'locale')
-
-	available_languages = ','.join(f.stem for f in get_template_path().glob('*.ftl'))
-
-	def get(self):
-		self.render(f'{self.get_query_argument('ftl')}.ftl')
-
-
-
-@handler
 class targets(WebSocketHandler):
 	all = tornado.WebSocketConnections()
 	targets = list[str]()
@@ -131,7 +117,7 @@ class targets(WebSocketHandler):
 class document(RequestHandler):
 
 	importmap = dict[str,str]()
-	imports = set[str]()
+	imports = list[str]()
 	stylesheets = list[str]()
 	favicon: str | None = None
 
@@ -155,7 +141,6 @@ class document(RequestHandler):
 			imports=self.imports,
 			stylesheets=self.stylesheets,
 			favicon=self.favicon,
-			available_languages=locale.available_languages
 		)
 
 		del document.importmap, document.imports, document.stylesheets, document.favicon

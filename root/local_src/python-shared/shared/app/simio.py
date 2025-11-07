@@ -70,6 +70,11 @@ class _IOBase[T:(bool, int, float, str)]:
 	async def sync(self):
 		pass
 
+	async def sync_loop(self, period:float):
+		while True:
+			await self.sync()
+			await app.sleep(period)
+
 
 
 class Input[T:(bool, int, float, str)](_IOBase[T]):

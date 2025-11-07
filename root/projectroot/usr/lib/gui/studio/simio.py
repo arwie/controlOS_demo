@@ -4,4 +4,4 @@
 import web
 
 
-web.document.imports.add('studio/simio')
+web.document.imports.append('studio/simio')

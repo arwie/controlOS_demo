@@ -28,15 +28,15 @@ systemIndex.addPage('remote', {
 	template: //html
 	`
 	<div class="mb-3">
-		<label class="form-label" data-l10n-id="remote_port"></label>
+		<label class="form-label">{{ $t('system.remote.port') }}</label>
 		<input v-model="port" type="number" step="1" min="60000" max="65500" class="form-control">
 	</div>
 	<ButtonBar>
-		<button @click="enable(true)" :disabled="!port" class="btn btn-primary" data-l10n-id="remote_enable"></button>
-		<button @click="enable(false)" class="btn btn-secondary" data-l10n-id="remote_disable"></button>
+		<button @click="enable(true)" :disabled="!port" class="btn btn-primary">{{ $t('system.remote.enable') }}</button>
+		<button @click="enable(false)" class="btn btn-secondary">{{ $t('system.remote.disable') }}</button>
 	</ButtonBar>
 	<div v-if="status" class="alert alert-success mt-4">
-		<p data-l10n-id="remote_active"></p>
+		<p>{{ $t('system.remote.active') }}</p>
 		<pre v-text="status"></pre>
 	</div>
 	`

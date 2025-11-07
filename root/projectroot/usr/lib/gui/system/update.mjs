@@ -18,7 +18,7 @@ systemIndex.addPage('update', {
 
 		url('system.update.revert').fetch().then((mtime)=>{
 			if (mtime)
-				revertDate.value = new Date(mtime*1000).toLocaleString(document.documentElement.lang, {hour12:false});
+				revertDate.value = mtime * 1000;
 		});
 
 		function upload(file, element) {
@@ -37,37 +37,37 @@ systemIndex.addPage('update', {
 	<div class="accordion" id="update_accordion">
 		<div class="accordion-item">
 			<h2 class="accordion-header">
-				<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#update_file" data-l10n-id="update_file"></button>
+				<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#update_file">{{ $t('system.update.file') }}</button>
 			</h2>
 			<div id="update_file" class="accordion-collapse collapse show" data-bs-parent="#update_accordion">
 				<div class="accordion-body">
 					<div class="mb-3">
-						<label class="form-label" data-l10n-id="update_version"></label>
+						<label class="form-label">{{ $t('system.update.version') }}</label>
 						<dl class="form-control">
-							<dt data-l10n-id="update_versionName"></dt>
+							<dt>{{ $t('system.update.versionName') }}</dt>
 							<dd>{{release.PTXDIST_BSP_VERSION}}</dd>
-							<dt data-l10n-id="update_buildDate"></dt>
+							<dt>{{ $t('system.update.buildDate') }}</dt>
 							<dd>{{release.PTXDIST_BUILD_DATE}}</dd>
 						</dl>
 					</div>
 					<ButtonBar>
-						<FileButton @file="upload" class="btn-primary" data-l10n-id="update_file" />
+						<FileButton @file="upload" class="btn-primary">{{ $t('system.update.file') }}</FileButton>
 					</ButtonBar>
 				</div>
 			</div>
 		</div>
 		<div v-if="revertDate" class="accordion-item">
 			<h2 class="accordion-header">
-				<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#update_revert" data-l10n-id="update_revert"></button>
+				<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#update_revert">{{ $t('system.update.revert') }}</button>
 			</h2>
 			<div id="update_revert" class="accordion-collapse collapse" data-bs-parent="#update_accordion">
 				<div class="accordion-body">
 					<dl class="form-control">
-						<dt data-l10n-id="update_revertDate"></dt>
-						<dd v-text="revertDate"></dd>
+						<dt>{{ $t('system.update.revertDate') }}</dt>
+						<dd>{{ $d(revertDate, { year:'numeric', month:'numeric', day:'numeric', hour:'2-digit', minute:'2-digit', hour12:false }) }}</dd>
 					</dl>
 					<ButtonBar>
-						<ConfirmButton @click="revert" class="btn-danger" data-l10n-id="update_revert" />
+						<ConfirmButton @click="revert" class="btn-danger">{{ $t('system.update.revert') }}</ConfirmButton>
 					</ButtonBar>
 				</div>
 			</div>

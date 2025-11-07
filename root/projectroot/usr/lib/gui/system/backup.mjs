@@ -20,8 +20,8 @@ systemIndex.addPage('backup', {
 	template: //html
 	`
 	<ButtonBar>
-		<a :href="url('', 8100)" target="_blank" class="btn btn-primary" data-l10n-id="backup_download"></a>
-		<FileButton @file="restore" class="btn-warning" data-l10n-id="backup_restore" />
+		<a :href="url('', 8100)" target="_blank" class="btn btn-primary">{{ $t('system.backup.download') }}</a>
+		<FileButton @file="restore" class="btn-warning">{{ $t('system.backup.restore') }}</FileButton>
 	</ButtonBar>
 	`
 })
