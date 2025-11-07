@@ -33,10 +33,10 @@ xml_filter = re.compile(r'.?<\?xml.*?\?>\r\n| *<fileHeader.*?/>\r\n| *<contentHe
 
 
 def txtfy(obj, obj_path):
-	obj_name = obj.get_name()
+	obj_name = obj.get_name().strip('<>')
 	obj_path = path.join(obj_path, obj_name)
 
-	if obj_name.startswith('_'):
+	if obj_name.startswith('_') or obj_name.startswith('Empty'):
 		return
 
 	children = obj.get_children()

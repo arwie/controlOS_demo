@@ -1,0 +1,29 @@
+// SPDX-FileCopyrightText: 2025 Artur Wiebe <artur@4wiebe.de>
+// SPDX-License-Identifier: MIT
+
+PROGRAM co_etc
+VAR
+	SdoWriteDWord:		ETC_CO_SdoWriteDWord;
+END_VAR
+
+////////////////////////////////
+
+IF app.cmd.co.func > 0 OR (app.cmd.co.func = 0 AND (app.fbk.co.done OR app.fbk.co.error)) THEN
+
+	app.fbk.co.done  := FALSE;
+	app.fbk.co.error := FALSE;
+	
+	SdoWriteDWord(
+		xExecute := app.cmd.co.func = 2,
+		usiCom := app.cmd.co.master,
+		uiDevice := app.cmd.co.slave,
+		wIndex := app.cmd.co.index,
+		bySubindex := app.cmd.co.subIndex,
+		usiDataLength := app.cmd.co.dataLength,
+		dwData := app.cmd.co.data,
+		udiTimeOut := 250,
+	);
+	app.fbk.co.done  := app.fbk.co.done  OR SdoWriteDWord.xDone;
+	app.fbk.co.error := app.fbk.co.error OR SdoWriteDWord.xError;
+
+END_IF
