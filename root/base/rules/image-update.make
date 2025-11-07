@@ -30,7 +30,7 @@ IMAGE_UPDATE_IMAGE	:= $(IMAGEDIR)/update
 # Image
 # ----------------------------------------------------------------------------
 
-IMAGE_UPDATE_GPGHOME := ${PTXDIST_WORKSPACE}/../keys/gpg
+IMAGE_UPDATE_GPGHOME := ${PTXDIST_WORKSPACE}/../keys
 IMAGE_UPDATE_GPG := gpg --homedir=$(IMAGE_UPDATE_GPGHOME) -v --batch --yes --compress-algo=none --lock-never --no-random-seed-file --no-permission-warning --no-secmem-warning
 
 $(IMAGE_UPDATE_IMAGE):

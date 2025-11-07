@@ -1,0 +1,9 @@
+## SECTION=project_specific
+
+menuconfig KEYS
+	bool
+	select GNUPG				if RUNTIME
+	select OPENSSH				if RUNTIME
+	prompt "keys"
+	help
+	  GPG and SSH keys installation

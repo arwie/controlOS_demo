@@ -3,14 +3,13 @@
 menuconfig SYSTEM
 	bool
 	select BUSYBOX				if RUNTIME
-	select GNUPG				if RUNTIME
 	select KEXEC_TOOLS			if RUNTIME
 	select PYTHON3_SYSTEMD		if RUNTIME
 	select HOSTAPD				if RUNTIME
 	select WPA_SUPPLICANT		if RUNTIME
-	select OPENSSH				if RUNTIME
 	select RNG_TOOLS			if RUNTIME
 	select PYTHON_SHARED		if RUNTIME
+	select KEYS					if RUNTIME
 	prompt "system"
 	help
 	  FIXME

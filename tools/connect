@@ -6,8 +6,7 @@ SSHFSMNT=/tmp/sys-fs
 
 
 BASEDIR=$(dirname $(realpath $0))
-
-cd $BASEDIR
+cd $BASEDIR/..
 
 
 
@@ -15,12 +14,12 @@ mkdir -p $SSHFSMNT
 
 
 sshfs \
-	-o IdentityFile=$BASEDIR/ssh/id_rsa \
+	-o IdentityFile=$BASEDIR/../keys/id_rsa \
 	root@$HOST:/ \
 	$SSHFSMNT
 
 ssh \
-	-i ssh/id_rsa \
+	-i keys/id_rsa \
 	root@$HOST
 
 

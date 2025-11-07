@@ -5,7 +5,8 @@ HOST=${1-controlOS}
 BASEDIR=$(dirname $(realpath $0))
 cd $BASEDIR/..
 
-SSHCMD="ssh -t -i keys/ssh/id_rsa root@$HOST"
+
+SSHCMD="ssh -t -i keys/id_rsa root@$HOST"
 
 PLATFORM=$($SSHCMD "grep PTXDIST_PLATFORM_NAME /etc/os-release")
 PLATFORM=${PLATFORM#*\"}

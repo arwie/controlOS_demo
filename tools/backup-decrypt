@@ -1,6 +1,7 @@
 #!/bin/sh
 
 BASEDIR=$(dirname $(realpath $0))
+cd $BASEDIR/..
 
 
 FILE="$1"
@@ -9,4 +10,4 @@ output() {
 	echo $(dirname "$FILE")/$(basename --suffix=.gpg "$FILE").txz
 }
 
-gpg --homedir=$BASEDIR/gpg --decrypt --no-permission-warning --output="$(output)" "$FILE"
+gpg --homedir=keys --decrypt --batch --no-permission-warning --passphrase="" --output="$(output)" "$FILE"

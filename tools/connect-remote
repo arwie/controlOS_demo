@@ -6,13 +6,12 @@ HOST=remote.4wiebe.de
 
 
 BASEDIR=$(dirname $(realpath $0))
-
-cd $BASEDIR
+cd $BASEDIR/..
 
 
 
 ssh \
-	-i ssh/id_rsa \
+	-i keys/id_rsa \
 	-p $PORT \
 	-C \
 	-o Tunnel=ethernet \

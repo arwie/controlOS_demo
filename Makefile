@@ -21,7 +21,7 @@ system_img: update
 		&& $(PTXDIST) --collectionconfig=configs/system  image system.img
 
 
-update: .initramfs
+update: .initramfs keygen
 	@cd root \
 		&& ln -sf platform-$(PLATFORM) platform-any \
 		&& $(PTXDIST) images
@@ -104,7 +104,33 @@ select-platform:
 
 
 
-keygen:
-	@cd keys \
-		&& ./gpg-keygen \
-		&& ./ssh-keygen
+keygen: \
+	keys/projectroot/etc/gpg/update.pubkey \
+	keys/projectroot/etc/gpg/backup.pubkey \
+	keys/projectroot/etc/gpg/common.symkey \
+	keys/projectroot/etc/ssh/ssh_host_rsa_key \
+	keys/projectroot/root/.ssh/authorized_keys \
+	keys/projectroot/root/.ssh/id_rsa
+
+keys/projectroot/etc/gpg/%.pubkey:
+	@mkdir -p keys/projectroot/etc/gpg \
+	&& gpg --homedir=keys --batch --passphrase='' --quick-generate-key $* default default never \
+	&& gpg --homedir=keys --output=keys/projectroot/etc/gpg/$*.pubkey --export $*
+
+keys/projectroot/etc/gpg/common.symkey:
+	@mkdir -p keys/projectroot/etc/gpg \
+	&& gpg --homedir=keys --no-random-seed-file --armor --gen-random 2 64 > keys/common.symkey \
+	&& cp keys/common.symkey keys/projectroot/etc/gpg
+
+keys/projectroot/etc/ssh/ssh_host_rsa_key:
+	@mkdir -p keys/projectroot/etc/ssh \
+	&& ssh-keygen -f keys/projectroot/etc/ssh/ssh_host_rsa_key -N ""
+
+keys/projectroot/root/.ssh/authorized_keys:
+	@mkdir -p keys/projectroot/root/.ssh \
+	&& ssh-keygen -f keys/id_rsa -N "" \
+	&& cp keys/id_rsa.pub keys/projectroot/root/.ssh/authorized_keys
+
+keys/projectroot/root/.ssh/id_rsa:
+	@mkdir -p keys/projectroot/root/.ssh \
+	&& ssh-keygen -f keys/projectroot/root/.ssh/id_rsa -N ""
