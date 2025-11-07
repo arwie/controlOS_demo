@@ -4,13 +4,13 @@
 	"python.analysis.autoSearchPaths": false,
 	"python.analysis.typeCheckingMode": "basic",
 	"python.analysis.include": [
-		"root/local_src",
+		"code",
 		"root/projectroot",
 		"root/base/projectroot",
 		"office"
 	],
 	"python.analysis.extraPaths": [
-		"root/local_src/python-shared",
+		"code",
 		"root/platform-any/sysroot-target/usr/lib/python3.13/site-packages",
 		"root/platform-any/sysroot-host/usr/lib/python3.13/site-packages"
 	],

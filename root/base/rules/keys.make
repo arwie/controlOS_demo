@@ -1,20 +1,17 @@
 # -*-makefile-*-
 #
-# Copyright (C) 2025 by Artur Wiebe <artur@4wiebe.de>
-#
-# For further information about the PTXdist project and license conditions
-# see the README file.
-#
+# SPDX-FileCopyrightText: 2025 Artur Wiebe <artur@4wiebe.de>
+# SPDX-License-Identifier: MIT
 
 #
 # We provide this package
 #
 PACKAGES-$(PTXCONF_KEYS) += keys
 
-KEYS_VERSION		:= 0.1
+KEYS_VERSION		:= 1
 KEYS			:= keys
 KEYS_URL		:= file://$(PTXDIST_WORKSPACE)/../keys/projectroot
-KEYS_DIR		:= $(BUILDDIR)/${KEYS}
+KEYS_DIR		:= $(BUILDDIR)/$(KEYS)
 
 # ----------------------------------------------------------------------------
 # Compile
