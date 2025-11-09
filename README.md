@@ -10,13 +10,11 @@ Directory structure
 ---
 
 * [codesys](/codesys/) - CODESYS application project and scripts
-* [code](/code/) - Links to relevant source code locations
-	* [app](/root/projectroot/usr/lib/app/) - Main Python application
-	* [shared](/root/local_src/python-shared/shared/) - Shared Python module (code used by app, gui and scripts)
-	* [gui](/root/projectroot/usr/lib/gui/) - User interface (HTML, Python)
+* [code](/code/) - Relevalt application and UI code
+	* [app](/code/app/) - Main Python application
+	* [gui](/code/gui/) - User interface (HTML, Python)
+	* [shared](/code/shared/) - Shared Python module (code used by app, gui and scripts)
 	* [esp32](/root/local_src/esp32/) -  ESP32 based gadgets (C++)
-	* ~~[mc](/root/projectroot/usr/lib/mc/)~~ - Legacy Servotronix SoftMC code (BASIC)
-	* ~~[arduino](/root/local_src/arduino/)~~ - Legacy Arduino based gadgets (C++)
 * [root](/root/) - PTXdist project for the root partition
 	* [projectroot](/root/projectroot/) - Files which are copied to the target
 * [boot](/boot/) - PTXdist project for bootloader and system image
@@ -41,26 +39,23 @@ STEP 1/19: FROM debian:bookworm-slim
 ~~~
 
 All source archives needed to build the target Linux system will be downloaded automatically during the build, except the CODESYS runtime and CodeMeter.
-In a Windows CODESYS installation these files are located under *C:\Program Files\CODESYS 3.5.20.50\CODESYS* in the folders *CODESYS Control for Linux SL\Delivery\linux* and *CODESYS CodeMeter for Linux SL\Delivery*.
-Copy the necessary *.deb files into the codesys directory of the project.
+In a Windows CODESYS installation these files are located under *C:\Program Files\CODESYS 3.5.xx.xx\CODESYS* in the folders *CODESYS Control for Linux SL\Delivery\linux* and *CODESYS CodeMeter for Linux SL\Delivery*.
+Copy the necessary *.deb files into the codesys directory of the project. The versions are coded in the corresponding rule files in root/rules/codemeter.make and root/rules/codesys.make.
 ~~~
 [client@gemini controlOS_demo]$ ll codesys/*.deb
 -rw-r--r-- 1 client client 25M 14. Mär 12:05 codesys/codemeter-lite_8.20.6539.500_amd64.deb
--rw-r--r-- 1 client client 16M 14. Mär 12:05 codesys/codesyscontrol_linux_4.14.0.0_amd64.deb
+-rw-r--r-- 1 client client 16M 14. Mär 12:05 codesys/codesyscontrol_linux_4.15.0.0_amd64.deb
 ~~~
 
 Enter the build container by running the *ptxdist/run* script.
-Generate new keys for the project by running *make keygen*.
 Now everything is set up for the build: just *make* it.
 ~~~
 [client@gemini controlOS_demo]$ ./ptxdist/run
-dev@ptxdist-2025-02-0:~/controlOS_demo$ make keygen
-...
-dev@ptxdist-2025-02-0:~/controlOS_demo$ make
+dev@ptxdist-2025-08-0:~/controlOS_demo$ make
 ...
 #############################################
 Build completed successfully!
-dev@ptxdist-2025-02-0:~/controlOS_demo$ exit
+dev@ptxdist-2025-08-0:~/controlOS_demo$ exit
 ~~~
 
 A new VirtualBox VM is created with the *virtualbox/create* script.
