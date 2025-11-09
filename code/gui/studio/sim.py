@@ -1,6 +1,6 @@
 import web
 
 
-web.document.imports.add('studio/sim')
+web.document.imports.append('studio/sim')
 
 web.files.glob('sim/**/*.stl')

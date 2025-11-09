@@ -17,7 +17,7 @@ async def _press_button_sim(button:app.simio.Input, duration=0.25):
 
 
 
-@app.CommandRunner
+@app.CommandExecutor
 async def cmd_handler(cmd, data):
 	match cmd:
 		case 1:

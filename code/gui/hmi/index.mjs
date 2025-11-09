@@ -4,8 +4,8 @@ import { url, poll } from 'web/utils'
 import { RootView, PageLink } from 'web/widgets'
 
 import { DiagDropdown } from 'diag'
-import { PoweroffDropdown } from 'system'
-import { LocaleDropdown } from 'locale'
+import { PoweroffDropdown } from 'system/power'
+import { LocaleDropdown } from 'web/locale'
 
 
 

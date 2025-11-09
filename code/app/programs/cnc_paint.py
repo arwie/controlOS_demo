@@ -13,7 +13,7 @@ web_placeholder = app.web.placeholder('paint')
 
 
 
-@app.CommandRunner
+@app.CommandExecutor
 async def cmd_handler(cmd, data:dict):
 	match cmd:
 		case 1:

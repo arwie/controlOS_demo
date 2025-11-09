@@ -1,7 +1,7 @@
-from shared import sqlite
+from shared.sqlite import Sqlite, SqliteTable
 
 
-class Progdb(sqlite.Sqlite):
+class Progdb(Sqlite):
 	def __init__(self):
 		super().__init__('/etc/app/progdb', 1, [
 			('progs', {
@@ -20,5 +20,5 @@ class Progdb(sqlite.Sqlite):
 
 
 progdb = Progdb()
-progs	= sqlite.Table(progdb, 'progs')
-points	= sqlite.Table(progdb, 'points')
+progs	= SqliteTable(progdb, 'progs')
+points	= SqliteTable(progdb, 'points')

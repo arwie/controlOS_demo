@@ -27,15 +27,15 @@ do_rsync() {
 
 do_ssh "mount --options=remount,rw --target=/mnt/root"
 
-do_rsync code/shared /mnt/root/usr/lib/python3.13/site-packages
+
+do_rsync code/shared /mnt/root/usr/lib/python3.13/site-packages \
+	&& SENT_SHARED=1
 
 
 do_rsync code/app /mnt/root/usr/lib \
-	&& do_ssh "systemctl --quiet restart app.service" \
-	&
+	|| [ -n "$SENT_SHARED" ] && do_ssh "systemctl --quiet restart app.service" &
 
 do_rsync code/gui /mnt/root/usr/lib \
-	&& do_ssh "systemctl --quiet stop gui-*.service" \
-	&
+	|| [ -n "$SENT_SHARED" ] && do_ssh "systemctl --quiet stop gui-*.service" &
 
 wait
