@@ -43,7 +43,8 @@ async def demo_move_cnc(rounds):
 
 
 
-async def run():
+@app.aux_task
+async def exec():
 	robot.override = 50
 
 	while True:
@@ -54,4 +55,3 @@ async def run():
 			await demo_move_cnc(3)
 		except Exception as exc:
 			app.log.exception(f'Motion error: {exc}')
-

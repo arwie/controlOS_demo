@@ -15,7 +15,7 @@ APP_SRC		:= $(PTXDIST_WORKSPACE)/../code/app
 # Target-Install
 # ----------------------------------------------------------------------------
 
-$(STATEDIR)/app.targetinstall:
+$(STATEDIR)/app.targetinstall: $(shell find $(APP_SRC) -type d)
 	@$(call targetinfo)
 	@$(call install_init, app)
 

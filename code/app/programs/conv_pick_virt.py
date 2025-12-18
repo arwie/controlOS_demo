@@ -7,28 +7,35 @@ import sim
 
 
 
-async def run():
+@app.context
+async def exec():
 	robot.override = 100
 
 	queue = deque[ConvItem]()
 	queue_trigger = app.Trigger()
 
-	async def place_items():
-		while True:
-			await app.sleep(1.1)
-			item = ConvItem(Pos(-300 - uniform(0, 50), uniform(10, 90)), conv.pos())
-			queue.append(item)
-			queue_trigger()
-			sim.conv_place_item(item)
-
 	async with (
 		conv.power(),
 		conv.move_velocity(100),
 		robot.power(),
-		app.task_group(place_items)
+		app.AuxTaskGroup() as task_group
 	):
-		while True:
-			await app.poll(lambda: queue, period=queue_trigger)
-			item = queue.popleft()
-			await robot.conv_pick(item)
-			sim.conv_remove_item(item)
+
+		@task_group
+		async def place_items():
+			while True:
+				await app.sleep(1.1)
+				item = ConvItem(Pos(-300 - uniform(0, 50), uniform(10, 90)), conv.pos())
+				queue.append(item)
+				queue_trigger()
+				sim.conv_place_item(item)
+
+		@task_group
+		async def pick_items():
+			while True:
+				await app.poll(lambda: queue, period=queue_trigger)
+				item = queue.popleft()
+				await robot.conv_pick(item)
+				sim.conv_remove_item(item)
+
+		yield

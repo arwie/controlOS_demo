@@ -97,6 +97,7 @@ class robot:
 	async def jog(self, power_time=15):
 		watchdog = Timeout(0.3)
 
+		@app.aux_task
 		async def jog_task():
 			while True:
 				await app.poll(lambda: any(codesys.cmd.rbt_move_coord))
@@ -121,7 +122,7 @@ class robot:
 				codesys.cmd.rbt_move_fvel = speed / 100
 
 		jog_control(Pos())
-		async with app.task_group(jog_task):
+		async with jog_task():
 			yield jog_control
 
 

@@ -1,24 +1,10 @@
-# Copyright (c) 2023 Artur Wiebe <artur@4wiebe.de>
-#
-# Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
-# associated documentation files (the "Software"), to deal in the Software without restriction,
-# including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
-# and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so,
-# subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
-# INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-# WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
+# SPDX-FileCopyrightText: 2025 Artur Wiebe <artur@4wiebe.de>
+# SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 from typing import overload, Any
 from collections.abc import Callable, Coroutine, AsyncGenerator
-from contextlib import AbstractAsyncContextManager
+from contextlib import AbstractAsyncContextManager, suppress
 import asyncio
 import inspect
 from functools import partial
@@ -57,40 +43,51 @@ class Trigger:
 async def poll(
 	condition: Callable[[], Any],
 	*,
-	timeout: float | Timeout | None = None,
+	timeout: float | None = None,
 	abort: Callable[[], Any] | None = None,
 	period: float | Trigger | Callable[[], Coroutine] = poll_period,
-	settle: float | Timeout = 0
+	settle: float = 0
 ):
+	"""
+	Periodically polls a condition until it becomes true, times out, or is aborted.
+
+	Args:
+		condition: Callable evaluated each iteration. Polling continues until it returns a truthy value.
+		timeout: Maximum time in seconds to poll. None means no timeout (poll indefinitely).
+		abort: Optional callable that when returns truthy, aborts the polling.
+		period: Time to wait between condition checks. Can be:
+			- float/int: Sleep interval in seconds
+			- Trigger: Event-driven trigger to wait for
+			- Callable[[], Coroutine]: Custom async wait function
+		settle: Duration in seconds the condition must remain continuously True before returning.
+			If condition becomes False during this period, the settle timer resets.
+
+	Returns:
+		- The truthy result from condition() when it has been True for the settle duration
+		- False when the abort condition becomes True
+		- None when the timeout expires
+	"""
 
 	if callable(abort):
 		abort = Condition(abort)
-
-	if isinstance(timeout, (float, int)):
-		timeout = Timeout(timeout)
 
 	if isinstance(period, (float, int)):
 		period = partial(asyncio.sleep, period)
 	elif isinstance(period, Trigger):
 		period = period.wait
 
-	if isinstance(settle, (float, int)):
-		settle = Timeout(settle)
+	settle_timeout = Timeout(settle)
 
-	while True:
-		if abort: #check abort before condition
+	with suppress(TimeoutError):
+		async with asyncio.timeout(timeout):
+			while not abort:
+				if result := condition():
+					if settle_timeout:
+						return result
+				else:
+					settle_timeout.reset()
+				await period()
 			return False
-
-		if result := condition():
-			if settle:
-				return result
-		else:
-			settle.reset()
-
-		if timeout:
-			return False
-		await period()
-
 
 
 @asynccontextmanager
@@ -124,21 +121,28 @@ def context(func): #type:ignore
 
 
 
-class task_group(asyncio.TaskGroup):
+class AuxTaskGroup(asyncio.TaskGroup):
+	"""TaskGroup that cancels all tasks on exit.
 
-	def __init__(self, *coros: Coroutine[Any, Any, None] | Callable[[], Coroutine[Any, Any, None]]):
-		super().__init__()
-		self._coros = coros
+	Unlike asyncio.TaskGroup which waits for tasks to complete on normal exit,
+	AuxTaskGroup always cancels all tasks when exiting the context, regardless
+	of whether an exception occurred.
 
-	async def __aenter__(self):
-		await super().__aenter__()
-		for coro in self._coros:
-			self(coro)
-		del self._coros
-		return self
+	Intended for background/supervisory tasks that should only run while the main
+	work is active (e.g., monitoring, heartbeats, logging).
+
+	Example:
+		async with AuxTaskGroup() as tg:
+			tg(monitor_health)
+			tg(log_metrics)
+			await main_work()
+		# monitor_health and log_metrics are cancelled here
+	"""
 
 	def __call__(self, coro: Coroutine[Any, Any, None] | Callable[[], Coroutine[Any, Any, None]], **kwargs):
-		return self.create_task(coro() if callable(coro) else coro, **kwargs)
+		if callable(coro):
+			coro = coro()
+		return self.create_task(coro, name=coro.__qualname__, **kwargs)
 
 	async def __aexit__(self, et, exc, tb):
 		if not self._aborting:	#type:ignore
@@ -148,6 +152,40 @@ class task_group(asyncio.TaskGroup):
 		except BaseExceptionGroup as eg:
 			if eg.exceptions[0] is not exc or len(eg.exceptions) > 1:
 				raise
+
+
+def aux_task(coro_function:Callable[..., Coroutine[Any, Any, None]]):
+	"""
+	Decorator that transforms a coroutine function into an async context manager
+	that runs the coroutine as a managed background task within an AuxTaskGroup.
+
+	Args:
+		coro_function: A coroutine function to run as a background task.
+			Can accept any arguments which are passed when entering the context.
+
+	Returns:
+		An async context manager that starts the task on entry and ensures proper
+		cleanup on exit via AuxTaskGroup lifecycle management.
+
+	Example:
+		@aux_task
+		async def background_worker(name: str, interval: float = 1.0):
+			while True:
+				await asyncio.sleep(interval)
+				print(f"{name}: tick")
+
+		async with background_worker("worker-1", interval=0.5) as task:
+			# background_worker is now running with the provided arguments
+			await do_other_work()
+			# task is cleaned up on exit
+	"""
+
+	@asynccontextmanager
+	async def aux_task_asynccontextmanager(*args, **kwargs):
+		async with AuxTaskGroup() as task_group:
+			yield task_group(coro_function(*args, **kwargs))
+
+	return aux_task_asynccontextmanager
 
 
 
@@ -183,15 +221,65 @@ class raise_cancelling(AbstractContextManager):
 
 
 
-def context_select_loop(switch: Callable[[], Any], **kwargs) -> Callable[[Callable[[Any], AsyncGenerator]], Callable[[], Coroutine]]:
+def context_select_loop(switch: Callable[[], Any], **kwargs) -> Callable[[Callable[..., AsyncGenerator]], Callable[[], Coroutine]]:
+	"""
+	Creates a state machine loop that monitors a switch function and manages async context lifecycles.
+
+	The decorator operates in two modes based on whether the decorated function accepts parameters:
+
+	**Parameterized mode** (function has parameters):
+	Enters context with the current switch value and stays active until the value changes.
+	The decorated function receives the switch value as a parameter.
+
+	**Boolean mode** (function has no parameters):
+	Waits for switch to become truthy, enters context, then waits for switch to become falsy.
+
+	Args:
+		switch: A callable that returns the current state value to monitor.
+		**kwargs: Options passed to poll() (period, settle).
+
+	Returns:
+		A decorator that transforms an async generator into a coroutine loop.
+
+	Examples:
+		@context_select_loop(lambda: current_mode)
+		async def handle_mode(mode):
+			# Receives mode value, stays active until mode changes
+			match mode:
+				case "manual":
+					async with manual_mode():
+						yield
+				case "auto":
+					async with auto_mode():
+						yield
+				case _:
+					yield
+
+		@context_select_loop(is_active)
+		async def active_handler():
+			# Enters when is_active() is True, exits when False
+			async with activate():
+				yield
+	"""
+
 	def decorator(select_gen):
 		select = asynccontextmanager(select_gen)
-		async def select_loop():
-			while True:
-				value = switch()
-				async with select(value):
-					await poll(lambda: switch() != value, **kwargs)
+
+		if inspect.signature(select_gen).parameters:
+			async def select_loop():
+				while True:
+					value = switch()
+					async with select(value):
+						await poll(lambda: switch() != value, **kwargs)
+		else:
+			async def select_loop():
+				while True:
+					await poll(switch, **kwargs)
+					async with select():
+						await poll(lambda: not switch(), **kwargs)
+
 		return select_loop
+
 	return decorator
 
 
@@ -226,7 +314,8 @@ class CommandExecutor:
 		self.future = None
 
 
-	async def run(self):
+	@aux_task
+	async def exec(self):
 		try:
 			while True:
 				self.cancelled = False

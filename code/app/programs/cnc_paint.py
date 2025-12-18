@@ -49,9 +49,11 @@ class WebHandler(app.web.WebSocketHandler):
 
 
 
-async def run():
+@app.context
+async def exec():
 	robot.override = 30
 
 	async with web_placeholder.handle(WebHandler, update_period=0.05):
-		await cmd_handler.run()
+		async with cmd_handler.exec():
+			yield
 

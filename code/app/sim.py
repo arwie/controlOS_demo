@@ -49,7 +49,7 @@ class WebHandler(app.web.WebSocketHandler):
 @app.context
 async def exec():
 	async with web_placeholder.handle(WebHandler, update_period=1/30):
-		async with app.task_group(cmd_handler.run):
+		async with cmd_handler.exec():
 			yield
 
 

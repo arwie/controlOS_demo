@@ -59,6 +59,7 @@ class conv:
 	async def jog(self, power_time=15):
 		watchdog = Timeout(0.3)
 
+		@app.aux_task
 		async def jog_task():
 			while True:
 				await app.poll(lambda: codesys.cmd.conv_move_vel)
@@ -82,5 +83,5 @@ class conv:
 				codesys.cmd.conv_move_vel = direction * 500 * speed / 100
 
 		jog_control(0)
-		async with app.task_group(jog_task):
+		async with jog_task():
 			yield jog_control

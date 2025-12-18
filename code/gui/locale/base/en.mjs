@@ -11,6 +11,7 @@ export default {
 	connect: "Connect",
 	disconnect: "Disconnect",
 	download: "Download",
+	send: "Send",
 
 	diag: {
 		title: "Diagnostics",
@@ -97,6 +98,12 @@ export default {
 			host: "Host",
 			port: "Port",
 			user: "User",
+		},
+		timedate: {
+			title: "Date / Time",
+			status: "System clock status on the controller",
+			timezone: "Timezone on the controller",
+			timeSync: "The system clock on the controller is not synchronized!\nShould the device time {time} UTC be sent to the controller?",
 		},
 	},
 

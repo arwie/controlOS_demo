@@ -1,19 +1,5 @@
-# Copyright (c) 2023 Artur Wiebe <artur@4wiebe.de>
-#
-# Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
-# associated documentation files (the "Software"), to deal in the Software without restriction,
-# including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
-# and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so,
-# subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
-# INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-# WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
+# SPDX-FileCopyrightText: 2025 Artur Wiebe <artur@4wiebe.de>
+# SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 from typing import overload, Any
@@ -70,6 +56,7 @@ class _IOBase[T:(bool, int, float, str)]:
 	async def sync(self):
 		pass
 
+	@app.aux_task
 	async def sync_loop(self, period:float):
 		while True:
 			await self.sync()
@@ -176,6 +163,7 @@ class IoGroup(AbstractContextManager):
 		for simio in self._simio:
 			await simio.sync()
 
+	@app.aux_task
 	async def sync_loop(self, period:float):
 		while True:
 			await self.sync()
@@ -192,6 +180,11 @@ class IoGroup(AbstractContextManager):
 		for simio in self._simio:
 			simio.close()
 		_WebHandler.all.write_update()
+
+
+	def _decorator_kwargs_defaults(self, kwargs:dict):
+		kwargs.setdefault('module', self.module)
+		kwargs.setdefault('prefix', self.prefix)
 
 
 	@overload
@@ -215,13 +208,12 @@ class IoGroup(AbstractContextManager):
 		pass
 
 	def input(self, io=None, **kwargs):
-		def decorator(io, /):
-			kwargs.setdefault('module', self.module)
-			kwargs.setdefault('prefix', self.prefix)
-			simio = AsyncInput(io, **kwargs) if iscoroutinefunction(io) else Input(io, **kwargs)
-			self._simio.append(simio)
-			return simio
-		return decorator if io is None else decorator(io)
+		if io is None: #decorator with kwargs
+			return lambda io, /: self.input(io, **kwargs)
+		self._decorator_kwargs_defaults(kwargs)
+		simio = AsyncInput(io, **kwargs) if iscoroutinefunction(io) else Input(io, **kwargs)
+		self._simio.append(simio)
+		return simio
 
 
 	@overload
@@ -243,13 +235,12 @@ class IoGroup(AbstractContextManager):
 		pass
 
 	def output(self, io=None, **kwargs):
-		def decorator(io, /):
-			kwargs.setdefault('module', self.module)
-			kwargs.setdefault('prefix', self.prefix)
-			simio = AsyncOutput(io, **kwargs) if iscoroutinefunction(io) else Output(io, **kwargs)
-			self._simio.append(simio)
-			return simio
-		return decorator if io is None else decorator(io)
+		if io is None: #decorator with kwargs
+			return lambda io, /: self.output(io, **kwargs)
+		self._decorator_kwargs_defaults(kwargs)
+		simio = AsyncOutput(io, **kwargs) if iscoroutinefunction(io) else Output(io, **kwargs)
+		self._simio.append(simio)
+		return simio
 
 
 

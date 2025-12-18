@@ -4,6 +4,7 @@
 import { router } from 'web'
 import { poll } from 'web/utils'
 import { ref, computed, watchEffect, provide, inject, useSlots } from 'vue'
+import { BFormCheckbox } from 'bootstrap/vue'
 
 
 
@@ -193,6 +194,18 @@ export const FileButton = {
 		<slot></slot>
 		<input type="file" @change="$emit('file', $event.target.files[0], $event.target.parentElement)" :disabled hidden>
 	</label>
+	`
+}
+
+
+
+export const ConfCheckbox = {
+	components: { BFormCheckbox },
+	template: //html
+	`
+	<BFormCheckbox value="true" unchecked-value="false">
+		<slot></slot>
+	</BFormCheckbox>
 	`
 }
 

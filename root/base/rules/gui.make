@@ -15,7 +15,7 @@ GUI_SRC		:= $(PTXDIST_WORKSPACE)/../code/gui
 # Target-Install
 # ----------------------------------------------------------------------------
 
-$(STATEDIR)/gui.targetinstall:
+$(STATEDIR)/gui.targetinstall: $(shell find $(GUI_SRC) -type d)
 	@$(call targetinfo)
 	@$(call install_init, gui)
 

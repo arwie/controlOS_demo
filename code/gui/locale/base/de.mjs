@@ -11,6 +11,7 @@ export default {
 	connect: "Verbinden",
 	disconnect: "Trennen",
 	download: "Herunterladen",
+	send: "Senden",
 
 	diag: {
 		title: "Diagnose",
@@ -97,6 +98,12 @@ export default {
 			host: "Host",
 			port: "Port",
 			user: "Benutzer",
+		},
+		timedate: {
+			title: "Datum / Uhrzeit",
+			status: "Status der Systemuhr auf der Steuerung",
+			timezone: "Zeitzone auf der Steuerung",
+			timeSync: "Die Systemuhr auf der Steuerung ist nicht synchronisiert!\nSoll die Geräteuhrzeit {time} UTC an die Steuerung gesendet werden?",
 		},
 	},
 

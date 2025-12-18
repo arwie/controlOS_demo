@@ -71,3 +71,14 @@ class Timeout(Timer):
 
 	def __call__(self):
 		return monotonic() >= self.expire	#always return True if timeout==0
+
+
+
+class Pulse(AbstractCondition):
+
+	def __init__(self, hertz:float = 1):
+		self.period = 1 / hertz
+		self.switch = self.period / 2
+
+	def __call__(self):
+		return (monotonic() % self.period) < self.switch

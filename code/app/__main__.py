@@ -7,7 +7,7 @@ import sim
 import teach
 
 
-from programs import hardware_test as program
+from programs import conv_pick_virt as program
 
 
 
@@ -21,7 +21,7 @@ async def operation():
 		async with teach.exec():
 			await app.poll(buttons.start)
 
-		async with app.task_group(program.run):
+		async with program.exec():
 			await app.poll(buttons.stop)
 
 

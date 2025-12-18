@@ -16,7 +16,7 @@ PYTHON_SHARED_SRC	:= $(PTXDIST_WORKSPACE)/../code/shared
 # Target-Install
 # ----------------------------------------------------------------------------
 
-$(STATEDIR)/python-shared.targetinstall:
+$(STATEDIR)/python-shared.targetinstall: $(shell find $(PYTHON_SHARED_SRC) -type d)
 	@$(call targetinfo)
 	@$(call install_init, python-shared)
 

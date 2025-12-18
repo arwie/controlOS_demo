@@ -55,7 +55,7 @@ class WebSocketHandler(tornado.WebSocketHandler):
 	@classmethod
 	@asynccontextmanager
 	async def exec(cls, *, update_period: float | app.Trigger | Callable[[], Coroutine] = 0.25):
-		async with app.task_group() as cls.task_group:
+		async with app.AuxTaskGroup() as cls.task_group:
 
 			if cls.update.__func__ is not WebSocketHandler.update.__func__:	#update() was overriden in subclass
 

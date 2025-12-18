@@ -23,7 +23,7 @@ from pathlib import Path
 def run(cmd, capture=False, **kwargs):
 	kwargs.setdefault('check', True)
 	kwargs.setdefault('stderr', subprocess.PIPE)
-	if capture:
+	if capture := capture or 'text' in kwargs:
 		kwargs['stdout'] = subprocess.PIPE
 	try:
 		proc = subprocess.run(cmd, shell=isinstance(cmd, str), **kwargs)
