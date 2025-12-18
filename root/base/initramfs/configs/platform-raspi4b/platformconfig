@@ -1,6 +1,6 @@
 #
 # Automatically generated file; DO NOT EDIT.
-# PTXdist 2025.03.0
+# PTXdist 2025.10.0
 #
 PTXCONF__platformconfig_MAGIC__=y
 
@@ -19,7 +19,7 @@ PTXCONF_PLATFORM="raspi4b"
 PTXCONF_PLATFORM_VERSION=""
 PTXCONF_RUNTIME=y
 PTXCONF_BUILDTIME=y
-PTXCONF_PLATFORMCONFIG_VERSION="2025.03.0"
+PTXCONF_PLATFORMCONFIG_VERSION="2025.10.0"
 
 #
 # architecture                  
@@ -136,6 +136,7 @@ PTXCONF_BAREBOX_ARCH_STRING="arm"
 # PTXCONF_BAREBOX_MLO is not set
 # PTXCONF_GRUB is not set
 # PTXCONF_HOST_MXS_UTILS is not set
+# PTXCONF_OPTEE is not set
 # PTXCONF_TF_A is not set
 # PTXCONF_U_BOOT is not set
 # end of bootloaders                   
