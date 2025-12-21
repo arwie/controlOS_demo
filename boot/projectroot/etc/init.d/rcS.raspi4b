@@ -99,6 +99,8 @@ echo "preparing production boot partition ..."
 . /mnt/root/boot/boot.conf
 cp /mnt/root/boot/$IMAGE /mnt/init/kernel8.img
 cp /mnt/root/boot/$DTB   /mnt/init/bcm2711-rpi-4-b.dtb
+cp -r /mnt/root/boot/overlays /mnt/init/
+echo "$CONFIG" > /mnt/init/config.txt
 echo $BOOTARGS > /mnt/init/cmdline.txt
 
 sync
