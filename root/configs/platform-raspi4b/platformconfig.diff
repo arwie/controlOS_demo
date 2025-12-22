@@ -1,3 +1,3 @@
-8736b9411dd35286bca2320f0b738dcc
-de608d1a66a4ad2539d2329e2bba8d42
-PTXCONF_KERNEL_DTSO="mcp251xfd-overlay.dts"
+73553a9a02c39026580fc8ecf32ae1ef
+84b2ff8139cfa23529164e22f39b35c5
+PTXCONF_KERNEL_DTSO="mcp251xfd-overlay.dts vc4-kms-v3d-pi4-overlay.dts"
