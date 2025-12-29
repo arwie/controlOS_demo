@@ -13,7 +13,7 @@
                 <DeviceIdentification>
                   <Type>64</Type>
                   <Id>0000 1002</Id>
-                  <Version>4.9.0.0</Version>
+                  <Version>4.10.0.0</Version>
                 </DeviceIdentification>
                 <Connector moduleType="257" role="child" interface="Common.PCI" connectorId="1">
                   <HostParameterSet />
@@ -69,7 +69,7 @@
                     <ParameterSection>
                       <Name>Diagnosis</Name>
                       <Description />
-                      <Parameter ParameterId="805502976" type="localTypes:StructStatistics" IndexInDevDesc="50">
+                      <Parameter ParameterId="805502976" type="localTypes:StructStatistics" IndexInDevDesc="51">
                         <Attributes channel="diag" offlineaccess="none" />
                         <Value name="_x0038_05502976" visiblename="Statistics" offlineaccess="none">
                           <Element name="SendFrameCount" visiblename="SendFrameCount">0</Element>
@@ -85,7 +85,7 @@
                         </Value>
                         <Name>Statistics</Name>
                       </Parameter>
-                      <Parameter ParameterId="805502977" type="std:BOOL" IndexInDevDesc="51">
+                      <Parameter ParameterId="805502977" type="std:BOOL" IndexInDevDesc="52">
                         <Attributes channel="diagAck" />
                         <Value name="_x0038_05502977" visiblename="Clear Statistics" desc="Clear Statistics">FALSE</Value>
                         <Name>Clear Statistics</Name>
@@ -95,13 +95,13 @@
                     <ParameterSection>
                       <Name>Mailbox Gateway</Name>
                       <Description />
-                      <Parameter ParameterId="1073750016" type="std:BOOL" IndexInDevDesc="52">
+                      <Parameter ParameterId="1073750016" type="std:BOOL" IndexInDevDesc="53">
                         <Attributes />
                         <Value name="_x0031_073750016" visiblename="Enable mailbox gateway" desc="if true then mailbox gateway is enabled">FALSE</Value>
                         <Name>Enable mailbox gateway</Name>
                         <Description>if true then mailbox gateway is enabled</Description>
                       </Parameter>
-                      <Parameter ParameterId="1073750018" type="std:ARRAY[0..3] OF BYTE" IndexInDevDesc="53">
+                      <Parameter ParameterId="1073750018" type="std:ARRAY[0..3] OF BYTE" IndexInDevDesc="54">
                         <Attributes />
                         <Value name="_x0031_073750018" visiblename="IP address" desc="IP address of mailbox gateway">[0,0,0,0]</Value>
                         <Name>IP address</Name>
@@ -143,6 +143,12 @@
                       <Value name="_x0038_05306379" visiblename="ShpwDCStatistik" offlineaccess="none" desc="true: DC Statistics page is shown">true</Value>
                       <Name>ShpwDCStatistik</Name>
                       <Description>true: DC Statistics page is shown</Description>
+                    </Parameter>
+                    <Parameter ParameterId="805306384" type="std:BOOL" IndexInDevDesc="50">
+                      <Attributes download="false" offlineaccess="none" />
+                      <Value name="_x0038_05306384" visiblename="SupportFixedAddresses" offlineaccess="none" desc="if true then the checkbox for fixed addresses is available">true</Value>
+                      <Name>SupportFixedAddresses</Name>
+                      <Description>if true then the checkbox for fixed addresses is available</Description>
                     </Parameter>
                     <Parameter ParameterId="805326848" type="std:DWORD" IndexInDevDesc="11">
                       <Attributes />

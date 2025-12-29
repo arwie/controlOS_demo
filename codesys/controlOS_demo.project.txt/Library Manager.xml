@@ -44,11 +44,11 @@
           <PlaceholderRedirection Placeholder="CAA TickUtil" Redirection="CAA TickUtil Extern, 3.5.17.0 (CAA Technical Workgroup)" />
           <PlaceholderRedirection Placeholder="MemoryUtils" Redirection="MemoryUtils, 3.5.18.0 (3S - Smart Software Solutions GmbH)" />
           <PlaceholderRedirection Placeholder="CmpSettings" Redirection="CmpSettings, 3.5.17.0 (System)" />
-          <PlaceholderRedirection Placeholder="IODrvEtherCATDriver" Redirection="IODrvEtherCATDriver, 4.9.0.0 (CODESYS)" />
-          <PlaceholderRedirection Placeholder="SysTimeRtc" Redirection="SysTimeRtc, 3.5.20.0 (System)" />
+          <PlaceholderRedirection Placeholder="IODrvEtherCATDriver" Redirection="IODrvEtherCATDriver, 4.10.0.0 (CODESYS)" />
+          <PlaceholderRedirection Placeholder="SysTimeRtc" Redirection="SysTimeRtc, 3.5.21.30 (System)" />
           <PlaceholderRedirection Placeholder="CmpSrv" Redirection="CmpSrv, 3.5.17.0 (System)" />
           <PlaceholderRedirection Placeholder="CAA MemBlockMan" Redirection="CAA Memory Block Manager Extern, 3.5.18.0 (CAA Technical Workgroup)" />
-          <PlaceholderRedirection Placeholder="EtherCATStackLibrary" Redirection="EtherCATStack, 4.9.0.0 (CODESYS)" />
+          <PlaceholderRedirection Placeholder="EtherCATStackLibrary" Redirection="EtherCATStack, 4.10.0.0 (CODESYS)" />
           <PlaceholderRedirection Placeholder="StringUtils" Redirection="StringUtils, 3.5.20.0 (System)" />
           <PlaceholderRedirection Placeholder="CmpIoMgr Implementation" Redirection="CmpIoMgr Implementation, 3.5.17.0 (System)" />
           <PlaceholderRedirection Placeholder="CmpLog" Redirection="CmpLog, 3.5.21.0 (System)" />

@@ -13,7 +13,7 @@
                 <DeviceIdentification>
                   <Type>1026</Type>
                   <Id>0000 0001</Id>
-                  <Version>4.18.0.0</Version>
+                  <Version>4.19.0.0</Version>
                 </DeviceIdentification>
                 <Connector moduleType="1026" role="child" interface="Common.SoftMotion.CAN.DSP402" connectorId="0">
                   <HostParameterSet>
@@ -851,6 +851,36 @@ Example: assuming _bImmediateDisabling is FALSE, the value 2#0110 means that onl
                         <Value name="_x0037_116" visiblename="DSP402._bDriveStartRequiresOperationEnabled" desc="Whether bit 2 of the status word, operation enabled, needs to be TRUE for bDriveStartRealState to become TRUE.">TRUE</Value>
                         <Name>DSP402._bDriveStartRequiresOperationEnabled</Name>
                         <Description>Whether bit 2 of the status word, operation enabled, needs to be TRUE for bDriveStartRealState to become TRUE.</Description>
+                      </Parameter>
+                      <Parameter ParameterId="7117" type="std:BOOL" IndexInDevDesc="154">
+                        <Attributes />
+                        <Value name="_x0037_117" visiblename="DSP402._readVelocityFactor_6096" desc="Whether the velocity factor (object 6096) is read and used for the conversion of velocity units.  If FALSE, the velocity unit is assumed to be increments per second.">TRUE</Value>
+                        <Name>DSP402._readVelocityFactor_6096</Name>
+                        <Description>Whether the velocity factor (object 6096) is read and used for the conversion of velocity units.  If FALSE, the velocity unit is assumed to be increments per second.</Description>
+                      </Parameter>
+                      <Parameter ParameterId="7118" type="std:SINT" IndexInDevDesc="155">
+                        <Attributes />
+                        <Value name="_x0037_118" visiblename="DSP402._modeOfOperation_Torque" desc="The ModeOfOperation to be used for controller mode torque.  The mode must behave like cyclic sync torque mode.">10</Value>
+                        <Name>DSP402._modeOfOperation_Torque</Name>
+                        <Description>The ModeOfOperation to be used for controller mode torque.  The mode must behave like cyclic sync torque mode.</Description>
+                      </Parameter>
+                      <Parameter ParameterId="7119" type="std:SINT" IndexInDevDesc="156">
+                        <Attributes />
+                        <Value name="_x0037_119" visiblename="DSP402._modeOfOperation_Velocity" desc="The ModeOfOperation to be used for controller mode velocity.  The mode must behave like cyclic sync velocity mode.">9</Value>
+                        <Name>DSP402._modeOfOperation_Velocity</Name>
+                        <Description>The ModeOfOperation to be used for controller mode velocity.  The mode must behave like cyclic sync velocity mode.</Description>
+                      </Parameter>
+                      <Parameter ParameterId="7120" type="std:SINT" IndexInDevDesc="157">
+                        <Attributes />
+                        <Value name="_x0037_120" visiblename="DSP402._modeOfOperation_Position" desc="The ModeOfOperation to be used for controller mode position.  The mode must behave like cyclic sync position mode.">8</Value>
+                        <Name>DSP402._modeOfOperation_Position</Name>
+                        <Description>The ModeOfOperation to be used for controller mode position.  The mode must behave like cyclic sync position mode.</Description>
+                      </Parameter>
+                      <Parameter ParameterId="7121" type="std:BOOL" IndexInDevDesc="158">
+                        <Attributes />
+                        <Value name="_x0037_121" visiblename="DSP402._bStayInSwitchOnDisabled" desc="FALSE: an automatic transition from SWITCH_ON_DISABLED to READY_TO_SWITCH_ON is performed, if either MC_Power.bDriveStart is TRUE or the quick stop option code (object 0x605A:00) is &gt; 4. TRUE: the transition from SWITCH_ON_DISABLED to READY_TO_SWITCH_ON is only done if MC_Power.bRegulatorOn is TRUE.">TRUE</Value>
+                        <Name>DSP402._bStayInSwitchOnDisabled</Name>
+                        <Description>FALSE: an automatic transition from SWITCH_ON_DISABLED to READY_TO_SWITCH_ON is performed, if either MC_Power.bDriveStart is TRUE or the quick stop option code (object 0x605A:00) is &gt; 4. TRUE: the transition from SWITCH_ON_DISABLED to READY_TO_SWITCH_ON is only done if MC_Power.bRegulatorOn is TRUE.</Description>
                       </Parameter>
                     </ParameterSection>
                     <Parameter ParameterId="8015" type="std:STRING">

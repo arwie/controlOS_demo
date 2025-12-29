@@ -40,7 +40,7 @@
           <PlaceholderRedirection Placeholder="System_VisuElemsAlarm" Redirection="VisuElemsAlarm, 4.7.0.0 (System)" />
           <PlaceholderRedirection Placeholder="Standard64" Redirection="Standard64, 3.5.20.0 (System)" />
           <PlaceholderRedirection Placeholder="System_VisuElemsWinControls" Redirection="VisuElemsWinControls, 4.7.0.0 (System)" />
-          <PlaceholderRedirection Placeholder="FloatingPointUtils" Redirection="FloatingPointUtils, 3.5.21.0 (System)" />
+          <PlaceholderRedirection Placeholder="FloatingPointUtils" Redirection="FloatingPointUtils, 4.0.0.0 (System)" />
           <PlaceholderRedirection Placeholder="System_VisuNativeControl" Redirection="VisuNativeControl, 4.7.0.0 (System)" />
         </PlaceholderRedirections>
         <addData />
