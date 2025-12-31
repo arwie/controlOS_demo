@@ -18,12 +18,19 @@ VAR
 	shm: RTS_IEC_HANDLE;
 	sem: RTS_IEC_HANDLE;
 	iec_result: RTS_IEC_RESULT;
-	conflicts: UDINT := 0;
+	sync: BYTE := 0;
+	missed: UDINT := 0;
 END_VAR
 
 ////////////////////////////////
 
-sync();
+SysSharedMemoryRead (shm, 0, ADR(sync), SIZEOF(sync), ADR(iec_result));
+IF sync > 0 THEN
+	SysSharedMemoryRead (shm, SIZEOF(sync), ADR(cmd), SIZEOF(cmd), ADR(iec_result));
+ELSE
+	missed := missed + 1;
+END_IF
+
 
 IF init.done THEN
 	main();
@@ -31,4 +38,10 @@ ELSE
 	init();
 END_IF
 
-sync();
+
+IF sync > 0 THEN
+	sync := 0;
+	SysSharedMemoryWrite(shm, SIZEOF(sync) + SIZEOF(cmd), ADR(fbk), SIZEOF(fbk), ADR(iec_result));
+	SysSharedMemoryWrite(shm, 0, ADR(sync), SIZEOF(sync), ADR(iec_result));
+	SysSemProcessLeave(sem);
+END_IF

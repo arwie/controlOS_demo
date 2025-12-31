@@ -1,19 +1,5 @@
-// Copyright (c) 2023 Artur Wiebe <artur@4wiebe.de>
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
-// associated documentation files (the "Software"), to deal in the Software without restriction,
-// including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
-// and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so,
-// subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
-// INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-// IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-// WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
+// SPDX-FileCopyrightText: 2025 Artur Wiebe <artur@4wiebe.de>
+// SPDX-License-Identifier: MIT
 
 PROGRAM app
 
@@ -32,12 +18,19 @@ VAR
 	shm: RTS_IEC_HANDLE;
 	sem: RTS_IEC_HANDLE;
 	iec_result: RTS_IEC_RESULT;
-	conflicts: UDINT := 0;
+	sync: BYTE := 0;
+	missed: UDINT := 0;
 END_VAR
 
 ////////////////////////////////
 
-sync();
+SysSharedMemoryRead (shm, 0, ADR(sync), SIZEOF(sync), ADR(iec_result));
+IF sync > 0 THEN
+	SysSharedMemoryRead (shm, SIZEOF(sync), ADR(cmd), SIZEOF(cmd), ADR(iec_result));
+ELSE
+	missed := missed + 1;
+END_IF
+
 
 IF init.done THEN
 	main();
@@ -45,4 +38,10 @@ ELSE
 	init();
 END_IF
 
-sync();
+
+IF sync > 0 THEN
+	sync := 0;
+	SysSharedMemoryWrite(shm, SIZEOF(sync) + SIZEOF(cmd), ADR(fbk), SIZEOF(fbk), ADR(iec_result));
+	SysSharedMemoryWrite(shm, 0, ADR(sync), SIZEOF(sync), ADR(iec_result));
+	SysSemProcessLeave(sem);
+END_IF

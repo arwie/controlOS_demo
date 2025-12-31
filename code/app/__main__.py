@@ -28,7 +28,7 @@ async def operation():
 
 @app.context
 async def main():
-	async with codesys.exec(4*2/1000):
+	async with codesys.exec():
 		await app.poll(lambda: codesys.fbk.init_done)
 
 		async with sim.exec():
