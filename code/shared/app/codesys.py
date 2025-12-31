@@ -2,12 +2,13 @@
 # SPDX-License-Identifier: MIT
 
 import asyncio
-import mmap
+from mmap import mmap
 from ctypes import addressof, sizeof, memmove, c_byte, c_uint8, c_uint16, c_uint32
-import posix_ipc
+from posix_ipc import SharedMemory, Semaphore
 from pathlib import Path
 from functools import partial
 from contextlib import closing
+from threading import Thread
 from shared.codesys_types import AppCfg, AppCmd, AppFbk
 from . import app
 
@@ -45,8 +46,13 @@ async def shell_cmd(cmd:str):
 
 
 
+class closing_fd(closing):
+	def __exit__(self, *exc_info):
+		self.thing.close_fd() #type:ignore
+
+
 @app.context
-async def exec(period:float):
+async def exec():
 	Path('/run/codesys/cfg').write_bytes(bytes(cfg))
 
 	await shell_cmd('resetprgcold application')
@@ -56,35 +62,41 @@ async def exec(period:float):
 	if not await app.poll(Path('/dev/shm/codesys').exists, timeout=30):
 		raise Exception('codesys application not started')
 
-	sem = posix_ipc.Semaphore('/codesys')
-	shm = posix_ipc.SharedMemory('/codesys')
-	try:
-		with mmap.mmap(shm.fd, shm.size) as mapfile:
-			cmd_addr, cmd_size = addressof(cmd), sizeof(cmd)
-			fbk_addr, fbk_size = addressof(fbk), sizeof(fbk)
-			assert shm.size >= cmd_size + fbk_size
-			shm_cmd_addr = addressof(c_byte.from_buffer(mapfile))
-			shm_fbk_addr = addressof(c_byte.from_buffer(mapfile, cmd_size))
+	with (
+		closing_fd(SharedMemory('/codesys')) as shm,
+		closing(Semaphore('/codesys')) as sem,
+		mmap(shm.fd, shm.size) as mapfile
+	):
+		cmd_addr, cmd_size = addressof(cmd), sizeof(cmd)
+		fbk_addr, fbk_size = addressof(fbk), sizeof(fbk)
+		assert shm.size >= 1 + cmd_size + fbk_size
 
-			@app.aux_task
-			async def sync_loop():
-				while True:
-					with sem:
-						memmove(shm_cmd_addr, cmd_addr, cmd_size)
-						memmove(fbk_addr, shm_fbk_addr, fbk_size)
-					_sync_trigger()
-					await asyncio.sleep(period)
+		shm_addr = addressof(c_byte.from_buffer(mapfile))
+		shm_sync_flag = c_byte.from_address(shm_addr)
+		shm_cmd_addr = shm_addr + sizeof(shm_sync_flag)
+		shm_fbk_addr = shm_cmd_addr + cmd_size
 
-			async with sync_loop():
-				await sync()
-				try:
-					yield
-				finally:
-					await sync()
+		def shm_sync():
+			memmove(shm_cmd_addr, cmd_addr, cmd_size)
+			memmove(fbk_addr, shm_fbk_addr, fbk_size)
+			shm_sync_flag.value = 1
+			_sync_trigger()
 
-	finally:
-		shm.close_fd()
-		sem.close()
+		def shm_sync_loop(event_loop=asyncio.get_running_loop()):
+			while mapfile is not None:
+				sem.acquire()
+				event_loop.call_soon_threadsafe(shm_sync)
+
+		shm_sync_thread = Thread(target=shm_sync_loop)
+		shm_sync_thread.start()
+		try:
+			await sync()
+			yield
+		finally:
+			mapfile = None
+			sem.release() #release shm_sync_thread in case codesys application is not running
+			shm_sync_thread.join()
+			await asyncio.sleep(0) #allow scheduled shm_sync to run before closing mmap
 
 
 

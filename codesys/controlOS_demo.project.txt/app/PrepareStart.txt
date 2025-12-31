@@ -6,9 +6,13 @@ END_VAR
 
 ////////////////////////////////
 
-shm_size := SIZEOF(fbk) + SIZEOF(cmd);
+shm_size := SIZEOF(sync) + SIZEOF(fbk) + SIZEOF(cmd);
+
 sem := SysSemProcessCreate('codesys', ADR(iec_result));
 shm := SysSharedMemoryCreate('codesys', 0, ADR(shm_size), ADR(iec_result));	
+
+SysSharedMemoryWrite(shm, 0, ADR(sync), SIZEOF(sync), ADR(iec_result));
+SysSemProcessLeave(sem);
 
 cfg_fh := SysFileOpen(CFG_FILE, SysFile.ACCESS_MODE.AM_READ, ADR(iec_result));
 IF cfg_fh <> RTS_INVALID_HANDLE THEN

@@ -30,7 +30,7 @@
           <PlaceholderRedirection Placeholder="Standard64" Redirection="Standard64, 3.5.20.0 (System)" />
           <PlaceholderRedirection Placeholder="StringUtils" Redirection="StringUtils, 3.5.20.0 (System)" />
           <PlaceholderRedirection Placeholder="System_VisuElemBase" Redirection="VisuElemBase, 4.7.0.0 (System)" />
-          <PlaceholderRedirection Placeholder="FloatingPointUtils" Redirection="FloatingPointUtils, 3.5.21.0 (System)" />
+          <PlaceholderRedirection Placeholder="FloatingPointUtils" Redirection="FloatingPointUtils, 4.0.0.0 (System)" />
           <PlaceholderRedirection Placeholder="System_VisuInputs" Redirection="VisuInputs, 4.7.0.0 (System)" />
         </PlaceholderRedirections>
         <addData />
