@@ -152,7 +152,7 @@
                     </Parameter>
                     <Parameter ParameterId="805326848" type="std:DWORD" IndexInDevDesc="11">
                       <Attributes />
-                      <Value name="_x0038_05326848" visiblename="MasterCycleTime" desc="Master Cycle Time">4000</Value>
+                      <Value name="_x0038_05326848" visiblename="MasterCycleTime" desc="Master Cycle Time">2000</Value>
                       <Name>MasterCycleTime</Name>
                       <Description>Master Cycle Time</Description>
                     </Parameter>

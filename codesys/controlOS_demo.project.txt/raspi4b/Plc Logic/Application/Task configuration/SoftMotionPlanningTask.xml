@@ -9,7 +9,7 @@
   <addData>
     <data name="http://www.3s-software.com/plcopenxml/application" handleUnknown="implementation">
       <resource name="Application">
-        <task name="SoftMotionPlanningTask" priority="15">
+        <task name="SoftMotionPlanningTask" priority="30">
           <pouInstance name="NCInterpreter" typeName="">
             <documentation>
               <xhtml xmlns="http://www.w3.org/1999/xhtml" />

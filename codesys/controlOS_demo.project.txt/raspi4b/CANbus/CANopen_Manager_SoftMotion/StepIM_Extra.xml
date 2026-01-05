@@ -101,7 +101,7 @@
                           <Attributes download="false" onlineaccess="read" />
                           <Value name="_x0031_6797696" visiblename="Sync-General Parameters" onlineaccess="read">
                             <Element name="SyncCOBID" visiblename="Sync-COBID">16#00000080</Element>
-                            <Element name="CommCyclePeriod" visiblename="Communication Cycle Period">16#00000FA0</Element>
+                            <Element name="CommCyclePeriod" visiblename="Communication Cycle Period">16#000007D0</Element>
                           </Value>
                           <Name>Sync-General Parameters</Name>
                         </Parameter>
@@ -824,8 +824,8 @@
                         <Value name="_x0031_7" visiblename="SDO Timeout" onlineaccess="read">1000000</Value>
                         <Name>SDO Timeout</Name>
                       </Parameter>
-                      <Parameter ParameterId="536875008" type="localTypes:ARRAY[0..118] OF Struct_SDOParameters">
-                        <Attributes offlineaccess="read" onlineaccess="read" driverSpecific="119" />
+                      <Parameter ParameterId="536875008" type="localTypes:ARRAY[0..120] OF Struct_SDOParameters">
+                        <Attributes offlineaccess="read" onlineaccess="read" driverSpecific="121" />
                         <Value name="_x0035_36875008_0_0_0" visiblename="Set COB-ID sync" offlineaccess="read" onlineaccess="read">
                           <Element name="Index" visiblename="Index">16#1005</Element>
                           <Element name="Subindex" visiblename="Subindex">16#00</Element>
@@ -841,7 +841,7 @@
                         <Value name="_x0035_36875008_1_0_0" visiblename="Set communication cycle period" offlineaccess="read" onlineaccess="read">
                           <Element name="Index" visiblename="Index">16#1006</Element>
                           <Element name="Subindex" visiblename="Subindex">16#00</Element>
-                          <Element name="Value" visiblename="Value">16#00000FA0</Element>
+                          <Element name="Value" visiblename="Value">16#000007D0</Element>
                           <Element name="Size" visiblename="Size">32</Element>
                           <Element name="AbortIfError" visiblename="AbortIfError">FALSE</Element>
                           <Element name="JumpToLine" visiblename="JumpToLine">FALSE</Element>
@@ -2252,6 +2252,27 @@
                           <Element name="Line" visiblename="Line">0</Element>
                           <Custom>
                             <ImplicitSDO />
+                          </Custom>
+                        </Value>
+                        <Value name="_x0035_36875008_119_0_0" visiblename="Time Units">
+                          <Element name="Index" visiblename="Index">16#60C2</Element>
+                          <Element name="Subindex" visiblename="Subindex">16#01</Element>
+                          <Element name="Value" visiblename="Value">2</Element>
+                          <Element name="Size" visiblename="Size">8</Element>
+                          <Element name="AbortIfError" visiblename="AbortIfError">FALSE</Element>
+                          <Element name="JumpToLine" visiblename="JumpToLine">FALSE</Element>
+                          <Element name="Line" visiblename="Line">0</Element>
+                        </Value>
+                        <Value name="_x0035_36875008_120_0_0" visiblename="Time Index">
+                          <Element name="Index" visiblename="Index">16#60C2</Element>
+                          <Element name="Subindex" visiblename="Subindex">16#02</Element>
+                          <Element name="Value" visiblename="Value">16#FFFFFFFD</Element>
+                          <Element name="Size" visiblename="Size">8</Element>
+                          <Element name="AbortIfError" visiblename="AbortIfError">FALSE</Element>
+                          <Element name="JumpToLine" visiblename="JumpToLine">FALSE</Element>
+                          <Element name="Line" visiblename="Line">0</Element>
+                          <Custom>
+                            <Signed />
                           </Custom>
                         </Value>
                         <Name>SDO List</Name>

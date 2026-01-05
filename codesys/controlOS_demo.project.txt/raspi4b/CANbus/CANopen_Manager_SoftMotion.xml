@@ -39,7 +39,7 @@
                     </Parameter>
                     <Parameter ParameterId="256" type="std:DWORD" IndexInDevDesc="4">
                       <Attributes />
-                      <Value name="_x0032_56" visiblename="Sync CycleTime in Microseconds">4000</Value>
+                      <Value name="_x0032_56" visiblename="Sync CycleTime in Microseconds">2000</Value>
                       <Name>Sync CycleTime in Microseconds</Name>
                     </Parameter>
                     <Parameter ParameterId="257" type="std:BOOL" IndexInDevDesc="5">
