@@ -22,7 +22,7 @@ setRootView({
 	components: { RootView, PageLink, DiagDropdown, LocaleDropdown, PoweroffDropdown },
 	template: //html
 	`
-	<RootView>
+	<RootView :title="$t('title')">
 		<template #navbar>
 			<PageLink v-for="to in links" :to />
 		</template>

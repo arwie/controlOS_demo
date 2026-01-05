@@ -7,7 +7,7 @@ import sim
 import teach
 
 
-from programs import conv_pick_virt as program
+from programs import io_wave as program
 
 
 
