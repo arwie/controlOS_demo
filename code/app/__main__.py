@@ -1,4 +1,4 @@
-from shared import app
+from shared import app, system
 from shared.app import codesys
 import drives
 from robot import robot
@@ -7,7 +7,7 @@ import sim
 import teach
 
 
-from programs import io_wave as program
+from programs import conv_pick_virt as program
 
 
 
@@ -29,6 +29,11 @@ async def operation():
 @app.context
 async def main():
 	async with codesys.exec():
+
+		# RT: tune SPI kernel threads on RPI
+		for proc in ('spi0','irq/[0-9]*-spi0.0'):
+			system.run(f'taskset -pc 2 $(pgrep -x {proc})', check=False)
+
 		await app.poll(lambda: codesys.fbk.init_done)
 
 		async with sim.exec():

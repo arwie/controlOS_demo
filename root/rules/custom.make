@@ -14,8 +14,7 @@ $(STATEDIR)/custom.targetinstall:
 	@$(call install_init, custom)
 
 
-	@$(call install_link, custom, ../rt-setup-irq@.service, /usr/lib/systemd/system/basic.target.wants/rt-setup-irq@can0.service)
-	@$(call install_link, custom, ../rt-setup-irq@.service, /usr/lib/systemd/system/basic.target.wants/rt-setup-irq@spi0.service)
+	@$(call install_link, custom, ../rt-setup-irq@.service, /usr/lib/systemd/system/basic.target.wants/rt-setup-irq@fe204000.service) #SPI
 
 	@$(call install_alternative, custom, 0, 0, 0644, /etc/hostapd/local.conf)
 

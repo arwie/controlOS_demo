@@ -9,7 +9,7 @@
   <addData>
     <data name="http://www.3s-software.com/plcopenxml/application" handleUnknown="implementation">
       <resource name="Application">
-        <task name="BusTask" interval="PT0.002S" priority="11">
+        <task name="BusTask" interval="PT0.004S" priority="11">
           <pouInstance name="app" typeName="">
             <documentation>
               <xhtml xmlns="http://www.w3.org/1999/xhtml" />
@@ -17,7 +17,7 @@
           </pouInstance>
           <addData>
             <data name="http://www.3s-software.com/plcopenxml/tasksettings" handleUnknown="implementation">
-              <TaskSettings KindOfTask="Cyclic" Interval="2000" IntervalUnit="µs" WithinSPSTimeSlicing="true">
+              <TaskSettings KindOfTask="Cyclic" Interval="4000" IntervalUnit="µs" WithinSPSTimeSlicing="true">
                 <Watchdog Enabled="false" TimeUnit="ms" />
               </TaskSettings>
             </data>

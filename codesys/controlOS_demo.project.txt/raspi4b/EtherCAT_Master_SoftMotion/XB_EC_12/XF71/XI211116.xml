@@ -197,7 +197,7 @@
                       <Description />
                       <Parameter ParameterId="1610633216" type="std:DWORD" IndexInDevDesc="27">
                         <Attributes />
-                        <Value name="_x0031_610633216" visiblename="DC sync0 cycletime" desc="DC sync0 cycletime">2000</Value>
+                        <Value name="_x0031_610633216" visiblename="DC sync0 cycletime" desc="DC sync0 cycletime">4000</Value>
                         <Name>DC sync0 cycletime</Name>
                         <Description>DC sync0 cycletime</Description>
                       </Parameter>
@@ -215,7 +215,7 @@
                       </Parameter>
                       <Parameter ParameterId="1610764288" type="std:DWORD" IndexInDevDesc="31">
                         <Attributes />
-                        <Value name="_x0031_610764288" visiblename="DC sync1 cycletime" desc="DC sync1 cycletime">2000</Value>
+                        <Value name="_x0031_610764288" visiblename="DC sync1 cycletime" desc="DC sync1 cycletime">4000</Value>
                         <Name>DC sync1 cycletime</Name>
                         <Description>DC sync1 cycletime</Description>
                       </Parameter>
