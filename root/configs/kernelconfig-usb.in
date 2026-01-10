@@ -1,6 +1,10 @@
 
+## UGREEN USB-HUB USB-Ethernet
+CONFIG_USB_NET_AX8817X=m
+CONFIG_USB_NET_AX88179_178A=m
+
 ## WLAN-Dongle Wi-Pi
-## firmware: rt2870.bin
+## firmware: */rt2870.bin
 CONFIG_RT2X00=m
 CONFIG_RT2800USB=m
 CONFIG_RT2800USB_RT33XX=y
@@ -10,10 +14,3 @@ CONFIG_RT2800USB_RT53XX=y
 CONFIG_RT2800USB_RT55XX=y
 CONFIG_RT2800USB_UNKNOWN=y
 
-## WLAN-Dongle VIA VNT9271
-## firmware: ath9k_htc/htc_9271-1.4.0.fw
-CONFIG_ATH9K_HTC=m
-
-## Delock USB-Ethernet 62616
-## firmware: rtl_nic/rtl8153a-4.fw
-CONFIG_USB_RTL8152=m

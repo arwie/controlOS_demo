@@ -1,6 +1,6 @@
 #
 # Automatically generated file; DO NOT EDIT.
-# PTXdist 2025.10.0
+# PTXdist 2026.01.0
 #
 PTXCONF__platformconfig_MAGIC__=y
 
@@ -19,7 +19,7 @@ PTXCONF_PLATFORM="raspi4b"
 PTXCONF_PLATFORM_VERSION=""
 PTXCONF_RUNTIME=y
 PTXCONF_BUILDTIME=y
-PTXCONF_PLATFORMCONFIG_VERSION="2025.10.0"
+PTXCONF_PLATFORMCONFIG_VERSION="2026.01.0"
 
 #
 # architecture                  
@@ -141,6 +141,7 @@ PTXCONF_KERNEL_DTS="broadcom/bcm2711-rpi-4-b.dts"
 # PTXCONF_KERNEL_OPENSSL is not set
 # PTXCONF_KERNEL_LIBELF is not set
 # PTXCONF_KERNEL_GCC_PLUGINS is not set
+# PTXCONF_KERNEL_RUST is not set
 # PTXCONF_KERNEL_CONFIG_BASE_VERSION is not set
 
 #
