@@ -2,10 +2,7 @@ PROGRAM Exec_Robot
 VAR
 	i: INT;
 
-	GroupReadStatus: MC_GroupReadStatus;
-	GroupPower: SMC_GroupPower;
-	GroupReset: MC_GroupReset;
-	
+	StatusPowerGroup: FB_StatusPowerGroup;
 	GroupSetOverride: MC_GroupSetOverride;
 	GroupHalt: MC_GroupHalt;
 
@@ -18,29 +15,16 @@ VAR
 END_VAR
 ////////////////////////////////
 
-GroupReadStatus(
-	AxisGroup := Robot,	
-	Enable := TRUE,
-);
-
-GroupReset(
-	AxisGroup := Robot,
-	Execute :=  app.cmd.rbt_reset AND GroupReadStatus.GroupErrorStop,
-);
-
-
-GroupPower(
-	AxisGroup := Robot,
-	Enable := TRUE,
-	bRegulatorOn := app.cmd.rbt_power OR GroupReadStatus.GroupMoving OR GroupReadStatus.GroupStopping,
-	bDriveStart  := app.cmd.rbt_power OR GroupReadStatus.GroupMoving OR GroupReadStatus.GroupStopping,
-	Status => app.fbk.rbt_powered
+StatusPowerGroup(
+	Group := Robot,
+	power := app.cmd.rbt_power,
+	powered => app.fbk.rbt_powered
 );
 
 
 GroupSetOverride(
 	AxisGroup := Robot,
-	Enable := GroupPower.Status AND NOT GroupReadStatus.GroupErrorStop,
+	Enable := StatusPowerGroup.powered AND NOT StatusPowerGroup.Status.GroupErrorStop,
 	VelFactor     := app.cmd.rbt_override,
 	PathVelFactor := app.cmd.rbt_override,
 );
@@ -48,14 +32,13 @@ GroupSetOverride(
 
 GroupHalt(
 	AxisGroup := Robot,
-	Execute := GroupPower.Status AND app.cmd.rbt_move = 0,
+	Execute := StatusPowerGroup.powered AND app.cmd.rbt_move = 0,
 	Deceleration := app.cfg.robot_acc,
 	Jerk         := app.cfg.robot_jrk,
 );
 
 
-app.fbk.rbt_move_done  := FALSE;
-app.fbk.rbt_move_error := FALSE;
+ResetErrorDone();
 
 
 //-1: Homing
@@ -67,8 +50,7 @@ GroupSetPosition(
 	Execute := app.cmd.rbt_move = -1,
 	CoordSystem := SMC_COORD_SYSTEM.ACS,
 );
-app.fbk.rbt_move_done  := app.fbk.rbt_move_done  OR GroupSetPosition.Done;
-app.fbk.rbt_move_error := app.fbk.rbt_move_error OR GroupSetPosition.Error;
+SetErrorDone(GroupSetPosition.Error, GroupSetPosition.Done);
 
 
 //1: MoveDirectAbsolute
@@ -79,12 +61,10 @@ MoveDirectAbsolute(
 	CoordSystem := SMC_COORD_SYSTEM.ACS,
 	VelFactor := app.cmd.rbt_move_fvel,
 );
-app.fbk.rbt_move_done  := app.fbk.rbt_move_done  OR MoveDirectAbsolute.Done;
-app.fbk.rbt_move_error := app.fbk.rbt_move_error OR MoveDirectAbsolute.Error;
+SetErrorDone(MoveDirectAbsolute.Error, MoveDirectAbsolute.Done);
 
 
 //2: MoveLinearAbsolute
-
 MEMUtils.MemCpy(ADR(MoveLinearAbsolute.Position.v), ADR(app.cmd.rbt_move_coord), SIZEOF(app.cmd.rbt_move_coord));
 MoveLinearAbsolute(
 	AxisGroup := Robot,
@@ -95,31 +75,25 @@ MoveLinearAbsolute(
 	Deceleration := app.cfg.robot_acc,
 	Jerk         := app.cfg.robot_jrk,
 );
-app.fbk.rbt_move_done  := app.fbk.rbt_move_done  OR MoveLinearAbsolute.Done;
-app.fbk.rbt_move_error := app.fbk.rbt_move_error OR MoveLinearAbsolute.Error;
+SetErrorDone(MoveLinearAbsolute.Error, MoveLinearAbsolute.Done);
 
 
 //11: CNC
-
 NCInterpreter.execute := app.cmd.rbt_move = 11;
 NCInterpreter.interpolate();
-app.fbk.rbt_move_done  := app.fbk.rbt_move_done  OR NCInterpreter.done;
-app.fbk.rbt_move_error := app.fbk.rbt_move_error OR NCInterpreter.error;
+SetErrorDone(NCInterpreter.Error, NCInterpreter.Done);
 
 
 //31: Conv pick
-
 MEMUtils.MemCpy(ADR(Conv_Pick.ItemPos), ADR(app.cmd.rbt_move_coord), SIZEOF(app.cmd.rbt_move_coord));
 Conv_Pick(
 	Execute := app.cmd.rbt_move = 31,
 	ItemConv := app.cmd.rbt_move_coord_conv,
 );
-app.fbk.rbt_move_done  := app.fbk.rbt_move_done  OR Conv_Pick.Done;
-app.fbk.rbt_move_error := app.fbk.rbt_move_error OR Conv_Pick.Error;
+SetErrorDone(Conv_Pick.Error, Conv_Pick.Done);
 
 
 //99: JOG
-
 GroupJog.MaxLinearDistance := 0.001;
 FOR i := 0 TO 2 DO
 	GroupJog.Forward[i]  := app.cmd.rbt_move_coord[i] > 0;
@@ -140,3 +114,4 @@ GroupJog(
 	JerkFactor := 1,
 );
 app.fbk.rbt_move_error := app.fbk.rbt_move_error OR GroupJog.error;
+SetErrorDone(GroupJog.Error, FALSE);

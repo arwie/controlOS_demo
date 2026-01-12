@@ -1,0 +1,60 @@
+// SPDX-FileCopyrightText: 2025 Artur Wiebe <artur@4wiebe.de>
+// SPDX-License-Identifier: MIT
+
+FUNCTION_BLOCK FB_StatusPowerGroup
+VAR_INPUT
+	Group:		REFERENCE TO AXIS_GROUP_REF_SM3;
+	power:		BOOL;
+END_VAR
+VAR_OUTPUT
+	Status:		MC_GroupReadStatus;
+	powered:	BOOL;
+	moving:		BOOL;
+	error:		BOOL;
+END_VAR
+VAR
+	GroupReset: MC_GroupReset;
+	GroupPower: SMC_GroupPower;
+	ResetTrig:	R_TRIG;
+	PoweredTON:	TON;
+	resetEn:	BOOL;
+END_VAR
+
+////////////////////////////////
+
+Status(
+	AxisGroup := Group,
+	Enable := TRUE,
+);
+moving := NOT (Status.GroupStandby OR Status.GroupErrorStop OR Status.GroupDisabled);
+
+
+ResetTrig(CLK := power);
+IF ResetTrig.Q THEN
+	resetEn := TRUE;
+END_IF
+
+GroupReset(
+	AxisGroup := Group,
+	Execute := resetEn AND Status.GroupErrorStop,
+	Error => error,
+);
+
+IF powered THEN
+	resetEn := FALSE;
+END_IF
+
+
+GroupPower.bRegulatorOn := power OR moving;
+GroupPower(
+	AxisGroup := Group,
+	Enable := TRUE,
+	bDriveStart := GroupPower.bRegulatorOn,
+);
+
+PoweredTON(
+	IN := GroupPower.Status,
+	PT := T#40MS,
+);
+
+powered := PoweredTON.Q AND (powered OR NOT Status.GroupErrorStop);

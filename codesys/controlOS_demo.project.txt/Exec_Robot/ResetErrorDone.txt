@@ -1,0 +1,6 @@
+METHOD ResetErrorDone
+
+////////////////////////////////
+
+app.fbk.rbt_move_error  := FALSE;
+app.fbk.rbt_move_done := FALSE;

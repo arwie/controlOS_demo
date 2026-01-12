@@ -1,0 +1,6 @@
+METHOD ResetErrorDone
+
+////////////////////////////////
+
+app.fbk.conv_move_error  := FALSE;
+app.fbk.conv_move_done := FALSE;

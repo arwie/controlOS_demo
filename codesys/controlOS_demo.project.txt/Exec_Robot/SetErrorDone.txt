@@ -1,0 +1,10 @@
+METHOD SetErrorDone
+VAR_INPUT
+	error: BOOL;
+	done:  BOOL;
+END_VAR
+
+////////////////////////////////
+
+app.fbk.rbt_move_error := app.fbk.rbt_move_error OR error;
+app.fbk.rbt_move_done  := app.fbk.rbt_move_done  OR done;

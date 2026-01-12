@@ -1,3 +1,4 @@
+from typing import Literal
 from shared import app
 from shared.app.codesys import CanopenDevice
 from ctypes import c_uint8, c_uint16, c_uint32
@@ -35,6 +36,21 @@ class StepIM(CanopenDevice):
 			await robot_a.sdo_write((0x6065, 0), c_uint32(error_drive))
 
 
+	async def set_baud_rate(self, baud_rate:Literal[1000,500,250]):
+		"""
+		Set the baud rate of the drive in the CANopen network.
+		
+		:param baud_rate: CAN Baud rate in Kbit/s
+		"""
+		values = {
+			1000:	0,
+			500:	2,
+			250:	3,
+		}
+		await self.sdo_write((0x2F1F,0), c_uint16(values[baud_rate]))
+		await self._save()
+
+
 	async def _save(self):
 		await self.sdo_write((0x1010,1), c_uint32(0x65766173))
 		await app.sleep(3)
@@ -49,9 +65,8 @@ robot_a = RobotDrive(1, 'Robot_A', 70)
 robot_b = RobotDrive(2, 'Robot_B', 70)
 robot_c = RobotDrive(3, 'Robot_C', 70)
 
-
-
-conv_drive = StepIM(4, 'Conv', 20)
+conv_drive  = StepIM(4, 'Conv', 20)
+extra_drive = StepIM(5, 'Extra')
 
 
 

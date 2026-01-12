@@ -42,15 +42,14 @@ class robot:
 
 	@asynccontextmanager
 	async def power(self):
-		codesys.cmd.rbt_power = codesys.cmd.rbt_reset = True
+		codesys.cmd.rbt_power = True
 		try:
 			if not await codesys.poll(lambda: codesys.fbk.rbt_powered, timeout=3):
 				raise Exception('Failed to power on robot')
-			codesys.cmd.rbt_reset = False
 			app.log.info('Robot power enabled')
 			yield
 		finally:
-			codesys.cmd.rbt_power = codesys.cmd.rbt_reset = False
+			codesys.cmd.rbt_power = False
 			if not await codesys.poll(lambda: not codesys.fbk.rbt_powered, timeout=3):
 				app.log.warning('Robot not disabled in time')
 			await app.sleep(0.2) #Let the hardware settle befor next enable

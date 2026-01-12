@@ -25,7 +25,7 @@
                       <Description />
                       <Parameter ParameterId="0" type="std:INT" IndexInDevDesc="0">
                         <Attributes />
-                        <Value name="_x0030_" visiblename="Baudrate">1000</Value>
+                        <Value name="_x0030_" visiblename="Baudrate">500</Value>
                         <Name>Baudrate</Name>
                         <Unit>kbit/s</Unit>
                       </Parameter>

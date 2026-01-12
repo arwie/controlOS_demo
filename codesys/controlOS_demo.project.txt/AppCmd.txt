@@ -3,7 +3,6 @@ STRUCT
 	co:		CoCmd;
 
 	rbt_power:				BOOL;
-	rbt_reset:				BOOL;
 	rbt_override:			LREAL;
 	rbt_move:				INT;
 	rbt_move_coord:			ARRAY [0..2] OF LREAL;
@@ -11,7 +10,6 @@ STRUCT
 	rbt_move_fvel:			LREAL;
 
 	conv_power:				BOOL;
-	conv_reset:				BOOL;
 	conv_move:				INT;
 	conv_move_vel:			LREAL;
 

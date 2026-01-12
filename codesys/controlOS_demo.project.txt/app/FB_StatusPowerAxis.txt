@@ -1,0 +1,60 @@
+// SPDX-FileCopyrightText: 2025 Artur Wiebe <artur@4wiebe.de>
+// SPDX-License-Identifier: MIT
+
+FUNCTION_BLOCK FB_StatusPowerAxis
+VAR_INPUT
+	Axis:		REFERENCE TO AXIS_REF_SM3;
+	power:		BOOL;
+END_VAR
+VAR_OUTPUT
+	Status:		MC_ReadStatus;
+	powered:	BOOL;
+	moving:		BOOL;
+	error:		BOOL;
+END_VAR
+VAR
+	AxisReset:	MC_Reset;
+	AxisPower:	MC_Power;
+	ResetTrig:	R_TRIG;
+	PoweredTON:	TON;
+	resetEn:	BOOL;
+END_VAR
+
+////////////////////////////////
+
+Status(
+	Axis := Axis,
+	Enable := TRUE,
+);
+moving := NOT (Status.StandStill OR Status.Errorstop OR Status.Disabled);
+
+
+ResetTrig(CLK := power);
+IF ResetTrig.Q THEN
+	resetEn := TRUE;
+END_IF
+
+AxisReset(
+	Axis := Axis,
+	Execute := resetEn AND Status.ErrorStop,
+	Error => error,
+);
+
+IF powered THEN
+	resetEn := FALSE;
+END_IF
+
+
+AxisPower.bRegulatorOn := power OR moving;
+AxisPower(
+	Axis := Axis,
+	Enable := TRUE,
+	bDriveStart := AxisPower.bRegulatorOn,
+);
+
+PoweredTON(
+	IN := AxisPower.Status,
+	PT := T#40MS,
+);
+
+powered := PoweredTON.Q AND (powered OR NOT Status.Errorstop);

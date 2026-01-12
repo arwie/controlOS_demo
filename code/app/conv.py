@@ -30,15 +30,14 @@ class conv:
 
 	@asynccontextmanager
 	async def power(self):
-		codesys.cmd.conv_power = codesys.cmd.conv_reset = True
+		codesys.cmd.conv_power = True
 		try:
 			if not await codesys.poll(lambda: codesys.fbk.conv_powered, timeout=3):
 				raise Exception('Failed to power on conveyor')
-			codesys.cmd.conv_reset = False
 			app.log.info('Conveyor power enabled')
 			yield
 		finally:
-			codesys.cmd.conv_power = codesys.cmd.conv_reset = False
+			codesys.cmd.conv_power = False
 			if not await codesys.poll(lambda: not codesys.fbk.conv_powered, timeout=3):
 				app.log.warning('Conveyor not disabled in time')
 			await app.sleep(0.2) #Let the hardware settle befor next enable
