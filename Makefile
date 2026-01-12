@@ -1,9 +1,10 @@
 PLATFORM ?= x86
+JOBS ?= $(shell jmax=16 ; j=$$(nproc); echo $$((j < jmax ? j : jmax)))
 
 PLATFORMCONFIG = configs/platform-$(PLATFORM)/platformconfig
 KERNELCONFIG   = configs/platform-$(PLATFORM)/kernelconfig
 
-PTXDIST = ptxdist --quiet --progress -j$(shell nproc) --platformconfig=$(PLATFORMCONFIG)
+PTXDIST = ptxdist --quiet --progress -j$(JOBS) --platformconfig=$(PLATFORMCONFIG)
 
 
 
