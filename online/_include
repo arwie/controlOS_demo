@@ -1,0 +1,10 @@
+HOST=${HOST:-${1:-controlOS}}
+
+SSHKEY=$(realpath keys/id_rsa)
+SSHDST="root@$HOST"
+SSHCMD="ssh -t -i$SSHKEY"
+
+SSH() {
+	echo "ssh: $@" >&2
+	$SSHCMD $SSHDST $@  || exit 1
+}

@@ -1,27 +1,28 @@
 #!/bin/sh
 
-BASEDIR=$(dirname "$(realpath "$0")")
-PROJECTDIR=$(realpath "$BASEDIR/..")
+cd "$(dirname "$(realpath "$0")")/.."
 
-. "$BASEDIR/config"
+. ptxdist/config
 
 IMAGE=ptxdist-$PTXDIST_VERSION
 HOMEDIR=/home/dev
-WORKDIR=$HOMEDIR/$(basename "$PROJECTDIR")
+WORKDIR="$HOMEDIR/$(basename "$PWD")"
 
-[ -L "$PROJECTDIR/keys" ] \
-	&& BIND_KEYS="--volume=$PROJECTDIR/keys:$(realpath "$PROJECTDIR/keys")"
+[ -L keys ] \
+	&& BIND_KEYS="$(realpath keys)"
 
-podman run \
+
+exec podman run \
 	--rm \
 	--tty \
 	--interactive \
 	--userns=keep-id:uid=1000,gid=1000 \
 	"--volume=$IMAGE-src:$HOMEDIR/src" \
 	"--volume=$IMAGE-cache:$HOMEDIR/.cache" \
-	"--volume=$PROJECTDIR:$WORKDIR" \
-	${BIND_KEYS:+"$BIND_KEYS"} \
+	"--volume=$PWD:$WORKDIR" \
+	${BIND_KEYS:+"--volume=$BIND_KEYS:$BIND_KEYS"} \
 	"--workdir=$WORKDIR" \
 	--hostname=${IMAGE//./-} \
 	--name=$IMAGE \
-	$IMAGE
+	$IMAGE \
+	"$@"

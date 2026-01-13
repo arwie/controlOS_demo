@@ -67,7 +67,6 @@ $(STATEDIR)/codesys.targetinstall:
 
 	@$(call install_alternative, codesys, 0, 0, 0644, /usr/lib/systemd/system/codesys-proxy.service)
 	@$(call install_alternative, codesys, 0, 0, 0644, /usr/lib/systemd/system/codesys-proxy.socket)
-	@$(call install_link,        codesys, ../codesys-proxy.socket, /usr/lib/systemd/system/debug.target.wants/codesys-proxy.socket)
 
 	@$(call install_alternative, codesys, 0, 0, 0644, /usr/lib/systemd/system/codesys.service)
 	@$(call install_link,        codesys, ../codesys.service, /usr/lib/systemd/system/multi-user.target.wants/codesys.service)

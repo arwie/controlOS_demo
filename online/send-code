@@ -1,0 +1,25 @@
+#!/bin/sh
+
+cd "$(dirname "$(realpath "$0")")/.." && . online/_include
+
+
+RSYNC() {
+	echo "rsync: $@"
+	[ -n "$(rsync -rltpE -i -e "$SSHCMD" $1 $SSHDST:$2)" ]
+}
+
+
+online/mount-rw
+
+
+RSYNC code/shared /usr/lib/python3.13/site-packages \
+	&& SENT_SHARED=1
+
+
+RSYNC code/app /usr/lib \
+	|| [ -n "$SENT_SHARED" ] && SSH "systemctl --quiet restart app.service" &
+
+RSYNC code/gui /usr/lib \
+	|| [ -n "$SENT_SHARED" ] && SSH "systemctl --quiet stop gui-*.service" &
+
+wait

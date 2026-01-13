@@ -53,8 +53,6 @@ $(STATEDIR)/system.targetinstall:
 	@$(call install_link,        system, ../backup.socket, /usr/lib/systemd/system/sockets.target.wants/backup.socket)
 
 	# development tools
-	@$(call install_copy,        system, 0, 0, 0700, /root)
-	@$(call install_alternative, system, 0, 0, 0644, /root/.profile)
 	@$(call install_alternative, system, 0, 0, 0644, /usr/lib/systemd/system/debug.target)
 	@$(call install_alternative, system, 0, 0, 0644, /usr/lib/systemd/system/remote@.service)
 	

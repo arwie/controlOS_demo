@@ -1,0 +1,8 @@
+#!/bin/sh
+
+cd "$(dirname "$(realpath "$0")")/.." && . online/_include
+
+
+online/mount-rw
+
+SSH "systemctl start codesys-proxy.socket"

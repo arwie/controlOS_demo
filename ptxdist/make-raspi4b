@@ -1,0 +1,5 @@
+#!/bin/sh
+
+cd "$(dirname "$(realpath "$0")")/.."
+
+exec ptxdist/run make PLATFORM=raspi4b "$@"

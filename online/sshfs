@@ -1,0 +1,19 @@
+#!/bin/sh
+
+[ "$1" = "--rw" ] && shift && RW=1
+
+cd "$(dirname "$(realpath "$0")")/.." && . online/_include
+
+
+SSHFSMNT=online/root
+
+mkdir -p $SSHFSMNT
+
+[ -n "$RW" ] && online/mount-rw
+
+echo "Mounting rootfs at $SSHFSMNT"
+exec sshfs -f \
+	-o IdentityFile=$SSHKEY \
+	-o auto_unmount \
+	$SSHDST:/ \
+	$SSHFSMNT

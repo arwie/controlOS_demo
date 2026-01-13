@@ -1,0 +1,9 @@
+#!/bin/sh
+
+cd "$(dirname "$(realpath "$0")")/.." && . online/_include
+
+
+PLATFORM=$(SSH ". /etc/os-release && echo -n \$PTXDIST_PLATFORM_NAME") || exit 1
+echo "Platform: $PLATFORM"
+
+pv root/platform-$PLATFORM/images/update | SSH "update --bare"

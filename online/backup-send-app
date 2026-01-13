@@ -1,0 +1,8 @@
+#!/bin/sh
+
+FILE="$1" && shift
+
+cd "$(dirname "$(realpath "$0")")/.." && . online/_include
+
+
+gpg --homedir=keys --decrypt --batch --no-permission-warning --passphrase="" "$FILE" | SSH "tar -xJ -C/ etc/app  && reboot"

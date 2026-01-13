@@ -1,0 +1,15 @@
+#!/bin/sh
+
+PORT=${1:-65000} && shift
+
+HOST="remote.4wiebe.de"
+
+cd "$(dirname "$(realpath "$0")")/.." && . online/_include
+
+
+exec $SSHCMD \
+	-p $PORT \
+	-C \
+	-o Tunnel=ethernet \
+	-w 0:0 \
+	$SSHDST

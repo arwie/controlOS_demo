@@ -1,0 +1,63 @@
+#!/bin/sh
+
+# SPDX-FileCopyrightText: 2026 Artur Wiebe <artur@4wiebe.de>
+# SPDX-License-Identifier: MIT
+
+show_help() {
+	cat <<-EOF
+	Usage: gitdir GITNAME [REMOTE_URL]
+
+	Manage multiple Git repositories in the same working directory using
+	separate .git directories.
+
+	ARGUMENTS:
+	  GITNAME      Name identifier for the git repository (e.g., 'config', 'scripts')
+	               Creates/uses .git-GITNAME directory
+	  REMOTE_URL   (Optional) Remote repository URL for initial setup
+
+	BEHAVIOR:
+	  If .git-GITNAME exists: Opens shell in that git context
+	  If .git-GITNAME doesn't exist: Initializes repo with REMOTE_URL and fetches remote
+	  Each gitdir session spawns a new shell with GIT_DIR and GIT_WORK_TREE
+	  set appropriately. All git commands in that shell operate on the
+	  specific .git-GITNAME repository. Type 'exit' to leave the session.
+
+	EXAMPLES:
+	  # First time: Initialize new repo with remote
+	  gitdir config https://github.com/user/config-files.git
+
+	  # Subsequent times: Enter existing repo context
+	  gitdir config
+
+	  # Work with different repo in same directory
+	  gitdir scripts https://github.com/user/scripts.git
+	EOF
+}
+
+if [ "$1" = "-h" ] || [ "$1" = "--help" ] || [ -z "$1" ]; then
+	show_help
+	exit 0
+fi
+
+
+GITNAME="$1"
+export GIT_DIR="$PWD/.git-$GITNAME"
+export GIT_WORK_TREE="$PWD"
+
+
+if [ ! -d "$GIT_DIR" ]; then
+	if [ -z "$2" ]; then
+		echo "ERROR: $GITNAME not found"
+		exit 1
+	fi
+	
+	git init
+	git config status.showUntrackedFiles no
+	git remote add --fetch --master=main origin "$2"
+	git reset origin/HEAD
+fi
+
+
+export PROMPT_COMMAND="PS1=$GITNAME:\$(basename \$PWD)'\\$ '"
+
+exec /bin/bash --login

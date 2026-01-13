@@ -1,0 +1,6 @@
+#!/bin/sh
+
+cd "$(dirname "$(realpath "$0")")/.." && . online/_include
+
+
+SSH "mount --options=remount,rw --target=/"
