@@ -1,6 +1,7 @@
 from contextlib import asynccontextmanager
 from shared.utils import instantiate
 from pathlib import Path
+from math import fmod
 from shared import app
 from shared.app import codesys
 from shared.condition import Timer, Timeout
@@ -82,6 +83,11 @@ class robot:
 		await self._move_exec(31)
 
 
+	async def set_position(self, axes:Axes):
+		codesys.cmd.rbt_move_coord[:] = axes.a, axes.b, axes.c
+		await self._move_exec(-1)
+
+
 	async def _move_exec(self, move:int):
 		codesys.cmd.rbt_move = move
 		try:
@@ -90,6 +96,11 @@ class robot:
 		finally:
 			codesys.cmd.rbt_move = 0
 			await codesys.sync()
+
+
+	async def set_torque(self, torque:float=100):
+		for drive in (robot_a, robot_b, robot_c):
+			await drive.set_torque(torque)
 
 
 	@asynccontextmanager
@@ -128,28 +139,27 @@ class robot:
 	async def home(self):
 		app.log.info(f'Robot homing started at {robot.axes()}')
 
-		HOME_AXES = Axes(310-53.37, 310-55.37, 310-52.43) #manually calibrated
-
-		async def setup_drives(torque, following_error):
-			for drive in (robot_a, robot_b, robot_c):
-				await drive.set_torque(torque)
-				await drive.set_following_error(following_error)
-
-		async def set_position(axes:Axes):
-			codesys.cmd.rbt_move_coord[:] = axes.a, axes.b, axes.c
-			await self._move_exec(-1)
-
-		await setup_drives(20, 200)
+		await self.set_torque(20)
+		for drive in (robot_a, robot_b, robot_c):
+			await drive.set_following_error(200)
 
 		async with self.power():
-			await app.sleep(1)
-			await set_position(Axes(370, 370, 370))
+			await self.set_position(Axes(370, 370, 370))
 			await self.move_direct(Axes(200, 200, 200), 5)
-			await set_position(HOME_AXES)
-			await self.move_direct(HOME_AXES, 30)
-			await self.move_direct(Axes(300, 300, 300), 10)
 
-		await setup_drives(100, 10)
+		await self.set_torque()
+		for drive in (robot_a, robot_b, robot_c):
+			await drive.set_following_error()
+
+		async with self.power():
+			await app.sleep(0.5)
+			offsets = [
+				drive.pos_offset + fmod(await drive.get_internal_pos(), drive.rev_units)
+				for drive in (robot_a, robot_b, robot_c)
+			]
+			await self.set_position(Axes(*offsets))
+			await self.move_direct(Axes(250, 250, 250), 5)
+
 		app.log.info(f'Robot homing finished at {robot.axes()}')
 
 

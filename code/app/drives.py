@@ -1,12 +1,14 @@
 from typing import Literal
 from shared import app
 from shared.app.codesys import CanopenDevice
-from ctypes import c_uint8, c_uint16, c_uint32
+from ctypes import c_uint8, c_uint16, c_uint32, c_int32
 from shared import system
+from shared.conf import Conf
 
 
 POSITION_FACTOR_ROBOT = 4096 / 70
 
+conf = Conf('/etc/app/drives.conf')
 virtual = system.virtual()
 
 
@@ -16,13 +18,19 @@ class StepIM(CanopenDevice):
 	def __init__(self, slave:int, name:str, rev_units:float=360):
 		super().__init__(slave)
 		self.name = name
+		self.rev_units = rev_units
 		self.pos_factor = 4096 / rev_units
+		self.pos_offset = conf.getfloat(name, 'offset', fallback=0.0)
 
 
 	async def initialize(self):
 		if not virtual:
-			self.max_current = await self.sdo_read((0x6075, 0))
+			self.max_current = await self.sdo_read((0x6075, 0), c_uint32)
 
+
+	async def get_internal_pos(self):
+		"""6064h: Position Actual Internal Value"""
+		return await self.sdo_read((0x6064,0), c_int32) / self.pos_factor
 
 	async def set_torque(self, torque:float=100):
 		if not virtual:
@@ -30,7 +38,9 @@ class StepIM(CanopenDevice):
 			await robot_a.sdo_write((0x6073, 0), c_uint16(current))
 
 
-	async def set_following_error(self, error:float):
+	async def set_following_error(self, error:float|None=None):
+		if error is None:
+			error = 0.01 * self.rev_units
 		if not virtual:
 			error_drive = int(error * self.pos_factor)
 			await robot_a.sdo_write((0x6065, 0), c_uint32(error_drive))
@@ -75,3 +85,9 @@ async def initialize():
 		await drive.initialize()
 
 	await app.sleep(1) # drives jump if enabled too soon (Servotronix bug)
+
+
+
+drive_by_name = {
+	drive.name: drive for drive in (robot_a, robot_b, robot_c, conv_drive, extra_drive)
+}
