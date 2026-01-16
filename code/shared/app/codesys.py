@@ -3,7 +3,7 @@
 
 import asyncio
 from mmap import mmap
-from ctypes import addressof, sizeof, memmove, c_byte, c_uint8, c_uint16, c_uint32
+from ctypes import addressof, sizeof, memmove, c_byte, c_uint8, c_int8, c_uint16, c_int16, c_uint32, c_int32
 from posix_ipc import SharedMemory, Semaphore
 from pathlib import Path
 from functools import partial
@@ -101,6 +101,9 @@ async def exec():
 
 
 
+SDO_TYPES = c_uint8 | c_int8 | c_uint16 | c_int16 | c_uint32 | c_int32
+
+
 class EthercatDevice:
 
 	_co_lock = asyncio.Lock()
@@ -111,12 +114,12 @@ class EthercatDevice:
 		self.master = master
 
 
-	async def sdo_read(self, addr:tuple[int, int]):
+	async def sdo_read(self, addr: tuple[int, int], data_type: type[SDO_TYPES] = c_uint32):
 		async with self._co_lock:
-			return await self._sdo_exec(1, addr)
+			return data_type(await self._sdo_exec(1, addr)).value
 
 
-	async def sdo_write(self, addr:tuple[int, int], data: c_uint8 | c_uint16 | c_uint32):
+	async def sdo_write(self, addr: tuple[int, int], data: SDO_TYPES):
 		async with self._co_lock:
 			cmd.co.dataLength = sizeof(data)
 			cmd.co.data = data.value
