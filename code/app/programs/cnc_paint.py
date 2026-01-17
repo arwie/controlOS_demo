@@ -9,7 +9,7 @@ Z_TRAVERSE = -590
 SMOOTHING  = 15
 
 
-web_placeholder = app.web.placeholder('paint')
+web_placeholder = app.web.placeholder('cnc_paint')
 
 
 

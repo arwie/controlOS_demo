@@ -42,7 +42,7 @@ export function url(url='', port=null, host=null) {
 		},
 
 		async postJson(body, options={}) {
-			if (body && !(body instanceof Blob)) {
+			if (body !== undefined && !(body instanceof Blob)) {
 				body = jsonStringify(body);
 			}
 			const result = await this.post(body, options);

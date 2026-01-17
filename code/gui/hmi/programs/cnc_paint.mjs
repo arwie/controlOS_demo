@@ -1,18 +1,17 @@
 import { shallowReactive, shallowRef } from 'vue'
 import { url, poll } from 'web/utils'
-import { PressButton } from 'web/widgets'
 import { hmiIndex } from 'hmi';
 
 
 
-hmiIndex.addPage('paint', {
-	targetGuard: 'app@paint',
+hmiIndex.addPage('cnc_paint', {
+	targetGuard: 'app@cnc_paint',
 	async setup() {
 
 		const info = shallowRef();
 		const paths = shallowReactive([]);
 
-		const ws = url('paint', 'app').webSocketJson((msg)=>{
+		const ws = url('cnc_paint', 'app').webSocketJson((msg)=>{
 			info.value = msg;
 		});
 

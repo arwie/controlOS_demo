@@ -40,7 +40,7 @@ class StepIM(CanopenDevice):
 
 	async def set_following_error(self, error:float|None=None):
 		if error is None:
-			error = 0.01 * self.rev_units
+			error = 0.1 * self.rev_units
 		if not virtual:
 			error_drive = int(error * self.pos_factor)
 			await robot_a.sdo_write((0x6065, 0), c_uint32(error_drive))

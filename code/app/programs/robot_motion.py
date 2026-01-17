@@ -4,7 +4,7 @@ from coordinates import Axes, Pos
 
 
 
-ZERO_AXES = Axes(320, 320, 320)
+ZERO_AXES = Axes(300, 300, 300)
 
 
 
@@ -21,10 +21,10 @@ async def demo_move_direct(rounds):
 async def demo_move_linear(rounds):
 	async with robot.power():
 		for _ in range(rounds):
-			await robot.move_linear(Pos(80,  170, -580))
-			await robot.move_linear(Pos(80, -170, -580))
-			await robot.move_linear(Pos(-110,  150, -600))
-			await robot.move_linear(Pos(-110, -150, -600))
+			await robot.move_linear(Pos(80,  170, -560))
+			await robot.move_linear(Pos(80, -170, -560))
+			await robot.move_linear(Pos(-110,  150, -580))
+			await robot.move_linear(Pos(-110, -150, -580))
 		await robot.move_direct(ZERO_AXES, 60)
 
 
@@ -34,10 +34,10 @@ async def demo_move_cnc(rounds):
 		for _ in range(rounds):
 			await robot.move_cnc("""
 				N10 G51  D250
-				N21 G01  X80    Y170   Z-580
-				N22 G01  X80    Y-170  Z-580
-				N23 G01  X-110  Y150   Z-600
-				N24 G01  X-110  Y-150  Z-600
+				N21 G01  X80    Y170   Z-560
+				N22 G01  X80    Y-170  Z-560
+				N23 G01  X-110  Y150   Z-580
+				N24 G01  X-110  Y-150  Z-580
 			""")
 		await robot.move_direct(ZERO_AXES, 60)
 

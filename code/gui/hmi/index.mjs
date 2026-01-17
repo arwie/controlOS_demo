@@ -40,15 +40,20 @@ setRootView({
 addPage('/', {
 	template: //html
 	`
-	<div class="jumbotron">
+	<div class="my-5">
 		<h1 class="display-4">Dipl.-Ing. Artur Wiebe</h1>
 		<h2>Software-Ingenieur</h2>
 		<hr class="my-4">
-		
 		<p class="lead">
-			<i class="fa fa-envelope mr-3"></i>	<a href="mailto:artur@4wiebe.de">artur@4wiebe.de</a> <br>
-			<i class="fa fa-phone mr-3"></i>	<a href="tel:+491632699840">+491632699840</a> <br>
-			<i class="fa fa-globe mr-3"></i>	<a href="https://engineering.4wiebe.de" target="_blank">engineering.4wiebe.de</a> <br>
+			<i class="fa fa-envelope me-2"></i>
+			<a href="mailto:artur@4wiebe.de">artur@4wiebe.de</a>
+			<br>
+			<i class="fa fa-phone me-2"></i>
+			<a href="tel:+491632699840">+491632699840</a>
+			<br>
+			<i class="fa fa-globe me-2"></i>
+			<a href="https://engineering.4wiebe.de" target="_blank">engineering.4wiebe.de</a>
+			<br>
 		</p>
 	</div>
 	`

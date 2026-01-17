@@ -18,8 +18,8 @@ hmiIndex.addPage('calib_robot', {
 			drives.value = await drivesUrl.fetchJson();
 		});
 
-		function save(ev, name) {
-			feedback(ev.target, drivesUrl.postJson({ name, calibPos:calibPos.value }));
+		async function save(ev, name) {
+			await feedback(ev.target, drivesUrl.postJson({ name, calibPos:calibPos.value }));
 			drivesPoll();
 		}
 

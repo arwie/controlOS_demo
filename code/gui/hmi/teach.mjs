@@ -51,30 +51,7 @@ hmiIndex.addPage('teach', {
 	template: //html
 	`
 	<div class="mb-3">
-		<label class="form-label" data-l10n-id="teach_tool"></label>
-		<div class="row">
-			<div class="col">
-				<select @change="selectTool" :value="info.tool" class="form-select">
-					<option value="0"  data-l10n-id="tool_none"></option>
-					<option value="1"  data-l10n-id="tool_magnet"></option>
-					<option value="2"  data-l10n-id="tool_vacuum"></option>
-					<option value="10" data-l10n-id="tool_laser"></option>
-					<option value="11" data-l10n-id="tool_probe"></option>
-				</select>
-			</div>
-			<div class="col-2">
-				<div class="form-check form-switch mt-2">
-					<input @change="gripTool" :value="info.gripped" type="checkbox" class="form-check-input" id="teach_grip">
-					<label class="form-check-label" for="teach_grip" data-l10n-id="teach_grip"></label>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<hr class="my-4">
-
-	<div class="mb-3">
-		<label class="form-label" data-l10n-id="teach_position"></label>
+		<label class="form-label">{{ $t('hmi.teach.pos') }}</label>
 		<div class="row gy-1 gx-3">
 			<div v-for="k in ['x','y','z','r']" class="input-group col-sm">
 				<span class="input-group-text">{{k.toUpperCase()}}</span>
@@ -84,7 +61,7 @@ hmiIndex.addPage('teach', {
 	</div>
 
 	<div class="mb-3">
-		<label class="form-label" data-l10n-id="teach_snap"></label>
+		<label class="form-label">{{ $t('hmi.teach.snap') }}</label>
 		<div class="row gy-1 gx-3">
 			<div v-for="k in ['x','y','z','r']" class="input-group col-sm">
 				<span class="input-group-text">{{k.toUpperCase()}}</span>
@@ -94,7 +71,7 @@ hmiIndex.addPage('teach', {
 	</div>
 
 	<div class="mb-3">
-		<label class="form-label" data-l10n-id="teach_speed"></label>
+		<label class="form-label">{{ $t('hmi.teach.speed') }}</label>
 		<input v-model.number="speed" type="range" min="0.1" max="8" step="0.1" class="form-range">
 	</div>
 
@@ -139,7 +116,7 @@ hmiIndex.addPage('teach', {
 	<hr class="my-4">
 
 	<div class="mb-3">
-		<label class="form-label" data-l10n-id="teach_conv"></label>
+		<label class="form-label">{{ $t('hmi.teach.conv') }}</label>
 		<div class="input-group input-group-lg">
 			<PressButton @press="moveConv(-1)" @release="moveStop" class="btn btn-secondary w-25">
 				<i class="fas fa-minus"></i>
@@ -148,6 +125,29 @@ hmiIndex.addPage('teach', {
 			<PressButton @press="moveConv(1)" @release="moveStop" class="btn btn-secondary w-25">
 				<i class="fas fa-plus"></i>
 			</PressButton>
+		</div>
+	</div>
+
+	<hr class="my-4">
+
+	<div class="mb-3">
+		<label class="form-label">{{ $t('hmi.teach.tool') }}</label>
+		<div class="row">
+			<div class="col">
+				<select @change="selectTool" :value="info.tool" class="form-select">
+					<option value="0"  data-l10n-id="tool_none"></option>
+					<option value="1"  data-l10n-id="tool_magnet"></option>
+					<option value="2"  data-l10n-id="tool_vacuum"></option>
+					<option value="10" data-l10n-id="tool_laser"></option>
+					<option value="11" data-l10n-id="tool_probe"></option>
+				</select>
+			</div>
+			<div class="col-2">
+				<div class="form-check form-switch mt-2">
+					<input @change="gripTool" :value="info.gripped" type="checkbox" class="form-check-input" id="teach_grip">
+					<label class="form-check-label" for="teach_grip" data-l10n-id="teach_grip"></label>
+				</div>
+			</div>
 		</div>
 	</div>
 	`

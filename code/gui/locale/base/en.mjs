@@ -7,6 +7,7 @@ export default {
 	help: "Help",
 	save: "Save",
 	apply: "Apply",
+	cancel: "Cancel",
 	execute: "Execute",
 	connect: "Connect",
 	disconnect: "Disconnect",
