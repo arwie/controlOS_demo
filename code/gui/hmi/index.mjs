@@ -6,6 +6,7 @@ import { RootView, PageLink } from 'web/widgets'
 import { DiagDropdown } from 'diag'
 import { PoweroffDropdown } from 'system/power'
 import { LocaleDropdown } from 'web/locale'
+import { RobotOverride } from 'hmi/override'
 
 
 
@@ -19,17 +20,18 @@ setRootView({
 			links: [...hmiIndex.children],
 		}
 	},
-	components: { RootView, PageLink, DiagDropdown, LocaleDropdown, PoweroffDropdown },
+	components: { RootView, PageLink, DiagDropdown, LocaleDropdown, PoweroffDropdown, RobotOverride },
 	template: //html
 	`
 	<RootView :title="$t('title')">
 		<template #navbar>
-			<PageLink v-for="to in links" :to />
+			<PageLink v-for="to in links" :to/>
 		</template>
 		<template #navbar-right>
-			<DiagDropdown />
-			<LocaleDropdown />
-			<PoweroffDropdown />
+			<RobotOverride class="nav-item me-2" style="min-width:30rem;"/>
+			<DiagDropdown/>
+			<LocaleDropdown/>
+			<PoweroffDropdown/>
 		</template>
 	</RootView>
 	`

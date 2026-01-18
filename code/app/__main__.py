@@ -7,12 +7,25 @@ import programs
 
 
 
+web_placeholder = app.web.placeholder('robot_override')
+
+class WebHandler(app.web.RequestHandler):
+
+	def get(self):
+		self.write(robot.override)
+
+	def post(self):
+		robot.override = self.read_json()
+
+
+
 @app.context
 async def operation():
 	await drives.initialize()
 	await robot.home()
 
-	await programs.run()
+	async with web_placeholder.handle(WebHandler):
+		await programs.run()
 
 
 

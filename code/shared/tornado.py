@@ -27,7 +27,7 @@ class RequestHandler(tornado.web.RequestHandler):
 		self.set_header('Cache-Control', 'no-store, must-revalidate')
 
 	def read_json(self):
-		return json.loads(self.request.body.decode())
+		return json.loads(self.request.body)
 
 	def write(self, msg: bytes | Any):
 		if not isinstance(msg, bytes):

@@ -25,7 +25,7 @@ class UdpMaster(asyncio.DatagramProtocol):
 
 
 	def datagram_received(self, data, addr):
-		self.fbk.update(json.loads(data.decode()))
+		self.fbk.update(json.loads(data))
 		self.connected = True
 		self.timeout.reset()
 
