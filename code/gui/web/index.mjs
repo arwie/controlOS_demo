@@ -68,6 +68,7 @@ export default async function() {
 			watchdog = null;
 			console.log('GUI: disconnected!');
 			document.getElementById('gui-disconnected')?.showModal();
+			targets.value.length = 0;
 			poll(3000, ()=>{
 				url('web.targets').post(null, { signal: AbortSignal.timeout(3000) })
 					.then(()=>location.reload())
