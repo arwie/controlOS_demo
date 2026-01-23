@@ -2,8 +2,7 @@
 # SPDX-License-Identifier: MIT
 
 import logging
-import os
-import sys
+import sys, os
 from pathlib import Path
 from io import StringIO
 from traceback import TracebackException
@@ -21,9 +20,6 @@ if TYPE_CHECKING:
 		return JournalLogger(name)
 else:
 	from logging import getLogger
-
-
-term = 'TERM' in os.environ
 
 
 
@@ -120,7 +116,7 @@ class JournalHandler(logging.Handler):
 logging.setLoggerClass(JournalLogger)
 
 logging.root.addHandler(JournalHandler())
-if term:
+if 'TERM' in os.environ:
 	logging.root.addHandler(logging.StreamHandler())
 
 logging.captureWarnings(True)

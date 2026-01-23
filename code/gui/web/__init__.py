@@ -52,7 +52,7 @@ class files(ModuleHandler):
 		cls.globs.extend(globs)
 
 	async def export_default(self):
-		globs = (cwd.glob(glob) for glob in self.globs)
+		globs = (cwd.glob(glob, recurse_symlinks=True) for glob in self.globs)
 		files = set(str(path.relative_to(cwd)) for path in chain(*globs) if path.is_file() and path.exists())
 		return {
 			file: self.static_url(file) for file in files

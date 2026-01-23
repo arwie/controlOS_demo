@@ -1,6 +1,6 @@
 #!/usr/bin/python -Bu
 
-from os import symlink
+from pathlib import Path
 from shared.setup import setup
 from shared import system
 
@@ -13,4 +13,6 @@ if system.virtual():
 
 if application:
 	print('Selected application:', application)
-	symlink(f'/opt/codesys/PlcLogic/{application}', '/run/codesys/Application')
+	link = Path('/run/codesys/Application')
+	link.unlink(True)
+	link.symlink_to(f'/opt/codesys/PlcLogic/{application}')

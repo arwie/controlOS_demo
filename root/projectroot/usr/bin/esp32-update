@@ -1,21 +1,7 @@
 #!/usr/bin/python -Bu
 
-# Copyright (c) 2022 Artur Wiebe <artur@4wiebe.de>
-#
-# Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
-# associated documentation files (the "Software"), to deal in the Software without restriction,
-# including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
-# and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so,
-# subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
-# INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-# WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
+# SPDX-FileCopyrightText: 2025 Artur Wiebe <artur@4wiebe.de>
+# SPDX-License-Identifier: MIT
 
 from typing import Any
 import argparse, json, tempfile, os, subprocess
@@ -29,6 +15,8 @@ parser = argparse.ArgumentParser()
 parser.add_argument("name", nargs='?', help="name of the esp32 project")
 parser.add_argument("--ip", help="ip address")
 args = parser.parse_args()
+
+term = 'TERM' in os.environ
 
 
 log.info(f'update esp32 project: {args.name}')
@@ -45,9 +33,8 @@ if flashconf.getboolean('net', 'wifi', fallback=True):
 		'psk':		Path('/etc/hostapd/hostapd.wpa_psk').read_text().strip().split()[1]
 	}
 if args.ip:
-	ip = f"{gethostbyname('sys').rpartition('.')[0]}.{args.ip}" if args.ip.isdigit() else gethostbyname(args.ip)
 	cfg['net'] = {
-		'ip':	ip,
+		'ip':	gethostbyname(args.ip),
 	}
 
 with tempfile.NamedTemporaryFile() as cfgFile:
@@ -63,7 +50,7 @@ with tempfile.NamedTemporaryFile() as cfgFile:
 	}
 	system.run(
 		['esptool.py', 'write_flash', *flash['boot'], *flash['part'], *flash['cfg'], *flash['ota'], *flash['app']],
-		stdout=(None if log.term else subprocess.PIPE)
+		stdout=(None if term else subprocess.PIPE)
 	)
 
 log.info('esp32 updated successfully')

@@ -52,7 +52,7 @@ types = {
 for struct_name in export_types:
 	print('exporting:', struct_name)
 
-	struct_text = project.find(struct_name)[0].textual_declaration.text
+	struct_text = project.find(struct_name, True)[0].textual_declaration.text
 
 	imports = []
 	fields  = []
