@@ -30,6 +30,8 @@ class StepIM(CanopenDevice):
 
 	async def get_internal_pos(self):
 		"""6064h: Position Actual Internal Value"""
+		if virtual:
+			return 0.0
 		return await self.sdo_read((0x6064,0), c_int32) / self.pos_factor
 
 	async def set_torque(self, torque:float=100):
