@@ -15,9 +15,8 @@ END_VAR
 VAR
 	GroupReset: MC_GroupReset;
 	GroupPower: SMC_GroupPower;
-	ResetTrig:	R_TRIG;
 	PoweredTON:	TON;
-	resetEn:	BOOL;
+	resetEn:	RS;
 END_VAR
 
 ////////////////////////////////
@@ -26,23 +25,8 @@ Status(
 	AxisGroup := Group,
 	Enable := TRUE,
 );
+
 moving := NOT (Status.GroupStandby OR Status.GroupErrorStop OR Status.GroupDisabled);
-
-
-ResetTrig(CLK := power);
-IF ResetTrig.Q THEN
-	resetEn := TRUE;
-END_IF
-
-GroupReset(
-	AxisGroup := Group,
-	Execute := resetEn AND Status.GroupErrorStop,
-	Error => error,
-);
-
-IF powered THEN
-	resetEn := FALSE;
-END_IF
 
 
 GroupPower.bRegulatorOn := power OR moving;
@@ -58,3 +42,15 @@ PoweredTON(
 );
 
 powered := PoweredTON.Q AND (powered OR NOT Status.GroupErrorStop);
+
+
+resetEn(
+	SET := power,
+	RESET1 := powered,
+);
+
+GroupReset(
+	AxisGroup := Group,
+	Execute := resetEn.Q1 AND Status.GroupErrorStop,
+	Error => error,
+);

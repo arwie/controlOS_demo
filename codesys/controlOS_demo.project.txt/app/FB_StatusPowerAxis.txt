@@ -15,9 +15,8 @@ END_VAR
 VAR
 	AxisReset:	MC_Reset;
 	AxisPower:	MC_Power;
-	ResetTrig:	R_TRIG;
 	PoweredTON:	TON;
-	resetEn:	BOOL;
+	resetEn:	RS;
 END_VAR
 
 ////////////////////////////////
@@ -26,23 +25,8 @@ Status(
 	Axis := Axis,
 	Enable := TRUE,
 );
+
 moving := NOT (Status.StandStill OR Status.Errorstop OR Status.Disabled);
-
-
-ResetTrig(CLK := power);
-IF ResetTrig.Q THEN
-	resetEn := TRUE;
-END_IF
-
-AxisReset(
-	Axis := Axis,
-	Execute := resetEn AND Status.ErrorStop,
-	Error => error,
-);
-
-IF powered THEN
-	resetEn := FALSE;
-END_IF
 
 
 AxisPower.bRegulatorOn := power OR moving;
@@ -58,3 +42,15 @@ PoweredTON(
 );
 
 powered := PoweredTON.Q AND (powered OR NOT Status.Errorstop);
+
+
+resetEn(
+	SET := power,
+	RESET1 := powered,
+);
+
+AxisReset(
+	Axis := Axis,
+	Execute := resetEn.Q1 AND Status.ErrorStop,
+	Error => error,
+);

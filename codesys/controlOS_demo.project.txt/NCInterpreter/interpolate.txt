@@ -13,7 +13,6 @@ Interpolator(
 	iVelMode := SMC_INT_VELMODE.QUADRATIC_SMOOTH,
 	dJerkMax := app.cfg.robot_jrk,
 	bEmergency_Stop := ControlAxisByPos_A.bStopIpo OR ControlAxisByPos_B.bStopIpo OR ControlAxisByPos_C.bStopIpo,
-	bDone  => done,
 );
 
 pos.c.X := Interpolator.piSetPosition.dX;
@@ -59,3 +58,4 @@ ControlAxisByPos_C(
 );
 
 error := Interpolator.bError OR ControlAxisByPos_A.bError OR ControlAxisByPos_B.bError OR ControlAxisByPos_C.bError;
+done  := Interpolator.bDone AND NOT (ControlAxisByPos_A.bBusy OR ControlAxisByPos_B.bBusy OR ControlAxisByPos_C.bBusy);
