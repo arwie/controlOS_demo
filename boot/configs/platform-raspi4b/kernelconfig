@@ -1,6 +1,6 @@
 #
 # Automatically generated file; DO NOT EDIT.
-# Linux/arm64 6.12.62 Kernel Configuration
+# Linux/arm64 6.12.67 Kernel Configuration
 #
 CONFIG_CC_VERSION_TEXT="aarch64-v8a-linux-gnu-gcc (OSELAS.Toolchain-2024.11.1 14-20250308) 14.2.1 20250308"
 CONFIG_CC_IS_GCC=y

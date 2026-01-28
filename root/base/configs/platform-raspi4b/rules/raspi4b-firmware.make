@@ -4,7 +4,7 @@
 PACKAGES-$(PTXCONF_RASPI4B_FIRMWARE) += raspi4b-firmware
 
 # Firmware files taken from:
-# https://archlinuxarm.org/packages/any/firmware-raspberrypi
+# https://github.com/RPi-Distro/firmware-nonfree/tree/trixie/debian/config/brcm80211
 
 RASPI4B_FIRMWARE_VERSION		:= 20231022
 
