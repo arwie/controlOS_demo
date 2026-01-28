@@ -1,8 +1,8 @@
 from asyncio import Event
-from dataclasses import astuple
 from numbers import Number
 from shared import app
-from robot import robot, Pos
+from robot import robot
+from coordinates import Pos, astuple, asdict
 from conv import conv
 
 
@@ -19,7 +19,7 @@ async def exec():
 			def update(cls):
 				return {
 					'robot': {
-						'pos': robot.pos().asdict(),
+						'pos': asdict(robot.pos()),
 					},
 					'conv': {
 						'pos': conv.pos(),

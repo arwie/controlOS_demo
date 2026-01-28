@@ -1,12 +1,13 @@
 from shared import app
-from robot import robot, Axes
+from robot import robot
+from coordinates import Axes, asdict
 from cnc import CNCProgram
 
 
 
 Z_PAINT    = -600
 Z_TRAVERSE = -590
-SMOOTHING  = 15
+SMOOTHING = 3
 
 
 web_placeholder = app.web.placeholder('cnc_paint')
@@ -32,7 +33,7 @@ async def cmd_handler(cmd, data:dict):
 
 			async with robot.power():
 				await robot.move_cnc(cnc)
-				await robot.move_direct(Axes(300, 300, 300), 60)
+				await robot.move_direct(Axes(260, 260, 260), 60)
 
 
 
@@ -40,7 +41,7 @@ class WebHandler(app.web.WebSocketHandler):
 	@classmethod
 	def update(cls):
 		return {
-			'pos': robot.pos().asdict(),
+			'pos': asdict(robot.pos()),
 			'busy': cmd_handler.busy(),
 		}
 
@@ -51,7 +52,7 @@ class WebHandler(app.web.WebSocketHandler):
 
 @app.context
 async def exec():
-	robot.override = 30
+	robot.override = 25
 
 	async with web_placeholder.handle(WebHandler, update_period=0.05):
 		async with cmd_handler.exec():

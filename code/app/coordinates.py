@@ -15,12 +15,6 @@ class Axes:
 	b: float = 0
 	c: float = 0
 
-	def astuple(self):
-		return astuple(self)
-
-	def asdict(self):
-		return asdict(self)
-
 	def __add__(self, other:Axes):
 		return Axes(
 			a = self.a + other.a,
@@ -66,9 +60,6 @@ class Pos:
 			z = float(data['z']),
 			r = float(data['r']),
 		)
-
-	def asdict(self):
-		return asdict(self)
 
 	def __add__(self, other:Pos):
 		return Pos(
