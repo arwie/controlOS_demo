@@ -14,6 +14,9 @@ export default {
 		cnc_paint: {
 			title: "CNC-Zeichnen",
 			description: "CODESYS SoftMotion CNC mit kontinuierlicher Pfadinterpolation",
+			prompt: "Sag Claude {model}, was es zeichnen soll",
+			model: "Claude Modell",
+			thinking: "Nachdenken",
 		},
 		conv_pick_virt: {
 			title: "Förderbandverfolgung mit virtuellen Objekten",

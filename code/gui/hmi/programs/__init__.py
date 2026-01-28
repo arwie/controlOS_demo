@@ -12,6 +12,7 @@ web.files.glob('hmi/programs/*.jpg')
 
 web.document.imports.append('hmi/programs')
 
+from . import cnc_paint
+
 web.document.imports.append('hmi/programs/calib_robot')
-web.document.imports.append('hmi/programs/cnc_paint')
 web.document.imports.append('hmi/programs/io_wave')

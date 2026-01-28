@@ -14,6 +14,9 @@ export default {
 		cnc_paint: {
 			title: "CNC Paint",
 			description: "CODESYS SoftMotion CNC continuous path interpolation",
+			prompt: "Tell Claude {model} what to draw",
+			model: "Claude Model",
+			thinking: "Thinking"
 		},
 		conv_pick_virt: {
 			title: "Conveyor tracking with virtual items",
