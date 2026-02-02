@@ -4,7 +4,7 @@
 %}
 
 <!DOCTYPE html>
-<html style="overscroll-behavior:none;">
+<html>
 
 <head>
 	<meta charset="utf-8"/>
@@ -20,9 +20,14 @@
 	<script type="importmap">
 		{ "imports": {% raw importmap %} }
 	</script>
+
+	<style>
+		html, body { overscroll-behavior: none; }
+		#gui-disconnected::backdrop { background-color: rgba(0, 0, 0, 0.4); }
+	</style>
 </head>
 
-<body style="overscroll-behavior:none;" class="vh-100">
+<body class="vh-100">
 
 	<div id="gui-view" class="h-100"></div>
 
@@ -32,9 +37,6 @@
 		oncancel="event.preventDefault()"
 		onfocus="event.target.blur()"
 	>
-		<style>
-			#gui-disconnected::backdrop { background-color: rgba(0, 0, 0, 0.4); }
-		</style>
 		<span style='font-size:200px;'>&#9940;</span>
 	</dialog>
 
