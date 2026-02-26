@@ -14,4 +14,5 @@ web.document.imports.append('hmi/teach')
 import system
 
 import diag.log
+web.document.imports.append('diag/watch')
 import diag.issue

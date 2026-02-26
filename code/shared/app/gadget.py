@@ -5,6 +5,7 @@ from contextlib import asynccontextmanager, closing
 import asyncio
 import json
 from . import app
+from .watch import Watch
 from shared.condition import Timeout
 
 
@@ -34,15 +35,30 @@ class UdpMaster(asyncio.DatagramProtocol):
 	async def exec(self):
 		transport,_ = await asyncio.get_running_loop().create_datagram_endpoint(lambda:self, remote_addr=self.address)
 		with closing(transport):
+			async with app.AuxTaskGroup() as task_group:
 
-			@app.aux_task
-			async def sync_loop():
-				while True:
-					await asyncio.sleep(self.period)
-					transport.sendto(json.dumps(self.cmd).encode())
-					if self.connected and self.timeout:
-						self.connected = False
-						app.log.warning(f'gadget {self.address} disconnected')
+				@task_group
+				async def sync_loop():
+					while True:
+						await asyncio.sleep(self.period)
+						transport.sendto(json.dumps(self.cmd).encode())
+						if self.connected and self.timeout:
+							self.connected = False
+							app.log.warning(f'Gadget {self.address[0]} disconnected')
 
-			async with sync_loop():
-				yield
+				@task_group
+				async def health_logger():
+					while True:
+						await app.poll(lambda: self.connected, period=1)
+						app.log.info(f'Gadget {self.address[0]} health', FBK=self.fbk)
+						await app.poll(lambda: not self.connected, period=1, timeout=5*60)
+
+				with Watch(
+					lambda: {
+						'connected': self.connected,
+						'cmd': self.cmd,
+						'fbk': self.fbk,
+					},
+					prefix=self.address[0]
+				):
+					yield

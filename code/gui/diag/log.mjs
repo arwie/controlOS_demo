@@ -346,7 +346,7 @@ diagIndex.addPage('log', {
 		<button v-if="config.desktop" @click="extendOlder" class="btn btn-secondary w-100 mt-auto mb-3">{{ $t('diag.log.extendOlder') }}</button>
 	</div>
 
-	<div class="col-xl h-100 overflow-scroll" id="log">
+	<div class="col-xl h-100 overflow-y-scroll" id="log">
 		<div v-if="!messages.length" class="alert alert-info">{{ $t('diag.log.empty') }}</div>
 		<table class="table table-sm table-hover">
 			<tbody>

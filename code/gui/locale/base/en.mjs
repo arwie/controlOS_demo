@@ -50,6 +50,9 @@ export default {
 			sendSuccess: "Issue was sent successfully to the manufacturer.",
 			sendFail: "Issue could not be sent. Please download and send manually.",
 		},
+		watch: {
+			title: "Real-time watch",
+		},
 	},
 
 	system: {

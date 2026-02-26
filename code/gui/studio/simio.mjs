@@ -26,7 +26,9 @@ studioIndex.addPage('simio', {
 				Input:  [],
 				Output: [],
 			};
-			for (const io of list.value.filter((io) => filterRegex.test(io.name)).sort((a, b) => Intl.Collator().compare(a.name, b.name))) {
+			const data = list.value.filter((io) => filterRegex.test(io.module) || filterRegex.test(io.name))
+				.sort((a, b) => a.module.localeCompare(b.module) || a.name.localeCompare(b.name));
+			for (const io of data) {
 				result[io.cls].push(io);
 			}
 			return result;
@@ -45,25 +47,17 @@ studioIndex.addPage('simio', {
 			ws.sendJson({id:io.id, ord:(ord(io) !== null ? null : val(io))});
 		}
 
-		function ordSendPreset(io, ord) {
-			ws.sendJson({id:io.id, ord});
-		}
-
-		function ordSendValue(io, event) {
-			if (event.keyCode != 13)
-				return true;
-			let ord = event.target.value;
+		function ordSendValue(io, ord) {
 			if (['bool','int','float'].includes(io.type)) {
 				ord = parseFloat(ord.replace(",","."));
 				if (isNaN(ord))
 					return;
 			}
 			ws.sendJson({id:io.id, ord});
-			event.target.value = null;
 		}
 
 		await ws.sync;
-		return { filter, lists, data, val, ord, ordToggle, ordSendPreset, ordSendValue }
+		return { filter, lists, data, val, ord, ordToggle, ordSendValue }
 	},
 	template: //html
 	`
@@ -73,17 +67,18 @@ studioIndex.addPage('simio', {
 		<input v-model.trim="filter" type="text" placeholder="match1 match2 match3 ..." class="form-control">
 	</div>
 	<div class="row h-100" style="min-height:0">
-		<div v-for="(list, cls) in lists" class="col-xxl h-100 overflow-scroll">
+		<div v-for="(list, cls) in lists" class="col-xxl h-100 overflow-y-scroll">
 			<table class="table table-hover">
 				<colgroup>
 					<col style="width:auto">
 					<col style="width:auto">
-					<col style="min-width:150px">
+					<col style="width:auto">
+					<col style="min-width:130px">
 					<col style="min-width:220px">
 				</colgroup>  
 			<thead>
 				<tr>
-					<th>{{ $t('studio.simio.cls_'+cls) }}</th>
+					<th colspan="2">{{ $t('studio.simio.cls_'+cls) }}</th>
 					<th>{{ $t('studio.simio.type') }}</th>
 					<th class="text-end">{{ $t('studio.simio.value') }}</th>
 					<th>{{ $t('studio.simio.override') }}</th>
@@ -91,19 +86,34 @@ studioIndex.addPage('simio', {
 			</thead>
 			<tbody>
 				<tr v-for="io in list" :key="io.id" :class="{'table-info':io.sim, 'table-warning':io.sim&&ord(io)!==null, 'table-danger':!io.sim&&ord(io)!==null}">
-					<th><span class="form-control-plaintext">{{io.name}}</span></th>
-					<td><span class="form-control-plaintext">{{io.type}}</span></td>
+					<td><span class="form-control-plaintext">{{ io.module }}</span></td>
+					<th><span class="form-control-plaintext">{{ io.name }}</span></th>
+					<td><span class="form-control-plaintext">{{ io.type }}</span></td>
 					<td class="text-end">
 						<span :class="{'fw-bold text-success':val(io)}" class="form-control-plaintext">{{val(io)}}</span>
 					</td>
 					<td>
 						<div class="input-group bg-light">
 							<label class="input-group-text">
-								<input @click="ordToggle(io)" :checked="ord(io)!==null" type="checkbox" class="form-check-input mt-0">
+								<input class="form-check-input mt-0"
+									:checked="ord(io) !== null"
+									@click="ordToggle(io)"
+									type="checkbox"
+								>
 							</label>
-							<input @keypress="ordSendValue(io, $event)" :placeholder="ord(io)" type="text" class="form-control">
-							<button v-if="['bool'].includes(io.type)"               @click="ordSendPreset(io, 1)" class="w-25 btn btn-outline-success">1</button>
-							<button v-if="['bool','int','float'].includes(io.type)" @click="ordSendPreset(io, 0)" class="w-25 btn btn-outline-primary">0</button>
+							<input class="form-control"
+								:placeholder="ord(io)"
+								@keyup.enter="ordSendValue(io, $event.target.value); $event.target.value = null;"
+								@blur="$event.target.value = null"
+							>
+							<button class="w-25 btn btn-outline-success"
+								v-if="['bool'].includes(io.type)"
+								@click="ordSendValue(io, $event.target.innerText)"
+							>1</button>
+							<button class="w-25 btn btn-outline-primary"
+								v-if="['bool','int','float'].includes(io.type)"
+								@click="ordSendValue(io, $event.target.innerText)"
+							>0</button>
 						</div>
 					</td>
 				</tr>

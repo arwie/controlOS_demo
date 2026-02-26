@@ -50,6 +50,9 @@ export default {
 			sendSuccess: "Problembericht wurde erfolgreich an den Hersteller gesendet.",
 			sendFail: "Problembericht konnte nicht gesendet werden. Bitte herunterladen und manuell versenden.",
 		},
+		watch: {
+			title: "Echtzeitdiagnose",
+		},
 	},
 
 	system: {

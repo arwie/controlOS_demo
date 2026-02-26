@@ -6,6 +6,8 @@ After=systemd-networkd-wait-online@sys.service
 
 
 [Service]
+RuntimeDirectory=app
+RuntimeDirectoryPreserve=restart
 SyslogIdentifier=app
 ExecStart=/usr/bin/python -Bu /usr/lib/app
 

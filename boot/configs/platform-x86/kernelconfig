@@ -1,6 +1,6 @@
 #
 # Automatically generated file; DO NOT EDIT.
-# Linux/x86 6.6.74 Kernel Configuration
+# Linux/x86 6.6.127 Kernel Configuration
 #
 CONFIG_CC_VERSION_TEXT="x86_64-unknown-linux-gnu-gcc (OSELAS.Toolchain-2024.11.1 14-20250308) 14.2.1 20250308"
 CONFIG_CC_IS_GCC=y
@@ -869,8 +869,6 @@ CONFIG_LOCK_MM_AND_FIND_VMA=y
 #
 # Device Drivers
 #
-CONFIG_HAVE_EISA=y
-# CONFIG_EISA is not set
 CONFIG_HAVE_PCI=y
 CONFIG_PCI=y
 CONFIG_PCI_DOMAINS=y
@@ -1904,6 +1902,7 @@ CONFIG_HID_TOPSEED=y
 # CONFIG_HID_TOPRE is not set
 # CONFIG_HID_THRUSTMASTER is not set
 # CONFIG_HID_UDRAW_PS3 is not set
+# CONFIG_HID_UNIVERSAL_PIDFF is not set
 # CONFIG_HID_WACOM is not set
 # CONFIG_HID_XINMO is not set
 # CONFIG_HID_ZEROPLUS is not set

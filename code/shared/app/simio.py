@@ -12,6 +12,7 @@ from asyncio import iscoroutinefunction
 from shared import system
 from . import app
 from . import web
+from .watch import Watch
 
 
 
@@ -27,15 +28,14 @@ class _IOBase[T:(bool, int, float, str)]:
 	_io_sim: Callable
 
 	def __init__(self, io:Callable, *, module=None, prefix=None, simulated=False):
-		io_module = '.'.join(p.strip('_') for p in (module or io.__module__).split('.'))
-		io_name   = '.'.join(p.strip('_') for p in (prefix, io.__name__) if p)
-		self.name = f'{io_module}: {io_name}'
+		self.module = '.'.join(p.strip('_') for p in (module or io.__module__).split('.'))
+		self.name   = '.'.join(p.strip('_') for p in (prefix, io.__name__) if p)
 		self.type:type[T] = next(iter(get_type_hints(io).values()))
 		self.override = None
 		self.simulated = simulated or _conf.getboolean(
-			io_module, io_name,
+			self.module, self.name,
 			fallback=_conf.getboolean(
-				io_module, self.__class__.__name__,
+				self.module, self.__class__.__name__,
 				fallback=_conf.getboolean(
 					'app', self.__class__.__name__,
 					fallback=_virtual
@@ -48,9 +48,11 @@ class _IOBase[T:(bool, int, float, str)]:
 
 	def open(self):
 		_WebHandler.add_simio(self)
+		self._watch = Watch(lambda: { self.name: self.value }, module=self.module)
 		return closing(self)
 
 	def close(self):
+		self._watch.close()
 		_WebHandler.remove_simio(self)
 
 	async def sync(self):
@@ -283,6 +285,7 @@ class _WebHandler(web.WebSocketHandler):
 				{
 					'id':		id,
 					'cls':		simio.cls,
+					'module':	simio.module,
 					'name':		simio.name,
 					'type':		simio.type.__name__,
 					'sim':		simio.simulated,

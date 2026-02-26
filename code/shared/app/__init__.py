@@ -2,19 +2,14 @@
 # SPDX-License-Identifier: MIT
 
 from __future__ import annotations
-from typing import TYPE_CHECKING
-if TYPE_CHECKING:
-	from typing import Callable
-	from contextlib import AbstractAsyncContextManager
-
+from collections.abc import Callable, Coroutine
 import asyncio
 import signal
 
 from .app import *
 from . import web
-from . import simio
+from .watch import Watch
 from .simio import input, output, IoGroup
-
 
 
 def run(app_main: Coroutine[Any, Any, None] | Callable[[], Coroutine[Any, Any, None]]):
@@ -31,6 +26,7 @@ def run(app_main: Coroutine[Any, Any, None] | Callable[[], Coroutine[Any, Any, N
 
 			async with (
 				web.server(),
+				watch.exec(),
 				simio.exec(),
 			):
 				await exit_event.wait()
