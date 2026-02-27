@@ -1,6 +1,11 @@
 # SPDX-FileCopyrightText: 2026 Artur Wiebe <artur@4wiebe.de>
 # SPDX-License-Identifier: MIT
 
+# Exports AppCfg, AppCmd, AppFbk (and any nested structs) from the CODESYS project
+# as Python ctypes.Structure classes into the codesys_types/ package.
+# Run via the CODESYS scripting engine: Tools > Scripting > Execute script file.
+# See docs/codesys_python_link.md for details.
+
 from __future__ import print_function
 from scriptengine import projects	#type:ignore
 from os import path
