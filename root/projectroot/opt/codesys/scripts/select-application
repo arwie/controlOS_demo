@@ -3,6 +3,7 @@
 from pathlib import Path
 from shared.setup import setup
 from shared import system
+from shared import log
 
 
 
@@ -12,7 +13,7 @@ if system.virtual():
 	application = setup['codesys']['sim']['application'] or application
 
 if application:
-	print('Selected application:', application)
+	log.info(f'Selected CODESYS application: {application}')
 	link = Path('/run/codesys/Application')
 	link.unlink(True)
 	link.symlink_to(f'/opt/codesys/PlcLogic/{application}')

@@ -24,6 +24,13 @@ def deploy(app, plc_logic='PlcLogic', dir='Application', name='Application'):
 		f.truncate(20)
 
 
+
 if __name__ == '__main__':
-	deploy(project.active_application)
+
+	for dev in project.get_children():
+		if dev.is_device:
+			for app in dev.get_children(True):
+				if app.is_application:
+					deploy(app, dir=dev.get_name())
+
 	print('All done!')
