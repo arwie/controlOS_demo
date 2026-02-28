@@ -1,6 +1,9 @@
 # SPDX-FileCopyrightText: 2026 Artur Wiebe <artur@4wiebe.de>
 # SPDX-License-Identifier: MIT
 
+# Compile CODESYS boot applications for all devices in the project for packaging.
+# See docs/codesys_application_packaging.md
+
 from __future__ import print_function
 from scriptengine import projects	#type:ignore
 from os import path, mkdir
