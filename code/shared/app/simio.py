@@ -67,6 +67,7 @@ class _IOBase[T:(bool, int, float, str)]:
 
 
 class Input[T:(bool, int, float, str)](_IOBase[T]):
+	"""Readable IO point. Returns sim value when simulated, hardware value otherwise."""
 	cls = 'Input'
 	_get: Callable[[], T]
 
@@ -85,6 +86,7 @@ class Input[T:(bool, int, float, str)](_IOBase[T]):
 
 
 class AsyncInput[T:(bool, int, float, str)](Input[T]):
+	"""Input that reads hardware asynchronously via periodic sync."""
 	_sync: Callable[[], Coroutine[Any, Any, T]]
 
 	def __init__(self, io, **kwargs):
@@ -102,6 +104,7 @@ class AsyncInput[T:(bool, int, float, str)](Input[T]):
 
 
 class Output[T:(bool, int, float, str)](_IOBase[T], AbstractContextManager):
+	"""Writable IO point. Resets to default on context manager exit."""
 	cls = 'Output'
 	_set: Callable[[T], None]
 
@@ -127,6 +130,7 @@ class Output[T:(bool, int, float, str)](_IOBase[T], AbstractContextManager):
 
 
 class AsyncOutput[T:(bool, int, float, str)](Output[T]):
+	"""Output that writes to hardware asynchronously via periodic sync."""
 	_sync: Callable[[T], Coroutine[Any, Any, None]]
 
 	def __init__(self, io, **kwargs):
@@ -144,6 +148,7 @@ class AsyncOutput[T:(bool, int, float, str)](Output[T]):
 
 
 class IoGroup(AbstractContextManager):
+	"""Groups related I/O points under a common module and/or prefix."""
 
 	def __init__(self, *, module: str | None = None, prefix: str | None = None):
 		self.module = module
@@ -151,6 +156,7 @@ class IoGroup(AbstractContextManager):
 		self._simio = list[_IOBase]()
 
 	def __exit__(self, *exc):
+		"""Reset all output members to their defaults."""
 		for simio in self._simio:
 			if isinstance(simio, AbstractContextManager):
 				simio.__exit__(*exc)
@@ -158,27 +164,32 @@ class IoGroup(AbstractContextManager):
 
 	@property
 	def simulated(self):
+		"""True when all contained I/O points are simulated."""
 		return all(simio.simulated for simio in self._simio)
 
 
 	async def sync(self):
+		"""Sync all async I/O points in the group."""
 		for simio in self._simio:
 			await simio.sync()
 
 	@app.aux_task
 	async def sync_loop(self, period:float):
+		"""Run sync() in a periodic background loop."""
 		while True:
 			await self.sync()
 			await app.sleep(period)
 
 
 	def open(self):
+		"""Register all I/O points for monitoring in the Studio UI."""
 		for simio in self._simio:
 			simio.open()
 		_WebHandler.all.write_update()
 		return closing(self)
 
 	def close(self):
+		"""Unregister all I/O points from the Studio UI."""
 		for simio in self._simio:
 			simio.close()
 		_WebHandler.all.write_update()
@@ -198,7 +209,7 @@ class IoGroup(AbstractContextManager):
 		sim: T | Callable[[], T] | None = None,
 		simulated = False,
 	) -> Input[T]:
-		pass
+		...
 	@overload
 	def input[T:(bool, int, float, str)](
 		self,
@@ -207,9 +218,10 @@ class IoGroup(AbstractContextManager):
 		sim: T | Callable[[], T] | None = None,
 		simulated = False,
 	) -> Callable[[Callable[[], T | Coroutine[Any, Any, T]]], Input[T]]:
-		pass
+		...
 
 	def input(self, io=None, **kwargs):
+		"""Decorator that registers a function as an Input in this group."""
 		if io is None: #decorator with kwargs
 			return lambda io, /: self.input(io, **kwargs)
 		self._decorator_kwargs_defaults(kwargs)
@@ -226,7 +238,7 @@ class IoGroup(AbstractContextManager):
 		prefix: str | None = None,
 		simulated = False,
 	) -> Output[T]:
-		pass
+		...
 	@overload
 	def output[T:(bool, int, float, str)](
 		self,
@@ -234,9 +246,10 @@ class IoGroup(AbstractContextManager):
 		prefix: str | None = None,
 		simulated = False,
 	) -> Callable[[Callable[[T], None | Coroutine[Any, Any, None]]], Output[T]]:
-		pass
+		...
 
 	def output(self, io=None, **kwargs):
+		"""Decorator that registers a function as an Output in this group."""
 		if io is None: #decorator with kwargs
 			return lambda io, /: self.output(io, **kwargs)
 		self._decorator_kwargs_defaults(kwargs)
