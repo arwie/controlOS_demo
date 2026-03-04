@@ -1,25 +1,9 @@
 #!/usr/bin/python -Bu
 
-# Copyright (c) 2023 Artur Wiebe <artur@4wiebe.de>
-#
-# Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
-# associated documentation files (the "Software"), to deal in the Software without restriction,
-# including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
-# and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so,
-# subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
-# INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-# WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+# SPDX-FileCopyrightText: 2026 Artur Wiebe <artur@4wiebe.de>
+# SPDX-License-Identifier: MIT
 
-
-import time
 from argparse import ArgumentParser
-from contextlib import suppress
 from pathlib import Path
 from shared import log, system
 
@@ -58,19 +42,12 @@ def cpu_set(query:str):
 			result.add(c)
 	return result
 
-
 isolated = cpu_set('isolated')
-regular  = cpu_set('present') - isolated
-log.info(f'CPUs: isolated={isolated}, regular={regular}')
+log.info(f'Isolated CPUs: {isolated}')
 
 
-# Set IRQ threads affinity
-for irq in Path('/proc/irq').glob('[0-9]*'):
-	affinity = Path(irq, 'smp_affinity_list')
-	with suppress(Exception):
-		if affinity.read_text().startswith('0-'):
-			log.info(f'Setting IRQ affinity for irq {irq.stem}')
-			affinity.write_text(','.join(regular))
+# Disable the real-time throttling mechanism of the Linux kernel
+Path('/proc/sys/kernel/sched_rt_runtime_us').write_bytes(b'-1')
 
 
 # Set the priority of the ksoftirqd on the isolated cores
@@ -97,13 +74,3 @@ for cpu in isolated:
 			if latency > int(args.cpuidle_latency):
 				log.info(f'Disabling cpuidle {state.stem} (latency: {latency}) for cpu {cpu}')
 				Path(state, 'disable').write_bytes(b'1')
-
-
-# Toggle cpu offline state to move away IRQ threads
-for cpu in isolated:
-	online = cpu_path(cpu, 'online')
-	if online.exists():
-		log.info(f'Toggling offline state for cpu {cpu}')
-		online.write_bytes(b'0')
-		time.sleep(0.1)
-		online.write_bytes(b'1')

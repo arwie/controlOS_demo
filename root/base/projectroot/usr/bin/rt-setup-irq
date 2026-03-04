@@ -1,0 +1,54 @@
+#!/usr/bin/python -Bu
+
+# SPDX-FileCopyrightText: 2026 Artur Wiebe <artur@4wiebe.de>
+# SPDX-License-Identifier: MIT
+
+from argparse import ArgumentParser
+from pathlib import Path
+from contextlib import suppress
+from time import sleep
+from shared import log, system
+
+
+parser = ArgumentParser()
+parser.add_argument(
+	"name",
+	help="IRQ device name"
+)
+parser.add_argument(
+	"--priority",
+	help="priority (80)",
+	default='80'
+)
+parser.add_argument(
+	"--affinity",
+	help="affinity (1)",
+	default='1'
+)
+args = parser.parse_args()
+
+
+# wait for the IRQs
+for retry in range(30):
+	if retry:
+		sleep(1)
+	with suppress(Exception):
+		procs = system.run(['pgrep','-l', f'irq/[0-9]*-{args.name}'], True, text=True).rstrip().split('\n')
+		break
+else:
+	log.warning(f'No IRQs found for "{args.name}"')
+	exit()
+
+
+for proc in procs:
+	proc = proc.split()
+	
+	log.info(f'Setting rt-priority {args.priority} and cpu affinity {args.affinity} for {proc[1]}')
+
+	#set priority
+	pid = proc[0]
+	system.run(['chrt','-fp', args.priority, pid])
+
+	#set affinity
+	irq = proc[1].lstrip('irq/').partition('-')[0]
+	Path('/proc/irq', irq, 'smp_affinity_list').write_text(args.affinity)

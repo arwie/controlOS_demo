@@ -7,7 +7,7 @@ Before=basic.target
 [Service]
 Type=oneshot
 RemainAfterExit=yes
-ExecStart=/usr/sbin/rt-setup-cpu
+ExecStart=/usr/bin/rt-setup-cpu
 StandardOutput=null
 
 [Install]

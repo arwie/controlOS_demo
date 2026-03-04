@@ -14,6 +14,7 @@ RuntimeDirectory=codesys codesysextension
 
 StandardOutput=tty
 TTYPath=/run/codesys-log/tty
+Environment=TERM=dumb
 
 CPUAffinity=1
 
