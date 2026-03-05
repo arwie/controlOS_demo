@@ -16,6 +16,7 @@ VAR
 	AxisReset:	MC_Reset;
 	AxisPower:	MC_Power;
 	PoweredTON:	TON;
+	resetTrig:	R_TRIG;
 	resetEn:	RS;
 END_VAR
 
@@ -44,9 +45,12 @@ PoweredTON(
 powered := PoweredTON.Q AND (powered OR NOT Status.Errorstop);
 
 
+resetTrig(
+	CLK := power,
+);
 resetEn(
-	SET := power,
-	RESET1 := powered,
+	SET := resetTrig.Q,
+	RESET1 := NOT power OR powered,
 );
 
 AxisReset(

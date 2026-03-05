@@ -16,6 +16,7 @@ VAR
 	GroupReset: MC_GroupReset;
 	GroupPower: SMC_GroupPower;
 	PoweredTON:	TON;
+	resetTrig:	R_TRIG;
 	resetEn:	RS;
 END_VAR
 
@@ -44,9 +45,12 @@ PoweredTON(
 powered := PoweredTON.Q AND (powered OR NOT Status.GroupErrorStop);
 
 
+resetTrig(
+	CLK := power,
+);
 resetEn(
-	SET := power,
-	RESET1 := powered,
+	SET := resetTrig.Q,
+	RESET1 := NOT power OR powered,
 );
 
 GroupReset(
