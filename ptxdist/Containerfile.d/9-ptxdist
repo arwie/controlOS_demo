@@ -1,18 +1,3 @@
-ARG DEBIAN_RELEASE=bookworm
-
-FROM debian:$DEBIAN_RELEASE-slim
-
-RUN apt-get update && apt-get install -y --no-install-recommends \
-	ca-certificates \
-	build-essential \
-	python3 \
-	ccache \
-	git \
-	ssh \
-	gpg gpg-agent \
-	bash-completion
-
-
 ARG DEBIAN_RELEASE
 ARG PTXDIST_VERSION
 ARG OSELAS_VERSION
@@ -44,20 +29,6 @@ RUN git clone --depth=1 --branch=ptxdist-${PTXDIST_VERSION} https://git.pengutro
 	&& make \
 	&& make install \
 	&& cd && rm -rf /ptxdist-src
-
-
-ARG ESP_IDF_VERSION=4.4.4
-ENV IDF_TOOLS_PATH=/opt/esp-idf
-
-RUN apt-get install -y --no-install-recommends \
-	python3-pip \
-	python3-virtualenv \
-	libusb-1.0-0-dev
-
-RUN git clone --depth=1 --shallow-submodules --recursive --branch=v$ESP_IDF_VERSION https://github.com/espressif/esp-idf.git $IDF_TOOLS_PATH \
-	&& cd $IDF_TOOLS_PATH \
-	&& ./install.sh esp32 \
-	&& rm -rf dist
 
 
 RUN apt-get install -y --no-install-recommends \

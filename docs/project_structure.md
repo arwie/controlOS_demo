@@ -201,6 +201,6 @@ These keys are installed into the rootfs by the `keys.make` PTXdist rule.
 Build environment configuration and helper scripts.
 
 * `config` pins the PTXdist and OSELAS toolchain versions used by this project
-* `Containerfile` defines the container image for a reproducible build environment
+* `Containerfile.d/` drop-in fragments composing the container image for a reproducible build environment
 * `create` sets up the PTXdist build environment
 * `make` and `run` are helper scripts for building inside the container

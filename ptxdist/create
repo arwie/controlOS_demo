@@ -5,8 +5,9 @@ cd "$(dirname "$(realpath "$0")")/.."
 . ptxdist/config
 
 
-exec podman build \
+cat ptxdist/Containerfile.d/* | \
+podman build \
 	--tag=ptxdist-$PTXDIST_VERSION \
-	--build-arg PTXDIST_VERSION=$PTXDIST_VERSION \
-	--build-arg OSELAS_VERSION=$OSELAS_VERSION \
+	--build-arg-file=ptxdist/config \
+	-f - \
 	ptxdist

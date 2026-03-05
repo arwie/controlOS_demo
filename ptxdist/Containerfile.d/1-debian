@@ -1,0 +1,13 @@
+ARG DEBIAN_RELEASE
+
+FROM debian:$DEBIAN_RELEASE-slim
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+	ca-certificates \
+	build-essential \
+	python3 \
+	ccache \
+	git \
+	ssh \
+	gpg gpg-agent \
+	bash-completion
