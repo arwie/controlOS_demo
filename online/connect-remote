@@ -2,7 +2,7 @@
 
 PORT=${1:-65000} && shift
 
-HOST="remote.4wiebe.de"
+HOST="remote.controlos.net"
 
 cd "$(dirname "$(realpath "$0")")/.." && . online/_include
 

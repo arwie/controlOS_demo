@@ -2,7 +2,7 @@
 After=network.target
 
 [Service]
-ExecStart=/usr/bin/ssh -N -T  -R *:%i:localhost:22  remote@remote.4wiebe.de
+ExecStart=/usr/bin/ssh -N -T  -R *:%i:localhost:22  remote@remote.controlos.net
 Restart=always
 RestartSec=10
 StartLimitInterval=0
