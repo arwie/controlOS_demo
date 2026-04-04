@@ -1,0 +1,61 @@
+#!/usr/bin/sh
+
+# SPDX-FileCopyrightText: 2026 Artur Wiebe <artur@4wiebe.de>
+# SPDX-License-Identifier: MIT
+
+
+. /init.inc
+. /init.board
+
+cd /mnt
+
+
+update()
+{
+	echo "### create root file system"
+	mkfs.ext4 -Fq /dev/mapper/root
+	mount /dev/mapper/root root
+
+	echo "### install update from $1"
+	tar --extract \
+		--xattrs \
+		--xattrs-include='*' \
+		--directory=root \
+		--file=$1
+
+	update_board
+
+	ignore fstrim -v root
+	umount root
+}
+update_board() { :; }
+
+
+. /boot.board
+
+
+if [ -f /install.hash ]
+then
+	. /install
+else
+	cryptkey_unseal
+	dmcrypt_setup
+fi
+
+
+mount --ro /dev/mapper/data data
+if [ -f data/update ]
+then
+	echo "### apply update"
+
+	check_archive data/update \
+		&& update data/update
+
+	mount --rw -o remount data
+	rm -f data/update
+	umount data
+fi
+
+
+echo "### start root system"
+boot

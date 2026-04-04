@@ -1,0 +1,19 @@
+# SPDX-FileCopyrightText: 2026 Artur Wiebe <artur@4wiebe.de>
+# SPDX-License-Identifier: MIT
+
+
+TPM_KEY=0x81000000
+TPM_POL=0x81000001
+TPM_PCR=sha256:7
+
+
+cryptkey_unseal()
+(
+	echo "### tpm: unseal crypt key"
+	cd /tmp
+
+	tpm2_startauthsession --policy-session -S unseal.ctx
+	tpm2_policypcr -S unseal.ctx -l $TPM_PCR
+	tpm2_unseal -c $TPM_POL -p session:unseal.ctx -o $CRYPTKEY_FILE
+	tpm2_flushcontext unseal.ctx
+)

@@ -8,19 +8,14 @@ PTXDIST = ptxdist --quiet --progress -j$(JOBS) --platformconfig=$(PLATFORMCONFIG
 
 
 
-all: install_img
+all: install
 	@echo "#############################################"
 	@echo "Build completed successfully!"
 
 
-install_img: system_img
+install: update
 	@cd boot \
-		&& $(PTXDIST) --collectionconfig=configs/install image install.img
-
-system_img: update
-	@cd boot \
-		&& $(PTXDIST) --collectionconfig=configs/system  image system.img
-
+		&& $(PTXDIST) images
 
 update: .initramfs keygen
 	@cd root \
@@ -28,12 +23,12 @@ update: .initramfs keygen
 		&& $(PTXDIST) images
 
 .initramfs:
-	@cd root/base/initramfs \
-		&& $(PTXDIST) images
+	@cd boot \
+		&& $(PTXDIST) image root.cpio
 
 
 get:
-	@for p in boot root/base/initramfs root; do( \
+	@for p in boot root; do( \
 		cd $$p \
 			&& $(PTXDIST) get \
 	);done
@@ -41,14 +36,14 @@ get:
 
 
 clean:
-	@for p in boot/base boot root/base/initramfs root/base root; do( \
+	@for p in boot/base boot root/base root; do( \
 		echo "Removing: $$p/platform-*" \
 		&& rm -rf $$p/platform-* \
 	);done
 
 
 clean-target:
-	@for p in boot root/base/initramfs root; do( \
+	@for p in boot root; do( \
 		cd $$p \
 			&& $(PTXDIST) clean target \
 	);done
@@ -73,7 +68,7 @@ kernel-oldconfig:
 
 
 oldconfig:
-	@for p in root/base/initramfs boot root; do( \
+	@for p in boot root; do( \
 		cd $$p \
 			&& $(PTXDIST) oldconfig \
 			&& $(PTXDIST) oldconfig platform \
@@ -84,7 +79,7 @@ oldconfig:
 include ptxdist/config
 
 migrate:
-	@for p in root/base/initramfs boot root; do( \
+	@for p in boot root; do( \
 		echo "####################\n\n Migrating: $$p \n\n####################" \
 		&& cd $$p \
 			&& /usr/local/lib/ptxdist-$(PTXDIST_VERSION)/bin/$(PTXDIST) migrate \
@@ -98,7 +93,7 @@ menuconfig:
 
 
 select-platform:
-	@for p in boot/base boot root/base/initramfs root/base; do( \
+	@for p in boot/base boot root/base; do( \
 		cd $$p \
 			&& ln -sf $(PLATFORMCONFIG) selected_platformconfig \
 	);done
@@ -106,6 +101,7 @@ select-platform:
 
 
 keygen: \
+	keys/sb.key \
 	keys/projectroot/etc/gpg/update.pubkey \
 	keys/projectroot/etc/gpg/backup.pubkey \
 	keys/projectroot/etc/gpg/common.symkey \
@@ -135,3 +131,6 @@ keys/projectroot/root/.ssh/authorized_keys:
 keys/projectroot/root/.ssh/id_rsa:
 	@mkdir -p keys/projectroot/root/.ssh \
 	&& ssh-keygen -f keys/projectroot/root/.ssh/id_rsa -N ""
+
+keys/sb.key:
+	@openssl req -new -x509 -newkey rsa:2048 -sha256 -nodes -keyout keys/sb.key -out keys/sb.crt -days 365000 -subj "/CN=controlOS/"

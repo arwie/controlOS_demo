@@ -39,5 +39,7 @@ seat:x:215:
 pipewire:x:216:
 mongodb:x:217:
 polkitd:x:218:
-codesysuser:x:8000:
+gpio:x:219:gpio-manager
+gpio-manager:x:220:
+clock:x:221:
 nogroup:x:65534:

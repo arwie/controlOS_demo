@@ -1,0 +1,7 @@
+#!/bin/sh
+
+BASEDIR=$(dirname $(realpath $0))
+
+
+echo "Press Ctrl-] to exit."
+exec socat -,raw,echo=0,escape=0x1d UNIX-CONNECT:$BASEDIR/vm/uart

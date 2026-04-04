@@ -1,0 +1,55 @@
+#!/usr/bin/sh
+
+# SPDX-FileCopyrightText: 2026 Artur Wiebe <artur@4wiebe.de>
+# SPDX-License-Identifier: MIT
+
+
+. /init.inc
+. /init.board
+
+
+cryptkey_unseal
+dmcrypt_setup
+
+
+echo "### check data file system"
+ignore fsck.ext4 -pv /dev/mapper/data
+
+
+echo "### mount file systems"
+root=/mnt/root
+
+mount --ro /dev/mapper/root $root
+mount -o bind $root $root/mnt/root
+
+mount /dev/mapper/data $root/var
+
+
+if [ -f $root/var/backup ]
+then
+	echo "### restore backup"
+
+	if check_archive $root/var/backup
+	then
+		rm -rf $root/var/etc
+		tar --extract \
+			--xattrs \
+			--xattrs-include='*' \
+			--directory=$root/var \
+			--file=$root/var/backup
+		sync
+	fi
+
+	rm -f $root/var/backup
+fi
+
+
+mkdir -p $root/var/etc $root/var/.etc
+mount -t overlay -o lowerdir=$root/etc,upperdir=$root/var/etc,workdir=$root/var/.etc none $root/etc
+
+
+echo "### switch root"
+umount /sys
+umount /proc
+umount /dev
+exec switch_root $root /sbin/init

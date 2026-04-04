@@ -6,6 +6,7 @@ menuconfig CODESYS
 	select LIBC_PTHREAD
 	select LIBC_RT
 	select LIBC_M
+	select ROOTFS			if RUNTIME
 	select CODEMETER		if RUNTIME
 	select PYTHON3_POSIX_IPC	if RUNTIME
 	prompt "CODESYS"

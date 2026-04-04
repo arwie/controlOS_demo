@@ -2,6 +2,7 @@
 
 config IMAGE_INSTALL
 	bool
+	select IMAGE_ROOT_TGZ
 	select IMAGE_KERNEL
 	select HOST_GENIMAGE
 	select HOST_DOSFSTOOLS

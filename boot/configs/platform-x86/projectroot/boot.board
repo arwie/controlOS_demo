@@ -1,0 +1,10 @@
+# SPDX-FileCopyrightText: 2026 Artur Wiebe <artur@4wiebe.de>
+# SPDX-License-Identifier: MIT
+
+
+boot() 
+{
+	mount --ro /dev/mapper/root root
+	kexec --load root/boot/linux --initrd=root/boot/initramfs
+	kexec --no-ifdown --exec
+}

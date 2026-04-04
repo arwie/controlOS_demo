@@ -1,0 +1,46 @@
+# SPDX-FileCopyrightText: 2026 Artur Wiebe <artur@4wiebe.de>
+# SPDX-License-Identifier: MIT
+
+
+image install_linuximage.signed {
+	custom {
+		exec = 'cd ${PTXDIST_WORKSPACE}/../keys && sbsign --key sb.key --cert sb.crt --output ${IMAGEOUTFILE} ${INPUTPATH}/install_linuximage'
+	}
+}
+
+image install_boot.vfat {
+	vfat {
+		file EFI/BOOT/BOOTx64.EFI { image = install_linuximage.signed }
+	}
+	size = 16M
+	temporary = true
+}
+
+image install_payload.vfat {
+	vfat {
+		label = install
+		file system.img { image = system.img }
+		file update     { image = update }
+		file db.auth    { image = db.auth }
+		file KEK.auth   { image = KEK.auth }
+		file PK.auth    { image = PK.auth }
+	}
+	size = @SIZE@
+	temporary = true
+}
+
+image install.img {
+	hdimage { 
+		partition-table-type = hybrid
+		align = 1M
+	}
+	partition install_boot {
+		image = install_boot.vfat
+		partition-type = 0xEF
+		bootable = true
+	}
+	partition install_payload {
+		image = install_payload.vfat
+		partition-type = 0x0C
+	}
+}

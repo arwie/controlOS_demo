@@ -170,11 +170,36 @@ PTXCONF_CROSS_PKG_CONFIG_WRAPPER=y
 #
 # PTXCONF_FAKE_OVERLAYFS is not set
 # PTXCONF_INITMETHOD is not set
+PTXCONF_OS_RELEASE=y
 
 #
 # directories in rootfs         
 #
-# PTXCONF_ROOTFS is not set
+PTXCONF_ROOTFS=y
+PTXCONF_ROOTFS_DEV=y
+PTXCONF_ROOTFS_DEV_INITIAL=y
+# PTXCONF_ROOTFS_HOME is not set
+# PTXCONF_ROOTFS_HOME_ROOT is not set
+# PTXCONF_ROOTFS_MEDIA is not set
+PTXCONF_ROOTFS_MNT=y
+PTXCONF_ROOTFS_PROC=y
+PTXCONF_ROOTFS_RUN=y
+PTXCONF_ROOTFS_SYS=y
+PTXCONF_ROOTFS_TMP=y
+
+#
+# /var                        
+#
+# PTXCONF_ROOTFS_VAR_RUN is not set
+# PTXCONF_ROOTFS_VAR_LOG is not set
+# PTXCONF_ROOTFS_VAR_LOCK is not set
+# PTXCONF_ROOTFS_VAR_LIB is not set
+# PTXCONF_ROOTFS_VAR_CACHE is not set
+# PTXCONF_ROOTFS_VAR_SPOOL is not set
+# PTXCONF_ROOTFS_VAR_SPOOL_CRON is not set
+# PTXCONF_ROOTFS_VAR_TMP is not set
+# PTXCONF_ROOTFS_VAR_WWW is not set
+# end of /var                        
 # end of directories in rootfs         
 
 #
@@ -184,7 +209,7 @@ PTXCONF_CROSS_PKG_CONFIG_WRAPPER=y
 # PTXCONF_ROOTFS_SHADOW is not set
 # PTXCONF_ROOTFS_GROUP is not set
 # PTXCONF_ROOTFS_GSHADOW is not set
-PTXCONF_ROOTFS_FSTAB=y
+# PTXCONF_ROOTFS_FSTAB is not set
 # PTXCONF_ROOTFS_MTAB_FILE is not set
 # PTXCONF_ROOTFS_MTAB_LINK_MOUNTS is not set
 PTXCONF_ROOTFS_MTAB_LINK_SELF_MOUNTS=y
@@ -205,6 +230,8 @@ PTXCONF_ROOTFS_RESOLV_NONE=y
 # PTXCONF_ROOTFS_INIT_BIN is not set
 PTXCONF_ROOTFS_INIT_NONE=y
 # end of files in rootfs               
+
+PTXCONF_USR_ROOTFS=y
 # end of Root Filesystem               
 
 #
@@ -236,10 +263,55 @@ PTXCONF_BASE=y
 # PTXCONF_KERNEL_HEADER is not set
 # PTXCONF_KERNEL is not set
 PTXCONF_GLOBAL_LARGE_FILE=y
-# PTXCONF_LIBC is not set
+PTXCONF_LIBC=y
+PTXCONF_LIBC_GLIBC=y
+# PTXCONF_LIBC_UCLIBC is not set
+PTXCONF_GLIBC=y
+
+#
+# glibc                         
+#
+# PTXCONF_GLIBC_Y2038 is not set
+
+#
+# Install options
+#
+PTXCONF_GLIBC_2_34=y
+PTXCONF_GLIBC_2_38=y
+PTXCONF_GLIBC_LD=y
+# PTXCONF_GLIBC_LDD is not set
+PTXCONF_GLIBC_C=y
+# PTXCONF_GLIBC_PTHREAD is not set
+# PTXCONF_GLIBC_THREAD_DB is not set
+# PTXCONF_GLIBC_RT is not set
+# PTXCONF_GLIBC_DL is not set
+# PTXCONF_GLIBC_UTIL is not set
+# PTXCONF_GLIBC_M is not set
+# PTXCONF_GLIBC_ANL is not set
+PTXCONF_GLIBC_NSS_DNS=y
+PTXCONF_GLIBC_NSS_FILES=y
+# PTXCONF_GLIBC_NSS_HESIOD is not set
+# PTXCONF_GLIBC_NSS_COMPAT is not set
+PTXCONF_GLIBC_RESOLV=y
+# PTXCONF_GLIBC_NSL is not set
+# PTXCONF_GLIBC_GETENT is not set
+# PTXCONF_GLIBC_LDCONFIG is not set
+# PTXCONF_GLIBC_I18N_BIN_LOCALE is not set
+# PTXCONF_GLIBC_I18N_BIN_LOCALEDEF is not set
+
+#
+# Install gconv libraries       
+#
+# PTXCONF_GLIBC_GCONV_DEF is not set
+# PTXCONF_GLIBC_GCONV_UTF is not set
+# PTXCONF_GLIBC_GCONV_ZH is not set
+# end of Install gconv libraries       
+# end of glibc                         
+
 PTXCONF_LIBC_NSS_DNS=y
 PTXCONF_LIBC_NSS_FILES=y
-PTXCONF_NO_LIBC=y
+# PTXCONF_LOCALES is not set
+# PTXCONF_TIMEZONE is not set
 # PTXCONF_USBIP is not set
 # end of Core (libc, locales)          
 

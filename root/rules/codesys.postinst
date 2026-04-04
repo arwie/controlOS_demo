@@ -1,0 +1,3 @@
+#!/bin/sh
+
+echo "codesysuser:x:8000:" >> $DESTDIR/etc/group

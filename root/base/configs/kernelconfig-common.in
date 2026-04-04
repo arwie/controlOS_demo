@@ -1,3 +1,4 @@
+## Platform independent settings for root kernel
 
 CONFIG_RTC_HCTOSYS=y
 # CONFIG_MODULE_COMPRESS is not set
@@ -60,7 +61,6 @@ CONFIG_MAC80211=m
 # CONFIG_MODULE_UNLOAD is not set
 # CONFIG_SWAP is not set
 # CONFIG_DEBUG_KERNEL is not set
-# CONFIG_MD is not set
 # CONFIG_SOUND is not set
 # CONFIG_DRM is not set
 # CONFIG_MISC_FILESYSTEMS is not set

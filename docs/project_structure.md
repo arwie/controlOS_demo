@@ -6,7 +6,6 @@
 │   └── base/            common platform and kernel settings
 ├── root/                runtime root partition (application layer)
 │   └── base/            controlOS runtime rootfs
-│       └── initramfs/   initramfs for the runtime kernel
 ├── code/
 │   ├── shared/          common python module
 │   ├── gui/             web-based user interface
@@ -39,7 +38,7 @@ The system is composed of multiple PTXdist projects that are built individually 
 
 The lowest layer in the PTXdist project hierarchy. It provides the common platform definition and kernel configuration that all other PTXdist projects inherit. This is where the hardware platform is defined, including the architecture, the cross-compilation toolchain and the base kernel configuration.
 
-All other PTXdist projects (/boot, /root/base, /root/base/initramfs) reference this layer via a `base` symlink that points here.
+All other PTXdist projects (/boot, /root/base) reference this layer via a `base` symlink that points here.
 
 
 /boot
@@ -54,14 +53,6 @@ This PTXdist project builds the boot system. It produces two images:
 The boot system itself is a minimal single-file Linux (kernel with appended initramfs). Its init script (`/etc/init.d/rcS`) handles two tasks:
 * On first boot it creates the partition layout on the internal storage.
 * On subsequent boots it checks for pending updates in the init partition and applies them before handing off to the main system.
-
-
-/root/base/initramfs
----
-
-Builds the initramfs that is appended to the runtime kernel. The initramfs runs before the main root filesystem is mounted. Its init script mounts the partitions and then switches root to the actual root filesystem where systemd takes over.
-
-The output is `root.cpio`, which gets appended to the kernel built by the /root project.
 
 
 /root/base

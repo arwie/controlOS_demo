@@ -41,7 +41,10 @@ RUN apt-get install -y --no-install-recommends \
 	libelf-dev \
 	diffstat \
 	bc \
-	cpio
+	cpio \
+	openssl \
+	efitools \
+	sbsigntool
 
 
 COPY <<EOF /etc/profile.d/alias.sh

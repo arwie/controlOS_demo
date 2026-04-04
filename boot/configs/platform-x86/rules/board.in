@@ -1,0 +1,5 @@
+## SECTION=platform_project_specific
+
+config BOARD
+	bool
+	prompt "board"

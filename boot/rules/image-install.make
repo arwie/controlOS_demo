@@ -1,18 +1,5 @@
-# Copyright (c) 2016 Artur Wiebe <artur@4wiebe.de>
-#
-# Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
-# associated documentation files (the "Software"), to deal in the Software without restriction,
-# including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
-# and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so,
-# subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
-# INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-# WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+# SPDX-FileCopyrightText: 2026 Artur Wiebe <artur@4wiebe.de>
+# SPDX-License-Identifier: MIT
 
 #
 # We provide this package
@@ -22,26 +9,46 @@ IMAGE_PACKAGES-$(PTXCONF_IMAGE_INSTALL) += image-install
 #
 # Paths and names
 #
-IMAGE_INSTALL			:= image-install
-IMAGE_INSTALL_DIR		:= $(BUILDDIR)/$(IMAGE_INSTALL)
-IMAGE_INSTALL_IMAGE		:= $(IMAGEDIR)/install.img
-IMAGE_INSTALL_CONFIG	:= image-install.config
+IMAGE_INSTALL_DIR		:= $(BUILDDIR)/image-install
+IMAGE_INSTALL_IMAGE		:= $(IMAGEDIR)/install.img.xz
+IMAGE_INSTALL_CONFIG	:= install
+IMAGE_INSTALL_UPDATE	:= $(PTXDIST_WORKSPACE)/../root/platform-$(PTXCONF_PLATFORM)/images/update
+
+IMAGE_INSTALL_CPIO_DIR		:= $(BUILDDIR)/image-install-cpio
+IMAGE_INSTALL_CPIO_IMAGE	:= $(IMAGEDIR)/install.cpio
+IMAGE_INSTALL_CPIO_FILES	:= $(IMAGEDIR)/root.tgz $(IMAGEDIR)/install.hash.tar
+
+IMAGE_SYSTEM_DIR		:= $(BUILDDIR)/image-system
+IMAGE_SYSTEM_IMAGE		:= $(IMAGEDIR)/system.img
+IMAGE_SYSTEM_CONFIG		:= system
 
 # ----------------------------------------------------------------------------
 # Image
 # ----------------------------------------------------------------------------
 
-$(IMAGE_INSTALL_IMAGE):
+IMAGE_INSTALL_CPIO_CONFIG	= $(IMAGE_ROOT_CPIO_CONFIG)
+IMAGE_INSTALL_CPIO_ENV		= $(IMAGE_ROOT_CPIO_ENV)
+
+IMAGE_INSTALL_ENV = \
+	SIZE="$(shell echo $$(( $$(stat -L -c%s $(IMAGE_INSTALL_UPDATE)) + 32*1024*1024 )) )"
+
+$(IMAGE_INSTALL_IMAGE): $(IMAGE_INSTALL_UPDATE)
 	@$(call targetinfo)
 
+	@ln -sf $(IMAGE_INSTALL_UPDATE) $(IMAGEDIR)/update
+	@$(call image/genimage, IMAGE_SYSTEM)
+
+	@cd $(IMAGEDIR) && tar -cf install.hash.tar install.hash
+	@$(call image/genimage, IMAGE_INSTALL_CPIO)
+
+ifdef PTXCONF_IMAGE_KERNEL_INITRAMFS
+	@sed -i -e 's,^CONFIG_INITRAMFS_SOURCE.*$$,CONFIG_INITRAMFS_SOURCE=\"$(IMAGE_INSTALL_CPIO_IMAGE)\",g' $(KERNEL_BUILD_DIR)/.config
+	@$(call compile, KERNEL, $(KERNEL_MAKE_OPT) $(KERNEL_IMAGE))
+	@install -m 644 "$(KERNEL_IMAGE_PATH_y)" $(IMAGEDIR)/install_linuximage
+endif
+
 	@$(call image/genimage, IMAGE_INSTALL)
-
-	rm -f $(IMAGEDIR)/root.*
-	rm -f $(IMAGEDIR)/linuximage
-	rm -f $(IMAGEDIR)/install.vfat
-	rm -f $(IMAGEDIR)/backup.vfat
-
-	xz -T0 -zf $(IMAGE_INSTALL_IMAGE)
+	@xz -T0 -1 -zf $(IMAGEDIR)/install.img
 
 	@$(call finish)
 

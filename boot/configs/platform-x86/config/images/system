@@ -1,0 +1,57 @@
+# SPDX-FileCopyrightText: 2026 Artur Wiebe <artur@4wiebe.de>
+# SPDX-License-Identifier: MIT
+
+
+image linuximage.signed {
+	custom {
+		exec = 'cd ${PTXDIST_WORKSPACE}/../keys && sbsign --key sb.key --cert sb.crt --output ${IMAGEOUTFILE} ${INPUTPATH}/linuximage'
+	}
+}
+
+image system_boot.vfat {
+	vfat {
+		label = boot
+		file EFI/BOOT/BOOTx64.EFI { image = linuximage.signed }
+	}
+	size = 16M
+	temporary = true
+}
+
+image system.img {
+	hdimage { 
+		partition-table-type = gpt
+		align = 1M
+	}
+	partition system_boot {
+		image = system_boot.vfat
+		partition-type-uuid = U
+		bootable = true
+	}
+}
+
+image sb.esl {
+	custom {
+		exec = 'cd ${PTXDIST_WORKSPACE}/../keys && cert-to-efi-sig-list sb.crt ${IMAGEOUTFILE}'
+	}
+}
+image db.auth {
+	custom {
+		exec = 'cd ${PTXDIST_WORKSPACE}/../keys && sign-efi-sig-list -k sb.key -c sb.crt db  ${INPUTPATH}/sb.esl ${IMAGEOUTFILE}'
+	}
+}
+image KEK.auth {
+	custom {
+		exec = 'cd ${PTXDIST_WORKSPACE}/../keys && sign-efi-sig-list -k sb.key -c sb.crt KEK ${INPUTPATH}/sb.esl ${IMAGEOUTFILE}'
+	}
+}
+image PK.auth {
+	custom {
+		exec = 'cd ${PTXDIST_WORKSPACE}/../keys && sign-efi-sig-list -k sb.key -c sb.crt PK  ${INPUTPATH}/sb.esl ${IMAGEOUTFILE}'
+	}
+}
+
+image install.hash {
+	custom {
+		exec = 'cd ${INPUTPATH} && sha256sum system.img update db.auth KEK.auth PK.auth > ${IMAGEOUTFILE}'
+	}
+}

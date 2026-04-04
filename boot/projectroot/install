@@ -1,0 +1,80 @@
+# SPDX-FileCopyrightText: 2026 Artur Wiebe <artur@4wiebe.de>
+# SPDX-License-Identifier: MIT
+
+
+error()
+{
+	echo "!!! ERROR: $1 -> aborting"
+	exit
+}
+trap 'exec sleep infinity' EXIT
+
+
+echo "### run install"
+mount --ro $(waitfs install) install || \
+	error "install partition not found"
+
+echo "### verify installation files"
+(cd install && sha256sum -c /install.hash) || \
+	error "installation files are corrupt"
+
+
+. /install.board
+
+
+echo "### search existing installation"
+while waitfs data > /dev/null
+do
+	echo "### Found existing installation!"
+	echo "  update  > Update existing installation"
+	echo "  install > Install: overwrites the existing installation irreversibly!"
+	printf "Select action: "
+	read action
+	case "$action" in
+		update)
+			cryptkey_unseal
+			dmcrypt_setup
+			update install/update
+			return ;;
+		install)
+			break ;;
+	esac
+done
+
+
+secure_boot_setup
+
+
+echo "### cache installation files"
+cp install/system.img install/update /tmp
+umount install
+
+
+echo "### install system to $SYSTEM_DEV"
+ignore blkdiscard $SYSTEM_DEV
+dd if=/tmp/system.img of=$SYSTEM_DEV bs=1M
+
+
+echo "### extend partition table"
+sfdisk --append $SYSTEM_DEV <<- +++
+	size=4G, type=linux, name="root"
+			 type=linux, name="data"
++++
+
+
+echo "### create and seal crypt key"
+dd if=/dev/urandom bs=64 count=1 of=$CRYPTKEY_FILE
+cryptkey_seal
+
+dmcrypt_setup
+
+
+echo "### create data file system"
+mkfs.ext4 -Fq /dev/mapper/data
+
+update /tmp/update
+
+
+install_board
+
+sync

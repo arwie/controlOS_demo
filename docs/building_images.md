@@ -37,10 +37,9 @@ ptxdist/make
 
 This single command enters the build container and runs the full build pipeline. The `Makefile` chains the build steps in dependency order:
 
-
-1. **update** - builds the root filesystem, compresses it with XZ and signs it with GPG, producing the `update.gpg` file
-2. **system.img** - builds the complete system disk image containing a boot partition and an init partition with the update file
-3. **install.img** - builds the bootable USB installer image that writes `system.img` onto the target's internal SSD
+1. **initramfs** - builds the boot initramfs (cpio) containing the init, boot, and install scripts
+2. **update** - builds the root filesystem, compresses it with XZ and signs it with GPG, producing the `update.gpg` file
+3. **install** - builds the bootable USB installer image containing the signed kernel (with embedded initramfs), system.img (GPT with EFI boot partition), update file, and Secure Boot keys
 
 If only the update file is needed (e.g. for deploying a software change to existing systems):
 
@@ -57,8 +56,7 @@ Images
 After a successful build, the `images/` directory contains symlinks to the built artifacts:
 
 * **`update-<platform>.gpg`** - signed and encrypted full system update file, ready to be installed on a running target via the GUI software update page
-* **`system-<platform>.img.xz`** - compressed system image to be flashed onto the target's internal drive
-* **`install-<platform>.img.xz`** - bootable USB image that, when booted on the target, automatically flashes `system.img` onto the internal SSD
+* **`install-<platform>.img.xz`** - bootable USB installer image that, when booted on the target, automatically partitions and installs the system onto the internal SSD
 * **`flash`** - helper script for writing images to a USB drive or block device
 
 

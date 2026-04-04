@@ -1,0 +1,55 @@
+# SPDX-FileCopyrightText: 2026 Artur Wiebe <artur@4wiebe.de>
+# SPDX-License-Identifier: MIT
+
+
+mount -t efivarfs none /sys/firmware/efi/efivars
+
+
+secure_boot_setup()
+{
+	case "$(efivar -d -n 8be4df61-93ca-11d2-aa0d-00e098032b8c-SecureBoot)" in 0*)
+		echo "### uefi: enroll secure boot keys"
+
+		efivar -w -A 0x27 -n "d719b2cb-3d3a-4596-a3bc-dad00e67656f-db"  -f install/db.auth
+		efivar -w -A 0x27 -n "8be4df61-93ca-11d2-aa0d-00e098032b8c-KEK" -f install/KEK.auth
+		efivar -w -A 0x27 -n "8be4df61-93ca-11d2-aa0d-00e098032b8c-PK"  -f install/PK.auth
+		reboot -f
+	esac
+}
+
+
+cryptkey_seal()
+(
+	echo "### tpm: seal crypt key"
+	cd /tmp
+
+	ignore tpm2_evictcontrol -c $TPM_KEY
+	ignore tpm2_evictcontrol -c $TPM_POL
+
+	tpm2_createprimary -c primary.ctx -G ecc
+	tpm2_evictcontrol  -c primary.ctx $TPM_KEY
+
+	tpm2_startauthsession -S policy.ctx
+	tpm2_policypcr -S policy.ctx -l $TPM_PCR -L policy.dgst
+	tpm2_flushcontext policy.ctx
+
+	tpm2_create -C $TPM_KEY -u seal.pub -r seal.priv -L policy.dgst -i $CRYPTKEY_FILE
+	tpm2_load   -C $TPM_KEY -u seal.pub -r seal.priv -c seal.ctx
+	tpm2_evictcontrol -c seal.ctx $TPM_POL
+)
+
+
+install_board()
+{
+	echo "### uefi: create boot configuration"
+	efibootmgr -c -d $SYSTEM_DEV -p 1 -l /EFI/BOOT/BOOTx64.EFI -L "controlOS"
+}
+
+
+BOARD_INFO=/sys/devices/virtual/dmi/id
+BOARD="$(cat $BOARD_INFO/board_name)@$(cat $BOARD_INFO/board_vendor)"
+
+[ -f "/install.boards/$BOARD" ] || \
+	error "board {$BOARD} not supported"
+
+. "/install.boards/$BOARD"

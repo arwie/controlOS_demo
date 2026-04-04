@@ -3,5 +3,3 @@
 config SYSTEM
 	bool
 	prompt "system"
-	help
-	  FIXME

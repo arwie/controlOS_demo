@@ -1,49 +1,47 @@
 #!/usr/bin/python -Bu
 
-# Copyright (c) 2021 Artur Wiebe <artur@4wiebe.de>
-#
-# Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
-# associated documentation files (the "Software"), to deal in the Software without restriction,
-# including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
-# and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so,
-# subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
-# INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-# WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+# SPDX-FileCopyrightText: 2026 Artur Wiebe <artur@4wiebe.de>
+# SPDX-License-Identifier: MIT
 
-
-import argparse, subprocess, tempfile, socket, os, shutil
+import socket, os
+from argparse import ArgumentParser
+from tempfile import TemporaryDirectory
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler
 from systemd import daemon
-from shared import log, system
+from shared import log
+from shared.system import gpg, tar_create, reboot
 
 
-parser = argparse.ArgumentParser()
+parser = ArgumentParser()
 parser.add_argument("--restore", action="store_true", help="restore backupt (from stdin)")
 args = parser.parse_args()
 
 
 def restore():
-	with tempfile.TemporaryDirectory(prefix='backup_', dir='/var/tmp') as gpghome:
-		os.chdir(gpghome)
-		status = system.run('set -o pipefail; gpg --options=/etc/gpg/gpg.conf --decrypt --passphrase-file=/etc/gpg/backup.symkey | tar -xJ', env={'GNUPGHOME':gpghome}).stderr.decode()
-		for key in ['NEED_PASSPHRASE_SYM','DECRYPTION_INFO','DECRYPTION_OKAY']:
-			if not key in status:
-				raise Exception('unexpected gpg status output')
+	with TemporaryDirectory(dir='/var/tmp', prefix='backup_') as tmp:
+		gpg(
+			'--decrypt',
+			'--passphrase-file=/etc/gpg/backup.symkey',
+			status={'NEED_PASSPHRASE_SYM','DECRYPTION_INFO','DECRYPTION_OKAY'},
+			output=f'{tmp}/backup'
+		)
 		os.sync()
-		shutil.rmtree('/var/etc', ignore_errors=True)
-		shutil.move('etc', '/var')
-	system.reboot()
+		os.rename(f'{tmp}/backup', '/var/backup')
+	reboot()
 
-def store(capture):
-	with tempfile.TemporaryDirectory(prefix='backup_') as gpghome:
-		return system.run('set -o pipefail; tar -cJ -C/var etc local | gpg --options=/etc/gpg/gpg.conf --symmetric --passphrase-file=/etc/gpg/backup.symkey --encrypt --recipient-file=/etc/gpg/backup.pubkey', capture, env={'GNUPGHOME':gpghome})
+
+def backup(capture:bool):
+	tar = tar_create('/var', 'etc')
+	return gpg(
+		'--symmetric',
+		'--passphrase-file=/etc/gpg/backup.symkey',
+		'--encrypt',
+		'--recipient-file=/etc/gpg/backup.pubkey',
+		input=tar,
+		output=capture
+	)
+
 
 
 class storeHttpHandler(BaseHTTPRequestHandler):
@@ -52,7 +50,7 @@ class storeHttpHandler(BaseHTTPRequestHandler):
 	
 	def do_GET(self):
 		try:
-			binary = store(True)
+			binary = backup(True)
 		except Exception as e:
 			log.exception('ERROR in backup')
 			self.send_error(HTTPStatus.INTERNAL_SERVER_ERROR, str(e))
@@ -69,10 +67,7 @@ class storeHttpHandler(BaseHTTPRequestHandler):
 if daemon.listen_fds():
 	systemdSocket = socket.fromfd(daemon.LISTEN_FDS_START, socket.AF_INET6, socket.SOCK_STREAM)
 	storeHttpHandler(systemdSocket, systemdSocket.getpeername(), None) #type:ignore
-	exit()
-
-
-if args.restore:
+elif args.restore:
 	restore()
 else:
-	store(False)
+	backup(False)

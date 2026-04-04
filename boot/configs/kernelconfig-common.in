@@ -1,4 +1,4 @@
-CONFIG_INITRAMFS_SOURCE="# Automatically set by PTXDist"
+## Platform independent settings for boot kernel
 
 CONFIG_PREEMPT_NONE=y
 
@@ -20,7 +20,6 @@ CONFIG_PREEMPT_NONE=y
 
 # CONFIG_FS_VERITY is not set
 # CONFIG_SECURITY is not set
-# CONFIG_MD is not set
 # CONFIG_MISC_FILESYSTEMS is not set
 # CONFIG_NETWORK_FILESYSTEMS is not set
 # CONFIG_JFS_FS is not set

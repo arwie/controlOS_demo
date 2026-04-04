@@ -1,0 +1,6 @@
+## SECTION=rootfs
+
+config USR_ROOTFS
+	bool
+	default y
+	select BASE

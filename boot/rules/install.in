@@ -1,7 +1,0 @@
-## SECTION=project_specific
-
-config INSTALL
-	tristate
-	prompt "install"
-	help
-	  FIXME

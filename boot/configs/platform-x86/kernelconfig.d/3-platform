@@ -1,4 +1,5 @@
-CONFIG_CMDLINE_BOOL=y
-CONFIG_CMDLINE="console=tty0"
+CONFIG_CMDLINE="rdinit=/boot console=tty0"
 
 CONFIG_EFI_STUB=y
+
+CONFIG_INITRAMFS_SOURCE="# Automatically set by PTXDist"

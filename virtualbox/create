@@ -20,42 +20,45 @@ UUID=$(cat vm/uuid)
 # create and configure new vm
 vboxmanage createvm --uuid=$UUID \
 	--register \
-	--ostype=Linux_64 \
-	--basefolder=$BASEDIR/vm \
-	--name=$(basename $(dirname $BASEDIR))
+	--ostype Linux_64 \
+	--basefolder $BASEDIR/vm \
+	--name $(basename $(dirname $BASEDIR))
 
 vboxmanage modifyvm $UUID \
-	--firmware=efi64 \
-	--memory=1024 \
-	--cpus=3 \
-	--nic1=hostonly \
-	--nic-type1=virtio \
-	--nicpromisc1=allow-all \
-	--host-only-adapter1=vboxnet0 \
-	--nic2=nat \
-	--nic-type2=virtio \
-	--rtcuseutc=on \
-	--graphicscontroller=vmsvga \
-	--vram=128 \
-	--accelerate-3d=on \
-	--usb-xhci=on \
-	--mouse=usbtablet \
-	--audio-enabled=off
+	--firmware efi64 \
+	--memory 1024 \
+	--cpus 3 \
+	--tpm-type 2.0 \
+	--nic1 hostonly \
+	--nic-type1 virtio \
+	--nicpromisc1 allow-all \
+	--host-only-adapter1 vboxnet0 \
+	--nic2 nat \
+	--nic-type2 virtio \
+	--rtcuseutc on \
+	--graphicscontroller vmsvga \
+	--vram 128 \
+	--accelerate-3d on \
+	--usb-xhci on \
+	--mouse usbtablet \
+	--uart1 0x3F8 4 \
+	--uart-mode1 server $BASEDIR/vm/uart \
+	--audio-enabled off
 
 
 # create and attach system disk
-xzcat ../boot/platform-x86/images/system.img.xz | \
-	vboxmanage convertfromraw stdin vm/system.vdi 4294967296
+xzcat ../boot/platform-x86/images/install.img.xz | \
+	vboxmanage convertfromraw stdin vm/system.vdi $((8 * 1024 * 1024 * 1024))
 
 vboxmanage storagectl $UUID \
-	--add=sata \
-	--name=sata \
-	--controller=IntelAhci \
-	--portcount=1 \
-	--hostiocache=on
+	--add sata \
+	--name sata \
+	--controller IntelAhci \
+	--portcount 1 \
+	--hostiocache on
 
 vboxmanage storageattach $UUID \
-	--medium=vm/system.vdi \
-	--storagectl=sata \
-	--type=hdd \
-	--port=0
+	--medium vm/system.vdi \
+	--storagectl sata \
+	--type hdd \
+	--port 0
