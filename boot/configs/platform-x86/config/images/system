@@ -10,7 +10,6 @@ image linuximage.signed {
 
 image system_boot.vfat {
 	vfat {
-		label = boot
 		file EFI/BOOT/BOOTx64.EFI { image = linuximage.signed }
 	}
 	size = 16M
@@ -22,7 +21,7 @@ image system.img {
 		partition-table-type = gpt
 		align = 1M
 	}
-	partition system_boot {
+	partition boot {
 		image = system_boot.vfat
 		partition-type-uuid = U
 		bootable = true

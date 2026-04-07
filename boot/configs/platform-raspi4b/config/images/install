@@ -23,7 +23,6 @@ image install_boot.vfat {
 
 image install_payload.vfat {
 	vfat {
-		label = install
 		@PAYLOAD@
 	}
 	size = @SIZE@
@@ -32,14 +31,15 @@ image install_payload.vfat {
 
 image install.img {
 	hdimage { 
+		partition-table-type = gpt
 		align = 1M
 	}
-	partition install_boot {
+	partition rpi {
 		image = install_boot.vfat
-		partition-type = 0x0C
+		partition-type-uuid = F
 	}
-	partition install_payload {
+	partition install {
 		image = install_payload.vfat
-		partition-type = 0x0C
+		partition-type-uuid = F
 	}
 }

@@ -21,7 +21,6 @@ image boot.img {
 
 image system_boot.vfat {
 	vfat {
-		label = boot
 		files = { config.txt, boot.img }
 	}
 	size = 64M
@@ -33,11 +32,11 @@ image system.img {
 		partition-table-type = gpt
 		align = 1M
 	}
-	partition system_boot {
+	partition boot {
 		image = system_boot.vfat
 		partition-type-uuid = F
 	}
-	partition system_init {
+	partition init {
 		size = 64M
 		partition-type-uuid = F
 	}

@@ -18,12 +18,7 @@ image install_boot.vfat {
 
 image install_payload.vfat {
 	vfat {
-		label = install
-		file system.img { image = system.img }
-		file update     { image = update }
-		file db.auth    { image = db.auth }
-		file KEK.auth   { image = KEK.auth }
-		file PK.auth    { image = PK.auth }
+		@PAYLOAD@
 	}
 	size = @SIZE@
 	temporary = true
@@ -34,12 +29,12 @@ image install.img {
 		partition-table-type = hybrid
 		align = 1M
 	}
-	partition install_boot {
+	partition efi {
 		image = install_boot.vfat
 		partition-type = 0xEF
 		bootable = true
 	}
-	partition install_payload {
+	partition install {
 		image = install_payload.vfat
 		partition-type = 0x0C
 	}

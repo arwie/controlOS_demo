@@ -25,7 +25,7 @@ waitfs()
 {
 	TIMEOUT=${2-100}
 
-	while ! (findfs PARTLABEL=$1 2>/dev/null || findfs LABEL=$1 2>/dev/null)
+	while ! findfs PARTLABEL=$1 2>/dev/null
 	do
 		[ $(( --TIMEOUT )) -gt 0 ] || return 1
 		sleep 0.1

@@ -6,7 +6,7 @@ update_board()
 { 
 	echo "### write update system.img"
 
-	cat root/boot/system.img > /dev/mmcblk0p2
+	cat root/boot/system.img > $(waitfs init)
 	sync
 }
 
