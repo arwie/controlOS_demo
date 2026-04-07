@@ -1,0 +1,44 @@
+# SPDX-FileCopyrightText: 2026 Artur Wiebe <artur@4wiebe.de>
+# SPDX-License-Identifier: MIT
+
+
+image config.txt {
+	custom {
+		exec = 'echo "boot_ramdisk=1" > ${IMAGEOUTFILE}'
+	}
+}
+
+image boot.img {
+	vfat {
+		@BOOTFILES@
+		file kernel8.img { image = "linuximage" }
+		file initramfs8  { image = "root.cpio" }
+		files += bcm2711-rpi-4-b.dtb
+	}
+	size = 48M
+	temporary = true
+}
+
+image system_boot.vfat {
+	vfat {
+		label = boot
+		files = { config.txt, boot.img }
+	}
+	size = 64M
+	temporary = true
+}
+
+image system.img {
+	hdimage { 
+		partition-table-type = gpt
+		align = 1M
+	}
+	partition system_boot {
+		image = system_boot.vfat
+		partition-type-uuid = F
+	}
+	partition system_init {
+		size = 64M
+		partition-type-uuid = F
+	}
+}

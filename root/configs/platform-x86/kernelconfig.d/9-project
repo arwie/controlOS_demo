@@ -1,3 +1,6 @@
+CONFIG_CMDLINE="irqaffinity=0 isolcpus=1 nohz_full=1 rcu_nocbs=1"
+
+
 ## ThinkEdge
 ## frimware: iwlwifi-ty-a0-gf-a0-83.ucode + iwlwifi-ty-a0-gf-a0.pnvm
 CONFIG_IGC=m

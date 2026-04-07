@@ -1,0 +1,1 @@
+rdinit=/boot console=ttyS0,115200

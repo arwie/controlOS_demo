@@ -1,0 +1,6 @@
+## SECTION=platform_project_specific
+
+config BOARD
+	bool
+	select IMAGE_SYSTEM
+	prompt "board"

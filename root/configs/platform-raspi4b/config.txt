@@ -1,11 +1,7 @@
-IMAGE="Image"
-DTB="bcm2711-rpi-4-b.dtb"
-BOOTARGS="console=ttyS0,115200 irqaffinity=0 isolcpus=1,2 nohz_full=1,2 rcu_nocbs=1,2"
-CONFIG="
+auto_initramfs=1
 arm_boost=0
 enable_uart=1
 dtparam=spi=on
 dtoverlay=mcp251xfd-overlay,spi0-0,interrupt=25
 dtoverlay=vc4-kms-v3d-pi4-overlay
 disable_fw_kms_setup=1
-"

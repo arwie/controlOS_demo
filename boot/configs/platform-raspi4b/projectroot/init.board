@@ -1,0 +1,13 @@
+# SPDX-FileCopyrightText: 2026 Artur Wiebe <artur@4wiebe.de>
+# SPDX-License-Identifier: MIT
+
+
+cryptkey_unseal()
+{
+	echo "### tpm: unseal crypt key"
+
+	#TODO: read from OTP
+	mount --ro $(waitfs boot) /mnt/boot
+	cp /mnt/boot/crypt.key $CRYPTKEY_FILE
+	umount /mnt/boot
+}

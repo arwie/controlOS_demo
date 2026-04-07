@@ -199,8 +199,8 @@ PTXCONF_IMAGE_KERNEL=y
 #
 # Generate images/linuximage    
 #
-PTXCONF_IMAGE_KERNEL_INITRAMFS=y
-PTXCONF_IMAGE_KERNEL_INSTALL_LATE=y
+# PTXCONF_IMAGE_KERNEL_INITRAMFS is not set
+PTXCONF_IMAGE_KERNEL_INSTALL_EARLY=y
 # PTXCONF_IMAGE_KERNEL_LZOP is not set
 # end of Generate images/linuximage    
 
@@ -231,7 +231,7 @@ PTXCONF_IMAGE_XPKG_EXTRA_ARGS=""
 # end of ipkg options                  
 
 # PTXCONF_KERNEL_FIT is not set
-# PTXCONF_IMAGE_INSTALL is not set
+PTXCONF_IMAGE_INSTALL=y
 PTXCONF_IMAGE_SYSTEM=y
 # end of image creation options        
 

@@ -1,0 +1,28 @@
+# SPDX-FileCopyrightText: 2026 Artur Wiebe <artur@4wiebe.de>
+# SPDX-License-Identifier: MIT
+
+
+SYSTEM_DEV=/dev/mmcblk0
+
+
+secure_boot_setup()
+{
+	:; #TODO: write cert into OTP
+}
+
+
+cryptkey_seal()
+{
+	echo "### seal crypt key"
+
+	#TODO: write into OTP
+	mount $(waitfs boot) boot
+	cp $CRYPTKEY_FILE boot/crypt.key
+	umount boot
+}
+
+
+install_board()
+{
+	:;
+}

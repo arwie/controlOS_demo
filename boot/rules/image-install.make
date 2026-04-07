@@ -13,14 +13,11 @@ IMAGE_INSTALL_DIR		:= $(BUILDDIR)/image-install
 IMAGE_INSTALL_IMAGE		:= $(IMAGEDIR)/install.img.xz
 IMAGE_INSTALL_CONFIG	:= install
 IMAGE_INSTALL_UPDATE	:= $(PTXDIST_WORKSPACE)/../root/platform-$(PTXCONF_PLATFORM)/images/update
+IMAGE_INSTALL_PAYLOAD	:= system.img.xz update
 
 IMAGE_INSTALL_CPIO_DIR		:= $(BUILDDIR)/image-install-cpio
 IMAGE_INSTALL_CPIO_IMAGE	:= $(IMAGEDIR)/install.cpio
 IMAGE_INSTALL_CPIO_FILES	:= $(IMAGEDIR)/root.tgz $(IMAGEDIR)/install.hash.tar
-
-IMAGE_SYSTEM_DIR		:= $(BUILDDIR)/image-system
-IMAGE_SYSTEM_IMAGE		:= $(IMAGEDIR)/system.img
-IMAGE_SYSTEM_CONFIG		:= system
 
 # ----------------------------------------------------------------------------
 # Image
@@ -30,15 +27,16 @@ IMAGE_INSTALL_CPIO_CONFIG	= $(IMAGE_ROOT_CPIO_CONFIG)
 IMAGE_INSTALL_CPIO_ENV		= $(IMAGE_ROOT_CPIO_ENV)
 
 IMAGE_INSTALL_ENV = \
+	PAYLOAD="$(foreach f,$(IMAGE_INSTALL_PAYLOAD),files += $(f))" \
 	SIZE="$(shell echo $$(( $$(stat -L -c%s $(IMAGE_INSTALL_UPDATE)) + 32*1024*1024 )) )"
 
 $(IMAGE_INSTALL_IMAGE): $(IMAGE_INSTALL_UPDATE)
 	@$(call targetinfo)
 
 	@ln -sf $(IMAGE_INSTALL_UPDATE) $(IMAGEDIR)/update
-	@$(call image/genimage, IMAGE_SYSTEM)
-
-	@cd $(IMAGEDIR) && tar -cf install.hash.tar install.hash
+	@cd $(IMAGEDIR) \
+		&& sha256sum $(IMAGE_INSTALL_PAYLOAD) > install.hash \
+		&& tar -cf install.hash.tar install.hash
 	@$(call image/genimage, IMAGE_INSTALL_CPIO)
 
 ifdef PTXCONF_IMAGE_KERNEL_INITRAMFS

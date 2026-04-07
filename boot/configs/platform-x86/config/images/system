@@ -49,9 +49,3 @@ image PK.auth {
 		exec = 'cd ${PTXDIST_WORKSPACE}/../keys && sign-efi-sig-list -k sb.key -c sb.crt PK  ${INPUTPATH}/sb.esl ${IMAGEOUTFILE}'
 	}
 }
-
-image install.hash {
-	custom {
-		exec = 'cd ${INPUTPATH} && sha256sum system.img update db.auth KEK.auth PK.auth > ${IMAGEOUTFILE}'
-	}
-}

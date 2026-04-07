@@ -1,0 +1,45 @@
+# SPDX-FileCopyrightText: 2026 Artur Wiebe <artur@4wiebe.de>
+# SPDX-License-Identifier: MIT
+
+
+image boot.img {
+	vfat {
+		@BOOTFILES@
+		file kernel8.img { image = "linuximage" }
+		file initramfs8  { image = "install.cpio" }
+		files += bcm2711-rpi-4-b.dtb
+	}
+	size = 48M
+	temporary = true
+}
+
+image install_boot.vfat {
+	vfat {
+		files = { config.txt, boot.img }
+	}
+	size = 64M
+	temporary = true
+}
+
+image install_payload.vfat {
+	vfat {
+		label = install
+		@PAYLOAD@
+	}
+	size = @SIZE@
+	temporary = true
+}
+
+image install.img {
+	hdimage { 
+		align = 1M
+	}
+	partition install_boot {
+		image = install_boot.vfat
+		partition-type = 0x0C
+	}
+	partition install_payload {
+		image = install_payload.vfat
+		partition-type = 0x0C
+	}
+}

@@ -1,0 +1,17 @@
+# SPDX-FileCopyrightText: 2026 Artur Wiebe <artur@4wiebe.de>
+# SPDX-License-Identifier: MIT
+
+
+update_board()
+{ 
+	echo "### write update system.img"
+
+	cat root/boot/system.img > /dev/mmcblk0p2
+	sync
+}
+
+
+boot()
+{
+	raspi-reboot 2
+}

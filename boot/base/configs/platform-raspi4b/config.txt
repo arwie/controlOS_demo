@@ -1,2 +1,3 @@
+auto_initramfs=1
 enable_uart=1
 arm_boost=0

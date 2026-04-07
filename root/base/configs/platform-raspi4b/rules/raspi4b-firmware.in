@@ -1,7 +1,0 @@
-## SECTION=non_free_firmware
-
-config RASPI4B_FIRMWARE
-	bool
-	prompt "RasPi4B Firmware"
-	help
-	  FIXME

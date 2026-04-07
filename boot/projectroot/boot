@@ -18,6 +18,7 @@ update()
 
 	echo "### install update from $1"
 	tar --extract \
+		--warning=none \
 		--xattrs \
 		--xattrs-include='*' \
 		--directory=root \

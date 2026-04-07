@@ -233,6 +233,7 @@ PTXCONF_IMAGE_XPKG_EXTRA_ARGS=""
 
 # PTXCONF_KERNEL_FIT is not set
 PTXCONF_IMAGE_INSTALL=y
+PTXCONF_IMAGE_SYSTEM=y
 # end of image creation options        
 
 # PTXCONF_CODE_SIGNING is not set

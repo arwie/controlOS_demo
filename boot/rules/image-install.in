@@ -2,11 +2,10 @@
 
 config IMAGE_INSTALL
 	bool
-	select IMAGE_ROOT_TGZ
-	select IMAGE_KERNEL
+	select IMAGE_SYSTEM
 	select HOST_GENIMAGE
 	select HOST_DOSFSTOOLS
 	select HOST_MTOOLS
-	prompt "Generate images/install.img"
+	prompt "Generate images/install.img.xz"
 	help
 	  Generate install image

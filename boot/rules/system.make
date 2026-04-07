@@ -16,7 +16,7 @@ $(STATEDIR)/system.targetinstall:
 	@$(call targetinfo)
 	@$(call install_init, system)
 
-	@$(foreach mnt, install data root, \
+	@$(foreach mnt, install boot root data, \
 		$(call install_copy, system, 0, 0, 0755, /mnt/$(mnt)); \
 	)
 
