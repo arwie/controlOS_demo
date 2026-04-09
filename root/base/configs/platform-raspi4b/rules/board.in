@@ -2,5 +2,8 @@
 
 config BOARD
 	bool
-	select IMAGE_SYSTEM
+	select KERNEL
+	select HOST_GENIMAGE
+	select HOST_DOSFSTOOLS
+	select HOST_MTOOLS
 	prompt "board"

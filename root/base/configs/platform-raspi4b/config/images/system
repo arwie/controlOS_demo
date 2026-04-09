@@ -11,7 +11,7 @@ image config.txt {
 image boot.img {
 	vfat {
 		@BOOTFILES@
-		file kernel8.img { image = "linuximage" }
+		file kernel8.img { image = "@KERNEL@" }
 		file initramfs8  { image = "initramfs" }
 		files += bcm2711-rpi-4-b.dtb
 		@OVERLAYS@

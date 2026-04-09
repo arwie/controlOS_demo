@@ -24,7 +24,7 @@ CODEMETER_LIB			:= aarch64-linux-gnu
 endif
 CODEMETER_URL			:= https://undefined
 CODEMETER_SOURCE		:= $(SRCDIR)/$(CODEMETER).deb
-CODEMETER_LICENSE		:= unknown
+CODEMETER_LICENSE		:= proprietary
 
 # ----------------------------------------------------------------------------
 # Get

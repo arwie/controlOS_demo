@@ -113,7 +113,7 @@ export const NavDropdown = {
 export const ButtonBar = {
 	template: //html
 	`
-	<div class="py-3">
+	<div class="py-3 mt-auto">
 		<slot></slot>
 	</div>
 	`

@@ -10,6 +10,7 @@ PACKAGES-$(PTXCONF_APP) += app
 
 APP_VERSION	:= 1
 APP_SRC		:= $(PTXDIST_WORKSPACE)/../code/app
+APP_LICENSE	:= ignore
 
 # ----------------------------------------------------------------------------
 # Target-Install

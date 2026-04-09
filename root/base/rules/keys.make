@@ -12,6 +12,7 @@ KEYS_VERSION		:= 1
 KEYS			:= keys
 KEYS_URL		:= file://$(PTXDIST_WORKSPACE)/../keys/projectroot
 KEYS_DIR		:= $(BUILDDIR)/$(KEYS)
+KEYS_LICENSE	:= ignore
 
 # ----------------------------------------------------------------------------
 # Compile

@@ -18,7 +18,7 @@ ESP32_VERSION	:= 1
 ESP32			:= esp32-$(ESP32_VERSION)
 ESP32_URL		:= file://local_src/esp32
 ESP32_DIR		:= $(BUILDDIR)/$(ESP32)
-ESP32_LICENSE	:= unknown
+ESP32_LICENSE	:= ignore
 
 ESP32_PROJECTS = $(call remove_quotes, $(PTXCONF_ESP32_PROJECTS))
 ESP32_INSTALL  = /usr/lib/esp32

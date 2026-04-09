@@ -11,6 +11,7 @@ PACKAGES-$(PTXCONF_PYTHON_SHARED) += python-shared
 PYTHON_SHARED_VERSION	:= 1
 PYTHON_SHARED		:= python-shared
 PYTHON_SHARED_SRC	:= $(PTXDIST_WORKSPACE)/../code/shared
+PYTHON_SHARED_LICENSE	:= ignore
 
 # ----------------------------------------------------------------------------
 # Target-Install

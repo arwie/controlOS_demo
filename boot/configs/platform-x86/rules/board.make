@@ -7,6 +7,7 @@
 PACKAGES-$(PTXCONF_BOARD) += board
 
 BOARD_VERSION	:= 1
+BOARD_LICENSE	:= ignore
 
 # ----------------------------------------------------------------------------
 # Target-Install

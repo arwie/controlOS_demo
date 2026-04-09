@@ -4,6 +4,7 @@
 PACKAGES-$(PTXCONF_CUSTOM) += custom
 
 CUSTOM_VERSION		:= 1
+CUSTOM_LICENSE		:= ignore
 
 # ----------------------------------------------------------------------------
 # Target-Install

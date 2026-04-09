@@ -12,6 +12,7 @@
 PACKAGES-$(PTXCONF_SYSTEM) += system
 
 SYSTEM_VERSION	:= 0.1
+SYSTEM_LICENSE	:= ignore
 
 # ----------------------------------------------------------------------------
 # Target-Install

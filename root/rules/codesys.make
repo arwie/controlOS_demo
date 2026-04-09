@@ -22,7 +22,7 @@ CODESYS_MD5			:= 91b4f8200d4d4b40dcf7aa0008a9f180
 endif
 CODESYS_URL			:= https://undefined
 CODESYS_SOURCE			:= $(SRCDIR)/$(CODESYS).deb
-CODESYS_LICENSE			:= unknown
+CODESYS_LICENSE			:= proprietary
 
 # ----------------------------------------------------------------------------
 # Get

@@ -10,6 +10,7 @@ PACKAGES-$(PTXCONF_GUI) += gui
 
 GUI_VERSION	:= 1
 GUI_SRC		:= $(PTXDIST_WORKSPACE)/../code/gui
+GUI_LICENSE	:= ignore
 
 # ----------------------------------------------------------------------------
 # Target-Install

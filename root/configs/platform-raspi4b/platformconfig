@@ -228,7 +228,6 @@ PTXCONF_IMAGE_XPKG_EXTRA_ARGS=""
 # end of ipkg options                  
 
 # PTXCONF_KERNEL_FIT is not set
-PTXCONF_IMAGE_SYSTEM=y
 PTXCONF_IMAGE_UPDATE=y
 # end of image creation options        
 
