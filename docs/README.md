@@ -45,11 +45,12 @@ A containerized build environment pins exact versions of Debian, PTXdist and the
 
 The same codebase and build system support multiple hardware platforms — x86, Raspberry Pi, and VirtualBox — with per-platform kernel and board configurations.
 
-### Read-Only Root Filesystem
+### Security
 
-The root filesystem is mounted read-only in normal operation, protecting against corruption from unexpected power loss. Persistent data is stored on a separate writable partition.
+The system is secured from boot to runtime. UEFI Secure Boot ensures only signed kernels can start the system. All persistent storage is encrypted with dm-crypt, with the encryption key sealed in a TPM 2.0 chip and bound to the boot chain — disks are unreadable outside the original hardware. The root filesystem is mounted read-only; device-specific configuration lives on a separate encrypted data partition via an overlayfs on /etc. Software updates are GPG-signed and encrypted. Backups are encrypted per-device and additionally to a developer key for offline recovery.
 
 ## Further Reading
 
 - [Project Structure](project_structure.md) — repository layout, PTXdist projects and application code organization
 - [Building Images](building_images.md) — build environment setup, image creation and deployment
+- [Security Architecture](security_architecture.md) — secure boot, disk encryption, signed updates and key management
