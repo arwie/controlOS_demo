@@ -25,6 +25,7 @@
                   <HostParameterSet />
                 </Connector>
                 <DeviceParameterSet />
+                <DriverInfo />
               </DeviceType>
             </Device>
           </data>

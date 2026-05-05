@@ -1,0 +1,11 @@
+[Service]
+
+Type=exec
+ExecStart=/opt/codesyssafecontrol/scripts/TestTimeProvider.py
+
+# real-time scheduling
+CPUSchedulingPolicy=fifo
+CPUSchedulingPriority=40
+
+RestartSec=5
+Restart=always

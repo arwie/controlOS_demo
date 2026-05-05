@@ -1,0 +1,23 @@
+[Unit]
+Wants=codesys-log.service
+After=codesys-log.service
+
+Wants=codesys-time-provider.service
+After=codesys-time-provider.service
+
+Requires=codesys.service
+Before=codesys.service
+
+
+[Service]
+WorkingDirectory=/var/opt/codesyssafecontrol
+
+StandardOutput=tty
+TTYPath=/run/codesys-log/tty
+Environment=TERM=dumb
+
+Type=exec
+ExecStart=/opt/codesyssafecontrol/lib/ld-linux.so.2 --library-path /opt/codesyssafecontrol/lib /opt/codesyssafecontrol/bin/codesyssafecontrol.bin /etc/codesyssafecontrol/CODESYSSafeControl.cfg
+
+RestartSec=5
+Restart=always

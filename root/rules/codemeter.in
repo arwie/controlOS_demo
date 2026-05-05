@@ -8,7 +8,6 @@ config CODEMETER
 	select LIBC_M
 	select GCCLIBS_GCC_S
 	select LIBUSB		if RUNTIME
-	select ZLIB		if RUNTIME
 	prompt "CodeMeter"
 	help
 	  Wibu CodeMeter license manager.

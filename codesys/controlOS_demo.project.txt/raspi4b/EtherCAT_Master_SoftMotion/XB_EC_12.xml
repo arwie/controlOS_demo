@@ -953,6 +953,7 @@
                       </Parameter>
                     </ParameterSection>
                   </HostParameterSet>
+                  <DriverInfo />
                 </Connector>
                 <Connector moduleType="67" interface="Common.Ethercat" connectorId="10" hostpath="1">
                   <HostParameterSet>

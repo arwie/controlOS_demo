@@ -1,0 +1,13 @@
+## SECTION=applications
+
+config CODESYS_SAFETY
+	tristate
+	select LIBC_M
+	select LIBC_PTHREAD
+	select LIBC_DL
+	select LIBC_RT
+	select GCCLIBS_GCC_S
+	select CODESYS		if RUNTIME
+	prompt "CODESYS Safe Control"
+	help
+	  CODESYS Virtual Safe Control SL

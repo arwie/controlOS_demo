@@ -128,6 +128,7 @@
                       </Parameter>
                     </ParameterSection>
                   </HostParameterSet>
+                  <DriverInfo />
                 </Connector>
                 <Connector moduleType="1248" interface="Common.SoftMotion.Logical" connectorId="1" hostpath="0">
                   <HostParameterSet />

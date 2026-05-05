@@ -213,6 +213,7 @@
                 </Connector>
                 <Connector moduleType="16" interface="Common.CANopen" connectorId="1" hostpath="0">
                   <HostParameterSet />
+                  <DriverInfo />
                 </Connector>
                 <DeviceParameterSet />
               </DeviceType>

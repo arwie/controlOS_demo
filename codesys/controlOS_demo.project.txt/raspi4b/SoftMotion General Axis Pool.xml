@@ -17,6 +17,7 @@
                 </DeviceIdentification>
                 <Connector moduleType="1249" role="child" interface="Common.SoftMotion.GeneralImplicit" connectorId="1">
                   <HostParameterSet />
+                  <DriverInfo />
                 </Connector>
                 <Connector moduleType="1279" interface="Common.SoftMotion.General" connectorId="2" hostpath="1">
                   <HostParameterSet />

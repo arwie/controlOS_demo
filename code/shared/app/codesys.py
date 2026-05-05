@@ -30,11 +30,11 @@ async def sync():
 
 
 def runstop_switch(run:bool):
-	Path('/var/opt/codesysextension/runstop.switch').write_bytes(b'RUN' if run else b'STOP')
+	Path('/var/opt/codesyscontrolapi/runstop.switch').write_bytes(b'RUN' if run else b'STOP')
 
 
 async def shell_cmd(cmd:str):
-	reader, writer = await asyncio.open_unix_connection('/var/run/codesysextension/plcshell.sock')
+	reader, writer = await asyncio.open_unix_connection('/var/opt/codesyscontrolapi/plcshell.sock')
 	with closing(writer):
 		writer.write(f'{cmd}\n'.encode())
 		await writer.drain()

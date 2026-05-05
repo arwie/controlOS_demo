@@ -13,7 +13,7 @@
                 <DeviceIdentification>
                   <Type>64</Type>
                   <Id>0000 1002</Id>
-                  <Version>4.10.0.0</Version>
+                  <Version>4.11.0.0</Version>
                 </DeviceIdentification>
                 <Connector moduleType="257" role="child" interface="Common.PCI" connectorId="1">
                   <HostParameterSet />
@@ -373,6 +373,7 @@
                       <Description>Config version</Description>
                     </Parameter>
                   </HostParameterSet>
+                  <DriverInfo />
                 </Connector>
                 <DeviceParameterSet />
               </DeviceType>

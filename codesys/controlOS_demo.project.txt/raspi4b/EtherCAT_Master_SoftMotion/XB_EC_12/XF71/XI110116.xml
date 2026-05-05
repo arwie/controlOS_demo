@@ -1239,6 +1239,7 @@
                       </Parameter>
                     </ParameterSection>
                   </HostParameterSet>
+                  <DriverInfo />
                 </Connector>
                 <DeviceParameterSet />
               </DeviceType>

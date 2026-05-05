@@ -2501,6 +2501,7 @@
                       <Name>ConfigVersion</Name>
                     </Parameter>
                   </HostParameterSet>
+                  <DriverInfo />
                 </Connector>
                 <Connector moduleType="1279" interface="Common.SoftMotion.CAN.DSP402" connectorId="1000" hostpath="0">
                   <HostParameterSet />

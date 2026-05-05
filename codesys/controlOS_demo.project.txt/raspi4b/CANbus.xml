@@ -88,6 +88,7 @@
                       <Name>Config Version</Name>
                     </Parameter>
                   </HostParameterSet>
+                  <DriverInfo />
                 </Connector>
                 <DeviceParameterSet />
               </DeviceType>

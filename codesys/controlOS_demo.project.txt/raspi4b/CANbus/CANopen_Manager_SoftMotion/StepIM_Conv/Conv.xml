@@ -1204,6 +1204,7 @@ Example: assuming _bImmediateDisabling is FALSE, the value 2#0110 means that onl
                       <Name>AddressPointer_8620</Name>
                     </Parameter>
                   </HostParameterSet>
+                  <DriverInfo />
                 </Connector>
                 <Connector moduleType="1248" interface="Common.SoftMotion.Logical" connectorId="1" hostpath="0">
                   <HostParameterSet />

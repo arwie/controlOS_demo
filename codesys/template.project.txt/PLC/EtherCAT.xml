@@ -333,6 +333,7 @@
                       <Description>Config version</Description>
                     </Parameter>
                   </HostParameterSet>
+                  <DriverInfo />
                 </Connector>
                 <DeviceParameterSet />
               </DeviceType>

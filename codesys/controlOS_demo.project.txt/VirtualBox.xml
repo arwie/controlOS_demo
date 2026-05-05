@@ -13,7 +13,7 @@
                 <DeviceIdentification>
                   <Type>4102</Type>
                   <Id>0000 0005</Id>
-                  <Version>4.15.0.0</Version>
+                  <Version>4.20.0.0</Version>
                 </DeviceIdentification>
                 <Connector moduleType="256" interface="Common.PCI" connectorId="0">
                   <HostParameterSet />
@@ -24,7 +24,17 @@
                 <Connector moduleType="1279" interface="Common.SoftMotion.General" connectorId="2">
                   <HostParameterSet />
                 </Connector>
+                <Connector moduleType="496" interface="Raspberry.I2CMaster" connectorId="3">
+                  <HostParameterSet />
+                </Connector>
+                <Connector moduleType="499" interface="Raspberry.OnewireMaster" connectorId="4">
+                  <HostParameterSet />
+                </Connector>
+                <Connector moduleType="497" interface="Raspberry.SPIMaster" connectorId="5">
+                  <HostParameterSet />
+                </Connector>
                 <DeviceParameterSet />
+                <DriverInfo />
               </DeviceType>
             </Device>
           </data>
