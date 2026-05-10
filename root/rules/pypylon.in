@@ -1,0 +1,14 @@
+## SECTION=python3
+
+config PYPYLON
+	tristate
+	select PYTHON3
+	select LIBC_PTHREAD
+	select LIBC_RT
+	select LIBC_DL
+	select LIBC_M
+	select GCCLIBS_CXX
+	select GCCLIBS_GCC_S
+	prompt "pypylon"
+	help
+	  The official python wrapper for the Basler pylon Camera Software Suite.
