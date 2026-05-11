@@ -1,0 +1,140 @@
+## SECTION=multimedia_libs
+
+menuconfig OPENCV
+	tristate
+	prompt "opencv                        "
+	select HOST_CMAKE
+	select HOST_SYSTEM_PYTHON3
+	select GCCLIBS_CXX
+	select ZLIB
+	select LIBPNG
+	select LIBJPEG
+	select QT5			if OPENCV_QT
+	select QT5_TEST			if OPENCV_QT
+	select QT5_GUI			if OPENCV_QT
+	select GSTREAMER1		if OPENCV_GSTREAMER
+	select GST_PLUGINS_BASE1	if OPENCV_GSTREAMER
+	select PYTHON3_NUMPY		if OPENCV_PYTHON
+	help
+	  Open Source Computer Vision Library
+
+if OPENCV
+
+config OPENCV_CALIB3D
+	bool
+	prompt "calib3d"
+	select OPENCV_FEATURES2D
+	help
+	  Camera Calibration and 3D Reconstruction
+
+config OPENCV_FEATURES2D
+	bool
+	prompt "features2d"
+	select OPENCV_FLANN
+	select OPENCV_IMGPROC
+	help
+	  2D Features Framework
+
+config OPENCV_FLANN
+	bool
+	prompt "flann"
+	help
+	  Clustering and Search in Multi-Dimensional Spaces
+
+config OPENCV_HIGHGUI
+	bool
+	prompt "highgui"
+	select OPENCV_IMGPROC
+	help
+	  High-level GUI and Media I/O
+
+config OPENCV_IMGPROC
+	bool
+	prompt "imgproc"
+	help
+	  Image Processing
+
+config OPENCV_IMGCODECS
+	bool
+	prompt "imgcodecs"
+	select OPENCV_IMGPROC
+	help
+	  Image Codecs
+
+config OPENCV_ML
+	bool
+	prompt "ml"
+	help
+	  Machine Learning
+
+config OPENCV_OBJDETECT
+	bool
+	prompt "objdetect"
+	select OPENCV_CALIB3D
+	select OPENCV_IMGPROC
+	help
+	  Object Detection
+
+config OPENCV_PHOTO
+	bool
+	prompt "photo"
+	select OPENCV_IMGPROC
+	help
+	  Computational Photography
+
+config OPENCV_STITCHING
+	bool
+	prompt "stitching"
+	select OPENCV_CALIB3D
+	select OPENCV_FEATURES2D
+	help
+	  Images stitching
+
+config OPENCV_VIDEO
+	bool
+	prompt "video"
+	select OPENCV_IMGPROC
+	help
+	  Video Analysis
+
+config OPENCV_VIDEOIO
+	bool
+	prompt "videoio"
+	select OPENCV_IMGCODECS
+	help
+	  Video I/O
+
+config OPENCV_DNN
+	bool
+	prompt "DNN"
+	select OPENCV_IMGPROC
+	help
+	  Deep Neural Network Library
+
+config OPENCV_GSTREAMER
+	bool
+	prompt "gstreamer"
+	select OPENCV_VIDEOIO
+	help
+	  Gstreamer Support
+
+config OPENCV_V4L
+	bool
+	prompt "v4l"
+	select OPENCV_VIDEOIO
+	help
+	  Video4Linux Support
+
+config OPENCV_QT
+	bool
+	prompt "qt"
+	help
+	  QT GUI Support
+
+config OPENCV_PYTHON
+	bool
+	prompt "Python bindings"
+	help
+	  Python bindings
+
+endif
