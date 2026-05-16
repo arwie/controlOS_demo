@@ -1,6 +1,7 @@
 from pathlib import Path
 from importlib import import_module
 from shared import app
+from shared.condition import Pulse
 import buttons
 import teach
 
@@ -34,9 +35,14 @@ async def run():
 	async with web_placeholder.handle(WebHandler):
 		while True:
 
-			async with teach.exec():
-				await app.poll(lambda: program and buttons.start())
-				assert program in programs
+			async with (
+				teach.exec(),
+			):
+				with buttons.led_running:
+					blink_pulse = Pulse(2)
+					while not (program and buttons.start()):
+						buttons.led_running(bool(program and blink_pulse()))
+						await app.sleep()
 
 			try:
 				with buttons.led_running(True):
