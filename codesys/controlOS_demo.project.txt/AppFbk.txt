@@ -14,6 +14,11 @@ STRUCT
 	conv_powered:		BOOL;
 	conv_move_done:		BOOL;
 	conv_move_error:	BOOL;
+
+	extra_pos:			LREAL;
+	extra_powered:		BOOL;
+	extra_move_done:	BOOL;
+	extra_move_error:	BOOL;
 	
 	io:		ARRAY [0..128] OF BOOL;
 END_STRUCT

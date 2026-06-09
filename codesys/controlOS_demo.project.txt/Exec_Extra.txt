@@ -1,0 +1,63 @@
+PROGRAM Exec_Extra
+VAR
+	ReadSetPosition: SMC_ReadSetPosition;
+
+	StatusPowerAxis: FB_StatusPowerAxis;
+	Halt: MC_Halt;
+
+	MoveAbsolute: MC_MoveAbsolute;
+	Jog: MC_Jog;
+END_VAR
+
+////////////////////////////////
+
+ReadSetPosition(
+	Axis := Extra,
+	Enable := TRUE,
+	Position => app.fbk.extra_pos
+);
+
+
+StatusPowerAxis(
+	Axis := Extra,
+	power := app.cmd.extra_power,
+	powered => app.fbk.extra_powered
+);
+
+
+Halt(
+	Axis := Extra,
+	Execute := StatusPowerAxis.powered AND app.cmd.extra_move = 0,
+	Deceleration := app.cfg.extra_acc,
+	Jerk         := app.cfg.extra_jrk,
+);
+
+
+ResetErrorDone();
+
+
+//1: MoveVelocity
+MoveAbsolute(
+	Axis := Extra,
+	Execute := app.cmd.extra_move = 1,
+	BufferMode := MC_BUFFER_MODE.Aborting,
+	Position     := app.cmd.extra_move_pos,
+	Velocity     := app.cmd.extra_move_vel,
+	Acceleration := app.cmd.extra_move_acc,
+	Deceleration := app.cmd.extra_move_acc,
+	Jerk         := app.cfg.extra_jrk,
+);
+SetErrorDone(MoveAbsolute.Error, MoveAbsolute.Done);
+
+
+//99: JOG
+Jog(
+	Axis := Extra,
+	JogForward  := app.cmd.extra_move = 99 AND app.cmd.extra_move_vel > 0,
+	JogBackward := app.cmd.extra_move = 99 AND app.cmd.extra_move_vel < 0,
+	Velocity     := ABS(app.cmd.extra_move_vel),
+	Acceleration := app.cfg.extra_acc,
+	Deceleration := app.cfg.extra_acc,
+	Jerk         := app.cfg.extra_jrk,
+);
+SetErrorDone(Jog.Error, FALSE);

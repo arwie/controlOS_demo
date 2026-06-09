@@ -30,6 +30,7 @@ hmiIndex.addPage('teach', {
 		function moveStop()		{ sendCmd(0); }
 		function moveDelta(dir)	{ sendCmd(1,  { dir }); }
 		function moveConv(dir)	{ sendCmd(11, { dir }); }
+		function moveExtra(dir)	{ sendCmd(12, { dir }); }
 		
 		function selectTool(event) {
 			sendCmd(-1, { tool:parseInt(event.target.value) });
@@ -45,7 +46,7 @@ hmiIndex.addPage('teach', {
 
 		await ws.sync;
 
-		return { info, speed, snap, moveStop, moveDelta, moveConv, selectTool, gripTool }
+		return { info, speed, snap, moveStop, moveDelta, moveConv, moveExtra, selectTool, gripTool }
 	},
 	components: { PressButton },
 	template: //html
@@ -115,16 +116,30 @@ hmiIndex.addPage('teach', {
 
 	<hr class="my-4">
 
-	<div class="mb-3">
-		<label class="form-label">{{ $t('hmi.teach.conv') }}</label>
-		<div class="input-group input-group-lg">
-			<PressButton @press="moveConv(-1)" @release="moveStop" class="btn btn-secondary w-25">
-				<i class="fas fa-minus"></i>
-			</PressButton>
-			<input :value="info.conv.pos.toFixed(2)" class="form-control text-center" disabled>
-			<PressButton @press="moveConv(1)" @release="moveStop" class="btn btn-secondary w-25">
-				<i class="fas fa-plus"></i>
-			</PressButton>
+	<div class="row mb-3">
+		<div class="col-lg">
+			<label class="form-label">{{ $t('hmi.teach.conv') }}</label>
+			<div class="input-group input-group-lg">
+				<PressButton @press="moveConv(-1)" @release="moveStop" class="btn btn-secondary w-25">
+					<i class="fas fa-minus"></i>
+				</PressButton>
+				<input :value="info.conv.pos.toFixed(2)" class="form-control text-center" disabled>
+				<PressButton @press="moveConv(1)" @release="moveStop" class="btn btn-secondary w-25">
+					<i class="fas fa-plus"></i>
+				</PressButton>
+			</div>
+		</div>
+		<div class="col-lg">
+			<label class="form-label">{{ $t('hmi.teach.extra') }}</label>
+			<div class="input-group input-group-lg">
+				<PressButton @press="moveExtra(-1)" @release="moveStop" class="btn btn-secondary w-25">
+					<i class="fas fa-minus"></i>
+				</PressButton>
+				<input :value="info.extra.pos.toFixed(2)" class="form-control text-center" disabled>
+				<PressButton @press="moveExtra(1)" @release="moveStop" class="btn btn-secondary w-25">
+					<i class="fas fa-plus"></i>
+				</PressButton>
+			</div>
 		</div>
 	</div>
 

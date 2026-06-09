@@ -5,10 +5,14 @@ class AppCfg(Structure):
 	robot_jrk: float
 	conv_acc: float
 	conv_jrk: float
+	extra_acc: float
+	extra_jrk: float
 	_fields_ = [
 		('robot_vel', c_double),
 		('robot_acc', c_double),
 		('robot_jrk', c_double),
 		('conv_acc', c_double),
 		('conv_jrk', c_double),
+		('extra_acc', c_double),
+		('extra_jrk', c_double),
 	]

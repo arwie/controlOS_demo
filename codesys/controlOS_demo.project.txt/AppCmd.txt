@@ -13,6 +13,12 @@ STRUCT
 	conv_move:				INT;
 	conv_move_vel:			LREAL;
 
+	extra_power:			BOOL;
+	extra_move:				INT;
+	extra_move_pos:			LREAL;
+	extra_move_vel:			LREAL;
+	extra_move_acc:			LREAL;
+
 	io:		ARRAY [0..128] OF BOOL;
 END_STRUCT
 END_TYPE

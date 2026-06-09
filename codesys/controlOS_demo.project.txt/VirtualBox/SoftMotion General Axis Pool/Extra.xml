@@ -34,7 +34,7 @@
                       </Parameter>
                       <Parameter ParameterId="1060" type="std:INT" IndexInDevDesc="2">
                         <Attributes />
-                        <Value name="_x0031_060" visiblename="iMovementType" desc="Movement type: 0: modulo, 1: finite">1</Value>
+                        <Value name="_x0031_060" visiblename="iMovementType" desc="Movement type: 0: modulo, 1: finite">0</Value>
                         <Name>iMovementType</Name>
                         <Description>Movement type: 0: modulo, 1: finite</Description>
                       </Parameter>

@@ -6,5 +6,8 @@ STRUCT
 
 	conv_acc:		LREAL;
 	conv_jrk:		LREAL;
+
+	extra_acc:		LREAL;
+	extra_jrk:		LREAL;
 END_STRUCT
 END_TYPE

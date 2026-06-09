@@ -1,0 +1,6 @@
+METHOD ResetErrorDone
+
+////////////////////////////////
+
+app.fbk.extra_move_error  := FALSE;
+app.fbk.extra_move_done := FALSE;

@@ -12,6 +12,10 @@ class AppFbk(Structure):
 	conv_powered: bool
 	conv_move_done: bool
 	conv_move_error: bool
+	extra_pos: float
+	extra_powered: bool
+	extra_move_done: bool
+	extra_move_error: bool
 	io: list[bool]
 	_fields_ = [
 		('co', CoFbk),
@@ -25,5 +29,9 @@ class AppFbk(Structure):
 		('conv_powered', c_bool),
 		('conv_move_done', c_bool),
 		('conv_move_error', c_bool),
+		('extra_pos', c_double),
+		('extra_powered', c_bool),
+		('extra_move_done', c_bool),
+		('extra_move_error', c_bool),
 		('io', c_bool * 129),
 	]

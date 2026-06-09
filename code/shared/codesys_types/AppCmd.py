@@ -11,6 +11,11 @@ class AppCmd(Structure):
 	conv_power: bool
 	conv_move: int
 	conv_move_vel: float
+	extra_power: bool
+	extra_move: int
+	extra_move_pos: float
+	extra_move_vel: float
+	extra_move_acc: float
 	io: list[bool]
 	_fields_ = [
 		('co', CoCmd),
@@ -23,5 +28,10 @@ class AppCmd(Structure):
 		('conv_power', c_bool),
 		('conv_move', c_int16),
 		('conv_move_vel', c_double),
+		('extra_power', c_bool),
+		('extra_move', c_int16),
+		('extra_move_pos', c_double),
+		('extra_move_vel', c_double),
+		('extra_move_acc', c_double),
 		('io', c_bool * 129),
 	]
