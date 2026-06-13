@@ -71,8 +71,8 @@ MoveLinearAbsolute(
 	Execute := app.cmd.rbt_move = 2,
 	CoordSystem := SMC_COORD_SYSTEM.WCS,
 	Velocity     := app.cfg.robot_vel * app.cmd.rbt_move_fvel,
-	Acceleration := app.cfg.robot_acc,
-	Deceleration := app.cfg.robot_acc,
+	Acceleration := app.cfg.robot_acc * app.cmd.rbt_move_facc,
+	Deceleration := app.cfg.robot_acc * app.cmd.rbt_move_facc,
 	Jerk         := app.cfg.robot_jrk,
 );
 SetErrorDone(MoveLinearAbsolute.Error, MoveLinearAbsolute.Done);

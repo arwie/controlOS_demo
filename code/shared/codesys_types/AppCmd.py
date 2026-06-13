@@ -8,6 +8,7 @@ class AppCmd(Structure):
 	rbt_move_coord: list[float]
 	rbt_move_coord_conv: float
 	rbt_move_fvel: float
+	rbt_move_facc: float
 	conv_power: bool
 	conv_move: int
 	conv_move_vel: float
@@ -25,6 +26,7 @@ class AppCmd(Structure):
 		('rbt_move_coord', c_double * 3),
 		('rbt_move_coord_conv', c_double),
 		('rbt_move_fvel', c_double),
+		('rbt_move_facc', c_double),
 		('conv_power', c_bool),
 		('conv_move', c_int16),
 		('conv_move_vel', c_double),

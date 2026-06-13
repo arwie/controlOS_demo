@@ -60,6 +60,7 @@ class robot:
 		app.log.info(f'Robot move direct to {axes}')
 		codesys.cmd.rbt_move_coord[:] = axes.a, axes.b, axes.c
 		codesys.cmd.rbt_move_fvel = speed / 100
+		codesys.cmd.rbt_move_facc = speed / 100
 		await self._move_exec(1)
 
 
@@ -67,6 +68,7 @@ class robot:
 		app.log.info(f'Robot move linear to {pos}')
 		codesys.cmd.rbt_move_coord[:] = pos.x, pos.y, pos.z
 		codesys.cmd.rbt_move_fvel = speed / 100
+		codesys.cmd.rbt_move_facc = speed / 100
 		await self._move_exec(2)
 
 
