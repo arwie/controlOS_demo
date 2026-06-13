@@ -26,6 +26,10 @@ export default {
 			title: "Grundlegende Roboterbewegung",
 			description: "Einfaches Bewegungsprogramm mit direkter, linearer und CNC-Interpolation.",
 		},
+		gravitrax: {
+			title: "GRAVITRAX",
+			description: "Der Roboter hält eine GraviTrax-Kugelbahn in Bewegung: Mit einem Magnetgreifer nimmt er Kugeln auf und setzt sie auf die Bahnen, während eine Drehbühne mehrere Strecken parallel beschickt. Mehrere nebenläufige Tasks lassen die Kugeln fortlaufend über Bühnen-, Boden-, Twister- und Sprungelemente zirkulieren.",
+		},
 		teach: {
 			title: "Teachen",
 			tool: "Greifer",
@@ -34,6 +38,7 @@ export default {
 			snap: "Einrasten auf Position",
 			speed: "Geschwindigkeit",
 			conv: "Förderband",
+			extra: "Zusatzachse",
 			tool_none: "Kein Greifer",
 			tool_magnet: "Magnet",
 			tool_vacuum: "Vakuum",

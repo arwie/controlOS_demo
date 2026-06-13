@@ -26,6 +26,10 @@ export default {
 			title: "Basic robot motion",
 			description: "Simple motion program with direct, linear and CNC interpolation."
 		},
+		gravitrax: {
+			title: "GRAVITRAX",
+			description: "The robot keeps a GraviTrax marble run alive: using a magnetic gripper it picks up balls and drops them onto the tracks, while a rotating stage feeds several runs in parallel. Multiple concurrent tasks continuously recirculate the marbles across stage, floor, twister and jump elements.",
+		},
 		teach: {
 			title: "Teach",
 			tool: "Gripper",
@@ -34,6 +38,7 @@ export default {
 			snap: "Snap to position",
 			speed: "Speed",
 			conv: "Conveyor",
+			extra: "Extra axis",
 			tool_none: "No gripper",
 			tool_magnet: "Magnet",
 			tool_vacuum: "Vacuum",
