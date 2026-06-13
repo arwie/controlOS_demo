@@ -3,12 +3,14 @@ from shared.utils import instantiate
 from shared import app
 from shared.app import codesys
 from shared.condition import Timer, Timeout
-from drives import extra_drive
 
 
 
 @instantiate
 class extra:
+
+	from drives import extra_drive as drive
+
 
 	def __init__(self):
 		codesys.cfg.extra_acc = 2000

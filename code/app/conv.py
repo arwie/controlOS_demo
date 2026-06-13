@@ -5,7 +5,6 @@ from shared import app
 from shared.app import codesys
 from shared.condition import Timer, Timeout
 from coordinates import Pos
-from drives import conv_drive
 
 
 
@@ -18,6 +17,9 @@ class ConvItem:
 
 @instantiate
 class conv:
+
+	from drives import conv_drive as drive
+
 
 	def __init__(self):
 		codesys.cfg.conv_acc = 250

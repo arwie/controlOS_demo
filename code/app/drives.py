@@ -48,6 +48,30 @@ class StepIM(CanopenDevice):
 			await robot_a.sdo_write((0x6065, 0), c_uint32(error_drive))
 
 
+	async def tune(self,
+		position_proportional_gain:int=10000,
+		position_integral_input_saturation:int=100000,
+		position_integral_gain:int=0,
+		position_derivative_gain:int=0,
+		position_velocity_feedforward_gain:int=256,
+		velocity_loop_input_filter:int=100,
+		velocity_proportional_gain:int=5000,
+		velocity_integral_gain:int=5,
+	):
+		"""
+		Tune the position and velocity control loops.
+		Parameter names and default values follow the ISM CANopen object dictionary.
+		"""
+		await self.sdo_write((0x2022, 0), c_int32(position_proportional_gain))
+		await self.sdo_write((0x2077, 0), c_int32(position_integral_input_saturation))
+		await self.sdo_write((0x2020, 0), c_int32(position_integral_gain))
+		await self.sdo_write((0x201E, 0), c_int32(position_derivative_gain))
+		await self.sdo_write((0x2023, 0), c_int32(position_velocity_feedforward_gain))
+		await self.sdo_write((0x20D9, 0), c_uint16(velocity_loop_input_filter))
+		await self.sdo_write((0x2027, 0), c_int32(velocity_proportional_gain))
+		await self.sdo_write((0x2026, 0), c_int32(velocity_integral_gain))
+
+
 	async def set_baud_rate(self, baud_rate:Literal[1000,500,250]):
 		"""
 		Set the baud rate of the drive in the CANopen network.
