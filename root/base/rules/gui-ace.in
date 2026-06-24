@@ -1,4 +1,4 @@
-## SECTION=web
+## SECTION=gui
 
 menuconfig GUI_ACE
 	tristate

@@ -24,4 +24,6 @@ config GUI_WPEWEBKIT
 	bool
 	prompt "Graphics stack with WPE WebKit full screen browser"
 
+
+source "generated/gui.in"
 endif

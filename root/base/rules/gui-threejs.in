@@ -1,4 +1,4 @@
-## SECTION=web
+## SECTION=gui
 
 config GUI_THREEJS
 	tristate
