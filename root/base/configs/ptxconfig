@@ -2269,6 +2269,7 @@ PTXCONF_GNUPG_GPG_SHA=y
 # PTXCONF_GNUPG_GPG_BZIP2 is not set
 # end of compression algorithms
 
+# PTXCONF_LLAMA_CPP is not set
 # PTXCONF_LPC21ISP is not set
 # PTXCONF_MINISIGN is not set
 # PTXCONF_MONGODB is not set

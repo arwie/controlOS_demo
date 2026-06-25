@@ -1,0 +1,29 @@
+## SECTION=applications
+
+menuconfig LLAMA_CPP
+	tristate
+	prompt "llama-cpp                     "
+	select HOST_CMAKE
+	select HOST_NINJA
+	select GCCLIBS_CXX
+	help
+	  LLM inference in C/C++ (CPU-only build).
+
+if LLAMA_CPP
+
+config LLAMA_CPP_SERVER
+	bool
+	default y
+	prompt "build and install server"
+	help
+	  Build and install llama-server (HTTP inference API).
+
+config LLAMA_CPP_CLI
+	bool
+	default y
+	depends on LLAMA_CPP_SERVER
+	prompt "install llama-cli"
+	help
+	  Install the llama-cli command-line tool.
+
+endif
