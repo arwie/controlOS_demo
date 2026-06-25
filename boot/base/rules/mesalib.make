@@ -14,8 +14,8 @@ PACKAGES-$(PTXCONF_MESALIB) += mesalib
 #
 # Paths and names
 #
-MESALIB_VERSION	:= 25.3.3
-MESALIB_MD5	:= 79092bdfc67b9037ce3694b3bfa722d2
+MESALIB_VERSION	:= 26.1.3
+MESALIB_SHA256	:= 7725004e724b34c6d4fbaf5c48fc6c6223aa9f2741d6d7782c699b049356fc45
 MESALIB		:= mesa-$(MESALIB_VERSION)
 MESALIB_SUFFIX	:= tar.xz
 MESALIB_URL	:= \
@@ -136,6 +136,8 @@ MESALIB_VIDEO_CODECS-$(PTXCONF_MESALIB_VIDEO_H265ENC)	+= h265enc
 MESALIB_VIDEO_CODECS-$(PTXCONF_MESALIB_VIDEO_AV1DEC)	+= av1dec
 MESALIB_VIDEO_CODECS-$(PTXCONF_MESALIB_VIDEO_AV1ENC)	+= av1enc
 MESALIB_VIDEO_CODECS-$(PTXCONF_MESALIB_VIDEO_VP9DEC)	+= vp9dec
+MESALIB_VIDEO_CODECS-$(PTXCONF_MESALIB_VIDEO_MPEG12DEC)	+= mpeg12dec
+MESALIB_VIDEO_CODECS-$(PTXCONF_MESALIB_VIDEO_JPEGDEC)	+= jpegdec
 
 ifdef PTXCONF_ARCH_X86
 MESALIB_VULKAN_DRIVERS-$(PTXCONF_MESALIB_VULKAN_AMD)		+= amd
@@ -165,6 +167,10 @@ MESALIB_VULKAN_LIBS-y = $(subst amd,radeon \
 	,$(subst imagination,powervr_mesa \
 	,$(MESALIB_VULKAN_DRIVERS-y) \
 	)))
+
+MESALIB_VULKAN_ICDS-y = $(subst gfxstream,gfxstream_vk \
+	,$(MESALIB_VULKAN_LIBS-y) \
+	)
 
 MESALIB_VULKAN_LAYERS-$(PTXCONF_MESALIB_VULKAN_ANTI_LAG)	+= anti-lag
 MESALIB_VULKAN_LAYERS-$(PTXCONF_MESALIB_VULKAN_DEVICE_SELECT)	+= device-select
@@ -200,6 +206,7 @@ MESALIB_MESON_CROSS_FILE := $(call ptx/get-alternative, config/meson, mesalib-cr
 MESALIB_CONF_TOOL	:= meson
 MESALIB_CONF_OPT	:= \
 	$(CROSS_MESON_USR) \
+	-Dallow-broken-lto=false \
 	-Dallow-fallback-for=[] \
 	-Dallow-kcmp=enabled \
 	-Damd-use-llvm=true \
@@ -255,6 +262,7 @@ MESALIB_CONF_OPT	:= \
 	-Dinstall-precomp-compiler=false \
 	-Dintel-elk=true \
 	-Dintel-rt=disabled \
+	-Dintel-virtio-experimental=false \
 	-Dlegacy-wayland=bind-wayland-display \
 	-Dlibgbm-external=false \
 	-Dlibunwind=disabled \
@@ -297,6 +305,7 @@ MESALIB_CONF_OPT	:= \
 	-Dvulkan-drivers=$(subst $(space),$(comma),$(MESALIB_VULKAN_DRIVERS-y)) \
 	-Dvulkan-icd-dir=/etc/vulkan/icd.d \
 	-Dvulkan-layers=$(subst $(space),$(comma),$(MESALIB_VULKAN_LAYERS-y)) \
+	-Dvulkan-manifest-per-architecture=true \
 	-Dxlib-lease=$(call ptx/endis, PTXCONF_MESALIB_EGL_X11)d \
 	-Dxmlconfig=$(call ptx/endis, PTXCONF_MESALIB_XMLCONFIG)d \
 	-Dzlib=enabled \
@@ -362,9 +371,10 @@ endif
 ifneq ($(strip $(MESALIB_VULKAN_LIBS-y)),)
 	@$(foreach lib, $(MESALIB_VULKAN_LIBS-y), \
 		$(call install_copy, mesalib, 0, 0, 0644, -, \
-		/usr/lib/libvulkan_$(lib).so)$(ptx/nl) \
+		/usr/lib/libvulkan_$(lib).so)$(ptx/nl))
+	@$(foreach icd, $(MESALIB_VULKAN_ICDS-y), \
 		$(call install_glob, mesalib, 0, 0, -, \
-		/etc/vulkan/icd.d, */$(lib)_icd.*.json)$(ptx/nl))
+		/etc/vulkan/icd.d, */$(icd)_icd.*.json)$(ptx/nl))
 endif
 ifneq ($(strip $(MESALIB_VULKAN_LAYERS-y)),)
 	@$(foreach lib, $(filter-out intel-nullhw,$(MESALIB_VULKAN_LAYERS-y)), \

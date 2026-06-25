@@ -1,0 +1,120 @@
+## SECTION=multimedia_libs
+
+menuconfig WPEWEBKIT
+	tristate
+	prompt "wpewebkit                     "
+	select HOST_CMAKE
+	select HOST_GPERF
+	select HOST_NINJA
+	select HOST_UNIFDEF
+	select HOST_SYSTEM_PERL
+	select HOST_SYSTEM_PERL_JSON
+	select HOST_SYSTEM_PYTHON3
+	select HOST_SYSTEM_RUBY
+	select ALSA_LIB				if WPEWEBKIT_WEBRTC
+	select GCCLIBS_ATOMIC
+	select GLIB
+	select LIBWPE
+	select CAIRO
+	select CAIRO_FREETYPE
+	select CAIRO_PNG
+	select FONTCONFIG
+	select FREETYPE
+	select ICU
+	select HARFBUZZ
+	select HARFBUZZ_ICU
+	select GLIB_NETWORKING if RUNTIME
+	select LIBDRM
+	select LIBXKBCOMMON
+	select LIBJPEG
+	select LIBWEBP
+	select LIBWEBP_DEMUX
+	select LIBWEBP_MUX
+	select SQLITE
+	select ZLIB
+	select LIBPNG
+	select LIBSOUP
+	select LIBXML2
+	select LIBXSLT
+	select LIBXSLT_LIBXSLT
+	select MESALIB
+	select MESALIB_EGL
+	select MESALIB_GLES2
+	select LIBEPOXY
+	select LIBGCRYPT
+	select LIBTASN1
+	select OPENSSL				if WPEWEBKIT_WEBRTC
+	select GSTREAMER1			if WPEWEBKIT_VIDEO || WPEWEBKIT_AUDIO
+	select GST_PLUGINS_BASE1		if WPEWEBKIT_VIDEO || WPEWEBKIT_AUDIO
+	select GST_PLUGINS_BASE1_ALSA		if WPEWEBKIT_WEBRTC
+	select GST_PLUGINS_BASE1_APP		if WPEWEBKIT_VIDEO || WPEWEBKIT_AUDIO
+	select GST_PLUGINS_BASE1_AUDIOCONVERT	if WPEWEBKIT_AUDIO
+	select GST_PLUGINS_BASE1_AUDIOMIXER	if WPEWEBKIT_AUDIO
+	select GST_PLUGINS_BASE1_AUDIORESAMPLE	if WPEWEBKIT_AUDIO
+	select GST_PLUGINS_BASE1_EGL		if WPEWEBKIT_VIDEO
+	select GST_PLUGINS_BASE1_GIO		if WPEWEBKIT_VIDEO || WPEWEBKIT_AUDIO
+	select GST_PLUGINS_BASE1_GL		if WPEWEBKIT_VIDEO
+	select GST_PLUGINS_BASE1_PLAYBACK	if WPEWEBKIT_VIDEO || WPEWEBKIT_AUDIO
+	select GST_PLUGINS_BASE1_TYPEFIND	if WPEWEBKIT_VIDEO || WPEWEBKIT_AUDIO
+	select GST_PLUGINS_BASE1_VIDEOCONVERTSCALE if WPEWEBKIT_VIDEO
+	select GST_PLUGINS_BASE1_VIDEORATE	if WPEWEBKIT_WEBRTC
+	select GST_PLUGINS_BASE1_VOLUME		if WPEWEBKIT_AUDIO
+	select GST_PLUGINS_GOOD1		if (WPEWEBKIT_VIDEO || WPEWEBKIT_AUDIO) && RUNTIME
+	select GST_PLUGINS_GOOD1_AUDIOFX	if WPEWEBKIT_AUDIO
+	select GST_PLUGINS_GOOD1_AUDIOPARSERS	if WPEWEBKIT_AUDIO
+	select GST_PLUGINS_GOOD1_AUTODETECT	if WPEWEBKIT_AUDIO
+	select GST_PLUGINS_GOOD1_DEINTERLACE	if WPEWEBKIT_VIDEO
+	select GST_PLUGINS_GOOD1_INTERLEAVE	if WPEWEBKIT_AUDIO
+	select GST_PLUGINS_GOOD1_ISOMP4		if WPEWEBKIT_VIDEO || WPEWEBKIT_AUDIO
+	select GST_PLUGINS_GOOD1_MATROSKA	if WPEWEBKIT_VIDEO || WPEWEBKIT_AUDIO
+	select GST_PLUGINS_GOOD1_VIDEOFILTER	if WPEWEBKIT_VIDEO
+	select GST_PLUGINS_BAD1			if WPEWEBKIT_VIDEO || WPEWEBKIT_AUDIO
+	# fdkaac is preferred but currently not available
+	select GST_PLUGINS_BAD1_FDKAAC		if WPEWEBKIT_AUDIO && BROKEN
+	select GST_PLUGINS_BAD1_DEBUGUTILS	if WPEWEBKIT_VIDEO
+	select GST_PLUGINS_BAD1_OPUS		if WPEWEBKIT_AUDIO
+	select GST_PLUGINS_BAD1_SUBENC		if WPEWEBKIT_VIDEO
+	select GST_PLUGINS_BAD1_VIDEOPARSERS	if WPEWEBKIT_VIDEO
+	select GST_PLUGINS_BAD1_WEBRTC		if WPEWEBKIT_WEBRTC
+	select WPEBACKEND_FDO
+	select SYSTEMD				if WPEWEBKIT_JOURNALD
+	help
+	  WebPlatformForEmbedded port for the WebKit cross-platform web browser engine.
+
+if WPEWEBKIT
+
+config WPEWEBKIT_JOURNALD
+	bool
+	depends on INITMETHOD_SYSTEMD
+	default y
+	prompt "journald support"
+
+config WPEWEBKIT_VIDEO
+	bool
+	select WPEWEBKIT_AUDIO
+	prompt "video support"
+
+config WPEWEBKIT_AUDIO
+	bool
+	prompt "audio support"
+
+config WPEWEBKIT_WEBRTC
+	bool
+	depends on WPEWEBKIT_AUDIO && WPEWEBKIT_VIDEO
+	prompt "WebRTC support"
+
+config WPEWEBKIT_ENABLE_LOGGING
+	bool
+	prompt "enable logging support"
+	help
+	  Enable this option if you want to get some more logging information. For more
+	  information check https://trac.webkit.org/wiki/WebKitGTK/Debugging.
+
+config WPEWEBKIT_WEBDRIVER
+	bool
+	prompt "WebDriver support"
+	help
+	  WebDriver is a standalone server that implements the W3C WebDriver standard
+	  for automated testing.
+
+endif

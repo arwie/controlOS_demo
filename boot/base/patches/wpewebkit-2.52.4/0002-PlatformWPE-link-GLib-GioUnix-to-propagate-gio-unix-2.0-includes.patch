@@ -1,0 +1,32 @@
+From: Artur Wiebe <artur@4wiebe.de>
+Subject: [PATCH] WebKit/WPE: fix cross-compilation by declaring GLib::GioUnix dependency
+
+Several GLib platform files compiled as part of the WebKit library include
+gio-unix-2.0 headers (gunixfdmessage.h, gunixconnection.h, gunixfdlist.h,
+gunixinputstream.h, gdesktopappinfo.h), but the WebKit cmake target never
+declares GLib::GioUnix as a dependency. The gio-unix-2.0 include directory
+is therefore never passed to the compiler for these files.
+
+In native builds this goes unnoticed: pkg-config calls made while detecting
+other targets leak the gio-unix-2.0 include path into global cmake state,
+making it accidentally available everywhere. In a cross build the sysroot is
+isolated and include paths are strictly scoped to declared dependencies, so
+the missing declaration causes a build failure.
+
+Fix by adding GLib::GioUnix to WebKit_LIBRARIES so cmake correctly propagates
+the include directory to all files compiled as part of the WebKit target.
+
+---
+ Source/WebKit/PlatformWPE.cmake | 1 +
+ 1 file changed, 1 insertion(+)
+
+--- a/Source/WebKit/PlatformWPE.cmake	2026-06-24 00:00:00.000000000 +0000
++++ b/Source/WebKit/PlatformWPE.cmake	2026-06-24 00:00:00.000000000 +0000
+@@ -467,6 +467,7 @@
+ )
+
+ list(APPEND WebKit_LIBRARIES
++    GLib::GioUnix
+     GLib::Module
+     Soup3::Soup3
+ )
