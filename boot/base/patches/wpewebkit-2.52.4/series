@@ -1,1 +1,2 @@
 0002-PlatformWPE-link-GLib-GioUnix-to-propagate-gio-unix-2.0-includes.patch
+0003-UIGamepadProvider-guard-stubs-with-ENABLE-WPE_PLATFORM.patch

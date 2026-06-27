@@ -14,7 +14,6 @@ menuconfig WPEWEBKIT
 	select ALSA_LIB				if WPEWEBKIT_WEBRTC
 	select GCCLIBS_ATOMIC
 	select GLIB
-	select LIBWPE
 	select CAIRO
 	select CAIRO_FREETYPE
 	select CAIRO_PNG
@@ -39,8 +38,15 @@ menuconfig WPEWEBKIT
 	select LIBXSLT_LIBXSLT
 	select MESALIB
 	select MESALIB_EGL
+	select MESALIB_GBM
+	select MESALIB_EGL_WAYLAND		if WPEWEBKIT_PLATFORM_WAYLAND
 	select MESALIB_GLES2
 	select LIBEPOXY
+	select WAYLAND				if WPEWEBKIT_PLATFORM_WAYLAND
+	select WAYLAND_PROTOCOLS		if WPEWEBKIT_PLATFORM_WAYLAND
+	select LIBINPUT				if WPEWEBKIT_PLATFORM_DRM
+	select UDEV				if WPEWEBKIT_PLATFORM_DRM
+	select UDEV_LIBUDEV			if WPEWEBKIT_PLATFORM_DRM
 	select LIBGCRYPT
 	select LIBTASN1
 	select OPENSSL				if WPEWEBKIT_WEBRTC
@@ -76,12 +82,39 @@ menuconfig WPEWEBKIT
 	select GST_PLUGINS_BAD1_SUBENC		if WPEWEBKIT_VIDEO
 	select GST_PLUGINS_BAD1_VIDEOPARSERS	if WPEWEBKIT_VIDEO
 	select GST_PLUGINS_BAD1_WEBRTC		if WPEWEBKIT_WEBRTC
-	select WPEBACKEND_FDO
 	select SYSTEMD				if WPEWEBKIT_JOURNALD
 	help
 	  WebPlatformForEmbedded port for the WebKit cross-platform web browser engine.
 
 if WPEWEBKIT
+
+choice
+	prompt "WPE platform backend"
+	default WPEWEBKIT_PLATFORM_WAYLAND
+	help
+	  Select which WPE Platform backend to build.
+
+config WPEWEBKIT_PLATFORM_WAYLAND
+	bool
+	prompt "Wayland"
+	help
+	  Build the Wayland backend of the WPE Platform library.
+
+config WPEWEBKIT_PLATFORM_DRM
+	bool
+	prompt "DRM/KMS"
+	help
+	  Build the DRM/KMS backend of the WPE Platform library. Uses libinput
+	  for input handling and udev for device discovery.
+
+endchoice
+
+config WPEWEBKIT_MINIBROWSER
+	bool
+	prompt "build MiniBrowser"
+	help
+	  Build and install the MiniBrowser, a simple WPE Platform based browser
+	  that can be used as a launcher instead of cog.
 
 config WPEWEBKIT_JOURNALD
 	bool

@@ -1,0 +1,55 @@
+From: Artur Wiebe <artur@4wiebe.de>
+Subject: [PATCH] UIGamepadProvider: guard fallback stubs with ENABLE(WPE_PLATFORM)
+
+The generic no-op implementations of platformSetDefaultGamepadProvider(),
+platformWebPageProxyForGamepadInput(), platformStopMonitoringInput() and
+platformStartMonitoringInput() in UIGamepadProvider.cpp are guarded with
+!USE(WPE_PLATFORM). That macro is never defined anywhere: the build system
+exposes ENABLE_WPE_PLATFORM (i.e. ENABLE(WPE_PLATFORM)), and every other
+gamepad source file uses ENABLE(WPE_PLATFORM) accordingly. USE(WPE_PLATFORM)
+therefore always evaluates to 0.
+
+The real implementations live in UIProcess/Gamepad/libwpe/
+UIGamepadProviderLibWPE.cpp, which is compiled unconditionally for the WPE
+port (guarded only by ENABLE(GAMEPAD)) and dispatches to either the WPE
+Platform or the legacy libwpe provider.
+
+When building the WPE port with ENABLE_WPE_PLATFORM=ON but without the legacy
+libwpe API (USE_LIBWPE=OFF) and without libmanette (USE_MANETTE=OFF), the
+guard stays true and the fallback stubs are compiled in addition to the real
+implementations, causing "redefinition of ..." errors at link/compile time of
+the unified sources.
+
+Fix the guard to use ENABLE(WPE_PLATFORM) to match the rest of the codebase,
+so the stubs are excluded whenever the WPE Platform implementation is present.
+
+This is the same fix applied upstream; drop this patch once it reaches a
+released 2.52.x tarball.
+
+Upstream-Bug: https://bugs.webkit.org/show_bug.cgi?id=317834
+Upstream-Commit: 0cab62d "[WPE] platformSetDefaultGamepadProvider is defined twice in WPEPlatform-only builds"
+
+---
+ Source/WebKit/UIProcess/Gamepad/UIGamepadProvider.cpp | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+--- a/Source/WebKit/UIProcess/Gamepad/UIGamepadProvider.cpp
++++ b/Source/WebKit/UIProcess/Gamepad/UIGamepadProvider.cpp
+@@ -250,7 +250,7 @@
+     });
+ }
+
+-#if !PLATFORM(COCOA) && !(USE(MANETTE) && OS(LINUX)) && !USE(LIBWPE) && !USE(WPE_PLATFORM)
++#if !PLATFORM(COCOA) && !(USE(MANETTE) && OS(LINUX)) && !USE(LIBWPE) && !ENABLE(WPE_PLATFORM)
+
+ void UIGamepadProvider::platformSetDefaultGamepadProvider()
+ {
+@@ -271,7 +271,7 @@
+ {
+ }
+
+-#endif // !PLATFORM(COCOA) && !(USE(MANETTE) && OS(LINUX)) && !USE(LIBWPE) && !USE(WPE_PLATFORM)
++#endif // !PLATFORM(COCOA) && !(USE(MANETTE) && OS(LINUX)) && !USE(LIBWPE) && !ENABLE(WPE_PLATFORM)
+
+ }
+

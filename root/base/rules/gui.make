@@ -36,10 +36,10 @@ $(STATEDIR)/gui.targetinstall: $(shell find $(GUI_SRC) -type d)
 ifdef PTXCONF_GUI_WPEWEBKIT
 	@$(call install_alternative, gui, 0, 0, 0644, /usr/lib/udev/rules.d/60-drm-systemd.rules)
 	@$(call install_alternative, gui, 0, 0, 0644, /usr/lib/systemd/system/weston.service)
-	@$(call install_alternative, gui, 0, 0, 0644, /etc/cog.conf)
 	@$(call install_alternative, gui, 0, 0, 0644, /etc/tmpfiles.d/fontconfig.conf)
-	@$(call install_alternative, gui, 0, 0, 0644, /usr/lib/systemd/system/cog.service)
-	@$(call install_link,        gui, ../cog.service, /usr/lib/systemd/system/multi-user.target.wants/cog.service)
+	@$(call install_alternative, gui, 0, 0, 0644, /etc/wpe-webkit-browser.conf)
+	@$(call install_alternative, gui, 0, 0, 0644, /usr/lib/systemd/system/wpe-webkit-browser.service)
+	@$(call install_link,        gui, ../wpe-webkit-browser.service, /usr/lib/systemd/system/multi-user.target.wants/wpe-webkit-browser.service)
 endif
 
 	@$(call install_finish,gui)

@@ -6,11 +6,16 @@ After=network.target
 
 [Service]
 User=daemon
+SupplementaryGroups=video
 
 StateDirectory=wpe
 
 Environment="XDG_RUNTIME_DIR=/run/xdg"
 Environment="XDG_DATA_HOME=/var/lib/"
 Environment="WAYLAND_DISPLAY=wayland-1"
+Environment="WPE_DISPLAY=wpe-display-wayland"
 
-ExecStart=cog --config=/etc/cog.conf --doc-viewer  http://sys
+ExecStart=/usr/libexec/wpe-webkit-2.0/MiniBrowser \
+	--config-file=/etc/wpe-webkit-browser.conf \
+	--features='+LogsPageMessagesToSystemConsole' \
+	http://sys
