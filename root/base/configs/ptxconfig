@@ -2539,6 +2539,7 @@ PTXCONF_DBUS_SYSTEMD=y
 # PTXCONF_DBUS_X is not set
 PTXCONF_DBUS_SYSTEMD_UNIT=y
 # PTXCONF_EGGDBUS is not set
+# PTXCONF_ICEORYX2 is not set
 # end of Middleware                    
 
 #

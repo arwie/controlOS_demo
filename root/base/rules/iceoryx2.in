@@ -1,0 +1,31 @@
+## SECTION=middleware
+
+menuconfig ICEORYX2
+	tristate
+	prompt "iceoryx2                      "
+	select PYTHON3		if ICEORYX2_PYTHON
+	help
+	  Eclipse iceoryx2 - true zero-copy lock-free inter-process communication
+
+if ICEORYX2
+
+config ICEORYX2_FFI_C
+	bool
+	prompt "C FFI library"
+	help
+	  Install libiceoryx2_ffi_c.so for C applications.
+
+config ICEORYX2_CLI
+	bool
+	prompt "iox2 CLI tools"
+	help
+	  Install the iox2, iox2-node, iox2-service, iox2-config and
+	  iox2-tunnel command line tools.
+
+config ICEORYX2_PYTHON
+	bool
+	prompt "python bindings"
+	help
+	  Install the iceoryx2 python module into site-packages.
+
+endif
