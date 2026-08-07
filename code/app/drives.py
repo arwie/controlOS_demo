@@ -62,14 +62,15 @@ class StepIM(CanopenDevice):
 		Tune the position and velocity control loops.
 		Parameter names and default values follow the ISM CANopen object dictionary.
 		"""
-		await self.sdo_write((0x2022, 0), c_int32(position_proportional_gain))
-		await self.sdo_write((0x2077, 0), c_int32(position_integral_input_saturation))
-		await self.sdo_write((0x2020, 0), c_int32(position_integral_gain))
-		await self.sdo_write((0x201E, 0), c_int32(position_derivative_gain))
-		await self.sdo_write((0x2023, 0), c_int32(position_velocity_feedforward_gain))
-		await self.sdo_write((0x20D9, 0), c_uint16(velocity_loop_input_filter))
-		await self.sdo_write((0x2027, 0), c_int32(velocity_proportional_gain))
-		await self.sdo_write((0x2026, 0), c_int32(velocity_integral_gain))
+		if not virtual:
+			await self.sdo_write((0x2022, 0), c_int32(position_proportional_gain))
+			await self.sdo_write((0x2077, 0), c_int32(position_integral_input_saturation))
+			await self.sdo_write((0x2020, 0), c_int32(position_integral_gain))
+			await self.sdo_write((0x201E, 0), c_int32(position_derivative_gain))
+			await self.sdo_write((0x2023, 0), c_int32(position_velocity_feedforward_gain))
+			await self.sdo_write((0x20D9, 0), c_uint16(velocity_loop_input_filter))
+			await self.sdo_write((0x2027, 0), c_int32(velocity_proportional_gain))
+			await self.sdo_write((0x2026, 0), c_int32(velocity_integral_gain))
 
 
 	async def set_baud_rate(self, baud_rate:Literal[1000,500,250]):
