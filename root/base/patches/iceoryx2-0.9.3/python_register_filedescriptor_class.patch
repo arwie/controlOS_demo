@@ -1,0 +1,12 @@
+diff --git a/iceoryx2-ffi/python/src/lib.rs b/iceoryx2-ffi/python/src/lib.rs
+index afffd7a..6a175a6 100644
+--- a/iceoryx2-ffi/python/src/lib.rs
++++ b/iceoryx2-ffi/python/src/lib.rs
+@@ -143,6 +143,7 @@ fn _iceoryx2(py: Python<'_>, m: &Bound<'_, PyModule>) -> PyResult<()> {
+     m.add_class::<crate::entry_handle_mut::EntryHandleMut>()?;
+     m.add_class::<crate::entry_value_uninit::EntryValueUninit>()?;
+     m.add_class::<crate::event_id::EventId>()?;
++    m.add_class::<crate::file_descriptor::FileDescriptor>()?;
+     m.add_class::<crate::file_name::FileName>()?;
+     m.add_class::<crate::file_path::FilePath>()?;
+     m.add_class::<crate::header_publish_subscribe::HeaderPublishSubscribe>()?;

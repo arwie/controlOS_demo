@@ -88,6 +88,8 @@ $(STATEDIR)/iceoryx2.targetinstall:
 	@$(call install_fixup, iceoryx2,AUTHOR,"Artur Wiebe <artur@4wiebe.de>")
 	@$(call install_fixup, iceoryx2,DESCRIPTION,missing)
 
+	@$(call install_alternative, iceoryx2, 0, 0, 0644, /etc/iceoryx2/iceoryx2.toml)
+
 ifdef PTXCONF_ICEORYX2_FFI_C
 	@$(call install_lib, iceoryx2, 0, 0, 0644, libiceoryx2_ffi_c)
 endif

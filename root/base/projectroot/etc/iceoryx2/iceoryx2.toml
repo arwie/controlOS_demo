@@ -1,0 +1,3 @@
+[global]
+root-path = "/tmp/iceoryx2/"
+prefix = "iox2_"

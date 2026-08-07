@@ -1,0 +1,12 @@
+# WaitSet::attach_notification_fd()/attach_deadline_fd() take a FileDescriptor,
+# but the FileDescriptor pyclass is never registered with the python module, so
+# it cannot be constructed and both methods are unreachable from python.
+# Fixed upstream on 2026-08-02 by b95e837 (issue #1872), drop on next version bump.
+python_register_filedescriptor_class.patch
+
+# The Listener socket fd is reachable from rust (FileDescriptorBased), C
+# (iox2_listener_get_file_descriptor) and C++ (Listener::file_descriptor), but
+# not from python. Without it every listener needs a WaitSet on a helper thread
+# instead of asyncio add_reader() on the fd.
+# Still missing in upstream main as of 2026-08-06.
+python_expose_listener_filedescriptor.patch

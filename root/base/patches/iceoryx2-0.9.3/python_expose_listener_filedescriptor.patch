@@ -1,0 +1,49 @@
+diff --git a/iceoryx2-ffi/python/src/listener.rs b/iceoryx2-ffi/python/src/listener.rs
+index c820bc1..6f9e000 100644
+--- a/iceoryx2-ffi/python/src/listener.rs
++++ b/iceoryx2-ffi/python/src/listener.rs
+@@ -12,12 +12,13 @@
+ 
+ use std::sync::Arc;
+ 
++use iceoryx2::prelude::FileDescriptorBased;
+ use iceoryx2_log::fatal_panic;
+ use pyo3::prelude::*;
+ 
+ use crate::{
+     duration::Duration, error::ListenerWaitError, event_id::EventId,
+-    unique_listener_id::UniqueListenerId,
++    file_descriptor::FileDescriptor, unique_listener_id::UniqueListenerId,
+ };
+ 
+ #[allow(clippy::large_enum_variant)] // used purely for python and there it will reside always in
+@@ -44,6 +45,29 @@
+         }
+     }
+ 
++    #[getter]
++    /// Returns the underlying `FileDescriptor` of the `Listener`. It becomes ready to read
++    /// whenever an `EventId` was notified, so it can be attached to an external event loop,
++    /// for instance via `asyncio.AbstractEventLoop.add_reader()`.
++    ///
++    /// The returned `FileDescriptor` is non-owning, the `Listener` keeps the ownership. It
++    /// must no longer be used after `Listener::delete()` was called.
++    pub fn file_descriptor(&self) -> FileDescriptor {
++        let native_handle = match &self.0 {
++            ListenerType::Ipc(Some(v)) => unsafe { v.file_descriptor().native_handle() },
++            ListenerType::Local(Some(v)) => unsafe { v.file_descriptor().native_handle() },
++            _ => fatal_panic!(from "Listener::file_descriptor()",
++                    "Accessing a released listener."),
++        };
++
++        FileDescriptor(Arc::new(
++            iceoryx2::prelude::FileDescriptor::non_owning_new(native_handle).unwrap_or_else(
++                || fatal_panic!(from "Listener::file_descriptor()",
++                        "This should never happen! The listener has an invalid file descriptor."),
++            ),
++        ))
++    }
++
+     /// Non-blocking wait for a new `EventId`. If no `EventId` was notified it returns `None`.
+     /// On error it emits `ListenerWaitError`.
+     pub fn try_wait_one(&self) -> PyResult<Option<EventId>> {
