@@ -19,7 +19,7 @@ install: update
 
 update: .initramfs keygen
 	@cd root \
-		&& ln -sf platform-$(PLATFORM) platform-any \
+		&& ln -sfn platform-$(PLATFORM) platform-any \
 		&& $(PTXDIST) images
 
 .initramfs:
