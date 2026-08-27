@@ -1,0 +1,11 @@
+{attribute 'hide'}
+FUNCTION iox2plc_publisher_send_cext: POINTER TO ERROR
+VAR_INPUT
+	port:			__XWORD;
+	data:			POINTER TO BYTE;
+	size:			UDINT;
+	out_delivered:	POINTER TO UDINT;
+END_VAR
+
+////////////////////////////////
+

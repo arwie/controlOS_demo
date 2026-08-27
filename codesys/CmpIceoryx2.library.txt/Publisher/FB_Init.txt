@@ -1,0 +1,39 @@
+// Publishers, Subscribers and History are the QoS of the service, not of this
+// port. They take effect when this FB creates the service and must match on
+// every other port of the same service, in this application and in the peers.
+
+METHOD FB_Init: BOOL
+VAR_INPUT
+	bInitRetains:	BOOL;
+	bInCopyCode:	BOOL;
+	ServiceName:	STRING(255);	// e.g. 'plc/temperature'
+	TypeName:		STRING(63);		// must match the peer exactly
+	PayloadSize:	UDINT;			// SIZEOF(YourStruct)
+	Alignment:		UDINT := 8;		// alignment of the largest primitive member
+	Publishers:		UDINT := 1;		// max publishers the service supports
+	Subscribers:	UDINT := 1;		// max subscribers the service supports
+	History:		BOOL := FALSE;	// TRUE = a late subscriber gets the last sample
+END_VAR
+
+////////////////////////////////
+
+FB_Init := TRUE;
+
+IF bInCopyCode THEN
+	RETURN;			// online change: handle and state come with the copied data
+END_IF
+
+service_name := ServiceName;
+
+payload_size := TO_DINT(PayloadSize);
+
+Check(iox2plc_publisher_open_cext(
+	service := ADR(ServiceName),
+	type_name := ADR(TypeName),
+	payload_size := PayloadSize,
+	alignment := Alignment,
+	publishers := Publishers,
+	subscribers := Subscribers,
+	history := History,
+	out_port := ADR(handle)
+));

@@ -1,0 +1,24 @@
+// SPDX-FileCopyrightText: 2026 Artur Wiebe <artur@4wiebe.de>
+// SPDX-License-Identifier: MIT
+
+// Receives fixed size POD samples from an ipc publish-subscribe service.
+//
+//	VAR
+//		sub:	IOX2.Subscriber('codesys/cmd', 'AppCmd', SIZEOF(AppCmd), Alignment:=8, Publishers:=1, Subscribers:=1, History:=FALSE);
+//	END_VAR
+//
+//	sub.Receive(RxData);
+//
+// An instance belongs to one task: the native port is not thread-safe, so all
+// calls on the same instance must come from the same task.
+
+FUNCTION_BLOCK Subscriber EXTENDS PortBase
+
+VAR
+	payload_size:	DINT;	// checked against ANY.diSize on every Receive
+	received:		ULINT;	// samples copied out, for watching in online mode
+END_VAR
+
+////////////////////////////////
+
+// Ports are used through their methods only.

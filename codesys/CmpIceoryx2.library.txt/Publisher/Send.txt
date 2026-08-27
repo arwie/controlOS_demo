@@ -1,0 +1,35 @@
+// TRUE = the sample was handed over to iceoryx2.
+// One C call: loan -> memcpy -> send. Bounded and allocation free.
+
+METHOD PUBLIC Send: BOOL
+VAR_INPUT
+	Data:	ANY;
+END_VAR
+VAR
+	delivered:	UDINT;
+END_VAR
+
+////////////////////////////////
+
+IF handle = 0 THEN
+	Send := FALSE;
+	RETURN;
+END_IF
+
+// ANY carries pointer and size, so the size travels with the payload. The C
+// layer copies exactly this many bytes, so it has to match the service.
+IF Data.pValue = 0 OR Data.diSize <> payload_size THEN
+	Send := Check(ADR(Errors.SIZE_MISMATCH));
+	RETURN;
+END_IF
+
+Send := Check(iox2plc_publisher_send_cext(
+	port := handle,
+	data := Data.pValue,
+	size := TO_UDINT(Data.diSize),
+	out_delivered := ADR(delivered)
+));
+
+IF Send THEN
+	sent := sent + 1;
+END_IF

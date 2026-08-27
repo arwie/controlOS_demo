@@ -1,0 +1,8 @@
+{attribute 'hide'}
+FUNCTION iox2plc_listener_close_cext: POINTER TO ERROR
+VAR_INPUT
+	port:			POINTER TO __XWORD;
+END_VAR
+
+////////////////////////////////
+

@@ -1,0 +1,28 @@
+// SPDX-FileCopyrightText: 2026 Artur Wiebe <artur@4wiebe.de>
+// SPDX-License-Identifier: MIT
+
+// Polls pending notifications of an ipc event service.
+//
+//	VAR
+//		lis:	IOX2.Listener('plc/temperature/event');
+//	END_VAR
+//
+//	WHILE lis.Poll() DO
+//		CASE lis.LastEventId OF
+//			1:	HandleNewSetpoint();
+//			2:	HandleEmergencyStop();
+//		END_CASE
+//	END_WHILE
+//
+// An instance belongs to one task: the native port is not thread-safe, so all
+// calls on the same instance must come from the same task.
+
+FUNCTION_BLOCK Listener EXTENDS PortBase
+
+VAR
+	last_event_id:	UDINT;
+END_VAR
+
+////////////////////////////////
+
+// Ports are used through their methods only.

@@ -1,0 +1,11 @@
+{attribute 'hide'}
+FUNCTION iox2plc_subscriber_recv_cext: POINTER TO ERROR
+VAR_INPUT
+	port:			__XWORD;
+	data:			POINTER TO BYTE;
+	size:			UDINT;
+	out_has_data:	POINTER TO BOOL;
+END_VAR
+
+////////////////////////////////
+

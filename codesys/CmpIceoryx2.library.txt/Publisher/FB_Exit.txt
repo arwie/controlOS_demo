@@ -1,0 +1,18 @@
+// Drops this instance's native port. Instance exit order does not matter,
+// every port is independent.
+
+METHOD FB_Exit: BOOL
+VAR_INPUT
+	bInCopyCode:	BOOL;
+END_VAR
+
+////////////////////////////////
+
+// bInCopyCode means the instance is being copied during an online change.
+// The handle moves to the new instance with the copied data, so the port
+// must stay open.
+IF NOT bInCopyCode THEN
+	iox2plc_publisher_close_cext(port := ADR(handle));
+END_IF
+
+FB_Exit := TRUE;

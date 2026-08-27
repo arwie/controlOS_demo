@@ -1,0 +1,25 @@
+// Retrieves exactly one pending event and returns FALSE when none is pending.
+// Draining is the caller's WHILE loop.
+
+METHOD PUBLIC Poll: BOOL
+VAR
+	event_id:	UDINT;
+	has_event:	BOOL;
+END_VAR
+
+////////////////////////////////
+
+IF handle = 0 THEN
+	Poll := FALSE;
+	RETURN;
+END_IF
+
+Poll := Check(iox2plc_listener_poll_cext(
+	port := handle,
+	out_event_id := ADR(event_id),
+	out_has_event := ADR(has_event)
+)) AND has_event;
+
+IF Poll THEN
+	last_event_id := event_id;
+END_IF

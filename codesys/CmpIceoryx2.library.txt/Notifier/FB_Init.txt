@@ -1,0 +1,21 @@
+METHOD FB_Init: BOOL
+VAR_INPUT
+	bInitRetains:	BOOL;
+	bInCopyCode:	BOOL;
+	ServiceName:	STRING(255);	// e.g. 'plc/temperature/event'
+END_VAR
+
+////////////////////////////////
+
+FB_Init := TRUE;
+
+IF bInCopyCode THEN
+	RETURN;			// online change: handle and state come with the copied data
+END_IF
+
+service_name := ServiceName;
+
+Check(iox2plc_notifier_open_cext(
+	service := ADR(ServiceName),
+	out_port := ADR(handle)
+));

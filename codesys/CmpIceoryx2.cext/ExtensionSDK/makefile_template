@@ -1,0 +1,48 @@
+##############################################################################
+#	Copyright:		Copyright CODESYS Development GmbH
+#	Program:		Extension API for the Linux SL products
+##############################################################################
+
+#
+# with this makefile you can influence the build of your component 
+#
+#
+# Hints:
+#  - the name of the *Itf.m4 file in this folder will be used as name of the shared object (and component name)
+#  - all C files in this folder will be compiled by default
+# 
+
+# set versions of your shared object
+# must be single digit, decimal
+MAJORVER=0
+MINORVER=1
+
+# set a component version (must match your IEC library version)
+# must be 4 bytes, hexadecimal
+CMPVERSION=0x01000000
+
+# set a component ID 
+# must be 2 bytes >= 0x2000 and hexadecimal and can be used to differentiate different components
+CMPID=0x2000
+
+# set your tools
+DOS2UNIX = dos2unix
+M4 = m4
+
+# set a compiler
+CC ?= gcc
+
+# add some compiler flags (with += )
+#CFLAGS += -g
+
+# add some include paths (with +=)
+#INCLUDES += -I.
+
+# add some linker flags (with += )
+#LDFLAGS += 
+
+# add some libraries that you might need (with += )
+#LDLIBS += -lc
+
+
+

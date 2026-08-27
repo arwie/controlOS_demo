@@ -1,0 +1,22 @@
+// Sends one notification.
+
+METHOD PUBLIC Notify: BOOL
+VAR_INPUT
+	EventId:	UDINT := 0;
+END_VAR
+VAR
+	notified:	UDINT;
+END_VAR
+
+////////////////////////////////
+
+IF handle = 0 THEN
+	Notify := FALSE;
+	RETURN;
+END_IF
+
+Notify := Check(iox2plc_notifier_notify_cext(
+	port := handle,
+	event_id := EventId,
+	out_notified := ADR(notified)
+));

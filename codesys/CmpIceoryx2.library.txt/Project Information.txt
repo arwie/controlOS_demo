@@ -1,0 +1,6 @@
+Author: Artur Wiebe
+Company: controlOS
+DefaultNamespace: IOX2
+Project: CmpIceoryx2
+Title: CmpIceoryx2
+Version: 0.1

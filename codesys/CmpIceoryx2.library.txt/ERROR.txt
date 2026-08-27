@@ -1,0 +1,11 @@
+// SPDX-FileCopyrightText: 2026 Artur Wiebe <artur@4wiebe.de>
+// SPDX-License-Identifier: MIT
+
+// The reason of a failed call, in the words of iceoryx2.
+// A port never holds a message, only a POINTER TO ERROR: every message is a
+// string literal that lives in the binary for the whole process, so the
+// pointer is valid forever and costs nothing to pass around.
+// 127 is generous, the longest message in iceoryx2 0.9.3 is 76 characters.
+
+TYPE ERROR: STRING(127);
+END_TYPE

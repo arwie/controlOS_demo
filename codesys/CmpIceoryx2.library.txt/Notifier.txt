@@ -1,0 +1,21 @@
+// SPDX-FileCopyrightText: 2026 Artur Wiebe <artur@4wiebe.de>
+// SPDX-License-Identifier: MIT
+
+// Notifies listeners on an ipc event service.
+//
+//	VAR
+//		notif:	IOX2.Notifier('plc/temperature/event');
+//	END_VAR
+//
+//	IF pub.Send(Data := TxData) THEN
+//		notif.Notify(EventId := 1);
+//	END_IF
+//
+// An instance belongs to one task: the native port is not thread-safe, so all
+// calls on the same instance must come from the same task.
+
+FUNCTION_BLOCK Notifier EXTENDS PortBase
+
+////////////////////////////////
+
+// Ports are used through their methods only.

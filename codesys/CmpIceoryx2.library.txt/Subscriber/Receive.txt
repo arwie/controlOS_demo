@@ -1,0 +1,35 @@
+// TRUE = Data was updated. The sample is copied and released inside the call,
+// nothing is borrowed into IEC scope.
+
+METHOD PUBLIC Receive: BOOL
+VAR_INPUT
+	Data:	ANY;
+END_VAR
+VAR
+	has_data:	BOOL;
+END_VAR
+
+////////////////////////////////
+
+IF handle = 0 THEN
+	Receive := FALSE;
+	RETURN;
+END_IF
+
+// ANY carries pointer and size, so the size travels with the destination. The
+// C layer copies exactly this many bytes, so it has to match the service.
+IF Data.pValue = 0 OR Data.diSize <> payload_size THEN
+	Receive := Check(ADR(Errors.SIZE_MISMATCH));
+	RETURN;
+END_IF
+
+Receive := Check(iox2plc_subscriber_recv_cext(
+	port := handle,
+	data := Data.pValue,
+	size := TO_UDINT(Data.diSize),
+	out_has_data := ADR(has_data)
+)) AND has_data;
+
+IF Receive THEN
+	received := received + 1;
+END_IF

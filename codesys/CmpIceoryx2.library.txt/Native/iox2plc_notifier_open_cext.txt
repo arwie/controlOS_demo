@@ -1,0 +1,9 @@
+{attribute 'hide'}
+FUNCTION iox2plc_notifier_open_cext: POINTER TO ERROR
+VAR_INPUT
+	service:		POINTER TO STRING;
+	out_port:		POINTER TO __XWORD;
+END_VAR
+
+////////////////////////////////
+

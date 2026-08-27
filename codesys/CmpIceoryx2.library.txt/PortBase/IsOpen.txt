@@ -1,0 +1,3 @@
+// FALSE means the port failed to open.
+
+PROPERTY PUBLIC IsOpen: BOOL

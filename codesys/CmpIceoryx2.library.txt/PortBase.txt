@@ -1,0 +1,23 @@
+// SPDX-FileCopyrightText: 2026 Artur Wiebe <artur@4wiebe.de>
+// SPDX-License-Identifier: MIT
+
+// Common state of every IOX2 port.
+// The handle is the single source of truth for whether the port is usable and
+// only the native layer ever writes it: an open sets it after it succeeded, a
+// close clears it after the drop, so handle <> 0 means open.
+// last_error is written only when a call fails. It is the reason of the most
+// recent failure, not the outcome of the most recent call, so the reason of a
+// failed open survives every later call on the dead port.
+
+{attribute 'hide'}
+FUNCTION_BLOCK PortBase
+
+VAR
+	handle:			__XWORD := 0;			// native port handle, 0 = no port
+	last_error:		POINTER TO ERROR := 0;	// message of the last failure, 0 = none yet
+	service_name:	STRING(255);			// service this port belongs to, for the log
+END_VAR
+
+////////////////////////////////
+
+// Ports are used through their methods only.

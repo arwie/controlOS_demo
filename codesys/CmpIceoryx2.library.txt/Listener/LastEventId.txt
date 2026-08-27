@@ -1,0 +1,3 @@
+// Id of the event retrieved by the most recent Poll that returned TRUE, unchanged otherwise.
+
+PROPERTY PUBLIC LastEventId: UDINT

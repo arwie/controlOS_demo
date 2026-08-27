@@ -1,0 +1,11 @@
+## SECTION=applications
+
+config CODESYS_ICEORYX2
+	tristate
+	select HOST_M4
+	select ICEORYX2
+	select ICEORYX2_FFI_C
+	prompt "CODESYS iceoryx2 component"
+	help
+	  CmpIceoryx2 runtime extension component: iceoryx2 publish/subscribe
+	  and event services for CODESYS applications (IOX2 library).

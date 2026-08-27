@@ -1,0 +1,15 @@
+{attribute 'hide'}
+FUNCTION iox2plc_subscriber_open_cext: POINTER TO ERROR
+VAR_INPUT
+	service:		POINTER TO STRING;
+	type_name:		POINTER TO STRING;
+	payload_size:	UDINT;
+	alignment:		UDINT;
+	publishers:		UDINT;
+	subscribers:	UDINT;
+	history:		BOOL;
+	out_port:		POINTER TO __XWORD;
+END_VAR
+
+////////////////////////////////
+

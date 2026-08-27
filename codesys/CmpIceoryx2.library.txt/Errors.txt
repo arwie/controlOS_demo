@@ -1,0 +1,13 @@
+// SPDX-FileCopyrightText: 2026 Artur Wiebe <artur@4wiebe.de>
+// SPDX-License-Identifier: MIT
+
+// The failures the IEC layer detects on its own, in the same form the native
+// layer reports its own: a message that outlives the call.
+// Deliberately not CONSTANT: the compiler is free to inline a constant, and
+// there is nothing to take the address of once it does.
+
+{attribute 'hide'}
+{attribute 'qualified_only'}
+VAR_GLOBAL
+	SIZE_MISMATCH:	ERROR := 'Data size does not match the service payload size';
+END_VAR

@@ -1,0 +1,24 @@
+// SPDX-FileCopyrightText: 2026 Artur Wiebe <artur@4wiebe.de>
+// SPDX-License-Identifier: MIT
+
+// Publishes fixed size POD samples on an ipc publish-subscribe service.
+//
+//	VAR
+//		pub:	IOX2.Publisher ('codesys/fbk', 'AppFbk', SIZEOF(AppFbk), Alignment:=8, Publishers:=1, Subscribers:=8, History:=FALSE);
+//	END_VAR
+//
+//	pub.Send(TxData);
+//
+// An instance belongs to one task: the native port is not thread-safe, so all
+// calls on the same instance must come from the same task.
+
+FUNCTION_BLOCK Publisher EXTENDS PortBase
+
+VAR
+	payload_size:	DINT;	// checked against ANY.diSize on every Send
+	sent:			ULINT;	// samples handed over to iceoryx2, for watching in online mode
+END_VAR
+
+////////////////////////////////
+
+// Ports are used through their methods only.

@@ -1,0 +1,10 @@
+{attribute 'hide'}
+FUNCTION iox2plc_notifier_notify_cext: POINTER TO ERROR
+VAR_INPUT
+	port:			__XWORD;
+	event_id:		UDINT;
+	out_notified:	POINTER TO UDINT;
+END_VAR
+
+////////////////////////////////
+

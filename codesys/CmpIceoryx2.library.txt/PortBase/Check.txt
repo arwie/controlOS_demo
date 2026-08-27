@@ -1,0 +1,29 @@
+// Evaluates the return value of a native call. TRUE = the call succeeded.
+// A failure records its message and logs it, a success leaves last_error
+// untouched. Only a message that differs from the one already recorded is
+// logged, so a port that fails every cycle produces one entry, not a flood.
+
+METHOD PROTECTED Check: BOOL
+VAR_INPUT
+	err:		POINTER TO ERROR;	// native return value, 0 = success
+END_VAR
+VAR
+	info:		STRING(255);
+END_VAR
+
+////////////////////////////////
+
+Check := err = 0;
+
+IF NOT Check AND last_error <> err THEN
+	info := CONCAT(CONCAT(service_name, ': '), err^);
+	LogAdd2(
+		hLogger := LOG_STD_LOGGER,
+		udiCmpID := 16#FFFF2000,
+		udiClassID := CmpLog.LogClass.LOG_ERROR,
+		udiErrorID := 0,
+		udiInfoID := 0,
+		pszInfo := info,
+	);
+	last_error := err;
+END_IF

@@ -8,7 +8,7 @@ menuconfig CODESYS
 	select LIBC_M
 	select ROOTFS			if RUNTIME
 	select CODEMETER		if RUNTIME
-	select PYTHON3_POSIX_IPC	if RUNTIME
+	select CODESYS_ICEORYX2		if RUNTIME
 	prompt "CODESYS"
 	help
 	  CODESYS Control Linux SL is an IEC 61131-3-compliant SoftPLC

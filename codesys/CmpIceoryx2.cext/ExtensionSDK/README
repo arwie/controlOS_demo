@@ -1,0 +1,149 @@
+##############################################################################
+#	Copyright:		Copyright CODESYS Development GmbH
+#	Program:		Extension API for the Linux SL products
+##############################################################################
+
+##########################
+This is the SDK of the Linux SL products to create an own additional CODESYS runtime component
+whose functions that can be called from a CODESYS IEC library.
+##########################
+
+##########################
+Prerequisites:
+- A CODESYS Installation to create an IEC library on a windows machine
+- Some buildtools to create a shared object (linux dynamic library), that can be run with the CODESYS Control SL runtimes
+  - some kind of GCC (for X64 / ARM / AARCH64, depending on your target system)
+  - make
+  - m4
+  - sed
+  - dos2unix
+##########################
+
+##########################
+If you want to start a new project, follow these steps:
+
+On the linux system (where you want to build the component)
+1) Install the required tools (see prerequisites), e.g. with
+    sudo apt-get install build-essential m4 sed dos2unix make
+
+2) Copy the SDK to a place of your choice, e.g. in your home directory.
+    Later we call this directory the "<SDKDIR>", so please remember this location!
+    Hint: As we are using the tool "make": dont use paths with whitespaces. Make does not like that at all!
+
+3) Create a folder next to the sdk where you want to start your project, e.g. "CmpFirstTest"
+    mkdir ~/CmpFirstTest    
+    Later we call this directory the "<PROJECT DIR>", so please remember this location!
+
+4) Now create a new project with the following command, and use the makefile from the <SDKDIR>:
+    make -f <SDKDIR>/makefile newproject
+    e.g.:
+    make -f ../sdk/makefile newproject
+    This creates a makefile within your folder, you might want to take a look at it later ;-)
+    Your workspace now might look like this:
+    |
+    |- SKD                    <SDKDIR>
+    |  |- include (dir)
+    |  |- m4 (dir)
+    |  |- src (dir)
+    |  |- makefile
+    |  |- makefile_template
+    |  |- README
+    |  
+    |- CmpFirstTest           <PROJECT DIR> 
+       |- makefile
+
+
+5) Now take a look at the generated makefile.
+    If you are compiling for X64, you dont need to change anything
+    If you are compiling for another architecture, you need to set a proper cross compiler via the variable CC (and probably more CFLAGS, INCLUDES and LDLIBS)
+
+
+On the Windows system (where CODESYS is installed)
+1) Open your CODESYS IDE and create a new library project. 
+    Set the title in the project information to e.g.: "CmpFirstTest"
+    and store it under the same filename, e.g. "CmpFirstTest.library".
+    These two must match, otherwise it wont be possible to generate the shared object!
+
+2) Add "externally linked" functions to your library as you wish. You can make a Function "externally linked" by right clicking
+    on the new function ->Properties->Build and select "External implementation".
+	This function must include "_cext" in its name, otherwise it wont be loaded by the runtime!
+	E.g.: TestFunction_cext
+   
+3) Now create the runtime system files by selecting Build->"Generate runtime system files".
+    Choose a suitable path as output directory.
+    Enable the checkboxes for "M4 interface file" and "C stub file" as you need to generate both: C and M4 files.
+    Also check that the component name is equal to the name of your library, e.g. "CmpFirstTest"
+
+4) Save or transfer these generated files (*.c and *Itf.m4 file) to the <PROJECT DIR> on your linux system
+
+
+On the linux system (at <PROJECT DIR>)
+1) Go to your <PROJECT DIR> and try to build your component with
+    make all
+
+2) Now a shared object, with the same name as your IEC library should have been generated in the "out" folder
+
+3) Now you can transfer, copy or symbolically link that to a location on your target system where libraries are normally found (e.g. /usr/lib )
+    e.g. if you are on the target system:
+    sudo cp out/libCmpFirstTest.so /usr/lib
+
+4) Stop the runtime on your target e.g. with
+    sudo /etc/init.d/codesyscontrol stop
+
+5) Open the configuration file CODESYSControl_User.cfg of the runtime, e.g. with nano
+    and add an entry at the section [ComponentManager], where the components are listed:
+    [ComponentManager]
+    Component.1=CmpFirstTest
+    Component.2=CmpSomeOtherComponent
+    Component.3=CmpSomeMoreComponent
+    ...
+
+    hints:
+    - the number or index in this setting needs to be incrementing, it might not collide with already existing settings/component indices
+    - if the line starts with ; it is a comment and the setting is not active
+
+6) Then restart your runtime again, e.g. with
+    sudo /etc/init.d/codesyscontrol start
+
+7) and check that your component is properly loaded, e.g. check the logfile (via CODESYS IDE), or under codesyscontrol.log
+    cat /var/opt/codesys/codesyscontrol.log
+    you should see a message like this:
+    ... Dynamic: <cmp>CmpFirstTest</cmp>, <id>0xffff2000</id> <ver>1.0.0.0</ver>
+
+-> Congratulations! you made your first component and it runs from the CODESYS Control runtime
+-> if not: check the FAQs section at the end of this file
+
+
+On the Windows system (where CODESYS is installed)
+1) go to the CODESYS project where you want to use your newly created IEC library, and use your library
+
+2) make a download and check if your code is called (e.g. make a printf there)
+
+##########################
+
+
+
+##########################
+FAQs:
+    1) My component does not build, what is going wrong?
+        - this might have very different reasons. Check what compiler (CC), flags (CFLAGS/LDFLAGS), include paths (INCLUDES) and libraries (LDLIBS) you are setting in your makefile
+        - check if the code you are writing does compile without this SDK stuff
+        - check if the functions in the component are named with "_cext"
+
+    2) My component is not loaded from the runtime?
+        - if you see a message in the log, like:
+        **** ERROR: libCmpFirstTest.so: cannot open shared object file: No such file or directory
+        or 
+        **** ERROR: *** Error: Component <cmp>CmpFirstTest</cmp> NOT loaded
+        -> then your shared object is not found. Please double check that you put it somewhere on your linuxsystem, where it can be found (e.g. /usr/lib/)
+
+    3) Can I output some messages from my code? Where is this output?
+        - just use the normal printf() function in your code. This will be output at the "debug logger". To enable the debug logger, just change the file /etc/defaults/codesyscontrol:
+        set these variables:
+        DEBUGOUTPUT=1
+        and
+        DEBUGLOGFILE=/tmp/codesyscontrol_debug.log
+        then restart the runtime. Then you can see the output at this logfile
+
+
+##########################

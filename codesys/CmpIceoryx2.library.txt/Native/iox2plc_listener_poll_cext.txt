@@ -1,0 +1,10 @@
+{attribute 'hide'}
+FUNCTION iox2plc_listener_poll_cext: POINTER TO ERROR
+VAR_INPUT
+	port:			__XWORD;
+	out_event_id:	POINTER TO UDINT;
+	out_has_event:	POINTER TO BOOL;
+END_VAR
+
+////////////////////////////////
+
