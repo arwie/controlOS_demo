@@ -10,3 +10,11 @@ python_register_filedescriptor_class.patch
 # instead of asyncio add_reader() on the fd.
 # Still missing in upstream main as of 2026-08-06.
 python_expose_listener_filedescriptor.patch
+
+# The pub-sub PortFactory can report its connected ports via dynamic_config()
+# in rust, C (iox2_port_factory_pub_sub_dynamic_config_*) and C++
+# (PortFactoryPublishSubscribe::dynamic_config()), but the python binding does
+# not expose dynamic_config at all, so the number of subscribers/publishers of
+# a service is unreachable from python.
+# Still missing in upstream main as of 2026-08-17 (95ba31bf7).
+python_expose_pubsub_dynamic_config.patch

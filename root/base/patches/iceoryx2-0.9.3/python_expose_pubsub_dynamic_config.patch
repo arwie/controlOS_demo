@@ -1,0 +1,247 @@
+diff --git b/iceoryx2-ffi/python/src/dynamic_config_publish_subscribe.rs b/iceoryx2-ffi/python/src/dynamic_config_publish_subscribe.rs
+new file mode 100644
+index 0000000..0552a1f
+--- /dev/null
++++ b/iceoryx2-ffi/python/src/dynamic_config_publish_subscribe.rs
+@@ -0,0 +1,146 @@
++// Copyright (c) 2025 Contributors to the Eclipse Foundation
++//
++// See the NOTICE file(s) distributed with this work for additional
++// information regarding copyright ownership.
++//
++// This program and the accompanying materials are made available under the
++// terms of the Apache Software License 2.0 which is available at
++// https://www.apache.org/licenses/LICENSE-2.0, or the MIT license
++// which is available at https://opensource.org/licenses/MIT.
++//
++// SPDX-License-Identifier: Apache-2.0 OR MIT
++
++use iceoryx2::prelude::{CallbackProgression, PortFactory};
++use pyo3::prelude::*;
++
++use crate::parc::Parc;
++use crate::port_factory_publish_subscribe::PortFactoryPublishSubscribeType;
++use crate::unique_node_id::UniqueNodeId;
++use crate::unique_publisher_id::UniquePublisherId;
++use crate::unique_subscriber_id::UniqueSubscriberId;
++
++#[pyclass]
++/// Contains the communication settings of a connected `Publisher`.
++pub struct PublisherDetails(
++    pub(crate) iceoryx2::service::dynamic_config::publish_subscribe::PublisherDetails,
++);
++
++#[pymethods]
++impl PublisherDetails {
++    #[getter]
++    /// The `UniquePublisherId` of the `Publisher`.
++    pub fn publisher_id(&self) -> UniquePublisherId {
++        UniquePublisherId(self.0.publisher_id)
++    }
++
++    #[getter]
++    /// The `UniqueNodeId` of the `Node` under which the `Publisher` was created.
++    pub fn node_id(&self) -> UniqueNodeId {
++        UniqueNodeId(self.0.node_id)
++    }
++
++    #[getter]
++    /// The total number of samples contained in the `Publisher`s data segment.
++    pub fn number_of_samples(&self) -> usize {
++        self.0.number_of_samples
++    }
++
++    #[getter]
++    /// The current maximum length of a slice.
++    pub fn max_slice_len(&self) -> usize {
++        self.0.max_slice_len
++    }
++}
++
++#[pyclass]
++/// Contains the communication settings of a connected `Subscriber`.
++pub struct SubscriberDetails(
++    pub(crate) iceoryx2::service::dynamic_config::publish_subscribe::SubscriberDetails,
++);
++
++#[pymethods]
++impl SubscriberDetails {
++    #[getter]
++    /// The `UniqueSubscriberId` of the `Subscriber`.
++    pub fn subscriber_id(&self) -> UniqueSubscriberId {
++        UniqueSubscriberId(self.0.subscriber_id)
++    }
++
++    #[getter]
++    /// The `UniqueNodeId` of the `Node` under which the `Subscriber` was created.
++    pub fn node_id(&self) -> UniqueNodeId {
++        UniqueNodeId(self.0.node_id)
++    }
++
++    #[getter]
++    /// The size of the receive buffer that stores `Sample`s.
++    pub fn buffer_size(&self) -> usize {
++        self.0.buffer_size
++    }
++}
++
++#[pyclass]
++/// The dynamic configuration of a `MessagingPattern::PublishSubscribe` based `Service`.
++/// Contains dynamic parameters like the connected endpoints etc..
++pub struct DynamicConfigPublishSubscribe(pub(crate) Parc<PortFactoryPublishSubscribeType>);
++
++#[pymethods]
++impl DynamicConfigPublishSubscribe {
++    #[getter]
++    /// Returns how many `Publisher` ports are currently connected.
++    pub fn number_of_publishers(&self) -> usize {
++        match &*self.0.lock() {
++            PortFactoryPublishSubscribeType::Ipc(v) => v.dynamic_config().number_of_publishers(),
++            PortFactoryPublishSubscribeType::Local(v) => v.dynamic_config().number_of_publishers(),
++        }
++    }
++
++    #[getter]
++    /// Returns how many `Subscriber` ports are currently connected.
++    pub fn number_of_subscribers(&self) -> usize {
++        match &*self.0.lock() {
++            PortFactoryPublishSubscribeType::Ipc(v) => v.dynamic_config().number_of_subscribers(),
++            PortFactoryPublishSubscribeType::Local(v) => v.dynamic_config().number_of_subscribers(),
++        }
++    }
++
++    /// Returns the `PublisherDetails` of all connected `Publisher` ports.
++    pub fn list_publishers(&self) -> Vec<PublisherDetails> {
++        let mut ret_val = vec![];
++        match &*self.0.lock() {
++            PortFactoryPublishSubscribeType::Ipc(v) => {
++                v.dynamic_config().list_publishers(|details| {
++                    ret_val.push(PublisherDetails(*details));
++                    CallbackProgression::Continue
++                })
++            }
++            PortFactoryPublishSubscribeType::Local(v) => {
++                v.dynamic_config().list_publishers(|details| {
++                    ret_val.push(PublisherDetails(*details));
++                    CallbackProgression::Continue
++                })
++            }
++        }
++        ret_val
++    }
++
++    /// Returns the `SubscriberDetails` of all connected `Subscriber` ports.
++    pub fn list_subscribers(&self) -> Vec<SubscriberDetails> {
++        let mut ret_val = vec![];
++        match &*self.0.lock() {
++            PortFactoryPublishSubscribeType::Ipc(v) => {
++                v.dynamic_config().list_subscribers(|details| {
++                    ret_val.push(SubscriberDetails(*details));
++                    CallbackProgression::Continue
++                })
++            }
++            PortFactoryPublishSubscribeType::Local(v) => {
++                v.dynamic_config().list_subscribers(|details| {
++                    ret_val.push(SubscriberDetails(*details));
++                    CallbackProgression::Continue
++                })
++            }
++        }
++        ret_val
++    }
++}
+diff --git a/iceoryx2-ffi/python/src/lib.rs b/iceoryx2-ffi/python/src/lib.rs
+index 6a175a6..6acc93c 100644
+--- a/iceoryx2-ffi/python/src/lib.rs
++++ b/iceoryx2-ffi/python/src/lib.rs
+@@ -24,6 +24,7 @@ pub mod cleanup_state;
+ pub mod client;
+ pub mod config;
+ pub mod duration;
++pub mod dynamic_config_publish_subscribe;
+ pub mod entry_handle;
+ pub mod entry_handle_mut;
+ pub mod entry_value_uninit;
+@@ -139,6 +140,9 @@ fn _iceoryx2(py: Python<'_>, m: &Bound<'_, PyModule>) -> PyResult<()> {
+     m.add_class::<crate::attribute_value::AttributeValue>()?;
+     m.add_class::<crate::client::Client>()?;
+     m.add_class::<crate::duration::Duration>()?;
++    m.add_class::<crate::dynamic_config_publish_subscribe::DynamicConfigPublishSubscribe>()?;
++    m.add_class::<crate::dynamic_config_publish_subscribe::PublisherDetails>()?;
++    m.add_class::<crate::dynamic_config_publish_subscribe::SubscriberDetails>()?;
+     m.add_class::<crate::entry_handle::EntryHandle>()?;
+     m.add_class::<crate::entry_handle_mut::EntryHandleMut>()?;
+     m.add_class::<crate::entry_value_uninit::EntryValueUninit>()?;
+diff --git a/iceoryx2-ffi/python/src/port_factory_publish_subscribe.rs b/iceoryx2-ffi/python/src/port_factory_publish_subscribe.rs
+index 9357181..be7314d 100644
+--- a/iceoryx2-ffi/python/src/port_factory_publish_subscribe.rs
++++ b/iceoryx2-ffi/python/src/port_factory_publish_subscribe.rs
+@@ -17,6 +17,7 @@ use pyo3::prelude::*;
+ use crate::attribute_set::AttributeSet;
+ use crate::cleanup_state::CleanupState;
+ use crate::duration::Duration;
++use crate::dynamic_config_publish_subscribe::DynamicConfigPublishSubscribe;
+ use crate::error::NodeListFailure;
+ use crate::node_state::{
+     AliveNodeView, AliveNodeViewType, DeadNodeView, DeadNodeViewType, NodeState,
+@@ -113,6 +114,13 @@ impl PortFactoryPublishSubscribe {
+         }
+     }
+ 
++    #[getter]
++    /// Returns the DynamicConfig of the `Service`.
++    /// Contains all dynamic settings, like the connected endpoints etc..
++    pub fn dynamic_config(&self) -> DynamicConfigPublishSubscribe {
++        DynamicConfigPublishSubscribe(self.value.clone())
++    }
++
+     #[getter]
+     /// Returns a list of all `NodeState` of all the `Node`s which have opened the `Service`.
+     pub fn nodes(&self) -> PyResult<Vec<NodeState>> {
+diff --git a/iceoryx2-ffi/python/tests/service_publish_subscribe_tests.py b/iceoryx2-ffi/python/tests/service_publish_subscribe_tests.py
+index 4daf99f..1de8b4c 100644
+--- a/iceoryx2-ffi/python/tests/service_publish_subscribe_tests.py
++++ b/iceoryx2-ffi/python/tests/service_publish_subscribe_tests.py
+@@ -391,3 +391,42 @@ def test_history_is_delivered_with_update_connections(
+         assert received_sample.payload().contents.data == 85 + i
+ 
+     assert not subscriber.has_samples()
++
++
++@pytest.mark.parametrize("service_type", service_types)
++def test_dynamic_config_tracks_connected_ports(
++    service_type: iox2.ServiceType,
++) -> None:
++    config = iox2.testing.generate_isolated_config()
++    node = iox2.NodeBuilder.new().config(config).create(service_type)
++
++    service_name = iox2.testing.generate_service_name()
++    service = (
++        node.service_builder(service_name).publish_subscribe(Payload).create()
++    )
++
++    assert service.dynamic_config.number_of_publishers == 0
++    assert service.dynamic_config.number_of_subscribers == 0
++
++    publisher = service.publisher_builder().create()
++    subscriber = service.subscriber_builder().create()
++
++    assert service.dynamic_config.number_of_publishers == 1
++    assert service.dynamic_config.number_of_subscribers == 1
++
++    publishers = service.dynamic_config.list_publishers()
++    assert len(publishers) == 1
++    assert publishers[0].publisher_id == publisher.id
++    assert publishers[0].node_id == node.id
++
++    subscribers = service.dynamic_config.list_subscribers()
++    assert len(subscribers) == 1
++    assert subscribers[0].subscriber_id == subscriber.id
++    assert subscribers[0].node_id == node.id
++    assert subscribers[0].buffer_size == subscriber.buffer_size
++
++    publisher.delete()
++    subscriber.delete()
++
++    assert service.dynamic_config.number_of_publishers == 0
++    assert service.dynamic_config.number_of_subscribers == 0

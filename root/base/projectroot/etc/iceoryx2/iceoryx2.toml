@@ -1,3 +1,11 @@
 [global]
 root-path = "/tmp/iceoryx2/"
 prefix = "iox2_"
+
+[defaults.event]
+event-id-max-value = 31
+
+[defaults.publish-subscribe]
+subscriber-max-borrowed-samples = 1
+publisher-max-loaned-samples = 1
+backpressure-strategy = "DiscardData"
