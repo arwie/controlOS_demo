@@ -1,3 +1,2 @@
 [Unit]
 Wants=hostapd.service
-Wants=network@syswlan.target

@@ -7,7 +7,6 @@ import asyncio
 import signal
 
 from .app import *
-from . import web
 from .watch import Watch
 from .simio import input, output, IoGroup
 

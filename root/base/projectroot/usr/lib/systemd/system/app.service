@@ -1,5 +1,4 @@
 [Unit]
-Wants=app.socket
 After=network.target
 Wants=systemd-networkd-wait-online@sys.service
 After=systemd-networkd-wait-online@sys.service
