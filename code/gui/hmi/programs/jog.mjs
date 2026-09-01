@@ -5,15 +5,15 @@ import { hmiIndex } from 'hmi';
 
 
 
-hmiIndex.addPage('teach', {
-	targetGuard: 'app@teach',
+hmiIndex.addPage('jog', {
+	show: 'hmi.programs.jog',
 	async setup() {
 
 		const info = shallowRef();
 		const speed = ref(3);
 		const snap = ref({x:'', y:'', z:'', r:''});
 
-		const ws = url('teach', 'app').webSocketJson((msg)=>{
+		const ws = url('hmi.programs.jog.main').webSocketJson((msg)=>{
 			info.value = msg;
 		});
 
@@ -41,7 +41,7 @@ hmiIndex.addPage('teach', {
 
 		const watchdog = poll(100, ()=>{
 			if (ws.readyState == WebSocket.OPEN)
-				ws.sendJson({});
+				sendCmd(-1);
 		});
 
 		await ws.sync;
@@ -52,7 +52,7 @@ hmiIndex.addPage('teach', {
 	template: //html
 	`
 	<div class="mb-3">
-		<label class="form-label">{{ $t('hmi.teach.pos') }}</label>
+		<label class="form-label">{{ $t('hmi.jog.pos') }}</label>
 		<div class="row gy-1 gx-3">
 			<div v-for="k in ['x','y','z','r']" class="input-group col-sm">
 				<span class="input-group-text">{{k.toUpperCase()}}</span>
@@ -62,7 +62,7 @@ hmiIndex.addPage('teach', {
 	</div>
 
 	<div class="mb-3">
-		<label class="form-label">{{ $t('hmi.teach.snap') }}</label>
+		<label class="form-label">{{ $t('hmi.jog.snap') }}</label>
 		<div class="row gy-1 gx-3">
 			<div v-for="k in ['x','y','z','r']" class="input-group col-sm">
 				<span class="input-group-text">{{k.toUpperCase()}}</span>
@@ -72,7 +72,7 @@ hmiIndex.addPage('teach', {
 	</div>
 
 	<div class="mb-3">
-		<label class="form-label">{{ $t('hmi.teach.speed') }}</label>
+		<label class="form-label">{{ $t('hmi.jog.speed') }}</label>
 		<input v-model.number="speed" type="range" min="0.1" max="8" step="0.1" class="form-range">
 	</div>
 
@@ -118,7 +118,7 @@ hmiIndex.addPage('teach', {
 
 	<div class="row mb-3">
 		<div class="col-lg">
-			<label class="form-label">{{ $t('hmi.teach.conv') }}</label>
+			<label class="form-label">{{ $t('hmi.jog.conv') }}</label>
 			<div class="input-group input-group-lg">
 				<PressButton @press="moveConv(-1)" @release="moveStop" class="btn btn-secondary w-25">
 					<i class="fas fa-minus"></i>
@@ -130,7 +130,7 @@ hmiIndex.addPage('teach', {
 			</div>
 		</div>
 		<div class="col-lg">
-			<label class="form-label">{{ $t('hmi.teach.extra') }}</label>
+			<label class="form-label">{{ $t('hmi.jog.extra') }}</label>
 			<div class="input-group input-group-lg">
 				<PressButton @press="moveExtra(-1)" @release="moveStop" class="btn btn-secondary w-25">
 					<i class="fas fa-minus"></i>
@@ -146,21 +146,21 @@ hmiIndex.addPage('teach', {
 	<hr class="my-4">
 
 	<div class="mb-3">
-		<label class="form-label">{{ $t('hmi.teach.tool') }}</label>
+		<label class="form-label">{{ $t('hmi.jog.tool') }}</label>
 		<div class="row">
 			<div class="col">
 				<select @change="selectTool" :value="info.tool" class="form-select">
-					<option value="0"  data-l10n-id="tool_none"></option>
-					<option value="1"  data-l10n-id="tool_magnet"></option>
-					<option value="2"  data-l10n-id="tool_vacuum"></option>
-					<option value="10" data-l10n-id="tool_laser"></option>
-					<option value="11" data-l10n-id="tool_probe"></option>
+					<option value="0" >{{ $t('hmi.jog.tool_none') }}</option>
+					<option value="1" >{{ $t('hmi.jog.tool_magnet') }}</option>
+					<option value="2" >{{ $t('hmi.jog.tool_vacuum') }}</option>
+					<option value="10">{{ $t('hmi.jog.tool_laser') }}</option>
+					<option value="11">{{ $t('hmi.jog.tool_probe') }}</option>
 				</select>
 			</div>
 			<div class="col-2">
 				<div class="form-check form-switch mt-2">
-					<input @change="gripTool" :value="info.gripped" type="checkbox" class="form-check-input" id="teach_grip">
-					<label class="form-check-label" for="teach_grip" data-l10n-id="teach_grip"></label>
+					<input @change="gripTool" :value="info.gripped" type="checkbox" class="form-check-input" id="jog_grip">
+					<label class="form-check-label" for="jog_grip">{{ $t('hmi.jog.grip') }}</label>
 				</div>
 			</div>
 		</div>

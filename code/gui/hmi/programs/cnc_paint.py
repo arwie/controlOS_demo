@@ -1,5 +1,10 @@
+from asyncio import sleep
 import web
 from shared.claude import ClaudeChat, ClaudeModel
+from shared.iceoryx.pubsub import IoxNotifyingPublisher, IoxSubscriber, poll
+from shared.topics.codesys import codesys_fbk_pubsub
+from shared.topics.programs import cnc_paint_pubsub, cnc_paint_event
+from shared.coordinates import Pos, asdict
 
 
 MAX_TOKENS      = 10000
@@ -7,6 +12,7 @@ THINKING_TOKENS = 6000
 
 
 web.document.imports.append('hmi/programs/cnc_paint')
+web.site.show(__name__, lambda: cnc_paint_pubsub.dynamic_config.number_of_subscribers)
 
 
 
@@ -81,3 +87,35 @@ class claude(web.RequestHandler):
 						result['polylines'] = block["input"]["polylines"]
 
 		self.write(result)
+
+
+
+@web.handler
+class draw(web.RequestHandler):
+
+	cmd_publisher = IoxNotifyingPublisher(cnc_paint_pubsub, cnc_paint_event)
+
+	def post(self):
+		self.cmd_publisher.send_msgpack({
+			'cmd': 1,
+			'paths': self.read_json(),
+		})
+
+
+
+@web.handler
+class info(web.WebSocketHandler):
+
+	async def update(self):
+		update_period=1/20
+		with IoxSubscriber(codesys_fbk_pubsub) as fbk_subscriber:
+			while True:
+				with await poll(fbk_subscriber.receive) as sample:
+					fbk = sample.payload().contents
+					msg = {
+						'robot': {
+							'pos': asdict(Pos(*fbk.rbt_pos)),
+						},
+					}
+				await self.write_message(msg)
+				await sleep(update_period)

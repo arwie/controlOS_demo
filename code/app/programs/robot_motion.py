@@ -1,6 +1,6 @@
 from shared import app
 from robot import robot
-from coordinates import Axes, Pos
+from shared.coordinates import Axes, Pos
 
 
 
@@ -43,10 +43,7 @@ async def demo_move_cnc(rounds):
 
 
 
-@app.aux_task
-async def exec():
-	robot.override = 50
-
+async def run():
 	while True:
 		await app.sleep(0.5)
 		try:

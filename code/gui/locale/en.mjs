@@ -30,8 +30,9 @@ export default {
 			title: "GRAVITRAX",
 			description: "The robot keeps a GraviTrax marble run alive: using a magnetic gripper it picks up balls and drops them onto the tracks, while a rotating stage feeds several runs in parallel. Multiple concurrent tasks continuously recirculate the marbles across stage, floor, twister and jump elements.",
 		},
-		teach: {
-			title: "Teach",
+		jog: {
+			title: "Jog",
+			description: "Manually move the robot, conveyor and extra axis step by step, optionally snapping to a target position, and switch or actuate the gripper.",
 			tool: "Gripper",
 			grip: "Grip",
 			pos: "Current position",

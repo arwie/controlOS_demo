@@ -1,6 +1,8 @@
 from collections import deque
 from random import uniform
 from shared import app
+from shared.asyncio import AuxTaskGroup, Trigger
+from shared.condition import poll
 from robot import robot, Pos
 from conv import conv, ConvItem
 import sim
@@ -8,17 +10,16 @@ import sim
 
 
 @app.context
-async def exec():
-	robot.override = 100
+async def run():
 
 	queue = deque[ConvItem]()
-	queue_trigger = app.Trigger()
+	queue_trigger = Trigger()
 
 	async with (
 		conv.power(),
 		conv.move_velocity(100),
 		robot.power(),
-		app.AuxTaskGroup() as task_group
+		AuxTaskGroup() as task_group
 	):
 
 		@task_group
@@ -30,12 +31,8 @@ async def exec():
 				queue_trigger()
 				sim.conv_place_item(item)
 
-		@task_group
-		async def pick_items():
-			while True:
-				await app.poll(lambda: queue, period=queue_trigger)
-				item = queue.popleft()
-				await robot.conv_pick(item)
-				sim.conv_remove_item(item)
-
-		yield
+		while True:
+			await poll(lambda: queue, queue_trigger)
+			item = queue.popleft()
+			await robot.conv_pick(item)
+			sim.conv_remove_item(item)

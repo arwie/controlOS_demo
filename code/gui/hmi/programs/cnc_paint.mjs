@@ -1,12 +1,12 @@
 import { shallowReactive, shallowRef } from 'vue'
 import { BFormCheckbox } from 'bootstrap/vue'
-import { url, poll } from 'web/utils'
+import { url } from 'web/utils'
 import { hmiIndex } from 'hmi';
 
 
 
 hmiIndex.addPage('cnc_paint', {
-	targetGuard: 'app@cnc_paint',
+	show: 'hmi.programs.cnc_paint',
 	async setup() {
 
 		const info = shallowRef();
@@ -18,7 +18,7 @@ hmiIndex.addPage('cnc_paint', {
 		const prompt = shallowRef('');
 		const chatting = shallowRef(false);
 
-		const ws = url('cnc_paint', 'app').webSocketJson((msg)=>{
+		const info_ws = url('hmi.programs.cnc_paint.info').webSocketJson((msg)=>{
 			info.value = msg;
 		});
 
@@ -53,8 +53,8 @@ hmiIndex.addPage('cnc_paint', {
 			newPath.push(np);
 		}
 		
-		function play() {
-			ws.sendJson({ cmd:1, paths });
+		function draw() {
+			url('hmi.programs.cnc_paint.draw').postJson(paths);
 		}
 
 		async function chat() {
@@ -84,9 +84,9 @@ hmiIndex.addPage('cnc_paint', {
 			history.length = 0;
 		}
 
-		await ws.sync;
+		await info_ws.sync;
 
-		return { info, paths, history, model, thinking, prompt, chatting, pointerdown, pointermove, play, chat, clear };
+		return { info, paths, history, model, thinking, prompt, chatting, pointerdown, pointermove, draw, chat, clear };
 	},
 	components: { BFormCheckbox },
 	template: //html
@@ -95,14 +95,14 @@ hmiIndex.addPage('cnc_paint', {
 		<div class="col-md-8 h-100 d-flex flex-column pb-3">
 			<svg viewBox="-160 -160 320 320" style="touch-action: none">
 				<circle @pointerdown="pointerdown" @pointermove="pointermove" cx="0" cy="0" r="160" fill="skyblue"/>
-				<circle :cx="info.pos.x" :cy="-info.pos.y" r="5" fill="red"/>
+				<circle :cx="info.robot.pos.x" :cy="-info.robot.pos.y" r="5" fill="red"/>
 				<polyline v-for="path in paths" :points="path.map(p=>[p.x,-p.y].join(',')).join(' ')"
 					fill="none" stroke-width="3" stroke="black"/>
 			</svg>
 		</div>
 		<div class="col-md d-flex flex-column h-100">
 			<div class="d-flex gap-2 mb-3">
-				<button @click="play" :disabled="!paths.length"
+				<button @click="draw" :disabled="!paths.length"
 					class="btn btn-lg btn-success w-75"><i class="fas fa-play"></i></button>
 				<button @click="clear"
 					class="btn btn-warning w-25"><i class="fas fa-trash"></i></button>

@@ -52,6 +52,7 @@ from contextlib import asynccontextmanager
 from dataclasses import replace
 
 from shared import app
+from shared.asyncio import AuxTaskGroup
 from robot import robot, Pos
 from extra import extra
 from tool import magnet
@@ -80,17 +81,16 @@ async def rotate_stage(pos:float):
 
 
 @app.context
-async def exec():
+async def run():
 
 	await extra.drive.tune(
 		velocity_integral_gain = 0,
 	)
-	robot.override = 100
 
 	async with (
 		robot.power(),
 		extra.power(),
-		app.AuxTaskGroup() as task_group
+		AuxTaskGroup() as task_group
 	):
 
 		@task_group
@@ -149,4 +149,4 @@ async def exec():
 				)
 				await app.sleep(2.5)
 
-		yield
+		await app.sleep(10*60)

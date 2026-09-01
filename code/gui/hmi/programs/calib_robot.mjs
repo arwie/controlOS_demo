@@ -6,10 +6,10 @@ import { hmiIndex } from 'hmi'
 
 
 hmiIndex.addPage('calib_robot', {
-	targetGuard: 'app@calib_robot',
+	show: 'hmi.programs.calib_robot',
 	setup() {
 
-		const drivesUrl = url('calib_robot', 'app');
+		const drivesUrl = url('hmi.programs.calib_robot.drives');
 
 		const calibPos = ref(310);
 		const drives = shallowRef([]);
