@@ -2,34 +2,21 @@
 # SPDX-License-Identifier: MIT
 
 from __future__ import annotations
-from collections.abc import Callable, Coroutine
-import asyncio
-import signal
+from collections.abc import Coroutine
+from shared.asyncio import asyncio_run
 
 from .app import *
 from .watch import Watch
 from .simio import input, output, IoGroup
 
 
-def run(app_main: Coroutine[Any, Any, None] | Callable[[], Coroutine[Any, Any, None]]):
+def run(app_main: Coroutine):
 
-	async def main():
-		exit_event = asyncio.Event()
+	async def _main():
+		async with (
+			watch.exec(),
+			simio.exec(),
+		):
+			await app_main
 
-		for sig in (signal.SIGINT, signal.SIGTERM):
-			asyncio.get_running_loop().add_signal_handler(sig, exit_event.set)
-
-		async with app.AuxTaskGroup() as task_group:
-
-			task_group(app_main)
-
-			async with (
-				web.server(),
-				watch.exec(),
-				simio.exec(),
-			):
-				await exit_event.wait()
-				log.warning('Received INT/TERM signal -> app is going to exit...')
-
-	asyncio.run(main())
-	exit(0)
+	asyncio_run(_main())

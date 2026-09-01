@@ -2,15 +2,13 @@
 # SPDX-License-Identifier: MIT
 
 from __future__ import annotations
-from typing import TYPE_CHECKING
-if TYPE_CHECKING:
-	from typing import Any
-	from collections.abc import Callable
-
+from typing import Any, overload, Callable, Awaitable, Literal
 from abc import ABC, abstractmethod
-from contextlib import AbstractContextManager
+from contextlib import AbstractContextManager, suppress
+from functools import partial
 from time import monotonic
-from asyncio import sleep
+import asyncio
+from shared.asyncio import Trigger
 
 
 
@@ -32,6 +30,97 @@ class Condition(AbstractCondition):
 
 	def __call__(self):
 		return bool(self.condition())
+
+
+
+@overload
+async def poll[T](
+	condition: Callable[[], T | None],
+	period: float | Trigger | Callable[[], Awaitable] = 0.02,
+	*,
+	timeout: None = None,
+	abort: None = None,
+	settle: float = 0
+) -> T: ...
+
+@overload
+async def poll[T](
+	condition: Callable[[], T | None],
+	period: float | Trigger | Callable[[], Awaitable] = 0.02,
+	*,
+	timeout: float,
+	abort: None = None,
+	settle: float = 0
+) -> T | None: ...
+
+@overload
+async def poll[T](
+	condition: Callable[[], T | None],
+	period: float | Trigger | Callable[[], Awaitable] = 0.02,
+	*,
+	timeout: None = None,
+	abort: Callable[[], Any],
+	settle: float = 0
+) -> T | Literal[False]: ...
+
+@overload
+async def poll[T](
+	condition: Callable[[], T | None],
+	period: float | Trigger | Callable[[], Awaitable] = 0.02,
+	*,
+	timeout: float,
+	abort: Callable[[], Any],
+	settle: float = 0
+) -> T | Literal[False] | None: ...
+
+async def poll[T](
+	condition: Callable[[], T | None],
+	period: float | Trigger | Callable[[], Awaitable] = 0.02,
+	*,
+	timeout: float | None = None,
+	abort: Callable[[], Any] | None = None,
+	settle: float = 0
+):
+	"""
+	Periodically polls a condition until it becomes true, times out, or is aborted.
+
+	Args:
+		condition: Callable evaluated each iteration. Polling continues until it returns a truthy value.
+		period: Time to wait between condition checks. Can be:
+			- float/int: Sleep interval in seconds
+			- Trigger: Event-driven trigger to wait for
+			- Callable[[], Coroutine]: Custom async wait function
+		timeout: Maximum time in seconds to poll. None means no timeout (poll indefinitely).
+		abort: Optional callable that when returns truthy, aborts the polling.
+		settle: Duration in seconds the condition must remain continuously True before returning.
+			If condition becomes False during this period, the settle timer resets.
+
+	Returns:
+		- The truthy result from condition() when it has been True for the settle duration
+		- False when the abort condition becomes True
+		- None when the timeout expires
+	"""
+
+	if callable(abort):
+		abort = Condition(abort)
+
+	if isinstance(period, (float, int)):
+		period = partial(asyncio.sleep, period)
+	elif isinstance(period, Trigger):
+		period = period.wait
+
+	settle_timeout = Timeout(settle)
+
+	with suppress(TimeoutError):
+		async with asyncio.timeout(timeout):
+			while not abort:
+				if result := condition():
+					if settle_timeout:
+						return result
+				else:
+					settle_timeout.reset()
+				await period()
+			return False
 
 
 
@@ -61,7 +150,7 @@ class Timer(AbstractCondition, AbstractContextManager):
 
 	async def wait(self):
 		while left := self.left():
-			await sleep(left)
+			await asyncio.sleep(left)
 
 	def __call__(self):
 		return monotonic() < self.expire	#always return False if timeout==0

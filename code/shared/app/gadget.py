@@ -6,6 +6,7 @@ import asyncio
 import json
 from . import app
 from .watch import Watch
+from shared.asyncio import AuxTaskGroup
 from shared.condition import Timeout
 
 
@@ -35,7 +36,7 @@ class UdpMaster(asyncio.DatagramProtocol):
 	async def exec(self):
 		transport,_ = await asyncio.get_running_loop().create_datagram_endpoint(lambda:self, remote_addr=self.address)
 		with closing(transport):
-			async with app.AuxTaskGroup() as task_group:
+			async with AuxTaskGroup() as task_group:
 
 				@task_group
 				async def sync_loop():

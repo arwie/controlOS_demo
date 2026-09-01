@@ -3,21 +3,22 @@
 
 import sys
 from importlib import import_module
-import asyncio
-import web
+from asyncio import Event
+from shared.asyncio import asyncio_run
 from shared import tornado
+import web
+
 
 
 import_module(sys.argv[-1])
 
 
 async def main():
-	asyncio.get_running_loop().set_task_factory(asyncio.eager_task_factory)
 
 	server = web.server()
 	server.add_socket(tornado.systemd_socket(3))
 
-	await asyncio.Event().wait()
+	await Event().wait()
 
 
-asyncio.run(main())
+asyncio_run(main())

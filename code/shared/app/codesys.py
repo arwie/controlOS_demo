@@ -2,14 +2,14 @@
 # SPDX-License-Identifier: MIT
 
 import asyncio
-from mmap import mmap
-from ctypes import addressof, sizeof, memmove, c_byte, c_uint8, c_int8, c_uint16, c_int16, c_uint32, c_int32
-from posix_ipc import SharedMemory, Semaphore
+from ctypes import sizeof, byref, memmove, c_uint8, c_int8, c_uint16, c_int16, c_uint32, c_int32
 from pathlib import Path
-from functools import partial
 from contextlib import closing
-from threading import Thread
-from shared.codesys_types import AppCfg, AppCmd, AppFbk
+from shared.condition import poll
+from shared.asyncio import Trigger, asyncio_loop
+from shared.iceoryx.pubsub import IoxPublisher, IoxSubscriber
+from shared.iceoryx.event import IoxListener
+from shared.topics.codesys import AppCfg, AppCmd, AppFbk, codesys_cmd_pubsub, codesys_fbk_pubsub, codesys_fbk_event
 from . import app
 
 
@@ -17,16 +17,7 @@ cfg = AppCfg()
 cmd = AppCmd()
 fbk = AppFbk()
 
-
-_sync_trigger = app.Trigger()
-
-
-poll = partial(app.poll, period=_sync_trigger)
-
-async def sync():
-	await _sync_trigger.wait() #cmd -> codesys
-	await _sync_trigger.wait() #codesys -> fbk
-
+fbk_trigger: Trigger
 
 
 def runstop_switch(run:bool):
@@ -46,11 +37,6 @@ async def shell_cmd(cmd:str):
 
 
 
-class closing_fd(closing):
-	def __exit__(self, *exc_info):
-		self.thing.close_fd() #type:ignore
-
-
 @app.context
 async def exec():
 	Path('/run/codesys/cfg').write_bytes(bytes(cfg))
@@ -59,44 +45,20 @@ async def exec():
 	runstop_switch(True)
 	await shell_cmd('startprg application')
 
-	if not await app.poll(Path('/dev/shm/codesys').exists, timeout=30):
-		raise Exception('codesys application not started')
+	class FbkListener(IoxListener):
+		def handle(self, event_id):
+			if fbk_sample := fbk_subscriber.receive():
+				memmove(byref(fbk), fbk_sample.payload(), sizeof(fbk))
+				self()
+				asyncio_loop.call_soon(cmd_publischer.send_copy, cmd)
 
+	global fbk_trigger
 	with (
-		closing_fd(SharedMemory('/codesys')) as shm,
-		closing(Semaphore('/codesys')) as sem,
-		mmap(shm.fd, shm.size) as mapfile
+		IoxSubscriber(codesys_fbk_pubsub) as fbk_subscriber,
+		IoxPublisher(codesys_cmd_pubsub) as cmd_publischer,
+		FbkListener(codesys_fbk_event) as fbk_trigger
 	):
-		cmd_addr, cmd_size = addressof(cmd), sizeof(cmd)
-		fbk_addr, fbk_size = addressof(fbk), sizeof(fbk)
-		assert shm.size >= 1 + cmd_size + fbk_size
-
-		shm_addr = addressof(c_byte.from_buffer(mapfile))
-		shm_sync_flag = c_byte.from_address(shm_addr)
-		shm_cmd_addr = shm_addr + sizeof(shm_sync_flag)
-		shm_fbk_addr = shm_cmd_addr + cmd_size
-
-		def shm_sync():
-			memmove(shm_cmd_addr, cmd_addr, cmd_size)
-			memmove(fbk_addr, shm_fbk_addr, fbk_size)
-			shm_sync_flag.value = 1
-			_sync_trigger()
-
-		def shm_sync_loop(event_loop=asyncio.get_running_loop()):
-			while mapfile is not None:
-				sem.acquire()
-				event_loop.call_soon_threadsafe(shm_sync)
-
-		shm_sync_thread = Thread(target=shm_sync_loop)
-		shm_sync_thread.start()
-		try:
-			await sync()
-			yield
-		finally:
-			mapfile = None
-			sem.release() #release shm_sync_thread in case codesys application is not running
-			shm_sync_thread.join()
-			await asyncio.sleep(0) #allow scheduled shm_sync to run before closing mmap
+		yield
 
 
 
@@ -137,7 +99,7 @@ class EthercatDevice:
 			return fbk.co.data
 		finally:
 			cmd.co.func = 0
-			await sync()
+			await poll(lambda: not (fbk.co.done or fbk.co.error), fbk_trigger, timeout=1)
 
 
 
