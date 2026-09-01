@@ -4,7 +4,9 @@ from shared.utils import instantiate
 from shared import app
 from shared.app import codesys
 from shared.condition import Timer, Timeout
-from coordinates import Pos
+from shared.coordinates import Pos
+from shared.asyncio import aux_task
+from shared.condition import poll
 
 
 
@@ -34,13 +36,13 @@ class conv:
 	async def power(self):
 		codesys.cmd.conv_power = True
 		try:
-			if not await codesys.poll(lambda: codesys.fbk.conv_powered, timeout=3):
+			if not await poll(lambda: codesys.fbk.conv_powered, codesys.fbk_trigger, timeout=3):
 				raise Exception('Failed to power on conveyor')
 			app.log.info('Conveyor power enabled')
 			yield
 		finally:
 			codesys.cmd.conv_power = False
-			if not await codesys.poll(lambda: not codesys.fbk.conv_powered, timeout=3):
+			if not await poll(lambda: not codesys.fbk.conv_powered, codesys.fbk_trigger, timeout=3):
 				app.log.warning('Conveyor not disabled in time')
 			await app.sleep(0.2) #Let the hardware settle befor next enable
 
@@ -53,17 +55,16 @@ class conv:
 			yield
 		finally:
 			codesys.cmd.conv_move = 0
-			await codesys.sync()
 
 
 	@asynccontextmanager
 	async def jog(self, power_time=15):
 		watchdog = Timeout(0.3)
 
-		@app.aux_task
+		@aux_task
 		async def jog_task():
 			while True:
-				await app.poll(lambda: codesys.cmd.conv_move_vel)
+				await poll(lambda: codesys.cmd.conv_move_vel)
 				async with self.power():
 					codesys.cmd.conv_move = 99
 					try:
@@ -74,8 +75,7 @@ class conv:
 								power_timer.reset()
 					finally:
 						codesys.cmd.conv_move = 0
-						await codesys.sync()
-				await app.poll(lambda: not codesys.cmd.conv_move_vel)
+				await poll(lambda: not codesys.cmd.conv_move_vel)
 
 		def jog_control(direction:int|None=None, speed:float=10):
 			"""Calling jog_control without args resets the watchdog."""

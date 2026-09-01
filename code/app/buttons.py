@@ -3,7 +3,7 @@ from shared.app import codesys
 
 
 
-@app.input(sim=True)
+@app.input()
 def start() -> bool:
 	return codesys.fbk.io[1]
 

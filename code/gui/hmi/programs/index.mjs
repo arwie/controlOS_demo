@@ -1,5 +1,5 @@
 import { ref } from 'vue'
-import { url, poll } from 'web/utils'
+import { url } from 'web/utils'
 import { hmiIndex } from 'hmi'
 
 import files from '/web.files'
@@ -8,21 +8,19 @@ import programs from '/hmi.programs.programs'
 
 
 hmiIndex.addPage('programs', {
-	targetGuard: 'app@programs',
-	setup() {
-
-		const programsUrl = url('programs', 'app');
+	async setup() {
 
 		const selected = ref(null);
 
-		const selectedPoll = poll(1000, async ()=>{
-			selected.value = await programsUrl.fetchJson();
+		const ws = url('hmi.programs.select').webSocketJson((msg)=>{
+			selected.value = msg;
 		});
 
-		async function select(program=null) {
-			await programsUrl.postJson(program);
-			selectedPoll();
+		function select(program) {
+			ws.sendJson(program);
 		}
+
+		await ws.sync;
 
 		return { files, programs, selected, select };
 	},
@@ -36,7 +34,6 @@ hmiIndex.addPage('programs', {
 					<button
 						v-for="program in programs"
 						@click="select(program)"
-						:disabled="selected"
 						class="list-group-item list-group-item-action"
 						:class="{active: program==selected}"
 						style="min-height:4rem;"
@@ -44,7 +41,7 @@ hmiIndex.addPage('programs', {
 				</div>
 			</div>
 			<button
-				@click="select()"
+				@click="select(null)"
 				:disabled="!selected"
 				class="btn btn-lg btn-secondary w-100 mt-auto"
 			>{{ $t('cancel') }}</button>

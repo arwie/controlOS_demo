@@ -1,31 +1,9 @@
 from shared import app, system
 from shared.app import codesys
-import sim
 import drives
+import sim
 from robot import robot
 import programs
-
-
-
-web_placeholder = app.web.placeholder('robot_override')
-
-class WebHandler(app.web.RequestHandler):
-
-	def get(self):
-		self.write(robot.override)
-
-	def post(self):
-		robot.override = self.read_json()
-
-
-
-@app.context
-async def operation():
-	await drives.initialize()
-	await robot.home()
-
-	async with web_placeholder.handle(WebHandler):
-		await programs.run()
 
 
 
@@ -38,10 +16,14 @@ async def main():
 			system.run(f'taskset -pc 2 $(pgrep -x {proc})', check=False)
 
 		await app.poll(lambda: codesys.fbk.init_done)
+		await drives.initialize()
 
-		async with sim.exec():
-			await operation()
+		async with (
+			sim.exec(),
+			robot.exec(),
+		):
+			await programs.run()
 
 
 
-app.run(main)
+app.run(main())

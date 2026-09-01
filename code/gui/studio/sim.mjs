@@ -94,8 +94,7 @@ class Item extends Bone {
 
 
 studioIndex.addPage('sim', {
-	targetGuard: 'app@sim',
-	async setup() {
+	setup() {
 
 		const scene = new Scene();
 		const robot = new IgusDeltaRobot();
@@ -103,7 +102,7 @@ studioIndex.addPage('sim', {
 
 		scene.add(robot, conv);
 
-		const ws = url('sim', 'app').webSocketJson((msg)=>{
+		const ws = url('studio.sim.update').webSocketJson((msg)=>{
 			switch (msg.cmd) {
 				case 0:
 					robot.setPose(msg.robot.axes, msg.robot.pos);
@@ -129,7 +128,6 @@ studioIndex.addPage('sim', {
 			ws.sendJson(args);
 		}
 
-		await ws.sync;
 		return { send }
 	},
 	template: //html

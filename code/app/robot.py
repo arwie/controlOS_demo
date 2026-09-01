@@ -4,8 +4,11 @@ from pathlib import Path
 from math import fmod
 from shared import app
 from shared.app import codesys
-from shared.condition import Timer, Timeout
-from coordinates import Axes, Pos
+from shared.condition import Timer, Timeout, poll
+from shared.asyncio import aux_task, AuxTaskGroup
+from shared.coordinates import Axes, Pos
+from shared.iceoryx.pubsub import IoxListeningSubscriber
+from shared.topics.robot import robot_override_pubsub, robot_override_event
 from drives import robot_a, robot_b, robot_c
 from cnc import CNCProgram
 from conv import ConvItem
@@ -20,19 +23,6 @@ class robot:
 		codesys.cfg.robot_acc = 20000
 		codesys.cfg.robot_jrk = 400000
 
-		self.override = 100
-
-
-	@property
-	def override(self) -> float:
-		"""Velocity override in %"""
-		return codesys.cmd.rbt_override * 100
-
-	@override.setter
-	def override(self, value:float):
-		value /= 100
-		codesys.cmd.rbt_override = max(0, min(value, 1))
-
 
 	def axes(self):
 		return Axes(*codesys.fbk.rbt_axes)
@@ -45,13 +35,13 @@ class robot:
 	async def power(self):
 		codesys.cmd.rbt_power = True
 		try:
-			if not await codesys.poll(lambda: codesys.fbk.rbt_powered, timeout=3):
+			if not await poll(lambda: codesys.fbk.rbt_powered, codesys.fbk_trigger, timeout=3):
 				raise Exception('Failed to power on robot')
 			app.log.info('Robot power enabled')
 			yield
 		finally:
 			codesys.cmd.rbt_power = False
-			if not await codesys.poll(lambda: not codesys.fbk.rbt_powered, timeout=3):
+			if not await poll(lambda: not codesys.fbk.rbt_powered, codesys.fbk_trigger, timeout=3):
 				app.log.warning('Robot not disabled in time')
 			await app.sleep(0.2) #Let the hardware settle befor next enable
 
@@ -93,11 +83,11 @@ class robot:
 	async def _move_exec(self, move:int):
 		codesys.cmd.rbt_move = move
 		try:
-			if not await codesys.poll(lambda: codesys.fbk.rbt_move_done, abort=lambda: codesys.fbk.rbt_move_error):
+			if not await poll(lambda: codesys.fbk.rbt_move_done, codesys.fbk_trigger, abort=lambda: codesys.fbk.rbt_move_error):
 				raise Exception('Failed to move robot')
 		finally:
 			codesys.cmd.rbt_move = 0
-			await codesys.sync()
+			await poll(lambda: not (codesys.fbk.rbt_move_done or codesys.fbk.rbt_move_error), codesys.fbk_trigger, timeout=1)
 
 
 	async def set_torque(self, torque:float=100):
@@ -109,7 +99,7 @@ class robot:
 	async def jog(self, power_time=15):
 		watchdog = Timeout(0.3)
 
-		@app.aux_task
+		@aux_task
 		async def jog_task():
 			while True:
 				await app.poll(lambda: any(codesys.cmd.rbt_move_coord))
@@ -123,7 +113,6 @@ class robot:
 								power_timer.reset()
 					finally:
 						codesys.cmd.rbt_move = 0
-						await codesys.sync()
 				await app.poll(lambda: not any(codesys.cmd.rbt_move_coord))
 
 		def jog_control(direction:Pos|None=None, speed:float=10):
@@ -165,4 +154,18 @@ class robot:
 		app.log.info(f'Robot homing finished at {robot.axes()}')
 
 
+	@asynccontextmanager
+	async def exec(self):
+		codesys.cmd.rbt_override = 1
+		await self.home()
 
+		async with AuxTaskGroup() as task_group:
+
+			@task_group
+			async def override_handler():
+				with IoxListeningSubscriber(robot_override_pubsub, robot_override_event) as override_subscriber:
+					while True:
+						msg = await override_subscriber.poll_receive_copy()
+						codesys.cmd.rbt_override = max(0, min(msg.override / 100, 1))
+
+			yield

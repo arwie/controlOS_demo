@@ -1,12 +1,30 @@
 from dataclasses import asdict, astuple
 from shared import app
+from shared.condition import poll
+from shared.asyncio import AuxTaskGroup
+from shared.iceoryx.pubsub import IoxPublisher, IoxListeningSubscriber
+from shared.topics.sim import sim_update_pubsub, sim_cmd_pubsub, sim_cmd_event
 from robot import robot
 from conv import conv, ConvItem
 import buttons
 
 
 
-web_placeholder = app.web.placeholder('sim')
+update_publisher = IoxPublisher(sim_update_pubsub)
+
+
+def conv_place_item(item:ConvItem):
+	update_publisher.send_msgpack({
+		'cmd': 11,
+		'id': str(id(item)),
+		'item': asdict(item),
+	})
+
+def conv_remove_item(item:ConvItem):
+	update_publisher.send_msgpack({
+		'cmd': 12,
+		'id': str(id(item)),
+	})
 
 
 
@@ -16,53 +34,19 @@ async def _press_button_sim(button:app.simio.Input, duration=0.25):
 	button.sim = False
 
 
-
-@app.CommandExecutor
-async def cmd_handler(cmd, data):
-	match cmd:
-		case 1:
-			await _press_button_sim(buttons.start)
-		case 2:
-			await _press_button_sim(buttons.stop)
-
-
-
-class WebHandler(app.web.WebSocketHandler):
-	@classmethod
-	def update(cls):
-		return {
-			'cmd': 0,
-			'robot': {
-				'axes': astuple(robot.axes()),
-				'pos': asdict(robot.pos()),
-			},
-			'conv': {
-				'pos': conv.pos(),
-			},
-		}
-
-	def on_message_json(self, msg):
-		cmd_handler(msg['cmd'], msg)
-
-
-
 @app.context
 async def exec():
-	async with web_placeholder.handle(WebHandler, update_period=1/30):
-		async with cmd_handler.exec():
-			yield
+	async with AuxTaskGroup() as task_group:
 
+		@task_group
+		async def cmd_task():
+			with IoxListeningSubscriber(sim_cmd_pubsub, sim_cmd_event) as cmd_subscriber:
+				while True:
+					msg = await cmd_subscriber.poll_receive_msgpack()
+					match msg['cmd']:
+						case 1:
+							await _press_button_sim(buttons.start)
+						case 2:
+							await _press_button_sim(buttons.stop)
 
-
-def conv_place_item(item:ConvItem):
-	WebHandler.all.write_message({
-		'cmd': 11,
-		'id': str(id(item)),
-		'item': asdict(item),
-	})
-
-def conv_remove_item(item:ConvItem):
-	WebHandler.all.write_message({
-		'cmd': 12,
-		'id': str(id(item)),
-	})
+		yield

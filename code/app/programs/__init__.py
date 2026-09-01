@@ -1,9 +1,11 @@
 from pathlib import Path
 from importlib import import_module
 from shared import app
-from shared.condition import Pulse
+from shared.condition import Pulse, poll
+from shared.asyncio import AuxTaskGroup
 import buttons
-import teach
+from shared.iceoryx.pubsub import IoxSubscriber
+from shared.topics.programs import programs_select_pubsub
 
 
 
@@ -11,44 +13,34 @@ programs = {
 	file.stem: import_module(f'{__name__}.{file.stem}')
 		for file in Path(__file__).parent.glob('*.py*') if not file.match('_*')
 }
-program = None
 
 
-web_placeholder = app.web.placeholder('programs')
+blink_pulse = Pulse(2)
 
-
-class WebHandler(app.web.RequestHandler):
-
-	async def get(self):
-		self.write(program)
-
-	async def post(self):
-		global program
-		program = self.read_json()
+async def run_program(prg:str):
+	with buttons.led_running:
+		while not buttons.start():
+			await app.sleep()
+			buttons.led_running(blink_pulse())
+		buttons.led_running(True)
+		try:
+			await programs[prg].run()
+		except Exception:
+			app.log.exception(f'Failed to run program: {prg}')
 
 
 
 @app.context
 async def run():
-	global program
+	with IoxSubscriber(programs_select_pubsub) as program_subscriber:
+		program = None
 
-	async with web_placeholder.handle(WebHandler):
 		while True:
+			async with AuxTaskGroup() as task_group:
+				await poll(lambda: not (buttons.stop() or buttons.start()))
 
-			async with (
-				teach.exec(),
-			):
-				with buttons.led_running:
-					blink_pulse = Pulse(2)
-					while not (program and buttons.start()):
-						buttons.led_running(bool(program and blink_pulse()))
-						await app.sleep()
+				if program:
+					task_group.create_task(run_program(program))
 
-			try:
-				with buttons.led_running(True):
-					async with programs[program].exec():
-						await app.poll(lambda: buttons.stop() or not program)
-
-			except Exception:
-				app.log.exception(f'Failed to run program: {program}')
-				program = None
+				if await poll(program_subscriber.has_samples, abort=buttons.stop):
+					program = program_subscriber.receive_msgpack()

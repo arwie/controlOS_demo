@@ -7,12 +7,10 @@ import web.use.fontawesome
 
 web.document.imports.append('hmi')
 
-import hmi.programs
-web.document.imports.append('hmi/teach')
-
-
-import system
+from . import robot
+from . import programs
 
 import diag.log
-web.document.imports.append('diag/watch')
+import diag.watch
 import diag.issue
+import system

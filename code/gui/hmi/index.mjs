@@ -6,7 +6,7 @@ import { RootView, PageLink } from 'web/widgets'
 import { DiagDropdown } from 'diag'
 import { PoweroffDropdown } from 'system/power'
 import { LocaleDropdown } from 'web/locale'
-import { RobotOverride } from 'hmi/override'
+import { RobotOverride } from 'hmi/robot'
 
 
 
