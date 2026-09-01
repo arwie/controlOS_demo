@@ -7,7 +7,7 @@ import { diagIndex } from 'diag'
 
 
 diagIndex.addPage('watch', {
-	targetGuard: 'app@watch',
+	show: 'diag.watch',
 	async setup() {
 
 		const data = shallowRef();
@@ -15,7 +15,7 @@ diagIndex.addPage('watch', {
 		const filterRegex = computed(() => RegExp(filter.value.replaceAll(/ +/g,'|'), 'i'))
 		const expanded = reactive(new Set())
 
-		const ws = url('watch', 'app').webSocketJson((msg)=>{
+		const ws = url('diag.watch.update').webSocketJson((msg)=>{
 			data.value = msg;
 		});
 		await ws.sync;

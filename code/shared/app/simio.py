@@ -2,17 +2,16 @@
 # SPDX-License-Identifier: MIT
 
 from __future__ import annotations
-from typing import overload, Any
-from collections.abc import Callable, Coroutine
-
-from typing import get_type_hints
+from typing import get_type_hints, overload, Any, Callable, Coroutine
 from contextlib import AbstractContextManager, closing, suppress
 from configparser import ConfigParser
-from asyncio import iscoroutinefunction
+from asyncio import sleep, iscoroutinefunction
 from shared import system
 from . import app
-from . import web
 from .watch import Watch
+from shared.asyncio import AuxTaskGroup, aux_task
+from shared.iceoryx.pubsub import IoxPublisher, IoxNotifyingPublisher, IoxListeningSubscriber
+from shared.topics._simio import simio_details_pubsub, simio_update_pubsub, simio_update_event, simio_cmd_pubsub, simio_cmd_event
 
 
 
@@ -47,22 +46,22 @@ class _IOBase[T:(bool, int, float, str)]:
 		self.override = None if override is None else self.type(override)
 
 	def open(self):
-		_WebHandler.add_simio(self)
+		add_simio(self)
 		self._watch = Watch(lambda: { self.name: self.value }, module=self.module)
 		return closing(self)
 
 	def close(self):
 		self._watch.close()
-		_WebHandler.remove_simio(self)
+		remove_simio(self)
 
 	async def sync(self):
 		pass
 
-	@app.aux_task
+	@aux_task
 	async def sync_loop(self, period:float):
 		while True:
 			await self.sync()
-			await app.sleep(period)
+			await sleep(period)
 
 
 
@@ -173,26 +172,24 @@ class IoGroup(AbstractContextManager):
 		for simio in self._simio:
 			await simio.sync()
 
-	@app.aux_task
+	@aux_task
 	async def sync_loop(self, period:float):
 		"""Run sync() in a periodic background loop."""
 		while True:
 			await self.sync()
-			await app.sleep(period)
+			await sleep(period)
 
 
 	def open(self):
 		"""Register all I/O points for monitoring in the Studio UI."""
 		for simio in self._simio:
 			simio.open()
-		_WebHandler.all.write_update()
 		return closing(self)
 
 	def close(self):
 		"""Unregister all I/O points from the Studio UI."""
 		for simio in self._simio:
 			simio.close()
-		_WebHandler.all.write_update()
 
 
 	def _decorator_kwargs_defaults(self, kwargs:dict):
@@ -265,57 +262,65 @@ output = default_io_group.output
 
 
 
-_web_placeholder = web.placeholder('simio')
+_simio = dict[str, _IOBase]()
+_simio_changed = False
 
-class _WebHandler(web.WebSocketHandler):
+def add_simio(simio:_IOBase):
+	global _simio, _simio_changed
+	_simio[str(id(simio))] = simio
+	_simio_changed = True
 
-	_simio = dict[int, _IOBase]()
-	_simio_changed = False
-
-	@classmethod
-	def add_simio(cls, simio:_IOBase):
-		cls._simio[id(simio)] = simio
-		cls._simio_changed = True
-
-	@classmethod
-	def remove_simio(cls, simio:_IOBase):
-		with suppress(Exception):
-			del cls._simio[id(simio)]
-			cls._simio_changed = True
-
-	@classmethod
-	def update(cls, full=False):
-		full = full or cls._simio_changed
-		cls._simio_changed = False
-		return {
-			'data': {
-				id: {
-					'ord':		simio.override,
-					'val':		simio.value,
-				} for id, simio in cls._simio.items()
-			},
-			'list': [
-				{
-					'id':		id,
-					'cls':		simio.cls,
-					'module':	simio.module,
-					'name':		simio.name,
-					'type':		simio.type.__name__,
-					'sim':		simio.simulated,
-				} for id, simio in cls._simio.items()
-			] if full else None,
-		}
-
-	def on_open(self):
-		self.write_update(True)
-
-	def on_message_json(self, msg):
-		self._simio[int(msg['id'])].set_override(msg['ord'])
-		self.all.write_update()
+def remove_simio(simio:_IOBase):
+	global _simio, _simio_changed
+	with suppress(Exception):
+		del _simio[str(id(simio))]
+		_simio_changed = True
 
 
 @app.context
 async def exec():
-	with default_io_group.open():
-		async with _web_placeholder.handle(_WebHandler):
+	with (
+		default_io_group.open(),
+		IoxPublisher(simio_details_pubsub) as details_publisher,
+		IoxNotifyingPublisher(simio_update_pubsub, simio_update_event) as update_publisher,
+	):
+
+		def update():
+			global _simio, _simio_changed
+			if _simio_changed:
+				_simio_changed = False
+				details_publisher.send_msgpack([
+					{
+						'id':		id,
+						'cls':		simio.cls,
+						'module':	simio.module,
+						'name':		simio.name,
+						'type':		simio.type.__name__,
+						'sim':		simio.simulated,
+					} for id, simio in _simio.items()
+				])
+			update_publisher.send_msgpack({
+				id: {
+					'ord':		simio.override,
+					'val':		simio.value,
+				} for id, simio in _simio.items()
+			})
+
+		async with AuxTaskGroup() as task_group:
+
+			@task_group
+			async def update_task():
+				while True:
+					update()
+					await sleep(0.2 if simio_update_pubsub.dynamic_config.number_of_subscribers else 1)
+
+			@task_group
+			async def cmd_task():
+				global _simio, _simio_changed
+				with IoxListeningSubscriber(simio_cmd_pubsub, simio_cmd_event) as cmd_subscriber:
+					while True:
+						msg = await cmd_subscriber.poll_receive_msgpack()
+						_simio[msg['id']].set_override(msg['ord'])
+						update()
+
 			yield

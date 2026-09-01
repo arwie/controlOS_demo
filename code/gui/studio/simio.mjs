@@ -7,13 +7,13 @@ import { studioIndex } from 'studio'
 
 
 studioIndex.addPage('simio', {
-	targetGuard: 'app@simio',
+	show: 'studio.simio',
 	async setup() {
 		const filter = ref('');
 		const list = shallowRef([])
 		const data = shallowRef();
 
-		const ws = url('simio', 'app').webSocketJson((msg)=>{
+		const ws = url('studio.simio.update').webSocketJson((msg)=>{
 			if (msg.list) {
 				list.value = msg.list;
 			}
@@ -57,7 +57,7 @@ studioIndex.addPage('simio', {
 		}
 
 		await ws.sync;
-		return { filter, lists, data, val, ord, ordToggle, ordSendValue }
+		return { filter, lists, val, ord, ordToggle, ordSendValue }
 	},
 	template: //html
 	`
