@@ -30,6 +30,10 @@ export default {
 			title: "GRAVITRAX",
 			description: "Der Roboter hält eine GraviTrax-Kugelbahn in Bewegung: Mit einem Magnetgreifer nimmt er Kugeln auf und setzt sie auf die Bahnen, während eine Drehbühne mehrere Strecken parallel beschickt. Mehrere nebenläufige Tasks lassen die Kugeln fortlaufend über Bühnen-, Boden-, Twister- und Sprungelemente zirkulieren.",
 		},
+		io_wave: {
+			title: "E/A-Welle",
+			description: "Lässt eine Welle über die digitalen Ausgänge laufen: Jeder Ausgang wird nacheinander geschaltet, und das Programm wartet auf die passende Eingangsrückmeldung, bevor es weitergeht. Die erreichten Durchläufe pro Sekunde werden sekündlich als Maß für die E/A-Latenz protokolliert.",
+		},
 		jog: {
 			title: "Tippbetrieb",
 			description: "Roboter, Förderband und Zusatzachse manuell schrittweise verfahren, wahlweise auf eine Zielposition einrasten, sowie den Greifer wechseln und betätigen.",
