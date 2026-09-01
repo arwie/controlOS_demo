@@ -15,21 +15,14 @@ VAR CONSTANT
 	CFG_FILE: STRING := '/run/codesys/cfg';
 END_VAR
 VAR
-	shm: RTS_IEC_HANDLE;
-	sem: RTS_IEC_HANDLE;
-	iec_result: RTS_IEC_RESULT;
-	sync: BYTE := 0;
-	missed: UDINT := 0;
+	cmd_subscriber: IOX2.Subscriber('codesys/cmd', 'AppCmd', SIZEOF(AppCmd), Alignment:=8, Publishers:=1, Subscribers:=1, History:=FALSE);
+	fbk_publisher:  IOX2.Publisher ('codesys/fbk', 'AppFbk', SIZEOF(AppFbk), Alignment:=8, Publishers:=1, Subscribers:=8, History:=FALSE);
+	fbk_notifier:   IOX2.Notifier  ('codesys/fbk');
 END_VAR
 
 ////////////////////////////////
 
-SysSharedMemoryRead (shm, 0, ADR(sync), SIZEOF(sync), ADR(iec_result));
-IF sync > 0 THEN
-	SysSharedMemoryRead (shm, SIZEOF(sync), ADR(cmd), SIZEOF(cmd), ADR(iec_result));
-ELSE
-	missed := missed + 1;
-END_IF
+cmd_subscriber.Receive(cmd);
 
 
 IF init.done THEN
@@ -39,9 +32,5 @@ ELSE
 END_IF
 
 
-IF sync > 0 THEN
-	sync := 0;
-	SysSharedMemoryWrite(shm, SIZEOF(sync) + SIZEOF(cmd), ADR(fbk), SIZEOF(fbk), ADR(iec_result));
-	SysSharedMemoryWrite(shm, 0, ADR(sync), SIZEOF(sync), ADR(iec_result));
-	SysSemProcessLeave(sem);
-END_IF
+fbk_publisher.Send(fbk);
+fbk_notifier.Notify();

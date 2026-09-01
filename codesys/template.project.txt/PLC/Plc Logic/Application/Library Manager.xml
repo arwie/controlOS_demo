@@ -31,7 +31,7 @@
           <PlaceholderRedirection Placeholder="Util" Redirection="Util, 3.5.22.0 (System)" />
           <PlaceholderRedirection Placeholder="StringUtils" Redirection="StringUtils, 3.5.22.0 (System)" />
           <PlaceholderRedirection Placeholder="Collections" Redirection="Collections, 3.5.17.0 (System)" />
-          <PlaceholderRedirection Placeholder="System_VisuElemBase" Redirection="VisuElemBase, 4.9.1.0 (System)" />
+          <PlaceholderRedirection Placeholder="System_VisuElemBase" Redirection="VisuElemBase, 4.10.0.0 (System)" />
           <PlaceholderRedirection Placeholder="FloatingPointUtils" Redirection="FloatingPointUtils, 4.0.0.0 (System)" />
           <PlaceholderRedirection Placeholder="System_VisuInputs" Redirection="VisuInputs, 4.7.0.0 (System)" />
         </PlaceholderRedirections>
