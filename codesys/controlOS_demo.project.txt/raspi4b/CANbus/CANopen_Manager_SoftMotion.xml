@@ -13,7 +13,7 @@
                 <DeviceIdentification>
                   <Type>16</Type>
                   <Id>0000 1018</Id>
-                  <Version>4.3.0.0</Version>
+                  <Version>4.4.0.0</Version>
                 </DeviceIdentification>
                 <Connector moduleType="15" role="child" interface="Common.CANbus" connectorId="0">
                   <HostParameterSet>

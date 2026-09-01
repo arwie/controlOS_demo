@@ -32,7 +32,7 @@ GroupSetOverride(
 
 GroupHalt(
 	AxisGroup := Robot,
-	Execute := StatusPowerGroup.powered AND app.cmd.rbt_move = 0,
+	Execute := StatusPowerGroup.moving AND app.cmd.rbt_move = 0,
 	Deceleration := app.cfg.robot_acc,
 	Jerk         := app.cfg.robot_jrk,
 );

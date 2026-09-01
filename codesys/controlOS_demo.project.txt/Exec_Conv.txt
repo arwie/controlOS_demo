@@ -27,7 +27,7 @@ StatusPowerAxis(
 
 Halt(
 	Axis := Conv,
-	Execute := StatusPowerAxis.powered AND app.cmd.conv_move = 0,
+	Execute := StatusPowerAxis.moving AND app.cmd.conv_move = 0,
 	Deceleration := app.cfg.conv_acc,
 	Jerk         := app.cfg.conv_jrk,
 );

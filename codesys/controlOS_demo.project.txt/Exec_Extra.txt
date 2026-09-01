@@ -27,7 +27,7 @@ StatusPowerAxis(
 
 Halt(
 	Axis := Extra,
-	Execute := StatusPowerAxis.powered AND app.cmd.extra_move = 0,
+	Execute := StatusPowerAxis.moving AND app.cmd.extra_move = 0,
 	Deceleration := app.cfg.extra_acc,
 	Jerk         := app.cfg.extra_jrk,
 );
