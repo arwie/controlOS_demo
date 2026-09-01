@@ -2,7 +2,6 @@
 // SPDX-License-Identifier: MIT
 
 import { ref, shallowReactive, watch } from 'vue'
-import { target } from 'web'
 import { url } from 'web/utils'
 import { FileButton, feedback } from 'web/widgets'
 import { BFormCheckbox } from 'bootstrap/vue'
@@ -97,7 +96,7 @@ diagIndex.addPage('log', {
 		const messages		= shallowReactive([]);
 		
 		const follow		= ref(null);
-		const priority		= ref(target('debug') ? 7 : 5);
+		const priority		= ref(5);
 		const identifier	= ref('');
 		const host			= ref('');
 		const date			= ref(null);

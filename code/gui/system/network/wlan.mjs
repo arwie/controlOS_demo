@@ -8,7 +8,7 @@ import { NetworkConf } from 'system/network/lan'
 
 
 networkIndex.addPage('wlan', {
-	targetGuard: 'network@wlan',
+	show: 'system.network.wlan',
 	setup() {
 
 		const enabled = ref(false);

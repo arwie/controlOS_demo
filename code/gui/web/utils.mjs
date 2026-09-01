@@ -4,16 +4,9 @@
 import { onUnmounted } from 'vue'
 
 
-const ports = {
-	app:	33000,
-}
 
+export function url(url='', port=location.port, host=location.hostname) {
 
-
-export function url(url='', port=null, host=null) {
-
-	host ??= location.hostname;
-	port = ports[port] || port || location.port;
 	let query = '';
 
 	return {

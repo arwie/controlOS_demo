@@ -80,7 +80,7 @@ export const NetworkConf = {
 
 
 networkIndex.addPage('lan', {
-	targetGuard: 'network@lan',
+	show: 'system.network.lan',
 	setup() {
 
 		const lanConf = useTemplateRef('lanConf')

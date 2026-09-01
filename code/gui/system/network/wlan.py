@@ -5,11 +5,12 @@ import re
 from pathlib import Path
 import web
 from shared import system
+from shared.network import hasInterface
 from .lan import network as lan_network
 
 
 web.document.imports.append('system/network/wlan')
-
+web.site.show(__name__, lambda: hasInterface('wlan'))
 
 
 @web.handler

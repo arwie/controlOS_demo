@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: MIT
 
 from __future__ import annotations
-
+from typing import Callable
 import json
 from pathlib import Path
 import asyncio
@@ -45,14 +45,14 @@ def redirect(match, target):
 
 @handler
 class files(ModuleHandler):
-	globs = list[str]()
+	_globs = list[str]()
 
 	@classmethod
 	def glob(cls, *globs:str):
-		cls.globs.extend(globs)
+		cls._globs.extend(globs)
 
 	async def export_default(self):
-		globs = (cwd.glob(glob, recurse_symlinks=True) for glob in self.globs)
+		globs = (cwd.glob(glob, recurse_symlinks=True) for glob in self._globs)
 		files = set(str(path.relative_to(cwd)) for path in chain(*globs) if path.is_file() and path.exists())
 		return {
 			file: self.static_url(file) for file in files
@@ -68,46 +68,20 @@ class setup(ModuleHandler):
 
 
 @handler
-class targets(WebSocketHandler):
-	all = tornado.WebSocketConnections()
-	targets = list[str]()
-	
+class site(WebSocketHandler):
+	_show = dict[str, Callable]()
+
 	@classmethod
-	def start(cls):
+	def show(cls, cmp:str, guard:Callable):
+		cls._show[cmp] = guard
 
-		async def watchdog():
-			while True:
-				await asyncio.sleep(1)
-				cls.all.write_message(None, send_unchanged=True)
-
-		async def update():
-			journalctl = await asyncio.create_subprocess_exec('journalctl','--follow','--output=cat','--lines=0','_PID=1', stdout=asyncio.subprocess.PIPE)
-			assert journalctl.stdout is not None
-			
-			timeout = 0
-			while True:
-				try:
-					line = await asyncio.wait_for(journalctl.stdout.readline(), timeout)
-					if b'target' in line:
-						timeout = 0.1
-					continue
-				except asyncio.TimeoutError:
-					timeout = None
-				
-				systemctl  = await asyncio.create_subprocess_exec('systemctl','list-units','--no-pager','--no-legend','--plain','--type=target','--state=active', stdout=asyncio.subprocess.PIPE)
-				targets,*_ = await systemctl.communicate()
-				cls.targets = list(t.partition('.target')[0] for t in targets.decode().splitlines())
-				
-				cls.all.write_message(cls.targets)
-
-		cls.tasks = asyncio.create_task(watchdog()), asyncio.create_task(update())
-
-	def open(self):
-		self.all.add(self)
-		self.write_message(self.targets)
-	
-	def on_close(self):
-		self.all.discard(self)
+	async def update(self):
+		while True:
+			await asyncio.sleep(0.5)
+			if not await self.write_message([
+				cmp for cmp, guard in self._show.items() if guard()
+			]):
+				await self.write_message(bytes(), skip_unchanged=False)
 
 	def post(self):
 		pass # connection test
@@ -158,8 +132,6 @@ def server() -> tornado.HTTPServer:
 			if absolute_path.endswith('.py'):
 				raise tornado.HTTPError(404)
 			return super().validate_absolute_path(root, absolute_path)
-
-	targets.start()
 
 	return tornado.HTTPServer(
 		tornado.Application(

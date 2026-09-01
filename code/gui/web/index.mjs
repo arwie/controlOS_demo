@@ -40,18 +40,18 @@ export function addPage(path, component, parent=null) {
 			router.push({ ...this, query });
 		},
 	}
-	if (component && component.targetGuard) {
-		route.beforeEnter = () => target(component.targetGuard) || parent || { path:'/' };
+	if (component && component.show) {
+		route.beforeEnter = () => show(component.show) || parent || { path:'/' };
 	}
 	(parent?.children || routes).push(route);
 	return route;
 }
 
 
-const targets = shallowRef([]);
+const _show = shallowRef([]);
 
-export function target(target) {
-	return targets.value.includes(target);
+export function show(target) {
+	return _show.value.includes(target);
 }
 
 
@@ -68,9 +68,9 @@ export default async function() {
 			watchdog = null;
 			console.log('GUI: disconnected!');
 			document.getElementById('gui-disconnected')?.showModal();
-			targets.value.length = 0;
+			_show.value.length = 0;
 			poll(3000, ()=>{
-				url('web.targets').post(null, { signal: AbortSignal.timeout(3000) })
+				url('web.site').post(null, { signal: AbortSignal.timeout(3000) })
 					.then(()=>location.reload())
 					.catch(()=>console.log('GUI: trying to reconnect...'));
 			});
@@ -78,9 +78,9 @@ export default async function() {
 	}
 	let watchdog = true;
 
-	const ws = url('web.targets').webSocketJson((msg)=>{
+	const ws = url('web.site').webSocketJson((msg)=>{
 		if (Array.isArray(msg)) {
-			targets.value = msg;
+			_show.value = msg;
 			for (const matched of router.currentRoute.value.matched) {
 				const guard = matched.beforeEnter?.();
 				if (isObject(guard)) {

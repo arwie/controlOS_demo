@@ -5,9 +5,11 @@ from pathlib import Path
 import web
 from shared import system
 from shared.conf import Conf
+from shared.network import hasInterface
 
 
 web.document.imports.append('system/network/syswlan')
+web.site.show(__name__, lambda: hasInterface('syswlan'))
 
 
 @web.handler

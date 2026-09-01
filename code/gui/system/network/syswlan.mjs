@@ -10,7 +10,7 @@ import { networkIndex } from 'system/network'
 
 
 networkIndex.addPage('syswlan', {
-	targetGuard: 'network@syswlan',
+	show: 'system.network.syswlan',
 	setup() {
 
 		const enabled = ref(false);

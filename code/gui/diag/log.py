@@ -3,6 +3,7 @@
 
 import asyncio
 import web
+from shared import log
 
 
 web.document.imports.append('diag/log')
@@ -17,19 +18,7 @@ def journalctl_subprocess(*args, lines, output):
 
 @web.handler
 class feed(web.WebSocketHandler):
-	
-	async def readJournal(self, args, lines):
-		proc = await journalctl_subprocess(*args, lines=lines, output='json')
-		try:
-			while proc.stdout and (msg := await proc.stdout.readline()):
-				self.write_message(msg, send_unchanged=True)
-			await proc.wait()
-		finally:
-			self.close()
-			proc.terminate()
-
-
-	def open(self):
+	async def update(self):
 		args = [f"--priority={self.get_query_argument('priority', 'notice')}"]
 		
 		lines = int(self.get_query_argument('lines', '50'))
@@ -56,11 +45,17 @@ class feed(web.WebSocketHandler):
 			for arg in filter.split():
 				args.append(arg.lstrip('-'))
 		
-		self.task = asyncio.create_task(self.readJournal(args, abs(lines)))
-
-
-	def on_close(self):
-		self.task.cancel()
+		proc = await journalctl_subprocess(*args, lines=abs(lines), output='json')
+		try:
+			while proc.stdout and (msg := await proc.stdout.readline()):
+				await self.write_message(msg, skip_unchanged=False)
+			await proc.wait()
+		finally:
+			if proc.returncode is None:
+				proc.terminate()
+			elif proc.returncode and proc.stderr:
+				err = (await proc.stderr.read()).decode().strip()
+				log.error(f'journalctl {" ".join(args)} failed ({proc.returncode}): {err}')
 
 
 
