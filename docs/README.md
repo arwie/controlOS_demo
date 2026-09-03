@@ -2,6 +2,8 @@
 
 An industrial automation platform built on real-time Linux. controlOS provides everything needed to develop, deploy and operate machine control applications — from hard real-time PLC execution to web-based operator interfaces, all running on standard hardware.
 
+![iceoryx2 data plane](iceoryx2_data_plane.png)
+
 ## Key Features
 
 ### Real-Time Control
@@ -14,7 +16,11 @@ Full integration of the CODESYS IEC 61131-3 PLC runtime. Applications are compil
 
 ### Hybrid CODESYS / Python Architecture
 
-CODESYS handles hard real-time control while a Python asyncio application runs alongside it, connected through POSIX shared memory. Commands and feedback are exchanged every PLC cycle, giving Python code synchronous access to the real-time process without compromising determinism.
+CODESYS handles hard real-time control while a Python asyncio application runs alongside it, connected through the iceoryx2 zero-copy shared-memory data plane. Commands and feedback are exchanged every PLC cycle, giving Python code synchronous access to the real-time process without compromising determinism.
+
+### iceoryx2 Data Plane
+
+All processes — PLC runtime, application and web backends — communicate over a single zero-copy shared-memory bus. Publish/subscribe services carry state, paired event services wake receivers, and the listener file descriptors integrate directly into Python's asyncio loop. No broker, no sockets, no allocation in the PLC cycle.
 
 
 ### I/O Abstraction & Simulation
