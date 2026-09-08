@@ -1,0 +1,52 @@
+[gd_scene format=3 uid="uid://bpxy8u1y3p28s"]
+
+[ext_resource type="Script" uid="uid://cq5ubuak62jke" path="res://robot/robot.gd" id="1_dsigu"]
+[ext_resource type="PackedScene" uid="uid://wr7hyw5cc37l" path="res://robot/base.glb" id="1_i4eqh"]
+[ext_resource type="PackedScene" uid="uid://by7smnamcsoe8" path="res://robot/arm.glb" id="2_dsigu"]
+[ext_resource type="PackedScene" uid="uid://bhqsmygt27bra" path="res://robot/rod.glb" id="4_abor7"]
+[ext_resource type="PackedScene" uid="uid://cgkvp18ycod37" path="res://robot/plate.glb" id="5_ad5v5"]
+
+[node name="Node3D" type="Node3D" unique_id=675810172]
+script = ExtResource("1_dsigu")
+
+[node name="base" parent="." unique_id=1685651800 instance=ExtResource("1_i4eqh")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, 0)
+
+[node name="rail_0" type="Node3D" parent="." unique_id=1971254486]
+transform = Transform3D(1, 0, 0, 0, -0.70710677, -0.70710677, 0, 0.70710677, -0.70710677, 0, 0, 0.39215)
+
+[node name="arm" parent="rail_0" unique_id=1976441716 instance=ExtResource("2_dsigu")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, 0.3)
+
+[node name="rod_l" parent="rail_0/arm" unique_id=1252909615 instance=ExtResource("4_abor7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.04, 0, 0)
+
+[node name="rod_r" parent="rail_0/arm" unique_id=1476404299 instance=ExtResource("4_abor7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.04, 0, 0)
+
+[node name="rail_120" type="Node3D" parent="." unique_id=1688322136]
+transform = Transform3D(-0.50000006, 0.6123724, -0.6123724, 0, -0.70710677, -0.70710677, -0.8660254, -0.3535534, 0.3535534, 0.33961186, 0, -0.19607504)
+
+[node name="arm" parent="rail_120" unique_id=399112238 instance=ExtResource("2_dsigu")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, 0.3)
+
+[node name="rod_l" parent="rail_120/arm" unique_id=353218468 instance=ExtResource("4_abor7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.04, 0, 0)
+
+[node name="rod_r" parent="rail_120/arm" unique_id=1472461062 instance=ExtResource("4_abor7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.04, 0, 0)
+
+[node name="rail_240" type="Node3D" parent="." unique_id=702743390]
+transform = Transform3D(-0.4999999, -0.61237246, 0.61237246, 0, -0.70710677, -0.70710677, 0.86602545, -0.35355332, 0.35355332, -0.3396119, 0, -0.19607498)
+
+[node name="arm" parent="rail_240" unique_id=1076651358 instance=ExtResource("2_dsigu")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, 0.3)
+
+[node name="rod_l" parent="rail_240/arm" unique_id=2112197359 instance=ExtResource("4_abor7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.04, 0, 0)
+
+[node name="rod_r" parent="rail_240/arm" unique_id=656877747 instance=ExtResource("4_abor7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.04, 0, 0)
+
+[node name="plate" parent="." unique_id=2088508742 instance=ExtResource("5_ad5v5")]
+transform = Transform3D(1, 0, 0, 0, 0.9999999, 0, 0, 0, 0.9999999, 0, 0, -2.9802322e-08)

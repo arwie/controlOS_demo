@@ -1,0 +1,42 @@
+[gd_scene format=3 uid="uid://bdinm8t2gy2kg"]
+
+[ext_resource type="PackedScene" uid="uid://bpxy8u1y3p28s" path="res://robot/robot.tscn" id="1_ig7tw"]
+[ext_resource type="Script" uid="uid://cw2qijukoga1f" path="res://orbit_camera.gd" id="2_0xm2m"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_0xm2m"]
+sky_top_color = Color(0.7, 0.72, 0.75, 1)
+sky_horizon_color = Color(0.62, 0.62, 0.62, 1)
+ground_bottom_color = Color(0.55, 0.55, 0.54, 1)
+ground_horizon_color = Color(0.62, 0.62, 0.62, 1)
+
+[sub_resource type="Sky" id="Sky_0xm2m"]
+sky_material = SubResource("ProceduralSkyMaterial_0xm2m")
+
+[sub_resource type="Environment" id="Environment_j5h3t"]
+background_mode = 1
+background_color = Color(0.35, 0.35, 0.36, 1)
+sky = SubResource("Sky_0xm2m")
+ambient_light_source = 2
+ambient_light_color = Color(0.78, 0.79, 0.82, 1)
+ambient_light_energy = 0.55
+reflected_light_source = 2
+tonemap_mode = 3
+
+[node name="Node3D" type="Node3D" unique_id=108695106]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=575563965]
+environment = SubResource("Environment_j5h3t")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="WorldEnvironment" unique_id=2126933032]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 5, 0)
+light_color = Color(0.94, 0.96, 1, 1)
+light_energy = 1.2
+light_angular_distance = 1.5
+shadow_enabled = true
+
+[node name="OrbitCamera" type="Camera3D" parent="." unique_id=1619539958]
+script = ExtResource("2_0xm2m")
+metadata/_custom_type_script = "uid://cw2qijukoga1f"
+
+[node name="robot" parent="." unique_id=675810172 instance=ExtResource("1_ig7tw")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
