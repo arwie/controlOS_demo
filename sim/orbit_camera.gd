@@ -8,14 +8,16 @@ class_name OrbitCamera
 extends Camera3D
 
 
+@export var target := Vector3.ZERO
 @export var distance := 2.0
 @export var rotate_speed := 0.5
 @export var zoom_speed := 0.1
 @export var min_distance := 0.1
 @export var max_distance := 10.0
-@export var yaw := deg_to_rad(-25.0)
-@export var pitch := deg_to_rad(20.0)
-@export var target := Vector3(0, 1, 0)
+@export_range(-180.0, 180.0, 0.1, "radians_as_degrees")
+var yaw := deg_to_rad(-25.0)
+@export_range(-89.0, 89.0, 0.1, "radians_as_degrees")
+var pitch := deg_to_rad(20.0)
 
 
 func _ready() -> void:

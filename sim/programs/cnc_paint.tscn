@@ -1,0 +1,39 @@
+[gd_scene format=3 uid="uid://bp60lgu6juyqm"]
+
+[ext_resource type="PackedScene" uid="uid://bdinm8t2gy2kg" path="res://main.tscn" id="2_2r72u"]
+[ext_resource type="Script" uid="uid://cnhgeqpnpkfhk" path="res://programs/cnc_paint/canvas.gd" id="3_2r72u"]
+[ext_resource type="PackedScene" uid="uid://cnli1y1ghfjwu" path="res://grippers/pen.glb" id="3_4p6p6"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_m8xab"]
+size = Vector2(0.5, 0.5)
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_2r72u"]
+viewport_path = NodePath("Canvas/SubViewport")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4p6p6"]
+resource_local_to_scene = true
+transparency = 2
+alpha_scissor_threshold = 0.5
+alpha_antialiasing_mode = 0
+cull_mode = 2
+albedo_texture = SubResource("ViewportTexture_2r72u")
+
+[node name="Node3D" unique_id=108695106 instance=ExtResource("2_2r72u")]
+
+[node name="pen" parent="robot/plate/tcp" parent_id_path=PackedInt32Array(675810172, 1394027651) index="0" unique_id=1944736360 instance=ExtResource("3_4p6p6")]
+
+[node name="Canvas" type="MeshInstance3D" parent="." index="4" unique_id=974961749]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.653, 0)
+mesh = SubResource("PlaneMesh_m8xab")
+surface_material_override/0 = SubResource("StandardMaterial3D_4p6p6")
+script = ExtResource("3_2r72u")
+
+[node name="SubViewport" type="SubViewport" parent="Canvas" index="0" unique_id=662600122]
+transparent_bg = true
+size = Vector2i(1024, 1024)
+render_target_clear_mode = 1
+render_target_update_mode = 0
+
+[node name="Painter" type="Node2D" parent="Canvas/SubViewport" index="0" unique_id=8869691]
+
+[editable path="robot"]

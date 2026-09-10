@@ -12,6 +12,14 @@ const params = {
 const thetas = [0, 120, 240]
 
 
+# The rig itself never changes shape, only its joints move.
+@onready var plate: Node3D = $plate
+@onready var rails: Array[Node3D] = [$rail_a, $rail_b, $rail_c]
+@onready var arms: Array[Node3D] = [$rail_a/arm, $rail_b/arm, $rail_c/arm]
+@onready var rods_l: Array[Node3D] = [$rail_a/arm/rod_l, $rail_b/arm/rod_l, $rail_c/arm/rod_l]
+@onready var rods_r: Array[Node3D] = [$rail_a/arm/rod_r, $rail_b/arm/rod_r, $rail_c/arm/rod_r]
+
+
 @export_tool_button("Setup transforms") var setup_transforms_action:
 	get: return setup_transforms
 
@@ -22,66 +30,61 @@ func setup_transforms():
 			turn * Basis(Vector3(1, 0, 0), deg_to_rad(180.0 - params['axis_angle'])),
 			turn * Vector3(0, 0, params['outer_radius'])
 		)
-		var reach := params['rods_distance'] / 2
-		rods_l[i].transform = Transform3D(Basis.IDENTITY, Vector3(-reach, 0, 0))
-		rods_r[i].transform = Transform3D(Basis.IDENTITY, Vector3( reach, 0, 0))
+		rods_l[i].position.x = -params['rods_distance'] / 2
+		rods_r[i].position.x = +params['rods_distance'] / 2
 	cache_geometry()
+	set_axes(0.3, 0.3, 0.3)
 
-
-# The rig itself never changes shape, only its joints move.
-@onready var plate: Node3D = $plate
-@onready var rails: Array[Node3D] = [$rail_0, $rail_120, $rail_240]
-@onready var arms: Array[Node3D] = [$rail_0/arm, $rail_120/arm, $rail_240/arm]
-@onready var rods_l: Array[Node3D] = [$rail_0/arm/rod_l, $rail_120/arm/rod_l, $rail_240/arm/rod_l]
-@onready var rods_r: Array[Node3D] = [$rail_0/arm/rod_r, $rail_120/arm/rod_r, $rail_240/arm/rod_r]
 
 # Geometry that only moves when the rails do, worked out once by
 # cache_geometry() so the per-frame update is plain arithmetic.
-var arm_bases: Array[Basis] = []           # robot space -> arm space
-var axis_origins := PackedVector3Array()   # carriage position at axis zero
+var rod_bases: Array[Basis] = []           # robot space -> arm space, over -rods_length
+var axis_zeros := PackedVector3Array()     # rod sphere centre at axis zero
 var axis_dirs := PackedVector3Array()      # rail travel direction, unit length
-var plate_joints := PackedVector3Array()   # plate joint centre, plate relative
 var axes := Vector3.INF                    # axis positions the pose was built for
-
-var socket := WebSocketPeer.new()
-
 
 
 func _ready() -> void:
 	cache_geometry()
 	update_kinematics()
-	if socket.connect_to_url("ws://90.0.0.1:8000/studio.sim.robot") != OK:
-		push_warning('Failed to connect WebSocket')
 
 
 func _process(_delta: float) -> void:
-	socket.poll()
-	if socket.get_ready_state() == WebSocketPeer.STATE_OPEN:
-		if socket.get_available_packet_count():
-			var msg = JSON.parse_string(socket.get_packet().get_string_from_utf8())
-			for index in arms.size():
-				arms[index].position.z = msg[index] / 1000
 	update_kinematics()
+
+
+## Slides the three carriages along their rails, in metres from axis zero. The
+## pose follows on the next update_kinematics().
+func set_axes(a: float, b: float, c: float) -> void:
+	arms[0].position.z = a
+	arms[1].position.z = b
+	arms[2].position.z = c
 
 
 ## Reduces the rails to the values update_kinematics() runs on. Call this after
 ## anything but the arms themselves moves.
 func cache_geometry() -> void:
-	arm_bases.clear()
-	axis_origins.clear()
+	rod_bases.clear()
+	axis_zeros.clear()
 	axis_dirs.clear()
-	plate_joints.clear()
 	axes = Vector3.INF
 	for i in thetas.size():
 		var rail := rails[i]
 		var arm := arms[i]
-		arm_bases.append((rail.basis * arm.basis).inverse())
+		# aim_rods() only ever wants the direction over -rods_length, so scale the
+		# basis by it here and the product comes out already normalised.
+		rod_bases.append(
+			(rail.basis * arm.basis).inverse().scaled(Vector3.ONE * (-1.0 / params['rods_length']))
+		)
 		# Rail-local transforms only reach as far as the rail; the carriage slides
 		# along the rail's own Z, so in robot space it is a ray.
 		axis_dirs.append(rail.basis.z)
-		axis_origins.append(rail.transform * Vector3(arm.position.x, arm.position.y, 0))
-		plate_joints.append(
-			Basis(Vector3(0, 1, 0), deg_to_rad(thetas[i])) * Vector3(0, 0, params['inner_radius'])
+		# Pulling the plate's joint centre back onto that ray is what leaves the
+		# centre of the rod's sphere, and both ends of the subtraction hold still
+		# until the rails move, so fold it in here.
+		axis_zeros.append(
+			rail.transform * Vector3(arm.position.x, arm.position.y, 0)
+			- Basis(Vector3(0, 1, 0), deg_to_rad(thetas[i])) * Vector3(0, 0, params['inner_radius'])
 		)
 
 
@@ -97,32 +100,32 @@ func update_kinematics() -> void:
 	# carriage and on the plate cancel, so the pair acts as a single rod of
 	# rods_length between the carriage and the plate's joint centre. That leaves
 	# the plate origin on a sphere around the carriage, shifted back by the
-	# plate's radial offset.
-	var a := axis_origins[0] + axis_dirs[0] * q.x - plate_joints[0]
-	var b := axis_origins[1] + axis_dirs[1] * q.y - plate_joints[1]
-	var c := axis_origins[2] + axis_dirs[2] * q.z - plate_joints[2]
+	# plate's radial offset, which axis_zeros already carries.
+	var a := axis_zeros[0] + axis_dirs[0] * q.x
+	var b := axis_zeros[1] + axis_dirs[1] * q.y
+	var c := axis_zeros[2] + axis_dirs[2] * q.z
 
-	var position = trilaterate(a, b, c, params['rods_length'])
-	if position == null:
+	var plate_pos := trilaterate(a, b, c, params['rods_length'])
+	if not plate_pos.is_finite():
 		return  # axis combination outside the workspace
-	plate.position = position
+	plate.position = plate_pos
 
 	# Each sphere centre is already the plate joint pulled back onto the
 	# carriage, so the vector to it is the rod, at its full length by definition.
-	aim_rods(0, position - a)
-	aim_rods(1, position - b)
-	aim_rods(2, position - c)
+	aim_rods(0, plate_pos - a)
+	aim_rods(1, plate_pos - b)
+	aim_rods(2, plate_pos - c)
 
 
 ## Intersects three spheres of equal radius, returning the lower of the two
-## solutions, or null if they do not meet.
-func trilaterate(a: Vector3, b: Vector3, c: Vector3, radius: float):
+## solutions, or Vector3.INF if they do not meet.
+func trilaterate(a: Vector3, b: Vector3, c: Vector3, radius: float) -> Vector3:
 	var n1 := b - a
 	var n2 := c - a
 	var line := n1.cross(n2)
 	var line_sq := line.length_squared()
 	if line_sq < 1e-12:
-		return null  # degenerate arrangement, the centres are collinear
+		return Vector3.INF  # degenerate arrangement, the centres are collinear
 
 	# Measured from `a`, equal radii reduce the other two spheres to the planes
 	# n·x = |n|² / 2, and Cramer's rule against `line` (which is normal to both)
@@ -134,7 +137,7 @@ func trilaterate(a: Vector3, b: Vector3, c: Vector3, radius: float):
 	# symmetrically along it at the half chord of the sphere around `a`.
 	var half_chord := radius * radius - point.length_squared()
 	if half_chord < 0.0:
-		return null
+		return Vector3.INF
 	# Dividing under the root rescales the step for `line` being unnormalised.
 	half_chord = sqrt(half_chord / line_sq)
 	return a + point + line * (-half_chord if line.y > 0.0 else half_chord)
@@ -143,7 +146,8 @@ func trilaterate(a: Vector3, b: Vector3, c: Vector3, radius: float):
 ## Swings a rail's rod pair, which run from their origins along local -Z, onto
 ## the given robot space direction.
 func aim_rods(i: int, direction: Vector3) -> void:
-	var z: Vector3 = arm_bases[i] * direction / -params['rods_length']
+	# rod_bases already divides by -rods_length, so this lands unit length.
+	var z: Vector3 = rod_bases[i] * direction
 	# The ball joints pivot around the arm's X axis, so keep the rod's own X as
 	# close to it as the swing permits instead of letting the rod roll.
 	var x := (Vector3(1, 0, 0) - z * z.x).normalized()

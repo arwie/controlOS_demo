@@ -10,15 +10,13 @@ config_version=5
 
 [application]
 
-config/name="sim"
+config/name="controlOS_demo"
 run/main_scene="uid://bdinm8t2gy2kg"
 config/features=PackedStringArray("4.7", "Forward Plus")
-config/icon="res://icon.svg"
 
-[display]
+[autoload]
 
-window/stretch/mode="canvas_items"
-window/stretch/aspect="expand"
+ProgramSelect="*uid://dcbldknlhy223"
 
 [physics]
 

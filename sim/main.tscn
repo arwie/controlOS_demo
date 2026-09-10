@@ -1,5 +1,6 @@
 [gd_scene format=3 uid="uid://bdinm8t2gy2kg"]
 
+[ext_resource type="Script" uid="uid://blag2agw5lce7" path="res://main.gd" id="1_1bvp3"]
 [ext_resource type="PackedScene" uid="uid://bpxy8u1y3p28s" path="res://robot/robot.tscn" id="1_ig7tw"]
 [ext_resource type="Script" uid="uid://cw2qijukoga1f" path="res://orbit_camera.gd" id="2_0xm2m"]
 
@@ -14,7 +15,7 @@ sky_material = SubResource("ProceduralSkyMaterial_0xm2m")
 
 [sub_resource type="Environment" id="Environment_j5h3t"]
 background_mode = 1
-background_color = Color(0.35, 0.35, 0.36, 1)
+background_color = Color(0.33413282, 0.3454326, 0.41716358, 1)
 sky = SubResource("Sky_0xm2m")
 ambient_light_source = 2
 ambient_light_color = Color(0.78, 0.79, 0.82, 1)
@@ -23,20 +24,27 @@ reflected_light_source = 2
 tonemap_mode = 3
 
 [node name="Node3D" type="Node3D" unique_id=108695106]
+script = ExtResource("1_1bvp3")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=575563965]
 environment = SubResource("Environment_j5h3t")
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="WorldEnvironment" unique_id=2126933032]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 5, 0)
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=2126933032]
+transform = Transform3D(1, 0, 0, 0, 0.49999997, 0.86602545, 0, -0.86602545, 0.49999997, 0, 5, 0)
 light_color = Color(0.94, 0.96, 1, 1)
 light_energy = 1.2
 light_angular_distance = 1.5
-shadow_enabled = true
 
 [node name="OrbitCamera" type="Camera3D" parent="." unique_id=1619539958]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5)
 script = ExtResource("2_0xm2m")
+target = Vector3(0, -0.4, 0)
+distance = 1.0
+yaw = -1.5707963267948966
+pitch = 0.5235987755982988
 metadata/_custom_type_script = "uid://cw2qijukoga1f"
 
 [node name="robot" parent="." unique_id=675810172 instance=ExtResource("1_ig7tw")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+unique_name_in_owner = true
+
+[editable path="robot"]
