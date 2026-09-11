@@ -15,3 +15,9 @@ func _process(delta: float) -> void:
 
 		var robot_axes = msg['robot']['axes']
 		robot.set_axes(robot_axes[0] / 1000, robot_axes[1] / 1000, robot_axes[2] / 1000)
+
+
+## Sends a command over the same socket the studio's sim page uses:
+## 1 presses the start button, 2 presses stop.
+func send(cmd: int) -> void:
+	motion_socket.send_text(JSON.stringify({'cmd': cmd}))

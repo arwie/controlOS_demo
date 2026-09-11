@@ -23,6 +23,9 @@ ambient_light_energy = 0.55
 reflected_light_source = 2
 tonemap_mode = 3
 
+[sub_resource type="Theme" id="Theme_h2yge"]
+default_font_size = 24
+
 [node name="Node3D" type="Node3D" unique_id=108695106]
 script = ExtResource("1_1bvp3")
 
@@ -46,5 +49,29 @@ metadata/_custom_type_script = "uid://cw2qijukoga1f"
 
 [node name="robot" parent="." unique_id=675810172 instance=ExtResource("1_ig7tw")]
 unique_name_in_owner = true
+
+[node name="UI" type="CanvasLayer" parent="." unique_id=411020733]
+
+[node name="Buttons" type="VBoxContainer" parent="UI" unique_id=822417195]
+custom_minimum_size = Vector2(140, 0)
+offset_left = 16.0
+offset_top = 16.0
+offset_right = 156.0
+offset_bottom = 96.0
+mouse_filter = 2
+theme = SubResource("Theme_h2yge")
+
+[node name="start" type="Button" parent="UI/Buttons" unique_id=1533908274]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.4, 0.9, 0.5, 1)
+text = "Start"
+
+[node name="stop" type="Button" parent="UI/Buttons" unique_id=1990244561]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.45, 0.45, 1)
+text = "Stop"
+
+[connection signal="pressed" from="UI/Buttons/start" to="." method="send" binds= [1]]
+[connection signal="pressed" from="UI/Buttons/stop" to="." method="send" binds= [2]]
 
 [editable path="robot"]

@@ -36,4 +36,13 @@ render_target_update_mode = 0
 
 [node name="Painter" type="Node2D" parent="Canvas/SubViewport" index="0" unique_id=8869691]
 
+[node name="HSeparator" type="HSeparator" parent="UI/Buttons" parent_id_path=PackedInt32Array(822417195) index="2" unique_id=498028994]
+layout_mode = 2
+
+[node name="Button" type="Button" parent="UI/Buttons" parent_id_path=PackedInt32Array(822417195) index="3" unique_id=929318647]
+layout_mode = 2
+text = "Clear"
+
+[connection signal="pressed" from="UI/Buttons/Button" to="Canvas" method="clear"]
+
 [editable path="robot"]
