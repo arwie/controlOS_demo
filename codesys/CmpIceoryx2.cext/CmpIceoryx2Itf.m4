@@ -66,18 +66,16 @@ DEF_API(`void',`CDECL',`iox2plc_listener_open_cext',`(iox2plc_listener_open_cext
  * </description>
  * <element name="iox2plc_listener_poll_cext" type=OUT></element>
  * <element name="port" type=IN></element>
- * <element name="out_event_id" type=IN></element>
- * <element name="out_has_event" type=IN></element>
+ * <element name="out_events" type=IN></element>
 */
 typedef struct tagiox2plc_listener_poll_cext_struct
 {
 	RTS_IEC_XWORD port;
-	RTS_IEC_UDINT *out_event_id;
-	RTS_IEC_BOOL *out_has_event;
+	RTS_IEC_DWORD *out_events;
 	RTS_IEC_STRING *iox2plc_listener_poll_cext;
 } iox2plc_listener_poll_cext_struct;
 
-DEF_API(`void',`CDECL',`iox2plc_listener_poll_cext',`(iox2plc_listener_poll_cext_struct *p)',1,RTSITF_GET_SIGNATURE(0xB0CDF3AF, 0xA54DC556),0x00010000)
+DEF_API(`void',`CDECL',`iox2plc_listener_poll_cext',`(iox2plc_listener_poll_cext_struct *p)',1,RTSITF_GET_SIGNATURE(0x9B79CF67, 0x8EF9F99E),0x00010000)
 
 /**
  * <description>

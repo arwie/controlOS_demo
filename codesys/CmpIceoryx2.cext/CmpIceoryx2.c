@@ -81,7 +81,7 @@ static const char *open_pub_sub_factory(const char *service, const char *type_na
 		iox2_type_variant_e_FIXED_SIZE, type_name, strlen(type_name),
 		(c_size_t)payload_size, (c_size_t)alignment);
 	if (rc != IOX2_OK)
-		/* iox2_type_detail_error_e is the one error iceoryx2 0.9.3 has no
+		/* iox2_type_detail_error_e is the one error iceoryx2 0.10.0 has no
 		 * string function for. */
 		return "invalid type name or payload size or alignment";
 
@@ -305,27 +305,33 @@ static const char *notifier_notify(RTS_IEC_XWORD port, RTS_IEC_UDINT id, RTS_IEC
 	return NULL;
 }
 
-static const char *listener_poll(RTS_IEC_XWORD port, RTS_IEC_UDINT *out_event_id, RTS_IEC_BOOL *out_has_event)
+// Event ids are folded into a 32 bit mask, larger ids do not fit and are ignored. 
+static void listener_poll_event(const iox2_event_id_t *event_id, uint64_t count, iox2_callback_context ctx)
+{
+	RTS_IEC_DWORD *events = (RTS_IEC_DWORD *)ctx;
+
+	(void)count;	/* repeated notifications of an id collapse into its bit */
+
+	if (event_id->value < 32)
+		*events |= (RTS_IEC_DWORD)1 << event_id->value;
+}
+
+static const char *listener_poll(RTS_IEC_XWORD port, RTS_IEC_DWORD *out_events)
 {
 	iox2_listener_h listener = (iox2_listener_h)(RTS_UINTPTR)port;
-	iox2_event_id_t event_id;
-	bool has_event = false;
+	RTS_IEC_DWORD events = 0;
+	uint64_t notifications = 0;
 	int rc;
 
-	*out_has_event = 0;
+	*out_events = 0;
 
-	rc = iox2_listener_try_wait_one(&listener, &event_id, &has_event);
+	rc = iox2_listener_try_wait(&listener, &notifications, listener_poll_event, &events);
 	if (rc != IOX2_OK)
 		/* An interrupted syscall is not an error, just no event this cycle. */
 		return rc == iox2_listener_wait_error_e_INTERRUPT_SIGNAL
 			? NULL : iox2_listener_wait_error_string((enum iox2_listener_wait_error_e)rc);
 
-	if (has_event)
-	{
-		*out_event_id = (RTS_IEC_UDINT)event_id.value;
-		*out_has_event = 1;
-	}
-
+	*out_events = events;
 	return NULL;
 }
 
@@ -353,8 +359,7 @@ void CDECL CDECL_EXT iox2plc_listener_open_cext(iox2plc_listener_open_cext_struc
 
 void CDECL CDECL_EXT iox2plc_listener_poll_cext(iox2plc_listener_poll_cext_struct *p)
 {
-	p->iox2plc_listener_poll_cext = (RTS_IEC_STRING *)listener_poll(p->port,
-		p->out_event_id, p->out_has_event);
+	p->iox2plc_listener_poll_cext = (RTS_IEC_STRING *)listener_poll(p->port, p->out_events);
 }
 
 void CDECL CDECL_EXT iox2plc_notifier_close_cext(iox2plc_notifier_close_cext_struct *p)

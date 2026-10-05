@@ -14,8 +14,8 @@ PACKAGES-$(PTXCONF_ICEORYX2) += iceoryx2
 #
 # Paths and names
 #
-ICEORYX2_VERSION	:= 0.9.3
-ICEORYX2_SHA256		:= 2b4438364614b390938354ac766c198bb2ad63a2bde84a142c53f555fe8f4bc1
+ICEORYX2_VERSION	:= 0.10.0
+ICEORYX2_SHA256		:= ef14e6b8f7cbb003dc0f67f06dd00436fe4ed3ddd97154efde5796bc441d0265
 ICEORYX2		:= iceoryx2-$(ICEORYX2_VERSION)
 ICEORYX2_SUFFIX		:= tar.gz
 ICEORYX2_URL		:= https://github.com/eclipse-iceoryx/iceoryx2/archive/refs/tags/v$(ICEORYX2_VERSION).$(ICEORYX2_SUFFIX)
@@ -31,7 +31,7 @@ ICEORYX2_LICENSE_FILES	:= \
 # ----------------------------------------------------------------------------
 
 ICEORYX2_CONF_TOOL	:= cargo
-ICEORYX2_CONF_OPT	:= \
+ICEORYX2_MAKE_OPT	:= \
 	$(CROSS_CARGO_OPT) \
 	$(call ptx/ifdef, PTXCONF_ICEORYX2_FFI_C, --package iceoryx2-ffi-c) \
 	$(call ptx/ifdef, PTXCONF_ICEORYX2_CLI, --package iceoryx2-cli) \
@@ -64,7 +64,7 @@ ifdef PTXCONF_ICEORYX2_CLI
 		$(ICEORYX2_ARTIFACTS)/iox2-node \
 		$(ICEORYX2_ARTIFACTS)/iox2-service \
 		$(ICEORYX2_ARTIFACTS)/iox2-config \
-		$(ICEORYX2_ARTIFACTS)/iox2-tunnel
+		$(ICEORYX2_ARTIFACTS)/iox2-link
 endif
 ifdef PTXCONF_ICEORYX2_PYTHON
 	@mkdir -p $(ICEORYX2_PKGDIR)$(PYTHON3_SITEPACKAGES)
@@ -99,7 +99,7 @@ ifdef PTXCONF_ICEORYX2_CLI
 	@$(call install_copy, iceoryx2, 0, 0, 0755, -, /usr/bin/iox2-node)
 	@$(call install_copy, iceoryx2, 0, 0, 0755, -, /usr/bin/iox2-service)
 	@$(call install_copy, iceoryx2, 0, 0, 0755, -, /usr/bin/iox2-config)
-	@$(call install_copy, iceoryx2, 0, 0, 0755, -, /usr/bin/iox2-tunnel)
+	@$(call install_copy, iceoryx2, 0, 0, 0755, -, /usr/bin/iox2-link)
 endif
 
 ifdef PTXCONF_ICEORYX2_PYTHON

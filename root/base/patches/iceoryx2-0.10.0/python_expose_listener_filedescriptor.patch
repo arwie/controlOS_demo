@@ -1,5 +1,8 @@
+# The Listener socket fd is reachable from rust (FileDescriptorBased), C
+# (iox2_listener_get_file_descriptor) and C++ (Listener::file_descriptor), but
+# not from python. Without it every listener needs a WaitSet on a helper thread
+# instead of asyncio add_reader() on the fd.
 diff --git a/iceoryx2-ffi/python/src/listener.rs b/iceoryx2-ffi/python/src/listener.rs
-index c820bc1..6f9e000 100644
 --- a/iceoryx2-ffi/python/src/listener.rs
 +++ b/iceoryx2-ffi/python/src/listener.rs
 @@ -12,12 +12,13 @@
@@ -11,9 +14,9 @@ index c820bc1..6f9e000 100644
  use pyo3::prelude::*;
  
  use crate::{
-     duration::Duration, error::ListenerWaitError, event_id::EventId,
--    unique_listener_id::UniqueListenerId,
-+    file_descriptor::FileDescriptor, unique_listener_id::UniqueListenerId,
+     duration::Duration, error::ListenerWaitError, event_activation::EventActivation,
+-    port_name::PortName, unique_listener_id::UniqueListenerId,
++    file_descriptor::FileDescriptor, port_name::PortName, unique_listener_id::UniqueListenerId,
  };
  
  #[allow(clippy::large_enum_variant)] // used purely for python and there it will reside always in
@@ -44,6 +47,6 @@ index c820bc1..6f9e000 100644
 +        ))
 +    }
 +
-     /// Non-blocking wait for a new `EventId`. If no `EventId` was notified it returns `None`.
+     /// Non-blocking wait for new events. Collects every `EventActivation` that was received
+     /// and returns them.
      /// On error it emits `ListenerWaitError`.
-     pub fn try_wait_one(&self) -> PyResult<Option<EventId>> {

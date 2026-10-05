@@ -28,8 +28,8 @@ class IoxListener(IoxPort[IoxEvent], Trigger):
 		asyncio_loop.add_reader(self._fd, self._readable)
 
 	def _readable(self):
-		for event_id in self.try_wait_all():
-			self.handle(event_id)
+		for activation in self.try_wait():
+			self.handle(activation.id)
 
 	def __exit__(self, et, exc, tb):
 		asyncio_loop.remove_reader(self._fd)

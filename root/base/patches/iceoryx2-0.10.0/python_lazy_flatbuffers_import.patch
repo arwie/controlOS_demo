@@ -1,0 +1,93 @@
+# iceoryx2/__init__.py imports the publish-subscribe and request-response
+# extensions unconditionally, and both import flatbuffers at module level. That
+# makes flatbuffers a hard runtime dependency even when no Flatbuffer payload
+# type is used. Import it only inside the flatbuffer helpers and defer the
+# annotations, so `import iceoryx2` works without flatbuffers installed.
+diff --git a/iceoryx2-ffi/python/python-src/iceoryx2/publish_subscribe_extensions.py b/iceoryx2-ffi/python/python-src/iceoryx2/publish_subscribe_extensions.py
+--- a/iceoryx2-ffi/python/python-src/iceoryx2/publish_subscribe_extensions.py
++++ b/iceoryx2-ffi/python/python-src/iceoryx2/publish_subscribe_extensions.py
+@@ -12,11 +12,11 @@
+ 
+ """Strong type safe extensions for the publish-subscribe messaging pattern."""
+ 
++from __future__ import annotations
++
+ import ctypes
+ from typing import Any, Type, TypeVar, get_args, get_origin, overload
+ 
+-import flatbuffers
+-
+ from ._iceoryx2 import *
+ from .flatbuffer import Flatbuffer
+ from .slice import Slice
+@@ -57,6 +57,8 @@
+ 
+     (PayloadType,) = get_args(self.__payload_type_details)
+ 
++    import flatbuffers
++
+     payload_bytes = self.payload_bytes()
+     view = payload_bytes.as_memory_view()
+     n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, view, 0)
+@@ -278,6 +280,8 @@
+     key = id(self)
+     builder = _sample_mut_uninit_dict.get(key)
+     if builder is None:
++        import flatbuffers
++
+         builder = flatbuffers.Builder(self.__available_payload_memory)
+         _sample_mut_uninit_dict[key] = builder
+     return builder
+diff --git a/iceoryx2-ffi/python/python-src/iceoryx2/request_response_extensions.py b/iceoryx2-ffi/python/python-src/iceoryx2/request_response_extensions.py
+--- a/iceoryx2-ffi/python/python-src/iceoryx2/request_response_extensions.py
++++ b/iceoryx2-ffi/python/python-src/iceoryx2/request_response_extensions.py
+@@ -12,11 +12,11 @@
+ 
+ """Strong type safe extensions for the request-response messaging pattern."""
+ 
++from __future__ import annotations
++
+ import ctypes
+ from typing import Any, Type, TypeVar, get_args, get_origin, overload
+ 
+-import flatbuffers
+-
+ from ._iceoryx2 import *
+ from .flatbuffer import Flatbuffer
+ from .slice import Slice
+@@ -269,6 +269,8 @@
+ 
+     (PayloadType,) = get_args(self.__request_payload_type_details)
+ 
++    import flatbuffers
++
+     payload_bytes = self.payload_bytes()
+     view = payload_bytes.as_memory_view()
+     n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, view, 0)
+@@ -289,6 +291,8 @@
+ 
+     (PayloadType,) = get_args(self.__response_payload_type_details)
+ 
++    import flatbuffers
++
+     payload_bytes = self.payload_bytes()
+     view = payload_bytes.as_memory_view()
+     n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, view, 0)
+@@ -414,6 +418,8 @@
+     key = id(self)
+     builder = _request_mut_uninit_dict.get(key)
+     if builder is None:
++        import flatbuffers
++
+         builder = flatbuffers.Builder(self.__available_payload_memory)
+         _request_mut_uninit_dict[key] = builder
+     return builder
+@@ -427,6 +433,8 @@
+     key = id(self)
+     builder = _response_mut_uninit_dict.get(key)
+     if builder is None:
++        import flatbuffers
++
+         builder = flatbuffers.Builder(self.__available_payload_memory)
+         _response_mut_uninit_dict[key] = builder
+     return builder

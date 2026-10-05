@@ -1,0 +1,11 @@
+// TRUE = EventId was received by the most recent Poll. Does not consume the
+// event, it stays set until the next Poll.
+
+METHOD PUBLIC Received: BOOL
+VAR_INPUT
+	EventId:	UDINT;
+END_VAR
+
+////////////////////////////////
+
+Received := EventId < 32 AND_THEN (SHR(events, EventId) AND 1) <> 0;

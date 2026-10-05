@@ -1,25 +1,25 @@
-// Retrieves exactly one pending event and returns FALSE when none is pending.
-// Draining is the caller's WHILE loop.
+// Retrieves all pending events at once and returns TRUE when at least one was
+// pending. Replaces the events of the previous Poll, query them with Received.
 
 METHOD PUBLIC Poll: BOOL
 VAR
-	event_id:	UDINT;
-	has_event:	BOOL;
+	pending:	DWORD;
 END_VAR
 
 ////////////////////////////////
+
+events := 0;
 
 IF handle = 0 THEN
 	Poll := FALSE;
 	RETURN;
 END_IF
 
-Poll := Check(iox2plc_listener_poll_cext(
+IF Check(iox2plc_listener_poll_cext(
 	port := handle,
-	out_event_id := ADR(event_id),
-	out_has_event := ADR(has_event)
-)) AND has_event;
-
-IF Poll THEN
-	last_event_id := event_id;
+	out_events := ADR(pending)
+)) THEN
+	events := pending;
 END_IF
+
+Poll := events <> 0;

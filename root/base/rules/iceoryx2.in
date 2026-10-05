@@ -20,7 +20,7 @@ config ICEORYX2_CLI
 	prompt "iox2 CLI tools"
 	help
 	  Install the iox2, iox2-node, iox2-service, iox2-config and
-	  iox2-tunnel command line tools.
+	  iox2-link command line tools.
 
 config ICEORYX2_PYTHON
 	bool

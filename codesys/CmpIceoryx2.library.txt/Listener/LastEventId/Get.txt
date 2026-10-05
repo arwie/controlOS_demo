@@ -1,6 +1,0 @@
-VAR
-END_VAR
-
-////////////////////////////////
-
-LastEventId := last_event_id;

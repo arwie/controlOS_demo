@@ -2,17 +2,17 @@
 // SPDX-License-Identifier: MIT
 
 // Polls pending notifications of an ipc event service.
+// Event ids 0..31 are distinguished, larger ids are silently ignored.
+// Repeated notifications of an id between two polls collapse into one.
 //
 //	VAR
 //		lis:	IOX2.Listener('plc/temperature/event');
 //	END_VAR
 //
-//	WHILE lis.Poll() DO
-//		CASE lis.LastEventId OF
-//			1:	HandleNewSetpoint();
-//			2:	HandleEmergencyStop();
-//		END_CASE
-//	END_WHILE
+//	IF lis.Poll() THEN
+//		IF lis.Received(1) THEN HandleNewSetpoint(); END_IF
+//		IF lis.Received(2) THEN HandleEmergencyStop(); END_IF
+//	END_IF
 //
 // An instance belongs to one task: the native port is not thread-safe, so all
 // calls on the same instance must come from the same task.
@@ -20,7 +20,7 @@
 FUNCTION_BLOCK Listener EXTENDS PortBase
 
 VAR
-	last_event_id:	UDINT;
+	events:		DWORD;		// bit n = event id n was received by the most recent Poll
 END_VAR
 
 ////////////////////////////////
